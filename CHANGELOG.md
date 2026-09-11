@@ -11,6 +11,7 @@ versions.
 
 ### Added
 - Project scaffold: a WinForms shell on .NET Framework 4.8 that builds to a
-  single exe, an accessibility lint test, CI, and the release pipeline.
+  single exe, an accessibility lint test, CI, the release pipeline, and a
+  placeholder app icon.
 
 [Unreleased]: https://github.com/PlanetLinux98/weatherspell/commits/main

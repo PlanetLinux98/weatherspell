@@ -94,8 +94,8 @@ account and paste a key into Settings.
 
 ## Updates: self-update, deferring to winget
 
-The app will check GitHub Releases, verify a downloaded exe against the
-`SHA256SUMS` asset, and replace itself. A copy installed by winget will not:
+On request, the app fetches the latest GitHub Release, verifies the
+downloaded exe against the `SHA256SUMS` asset, and replaces itself. A copy installed by winget will not:
 winget owns that folder, so the app should detect the winget install location
 and point the user at `winget upgrade` instead.
 
@@ -106,3 +106,64 @@ Pushing a tag makes CI build the exe, write `SHA256SUMS`, and draft a GitHub
 Release with the matching `CHANGELOG.md` section as notes. Publishing the
 draft triggers the winget submission. Releases are therefore reproducible
 from a tag with no local build step.
+
+## Official forecast text where it exists, generated text elsewhere
+
+The US National Weather Service and Environment Canada both publish
+human-written forecast sentences and real station observations, keyless.
+For those countries Weatherspell shows the official text; everywhere else it
+writes its own sentences from Open-Meteo's numbers. Two writing styles is the
+price of authority: a Canadian reader gets the same words Environment Canada
+put on the radio, humidex and all.
+
+Candidates for later: Australia (Bureau of Meteorology open data) and Ireland
+(Met Eireann open data), both English. The UK Met Office needs an API key, so
+it stays out. Norway, Germany, Japan and others publish only in their own
+language; generated English serves those better.
+
+## Alerts are regional by necessity
+
+No keyless service covers alerts worldwide. Coverage is built one source at
+a time: Environment Canada and the NWS first, MeteoAlarm (Europe) next.
+A location outside every supported region gets an explicit "alerts are not
+available for this region" line, never silence, so nobody mistakes a gap in
+coverage for a quiet day.
+
+Rejected: a keyed aggregator (OpenWeatherMap One Call carries alerts
+globally) for the reason above: every user would need an account and a key.
+
+## Words, not symbols
+
+"21 degrees", "wind from the southwest at 20 kilometres an hour", "70 percent
+chance of rain". Symbols and abbreviations ("21 C", "SW 20 km/h") depend on
+how a particular screen reader and its symbol dictionary happen to read
+them; words read the same everywhere. Whole degrees only.
+
+Times are the location's own, with the PC's time in brackets when the two
+zones differ, so a faraway sunrise reads correctly and a local one is not
+cluttered.
+
+## Section jumps are Ctrl+PageDown / Ctrl+PageUp
+
+Not Ctrl+Up / Ctrl+Down: NVDA 2024.1 and later handle those keys itself in
+editable text (paragraph navigation, a user setting) and JAWS users expect
+the same pair to move by paragraph. Ctrl+PageUp/Down is unbound in edit
+controls and in both screen readers.
+
+## Alerts poll every saved location
+
+Polling only the location on screen would miss a warning for home while the
+user reads a forecast for somewhere else. Polling all of them costs one small
+request per location every ten minutes and a per-location list of alert ids
+already seen. Each saved location has its own "notify me" switch.
+
+New alerts are announced through UI Automation notifications while the app
+is open (all alerts by default; the threshold is a setting). Tray icon,
+Windows toasts and start-with-Windows are deferred: they add a background
+mode whose behaviour deserves its own design pass.
+
+## Updates are checked on request only
+
+No automatic checking. Help > Check for Updates shows the newest version and
+its release notes and offers to install. The app is small and the audience
+prefers not to be interrupted; a manual check is enough.

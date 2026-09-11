@@ -11,6 +11,9 @@ internal sealed class MainForm : Form
     public MainForm()
     {
         Text = "Weatherspell";
+        // The exe's embedded icon, so the title bar and Alt+Tab match Explorer
+        // without shipping a loose .ico.
+        Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
         AutoScaleMode = AutoScaleMode.Dpi;
         StartPosition = FormStartPosition.CenterScreen;
         MinimumSize = new Size(480, 360);

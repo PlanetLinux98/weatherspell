@@ -11,6 +11,10 @@
     <RootNamespace>Weatherspell</RootNamespace>
     <AssemblyName>Weatherspell</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- Embedded as a Win32 resource, so Explorer, the taskbar and the form
+         all read it from the exe; nothing ships beside it. Placeholder art
+         from Assets\make-placeholder-icon.ps1 until the designed icon lands. -->
+    <ApplicationIcon>..\..\Assets\Weatherspell.ico</ApplicationIcon>
 
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
