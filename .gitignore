@@ -1,0 +1,21 @@
+# .NET SDK build output
+bin/
+obj/
+TestResults/
+*.binlog
+
+# Visual Studio / Rider / VS Code local state
+.vs/
+.idea/
+*.user
+*.suo
+
+# Release staging (release.yml builds the shipped exe; build-release.cmd mirrors
+# it locally). The GitHub Release is the only place these ship.
+/artifacts/
+SHA256SUMS
+
+# Personal Claude Code project context: lives only in this working copy
+CLAUDE.md
+CLAUDE.local.md
+.claude/settings.local.json

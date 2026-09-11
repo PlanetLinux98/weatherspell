@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!-- .NET Framework 4.8 is already part of Windows 10 (1903+) and 11, so the
+         exe is the whole program: nothing to install, nothing beside it. See
+         NOTES.md for what that rules out (exe.config, per-monitor DPI, runtime
+         NuGet dependencies). -->
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>Weatherspell</RootNamespace>
+    <AssemblyName>Weatherspell</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- The shipped file is the bare exe, so nothing may need
+         Weatherspell.exe.config at runtime. Do not generate one: no binding
+         redirects, no config-driven settings. -->
+    <GenerateSupportedRuntime>false</GenerateSupportedRuntime>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+
+    <Product>Weatherspell</Product>
+    <Authors>PlanetLinux98</Authors>
+    <Company>PlanetLinux98</Company>
+    <Copyright>Copyright (c) 2026 PlanetLinux98</Copyright>
+    <Description>A plain-text weather app for Windows.</Description>
+    <NeutralLanguage>en-CA</NeutralLanguage>
+    <Deterministic>true</Deterministic>
+
+    <!-- Versioning is driven by MinVer from git tags (releases are tagged
+         vX.Y.Z), so the version is never hand-edited; do not add a <Version>
+         property, it would override MinVer's computed value. Untagged commits
+         get the next minor as a pre-release. -->
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <MinVerAutoIncrement>minor</MinVerAutoIncrement>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="8.0.0" PrivateAssets="all" />
+    <!-- Modern C# syntax on the frozen 4.8 BCL: PolySharp generates the missing
+         compiler-support types (IsExternalInit, required, nullable attributes)
+         at build time; nothing ships. Runtime-backed features (default
+         interface members, static abstract members, ref fields) stay off. -->
+    <PackageReference Include="PolySharp" Version="1.16.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Tests reference this exe directly; internals stay internal. -->
+    <InternalsVisibleTo Include="Weatherspell.Tests" />
+  </ItemGroup>
+
+</Project>

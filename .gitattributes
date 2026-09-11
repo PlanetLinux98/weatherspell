@@ -1,0 +1,8 @@
+# Normalize line endings in the repo; check out as CRLF on Windows (the only
+# platform this builds on) so diffs stay quiet across editors.
+* text=auto
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+*.sln text eol=crlf
+*.png binary
+*.ico binary

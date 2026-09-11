@@ -1,0 +1,27 @@
+name: Publish to WinGet
+
+# Opens a winget-pkgs version-bump PR whenever a (non-prerelease) GitHub
+# Release is published. It only updates an existing package: the first
+# version must be submitted by hand with `wingetcreate new` (portable
+# installer type, command alias `weatherspell`), after which this takes over.
+#
+# Requires a repository secret named WINGET_TOKEN: a *classic* Personal Access
+# Token with the public_repo scope (fine-grained PATs are not supported by the
+# action). The action uses it to push to the PlanetLinux98 fork of
+# microsoft/winget-pkgs and open the PR.
+on:
+  release:
+    types: [released]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: vedantmgoyal9/winget-releaser@main
+        with:
+          identifier: PlanetLinux98.Weatherspell
+          # The release asset is a bare exe, which the action's default regex
+          # already matches; stated explicitly so SHA256SUMS is never picked up.
+          installers-regex: 'Weatherspell\.exe$'
+          max-versions-to-keep: 5
+          token: ${{ secrets.WINGET_TOKEN }}

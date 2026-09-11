@@ -1,0 +1,70 @@
+name: Release
+
+# Pushing a v* tag builds the shipping exe, writes the checksum manifest the
+# in-app updater verifies against, and drafts a GitHub Release with the
+# matching CHANGELOG section as its notes. Publishing the draft is a manual
+# step; that publish is what triggers the winget workflow.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build
+        run: dotnet build Weatherspell.slnx -c Release
+
+      - name: Test
+        run: dotnet test Weatherspell.slnx -c Release --no-build
+
+      - name: Stage the exe and checksum manifest
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory artifacts | Out-Null
+          Copy-Item src/Weatherspell/bin/Release/net48/Weatherspell.exe artifacts/
+          $hash = (Get-FileHash artifacts/Weatherspell.exe -Algorithm SHA256).Hash.ToLower()
+          # sha256sum format, LF-terminated, so standard tools can verify it.
+          [IO.File]::WriteAllText("$PWD/artifacts/SHA256SUMS", "$hash  Weatherspell.exe`n")
+          Get-Content artifacts/SHA256SUMS
+
+      - name: Extract release notes from CHANGELOG.md
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}".TrimStart('v')
+          $lines = Get-Content CHANGELOG.md
+          $heading = $lines | Select-String -Pattern "^## \[$([regex]::Escape($version))\]" | Select-Object -First 1
+          if (-not $heading) {
+            Write-Warning "CHANGELOG.md has no [$version] section; the draft's notes will be empty."
+            Set-Content artifacts/notes.md ""
+            exit 0
+          }
+          # LineNumber is 1-based, so indexing from it skips the heading itself.
+          $rest = $lines[$heading.LineNumber..($lines.Count - 1)]
+          $next = $rest | Select-String -Pattern "^## \[" | Select-Object -First 1
+          $section = if ($next) { $rest[0..($next.LineNumber - 2)] } else { $rest }
+          # Drop the link-reference lines that Keep a Changelog puts at the end.
+          $section = $section | Where-Object { $_ -notmatch '^\[[^\]]+\]: https?://' }
+          ($section -join "`n").Trim() | Set-Content artifacts/notes.md
+          Get-Content artifacts/notes.md
+
+      - name: Draft the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create "${{ github.ref_name }}"
+          artifacts/Weatherspell.exe artifacts/SHA256SUMS
+          --draft
+          --title "Weatherspell ${{ github.ref_name }}"
+          --notes-file artifacts/notes.md

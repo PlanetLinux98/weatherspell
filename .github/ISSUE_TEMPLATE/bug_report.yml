@@ -1,0 +1,45 @@
+name: Bug report
+description: Something in Weatherspell is wrong or broken
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what Weatherspell did instead.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Weatherspell version
+      description: Shown under Help > About, or the release you downloaded.
+      placeholder: v0.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: Windows 11 24H2
+
+  - type: input
+    id: assistive
+    attributes:
+      label: Assistive technology, if any
+      description: If you use a screen reader, magnifier, voice control or similar, name it and its version. It helps reproduce how the app was read or navigated.
+      placeholder: NVDA 2025.1
+
+  - type: input
+    id: location
+    attributes:
+      label: Location, if it matters
+      description: The place you had selected, if the problem seems tied to it.
+
+  - type: textarea
+    id: more
+    attributes:
+      label: Anything else
+      description: Screenshots, exact text of an error, or steps that make it happen reliably.
