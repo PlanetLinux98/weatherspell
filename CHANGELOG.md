@@ -13,10 +13,11 @@ versions.
 - Find a place by name or postal code (Ctrl+L) and save it; the location
   last viewed comes back on the next launch.
 - A forecast written in words from Open-Meteo data: right now, the rest of
-  today by part of day, the coming week, sun and UV, and details such as
-  humidity and pressure. Whole degrees, "kilometres an hour" rather than
-  symbols, and the location's own times with yours in brackets when they
-  differ. Units follow the Windows region setting.
+  today by part of day, each coming day as a daytime and a night sentence
+  ("Saturday", "Saturday night"), sun and UV, and details such as humidity
+  and pressure. Whole degrees, chances rounded to tens, "kilometres an hour"
+  rather than symbols, and the location's own times with yours in brackets
+  when they differ. Units follow the Windows region setting.
 - Ctrl+PageDown and Ctrl+PageUp jump between sections; F5 refreshes.
 
 [Unreleased]: https://github.com/PlanetLinux98/weatherspell/commits/main

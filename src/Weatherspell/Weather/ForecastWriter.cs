@@ -36,7 +36,8 @@ internal static class ForecastWriter
         foreach (var day in f.Days)
         {
             if (day.Date <= nowLocal.Date) continue;
-            sections.Add(new Section(clock.DayHeading(day.Date), [DayParagraph(day, f.Units)]));
+            var following = f.Days.FirstOrDefault(d => d.Date == day.Date.AddDays(1));
+            sections.Add(new Section(clock.DayHeading(day.Date), DayAndNight(day, following, f, o.Culture)));
         }
 
         var sun = SunAndUv(f, nowLocal, clock);
@@ -138,10 +139,9 @@ internal static class ForecastWriter
         }
 
         var chance = hours.Max(h => h.PrecipitationProbability ?? 0);
-        if (chance >= 10)
+        if (chance >= MinimumMentionedChance)
         {
-            var worst = hours.OrderByDescending(h => WeatherCodes.Severity(h.WeatherCode)).First().WeatherCode;
-            pieces.Add($"{chance} percent chance of {WeatherCodes.PrecipitationWord(worst)}");
+            pieces.Add(ChancePhrase(hours, chance, units));
         }
 
         var wind = hours.Max(h => h.WindSpeed);
@@ -167,6 +167,130 @@ internal static class ForecastWriter
         return WeatherCodes.Describe(common);
     }
 
+    // Twelve-hour periods, as the official services write them: "Saturday"
+    // from sunrise to sunset, "Saturday night" until the next sunrise. Built
+    // from the hourly data; the daily aggregates are the fallback when the
+    // hours run out near the end of the horizon.
+    private static IReadOnlyList<string> DayAndNight(DayForecast day, DayForecast? following, Forecast f, CultureInfo culture)
+    {
+        var dayStart = Floor(day.Sunrise ?? day.Date.AddHours(6));
+        var dayEnd = Floor(day.Sunset ?? day.Date.AddHours(18));
+        var nightEnd = Floor(following?.Sunrise ?? day.Date.AddDays(1).AddHours(6));
+        var dayHours = f.Hours.Where(h => h.LocalTime >= dayStart && h.LocalTime < dayEnd).ToList();
+        var nightHours = f.Hours.Where(h => h.LocalTime >= dayEnd && h.LocalTime < nightEnd).ToList();
+
+        if (dayHours.Count < 3)
+        {
+            return [DayParagraph(day, f.Units)];
+        }
+
+        var weekday = day.Date.ToString("dddd", culture);
+        var paragraphs = new List<string> { $"{weekday}: {DaySentence(dayHours, day, f.Units)}." };
+        if (nightHours.Count >= 3)
+        {
+            paragraphs.Add($"{weekday} night: {NightSentence(nightHours, f.Units)}.");
+        }
+        return paragraphs;
+    }
+
+    private static string DaySentence(List<HourPoint> hours, DayForecast day, UnitSystem units)
+    {
+        var pieces = new List<string> { ConditionPhrase(hours) };
+        var high = hours.Max(h => h.Temperature);
+        pieces.Add($"high {Units.DegreesBare(high)}");
+        if (Math.Abs(Round(day.FeelsLikeHigh) - Round(high)) >= 3)
+        {
+            pieces.Add($"feeling like {Units.DegreesBare(day.FeelsLikeHigh)} at the warmest");
+        }
+
+        var chance = hours.Max(h => h.PrecipitationProbability ?? 0);
+        if (chance >= MinimumMentionedChance)
+        {
+            var piece = ChancePhrase(hours, chance, units) + Timing(hours, chance);
+            if (day.PrecipitationSum >= MinimumMentionedAmount(units))
+            {
+                piece += $", about {Units.PrecipitationAmount(day.PrecipitationSum, units)}";
+            }
+            pieces.Add(piece);
+        }
+        if (day.SnowfallSum >= (units == UnitSystem.Metric ? 1 : 0.5))
+        {
+            pieces.Add(units == UnitSystem.Metric
+                ? $"snowfall around {(int)Math.Round(day.SnowfallSum)} centimetres"
+                : $"snowfall around {day.SnowfallSum.ToString("0.#", CultureInfo.InvariantCulture)} inches");
+        }
+        pieces.Add(WindPhrase(hours, units));
+        return string.Join(", ", pieces);
+    }
+
+    private static string NightSentence(List<HourPoint> hours, UnitSystem units)
+    {
+        var pieces = new List<string>
+        {
+            ConditionPhrase(hours),
+            $"low {Units.DegreesBare(hours.Min(h => h.Temperature))}",
+        };
+        var chance = hours.Max(h => h.PrecipitationProbability ?? 0);
+        if (chance >= MinimumMentionedChance)
+        {
+            pieces.Add(ChancePhrase(hours, chance, units));
+        }
+        pieces.Add(WindPhrase(hours, units));
+        return string.Join(", ", pieces);
+    }
+
+    // "30 percent chance of rain": chances rounded to tens, as forecasts say
+    // them, and the word chosen from the hour's conditions or, failing a
+    // precipitation code, from how cold the period is.
+    private static string ChancePhrase(List<HourPoint> hours, int chance, UnitSystem units)
+    {
+        var rounded = (int)Math.Round(chance / 10.0, MidpointRounding.AwayFromZero) * 10;
+        var worst = hours.OrderByDescending(h => WeatherCodes.Severity(h.WeatherCode)).First().WeatherCode;
+        var word = WeatherCodes.IsPrecipitation(worst) ? WeatherCodes.PrecipitationWord(worst) : PrecipitationWordByTemperature(hours, units);
+        return $"{rounded} percent chance of {word}";
+    }
+
+    private static string PrecipitationWordByTemperature(List<HourPoint> hours, UnitSystem units)
+    {
+        var coldest = hours.Min(h => h.Temperature);
+        var warmest = hours.Max(h => h.Temperature);
+        var (rainAbove, snowBelow) = units == UnitSystem.Metric ? (3.0, -1.0) : (37.0, 30.0);
+        if (coldest > rainAbove) return "rain";
+        if (warmest < snowBelow) return "snow";
+        return "precipitation";
+    }
+
+    // Mentioned from 15 percent, which rounds to "20 percent"; below that a
+    // chance is noise.
+    private const int MinimumMentionedChance = 15;
+
+    // "in the afternoon" when the likely hours all sit in one part of the
+    // day; nothing when the chance is spread across the day.
+    private static string Timing(List<HourPoint> hours, int chance)
+    {
+        var likely = hours.Where(h => (h.PrecipitationProbability ?? 0) >= chance - 10).Select(h => PartOfDay(h.LocalTime.Hour)).Distinct().ToList();
+        return likely.Count == 1 ? $" in the {likely[0]}" : "";
+    }
+
+    private static string PartOfDay(int hour) => hour < 12 ? "morning" : (hour < 17 ? "afternoon" : "evening");
+
+    // Direction taken at the strongest hour, so "from the southwest up to 25"
+    // describes one moment rather than an average of shifting winds.
+    private static string WindPhrase(List<HourPoint> hours, UnitSystem units)
+    {
+        var strongest = hours.OrderByDescending(h => h.WindSpeed).First();
+        if (strongest.WindSpeed < BreezyThreshold(units)) return "light wind";
+        var s = $"wind from the {Compass.FromDegrees(strongest.WindDirection)} up to {Units.Speed(strongest.WindSpeed, units)}";
+        var gust = hours.Max(h => h.WindGusts);
+        if (gust - strongest.WindSpeed >= GustMargin(units))
+        {
+            s += $", gusting to {Units.SpeedBare(gust)}";
+        }
+        return s;
+    }
+
+    private static DateTime Floor(DateTime t) => new(t.Year, t.Month, t.Day, t.Hour, 0, 0);
+
     private static string DayParagraph(DayForecast d, UnitSystem units)
     {
         var sb = new StringBuilder();
@@ -176,9 +300,10 @@ internal static class ForecastWriter
             sb.Append($" Feeling like {Units.DegreesBare(d.FeelsLikeHigh)} at the warmest.");
         }
         var chance = d.PrecipitationProbabilityMax ?? 0;
-        if (chance >= 10)
+        if (chance >= MinimumMentionedChance)
         {
-            sb.Append($" {chance} percent chance of {WeatherCodes.PrecipitationWord(d.WeatherCode)}");
+            var rounded = (int)Math.Round(chance / 10.0, MidpointRounding.AwayFromZero) * 10;
+            sb.Append($" {rounded} percent chance of {WeatherCodes.PrecipitationWord(d.WeatherCode)}");
             if (d.PrecipitationSum >= MinimumMentionedAmount(units))
             {
                 sb.Append($", about {Units.PrecipitationAmount(d.PrecipitationSum, units)}");
