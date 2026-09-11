@@ -1,3 +1,5 @@
+using Weatherspell.Settings;
+using Weatherspell.Weather.OpenMeteo;
 using Xunit;
 
 namespace Weatherspell.Tests;
@@ -9,7 +11,20 @@ public class AccessibilityLintTests
     {
         var failures = Sta.Run(() =>
         {
-            using var form = new MainForm();
+            // A store pointing nowhere, so the test never reads real settings.
+            using var form = new MainForm(new SettingsStore(Path.Combine(Path.GetTempPath(), "weatherspell-lint", "settings.json")));
+            return AccessibilityLint.Check(form).ToList();
+        });
+
+        Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
+    public void FindLocationDialog_passes_the_accessibility_lint()
+    {
+        var failures = Sta.Run(() =>
+        {
+            using var form = new FindLocationDialog(new OpenMeteoClient());
             return AccessibilityLint.Check(form).ToList();
         });
 

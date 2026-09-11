@@ -10,8 +10,13 @@ versions.
 ## [Unreleased]
 
 ### Added
-- Project scaffold: a WinForms shell on .NET Framework 4.8 that builds to a
-  single exe, an accessibility lint test, CI, the release pipeline, and a
-  placeholder app icon.
+- Find a place by name or postal code (Ctrl+L) and save it; the location
+  last viewed comes back on the next launch.
+- A forecast written in words from Open-Meteo data: right now, the rest of
+  today by part of day, the coming week, sun and UV, and details such as
+  humidity and pressure. Whole degrees, "kilometres an hour" rather than
+  symbols, and the location's own times with yours in brackets when they
+  differ. Units follow the Windows region setting.
+- Ctrl+PageDown and Ctrl+PageUp jump between sections; F5 refreshes.
 
 [Unreleased]: https://github.com/PlanetLinux98/weatherspell/commits/main

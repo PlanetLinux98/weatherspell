@@ -19,11 +19,52 @@ param(
     [switch]$NoUia
 )
 
-$proc = Get-Process -Name $ProcessName -ErrorAction SilentlyContinue |
-    Where-Object { $_.MainWindowHandle -ne 0 } |
-    Select-Object -First 1
+$proc = Get-Process -Name $ProcessName -ErrorAction SilentlyContinue | Select-Object -First 1
 if (-not $proc) {
-    Write-Error "No running $ProcessName window found. Launch the app first."
+    Write-Error "No running $ProcessName process found. Launch the app first."
+    exit 1
+}
+
+# Every visible top-level window of the process: a modal dialog is its own
+# window, and it is usually the one under test.
+Add-Type -TypeDefinition @"
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Text;
+
+public static class TopWindows
+{
+    delegate bool EnumProc(IntPtr hwnd, IntPtr lParam);
+    [DllImport("user32.dll")] static extern bool EnumWindows(EnumProc proc, IntPtr lParam);
+    [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr hwnd, out uint pid);
+    [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr hwnd);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern int GetWindowText(IntPtr hwnd, StringBuilder text, int max);
+
+    public static IntPtr[] ForProcess(int pid)
+    {
+        var found = new List<IntPtr>();
+        EnumWindows((hwnd, l) =>
+        {
+            uint owner;
+            GetWindowThreadProcessId(hwnd, out owner);
+            if (owner == pid && IsWindowVisible(hwnd)) found.Add(hwnd);
+            return true;
+        }, IntPtr.Zero);
+        return found.ToArray();
+    }
+
+    public static string Title(IntPtr hwnd)
+    {
+        var sb = new StringBuilder(256);
+        GetWindowText(hwnd, sb, 256);
+        return sb.ToString();
+    }
+}
+"@
+$windows = [TopWindows]::ForProcess($proc.Id)
+if ($windows.Count -eq 0) {
+    Write-Error "$ProcessName is running but has no visible window yet."
     exit 1
 }
 
@@ -169,8 +210,11 @@ public static class Msaa
 }
 "@
 
-'== MSAA (what NVDA reads for WinForms controls) =='
-[Msaa]::Dump($proc.MainWindowHandle, $Depth)
+foreach ($hwnd in $windows) {
+    '== MSAA (what NVDA reads for WinForms controls): "' + [TopWindows]::Title($hwnd) + '" =='
+    [Msaa]::Dump($hwnd, $Depth)
+    ''
+}
 
 if (-not $NoUia) {
     Add-Type -AssemblyName UIAutomationClient
@@ -202,9 +246,11 @@ if (-not $NoUia) {
         }
     }
 
-    ''
-    '== UI Automation (HWND bridge view; secondary) =='
-    Walk-Uia ([System.Windows.Automation.AutomationElement]::FromHandle($proc.MainWindowHandle)) 0
+    foreach ($hwnd in $windows) {
+        '== UI Automation (HWND bridge view; secondary): "' + [TopWindows]::Title($hwnd) + '" =='
+        Walk-Uia ([System.Windows.Automation.AutomationElement]::FromHandle($hwnd)) 0
+        ''
+    }
 
     $focused = [System.Windows.Automation.AutomationElement]::FocusedElement
     if ($focused) {

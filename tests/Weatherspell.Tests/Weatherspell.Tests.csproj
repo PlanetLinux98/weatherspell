@@ -19,6 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Real API responses, captured once; parsing and prose tests read them
+         from the output folder. -->
+    <None Include="Fixtures\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- The app is referenced as an assembly, exe and all: no separate Core
          library to keep the shipped program a single file. Logic under test
          must therefore live in plain classes, not in the forms. -->
