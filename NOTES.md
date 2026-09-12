@@ -167,3 +167,17 @@ mode whose behaviour deserves its own design pass.
 No automatic checking. Help > Check for Updates shows the newest version and
 its release notes and offers to install. The app is small and the audience
 prefers not to be interrupted; a manual check is enough.
+
+## Windows scale by font
+
+Every form uses the system message font and scales by font rather than by
+DPI alone. Display scale changes the font's pixel size, and the Windows Text
+size accessibility setting enlarges the system font without changing the
+display scale; scaling by font follows both, so a low-vision user who turns
+Text size up gets a window that grows with its text instead of clipping it.
+Layouts are auto-sizing wherever possible so they follow the font too, and a
+window that would scale past the screen is clamped to the working area.
+
+Per-monitor DPI stays out (see the single-exe section): moving the window to
+a display with a different scale gets it bitmap-scaled by Windows, correct
+but soft. Revisit if a user with mixed-scale monitors asks.
