@@ -1,29 +1,27 @@
 # Weatherspell
 
-A plain-text weather app for Windows: current conditions, the forecast, and
-severe-weather alerts for any place in the world, written out in words rather
-than drawn in icons. Built keyboard-first and screen-reader-first, and usable
-by anyone who just wants the weather as text.
+A text-based weather app for Windows: current conditions, the forecast, and
+severe-weather alerts for any place in the world, written out in clear text.
+Built keyboard-first and screen-reader-first, and usable by anyone who wants the 
+weather in a simple and straightforward manner.
 
-> **Pre-release.** Weatherspell is being built in the open and has no
-> downloadable release yet. Watch the [Releases](https://github.com/PlanetLinux98/weatherspell/releases)
-> page, or follow the [Changelog](CHANGELOG.md).
+> **Pre-release.** Weatherspell is being built in the open and is currently
+pre-release. Keep an eye on the [Releases](https://github.com/PlanetLinux98/weatherspell/releases)
+> page, and the [Changelog](CHANGELOG.md).
 
 ## What it will do
 
 - Show current conditions and a multi-day forecast for any location you
   choose, as readable text.
-- Remember your locations so switching between them is a keystroke, not a
-  search.
+- Remember your locations so switching between them is a keystroke away.
 - Surface urgent and severe weather alerts for the selected location.
-- Need nothing from you but the exe: no account, no API key, no installer.
+- Run solely as a single exe: no account, no API key, no installer.
 
 ## Running it
 
 Weatherspell is a single `Weatherspell.exe`. Download it from a release, put it
-wherever you like, and run it. It uses the .NET Framework 4.8 that is already
-part of Windows 10 (version 1903 and later) and Windows 11, so there is nothing
-else to install.
+wherever you like, and run it. It uses the .NET Framework 4.8 that is natively 
+part of Windows 10 (version 1903 and later) and Windows 11.
 
 Your saved locations and settings live in `%APPDATA%\Weatherspell`, so they
 survive moving or updating the exe.
@@ -33,10 +31,10 @@ Once released, it will also be installable with winget:
 
 ## Accessibility
 
-Every control is a standard Windows control with its visible text as its
+Every control is a standard Windows Win32 control with its visible text as an
 accessible name, everything is reachable from the keyboard, and the forecast
-itself is plain text you can read, arrow through, and copy. If something reads
-badly in your screen reader, magnifier or other assistive technology, that is
+itself is plain text you can easily navigate, arrow through, and copy. If something 
+behaves badly with your screen reader, magnifier or other assistive technology, that is
 a bug: please [report it](https://github.com/PlanetLinux98/weatherspell/issues/new/choose).
 
 ## Building from source
