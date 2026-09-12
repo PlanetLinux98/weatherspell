@@ -45,6 +45,12 @@ sources are added.
 
 - Forecasts and place-name search: [Open-Meteo](https://open-meteo.com/),
   licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+- Forecast text and current conditions in Canada:
+  [Environment and Climate Change Canada](https://weather.gc.ca/), from the
+  [MSC Datamart](https://eccc-msc.github.io/open-data/), under its
+  [data licence](https://eccc-msc.github.io/open-data/licence/readme_en/).
+- Forecast text and current conditions in the United States: the
+  [National Weather Service](https://www.weather.gov/) API, public domain.
 - Postal codes for Canada, the UK, Australia, New Zealand and Ireland:
   [GeoNames](https://www.geonames.org/) postal code data, licensed
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), built into the

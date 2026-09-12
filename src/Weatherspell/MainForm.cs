@@ -1,6 +1,8 @@
 using System.Text;
 using Weatherspell.Settings;
 using Weatherspell.Weather;
+using Weatherspell.Weather.EnvironmentCanada;
+using Weatherspell.Weather.Nws;
 using Weatherspell.Weather.OpenMeteo;
 
 namespace Weatherspell;
@@ -14,6 +16,7 @@ internal sealed class MainForm : Form
 
     private readonly SettingsStore _store;
     private readonly OpenMeteoClient _client = new();
+    private readonly ForecastService _forecasts;
     private AppSettings _settings;
 
     private readonly ComboBox _locations;
@@ -31,6 +34,7 @@ internal sealed class MainForm : Form
     {
         _store = store;
         _settings = store.Load();
+        _forecasts = new ForecastService(_client);
 
         Text = "Weatherspell";
         // The exe's embedded icon, so the title bar and Alt+Tab match Explorer
@@ -209,7 +213,7 @@ internal sealed class MainForm : Form
         _status.Text = $"Fetching the forecast for {location.DisplayName}...";
         try
         {
-            var forecast = await _client.GetForecastAsync(location, Units.FromWindowsRegion(), ForecastDays, token);
+            var forecast = await _forecasts.GetAsync(location, Units.FromWindowsRegion(), ForecastDays, token);
             if (token.IsCancellationRequested) return;
             var sections = ForecastWriter.Write(forecast, WriterOptions.Default());
             SetText(sections, caret);
@@ -300,7 +304,7 @@ internal sealed class MainForm : Form
     private void ShowAbout()
     {
         MessageBox.Show(this,
-            $"Weatherspell {AppVersion.Display}\nA text-based weather app for Windows.\n\nForecast data: {OpenMeteoClient.SourceNote}.\nPostal codes for Canada, the UK, Australia, New Zealand and Ireland: {PostalCodes.SourceNote}.",
+            $"Weatherspell {AppVersion.Display}\nA text-based weather app for Windows.\n\nForecast data: {OpenMeteoClient.SourceNote}.\nForecast text and current conditions: {CityPageClient.SourceName} (weather.gc.ca) in Canada, {NwsClient.SourceName} (weather.gov) in the United States.\nPostal codes for Canada, the UK, Australia, New Zealand and Ireland: {PostalCodes.SourceNote}.",
             "About Weatherspell", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 }

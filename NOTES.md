@@ -143,6 +143,28 @@ writes its own sentences from Open-Meteo's numbers. Two writing styles is the
 price of authority: a Canadian reader gets the same words Environment Canada
 put on the radio, humidex and all.
 
+The official text is laid over the Open-Meteo forecast rather than replacing
+it: Open-Meteo still supplies the hourly data, sunrise and sunset, UV and the
+unit conversion, and stands in for anything the service leaves out (a station
+that reports no humidity, a page with no current conditions). The official
+sentences are shown as written, in the service's own units (the NWS speaks
+Fahrenheit whatever the units setting), with one typographic pass so they
+read aloud the way the service says them on air: "km/h" and "mph" become
+words and "90%" becomes "90 percent". The Sources line at the end names what
+was used, and when the official fetch fails the location gets generated
+sentences for that refresh with the reason stated there; Open-Meteo failing
+still fails the refresh.
+
+Coverage is decided by the geocoded country and then by the service: the NWS
+rejects points outside the US, and a Canadian location further than 200 km
+from any Environment Canada site gets generated text. Environment Canada's
+files live on the MSC Datamart under `today/citypage_weather/{PROV}/{HH}/`
+by UTC hour of emission, with only the current day kept, so the latest page
+is found by listing the current hour and walking back; in the first minutes
+after 00:00 UTC there may be none yet, which is one refresh of generated
+text. The site list is fetched once per session, the NWS grid and station
+once per location.
+
 Candidates for later: Australia (Bureau of Meteorology open data) and Ireland
 (Met Eireann open data), both English. The UK Met Office needs an API key, so
 it stays out. Norway, Germany, Japan and others publish only in their respective

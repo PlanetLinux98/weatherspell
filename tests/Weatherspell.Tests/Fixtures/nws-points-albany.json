@@ -1,0 +1,112 @@
+{
+    "@context": [
+        "https://geojson.org/geojson-ld/geojson-context.jsonld",
+        {
+            "@version": "1.1",
+            "wx": "https://api.weather.gov/ontology#",
+            "s": "https://schema.org/",
+            "geo": "http://www.opengis.net/ont/geosparql#",
+            "unit": "http://codes.wmo.int/common/unit/",
+            "@vocab": "https://api.weather.gov/ontology#",
+            "geometry": {
+                "@id": "s:GeoCoordinates",
+                "@type": "geo:wktLiteral"
+            },
+            "city": "s:addressLocality",
+            "state": "s:addressRegion",
+            "distance": {
+                "@id": "s:Distance",
+                "@type": "s:QuantitativeValue"
+            },
+            "bearing": {
+                "@type": "s:QuantitativeValue"
+            },
+            "value": {
+                "@id": "s:value"
+            },
+            "unitCode": {
+                "@id": "s:unitCode",
+                "@type": "@id"
+            },
+            "forecastOffice": {
+                "@type": "@id"
+            },
+            "forecastGridData": {
+                "@type": "@id"
+            },
+            "publicZone": {
+                "@type": "@id"
+            },
+            "county": {
+                "@type": "@id"
+            }
+        }
+    ],
+    "id": "https://api.weather.gov/points/42.6526,-73.7562",
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -73.7562,
+            42.6526
+        ]
+    },
+    "properties": {
+        "@id": "https://api.weather.gov/points/42.6526,-73.7562",
+        "@type": "wx:Point",
+        "cwa": "ALY",
+        "type": "land",
+        "forecastOffice": "https://api.weather.gov/offices/ALY",
+        "gridId": "ALY",
+        "gridX": 72,
+        "gridY": 63,
+        "forecast": "https://api.weather.gov/gridpoints/ALY/72,63/forecast",
+        "forecastHourly": "https://api.weather.gov/gridpoints/ALY/72,63/forecast/hourly",
+        "forecastGridData": "https://api.weather.gov/gridpoints/ALY/72,63",
+        "observationStations": "https://api.weather.gov/gridpoints/ALY/72,63/stations",
+        "relativeLocation": {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -73.7983532,
+                    42.6657453
+                ]
+            },
+            "properties": {
+                "city": "Albany",
+                "state": "NY",
+                "distance": {
+                    "unitCode": "wmoUnit:m",
+                    "value": 0
+                },
+                "bearing": {
+                    "unitCode": "wmoUnit:degree_(angle)",
+                    "value": 0
+                }
+            }
+        },
+        "forecastZone": "https://api.weather.gov/zones/forecast/NYZ052",
+        "county": "https://api.weather.gov/zones/county/NYC001",
+        "fireWeatherZone": "https://api.weather.gov/zones/fire/NYZ208",
+        "timeZone": "America/New_York",
+        "radarStation": "KENX",
+        "astronomicalData": {
+            "sunrise": "2026-09-11T06:30:49-04:00",
+            "sunset": "2026-09-11T19:12:19-04:00",
+            "transit": "2026-09-11T12:51:34-04:00",
+            "civilTwilightBegin": "2026-09-11T06:02:26-04:00",
+            "civilTwilightEnd": "2026-09-11T19:40:43-04:00",
+            "nauticalTwilightBegin": "2026-09-11T05:28:42-04:00",
+            "nauticalTwilightEnd": "2026-09-11T20:14:26-04:00",
+            "astronomicalTwilightBegin": "2026-09-11T04:53:47-04:00",
+            "astronomicalTwilightEnd": "2026-09-11T20:49:22-04:00"
+        },
+        "nwr": {
+            "transmitter": "WXL34",
+            "sameCode": "036001",
+            "areaBroadcast": "https://api.weather.gov/radio/WXL34/broadcast",
+            "pointBroadcast": "https://api.weather.gov/points/42.6526,-73.7562/radio"
+        }
+    }
+}

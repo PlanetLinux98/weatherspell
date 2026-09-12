@@ -61,6 +61,8 @@ public class WordingTests
         Assert.Equal("24 kilometres", Units.Distance(24100, UnitSystem.Metric));
         Assert.Equal("800 metres", Units.Distance(800, UnitSystem.Metric));
         Assert.Equal("under a mile", Units.Distance(800, UnitSystem.Imperial));
+        Assert.Equal("1 kilometre", Units.Distance(1200, UnitSystem.Metric));
+        Assert.Equal("1 mile", Units.Distance(1700, UnitSystem.Imperial));
         Assert.Equal("1017 hectopascals", Units.Pressure(1016.8, UnitSystem.Metric));
         Assert.Equal("30.03 inches of mercury", Units.Pressure(1016.8, UnitSystem.Imperial));
         Assert.Equal("less than a millimetre", Units.PrecipitationAmount(0.4, UnitSystem.Metric));

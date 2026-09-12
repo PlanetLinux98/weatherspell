@@ -54,7 +54,7 @@ public class ForecastWriterTests
             new(new DateTime(2026, 9, 13), 0, 22.0, 9.5, 21.0, 8.0, new DateTime(2026, 9, 13, 6, 54, 0), new DateTime(2026, 9, 13, 19, 30, 0), 45480, 6.4, 0, 0, 0, 9, 14, 315),
         };
 
-        return new Forecast(Toronto, Now.AddMinutes(-3), Eastern, units, current, hours, days, "Open-Meteo", "Open-Meteo (open-meteo.com), licensed CC BY 4.0");
+        return new Forecast(Toronto, Now.AddMinutes(-3), Eastern, units, current, hours, days, [], "Open-Meteo", ["Forecast and current conditions: Open-Meteo (open-meteo.com), licensed CC BY 4.0."]);
     }
 
     private static Section Find(IReadOnlyList<Section> sections, string heading) =>

@@ -138,8 +138,9 @@ internal sealed class OpenMeteoClient
             current,
             hours,
             days,
+            Periods: [],
             SourceName,
-            SourceNote);
+            [$"Forecast and current conditions: {SourceNote}."]);
     }
 
     private static double? At(double?[]? values, int i) =>

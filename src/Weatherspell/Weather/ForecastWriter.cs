@@ -30,29 +30,73 @@ internal static class ForecastWriter
             RightNow(f, o, clock),
         };
 
-        var rest = RestOfToday(f, nowLocal);
-        if (rest is not null) sections.Add(rest);
-
-        foreach (var day in f.Days)
+        if (f.Periods.Count > 0)
         {
-            if (day.Date <= nowLocal.Date) continue;
-            var following = f.Days.FirstOrDefault(d => d.Date == day.Date.AddDays(1));
-            sections.Add(new Section(clock.DayHeading(day.Date), DayAndNight(day, following, f, o.Culture)));
+            sections.AddRange(OfficialSections(f, nowLocal, clock));
+        }
+        else
+        {
+            var rest = RestOfToday(f, nowLocal);
+            if (rest is not null) sections.Add(rest);
+
+            foreach (var day in f.Days)
+            {
+                if (day.Date <= nowLocal.Date) continue;
+                var following = f.Days.FirstOrDefault(d => d.Date == day.Date.AddDays(1));
+                sections.Add(new Section(clock.DayHeading(day.Date), DayAndNight(day, following, f, o.Culture)));
+            }
         }
 
         var sun = SunAndUv(f, nowLocal, clock);
         if (sun is not null) sections.Add(sun);
 
         sections.Add(Details(f, nowLocal));
-        sections.Add(new Section("Sources", [$"Forecast and current conditions: {f.SourceNote}."]));
+        sections.Add(new Section("Sources", f.Sources));
         return sections;
     }
+
+    // A weather service's periods as written, under this app's headings:
+    // today's under "Rest of today", the rest one section per day, each
+    // paragraph led by the service's own period name. A night period is
+    // dated by the day it follows, so before dawn yesterday's is still
+    // today's news.
+    private static IEnumerable<Section> OfficialSections(Forecast f, DateTime nowLocal, Clock clock)
+    {
+        var today = nowLocal.Date;
+        var current = f.Periods
+            .Where(p => p.Date == today || (p.Date == today.AddDays(-1) && IsNight(p.Name) && nowLocal.Hour < 6))
+            .ToList();
+        if (current.Count > 0)
+        {
+            yield return new Section("Rest of today", current.Select(Paragraph).ToList());
+        }
+        foreach (var day in f.Periods.Where(p => p.Date > today).GroupBy(p => p.Date))
+        {
+            yield return new Section(clock.DayHeading(day.Key), day.Select(Paragraph).ToList());
+        }
+    }
+
+    private static string Paragraph(OfficialPeriod p) => $"{p.Name}: {p.Text}";
+
+    private static bool IsNight(string periodName) =>
+        periodName == "Tonight" || periodName == "Overnight" || periodName.EndsWith(" night", StringComparison.OrdinalIgnoreCase);
 
     private static Section RightNow(Forecast f, WriterOptions o, Clock clock)
     {
         var c = f.Current;
         var sb = new StringBuilder();
-        sb.Append($"As of {clock.Time(c.LocalTime)}, it's {Units.Degrees(c.Temperature)} and {WeatherCodes.Describe(c.WeatherCode, c.IsDay)}");
+        if (c.Station is not null)
+        {
+            // The station's own words for the sky ("mist", "patchy fog"),
+            // then this app's numbers.
+            sb.Append($"As of {clock.Time(c.LocalTime)}, {c.Station} reports ");
+            if (c.Description is not null) sb.Append($"{SpokenCondition(c.Description)} and ");
+            sb.Append(Units.Degrees(c.Temperature));
+        }
+        else
+        {
+            sb.Append($"As of {clock.Time(c.LocalTime)}, it's {Units.Degrees(c.Temperature)} and {WeatherCodes.Describe(c.WeatherCode, c.IsDay)}");
+        }
         if (Round(c.FeelsLike) != Round(c.Temperature))
         {
             sb.Append($", feeling like {Units.DegreesBare(c.FeelsLike)}");
@@ -64,6 +108,11 @@ internal static class ForecastWriter
         var age = o.Now - f.FetchedAt;
         return new Section("Right now", [sb.ToString(), $"Updated {Clock.Age(age)}."]);
     }
+
+    // "Fog/Mist" is how the NWS writes fog or mist; mid-sentence and spoken,
+    // the words are lowercase and the slash is a word.
+    private static string SpokenCondition(string description) =>
+        description.Trim().ToLowerInvariant().Replace("/", " or ");
 
     private static string WindSentence(double speed, int direction, double gusts, UnitSystem units)
     {
@@ -366,9 +415,9 @@ internal static class ForecastWriter
         // Dew point and visibility are hourly-only; take the hour nearest now.
         var nearest = f.Hours.OrderBy(h => Math.Abs((h.LocalTime - nowLocal).Ticks)).FirstOrDefault();
         var pieces = new List<string> { $"Humidity {c.Humidity} percent" };
-        if (nearest?.DewPoint is double dew) pieces.Add($"dew point {Units.Degrees(dew)}");
+        if ((c.DewPoint ?? nearest?.DewPoint) is double dew) pieces.Add($"dew point {Units.Degrees(dew)}");
         if (c.PressureHpa > 0) pieces.Add($"pressure {Units.Pressure(c.PressureHpa, f.Units)}");
-        if (nearest?.VisibilityMetres is double vis) pieces.Add($"visibility {Units.Distance(vis, f.Units)}");
+        if ((c.VisibilityMetres ?? nearest?.VisibilityMetres) is double vis) pieces.Add($"visibility {Units.Distance(vis, f.Units)}");
         pieces.Add($"cloud cover {c.CloudCover} percent");
         return new Section("Details", [Capitalize(string.Join(", ", pieces)) + "."]);
     }

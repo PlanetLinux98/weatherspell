@@ -16,6 +16,12 @@ versions.
   into the exe (Open-Meteo's search has none for them), each resolving to
   its area (the first three characters of a Canadian or Irish code, the UK
   outward code) named after the area's largest place.
+- In Canada and the United States, the forecast in the words of Environment
+  Canada or the National Weather Service: each period as the service wrote
+  it ("Tonight", "Saturday", "Saturday night"), under the same headings, and
+  current conditions from the nearest station with its name and observation
+  time. Open-Meteo still supplies the hourly data, sun and UV, and stands in
+  when the official text cannot be fetched; the Sources line says which.
 - A forecast written in words from Open-Meteo data: right now, the rest of
   today by part of day, each coming day as a daytime and a night sentence
   ("Saturday", "Saturday night"), sun and UV, and details such as humidity

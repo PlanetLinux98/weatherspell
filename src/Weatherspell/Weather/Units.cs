@@ -20,6 +20,11 @@ internal static class Units
     public static string WindParameter(UnitSystem u) => u == UnitSystem.Metric ? "kmh" : "mph";
     public static string PrecipitationParameter(UnitSystem u) => u == UnitSystem.Metric ? "mm" : "inch";
 
+    // Observed values arrive in SI whatever the user chose; Open-Meteo's are
+    // requested in the user's units, so only official sources convert.
+    public static double FromCelsius(double celsius, UnitSystem u) => u == UnitSystem.Metric ? celsius : celsius * 9 / 5 + 32;
+    public static double FromKmh(double kmh, UnitSystem u) => u == UnitSystem.Metric ? kmh : kmh / 1.609344;
+
     public static string Degrees(double value)
     {
         var rounded = (int)Math.Round(value, MidpointRounding.AwayFromZero);
@@ -47,11 +52,13 @@ internal static class Units
     {
         if (u == UnitSystem.Metric)
         {
-            var km = metres / 1000.0;
-            return km < 1 ? $"{(int)Math.Round(metres)} metres" : $"{(int)Math.Round(km)} kilometres";
+            if (metres < 1000) return $"{(int)Math.Round(metres)} metres";
+            var km = (int)Math.Round(metres / 1000.0);
+            return km == 1 ? "1 kilometre" : $"{km} kilometres";
         }
-        var miles = metres / 1609.344;
-        return miles < 1 ? "under a mile" : $"{(int)Math.Round(miles)} miles";
+        if (metres < 1609.344) return "under a mile";
+        var miles = (int)Math.Round(metres / 1609.344);
+        return miles == 1 ? "1 mile" : $"{miles} miles";
     }
 
     public static string Pressure(double hpa, UnitSystem u) =>
