@@ -1,5 +1,4 @@
 using Weatherspell.Weather;
-using Weatherspell.Weather.OpenMeteo;
 
 namespace Weatherspell;
 
@@ -7,7 +6,7 @@ namespace Weatherspell;
 // add. The list only changes when the user asks, never as they type.
 internal sealed class FindLocationDialog : Form
 {
-    private readonly OpenMeteoClient _client;
+    private readonly LocationSearch _locations;
     private readonly TextBox _query;
     private readonly Button _search;
     private readonly ListBox _results;
@@ -17,9 +16,9 @@ internal sealed class FindLocationDialog : Form
 
     public Location? Chosen { get; private set; }
 
-    public FindLocationDialog(OpenMeteoClient client)
+    public FindLocationDialog(LocationSearch search)
     {
-        _client = client;
+        _locations = search;
         Text = "Find Location";
         Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
         FormBorderStyle = FormBorderStyle.Sizable;
@@ -114,7 +113,7 @@ internal sealed class FindLocationDialog : Form
         _search.Enabled = false;
         try
         {
-            var found = await _client.SearchAsync(query, token);
+            var found = await _locations.SearchAsync(query, token);
             if (token.IsCancellationRequested) return;
             _results.BeginUpdate();
             _results.Items.Clear();

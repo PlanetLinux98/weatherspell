@@ -11,7 +11,11 @@ versions.
 
 ### Added
 - Find a place by name or postal code (Ctrl+L) and save it; the location
-  last viewed comes back on the next launch.
+  last viewed comes back on the next launch. Postal codes for Canada, the
+  UK, Australia, New Zealand and Ireland come from a GeoNames table built
+  into the exe (Open-Meteo's search has none for them), each resolving to
+  its area (the first three characters of a Canadian or Irish code, the UK
+  outward code) named after the area's largest place.
 - A forecast written in words from Open-Meteo data: right now, the rest of
   today by part of day, each coming day as a daytime and a night sentence
   ("Saturday", "Saturday night"), sun and UV, and details such as humidity

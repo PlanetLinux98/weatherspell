@@ -59,6 +59,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- The GeoNames table behind postal code search for the countries the
+         geocoder lacks, inside the exe like everything else (about half a
+         megabyte of text). tools\Update-PostalCodes.ps1 regenerates it. -->
+    <EmbeddedResource Include="Weather\PostalCodes.tsv" LogicalName="PostalCodes.tsv" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Tests reference this exe directly; internals stay internal. -->
     <InternalsVisibleTo Include="Weatherspell.Tests" />
   </ItemGroup>

@@ -37,6 +37,22 @@ itself is plain text you can easily navigate, arrow through, and copy. If someth
 behaves badly with your screen reader, magnifier or other assistive technology, that is
 a bug: please [report it](https://github.com/PlanetLinux98/weatherspell/issues/new/choose).
 
+## Data sources
+
+Weatherspell uses these openly licensed sources, and credits them in
+Help > About and on the Sources line of every forecast. The list grows as
+sources are added.
+
+- Forecasts and place-name search: [Open-Meteo](https://open-meteo.com/),
+  licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+- Postal codes for Canada, the UK, Australia, New Zealand and Ireland:
+  [GeoNames](https://www.geonames.org/) postal code data, licensed
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), built into the
+  exe. Open-Meteo's own search covers postal codes for the US and some
+  other countries. GeoNames has only the first part of Canadian and Irish
+  codes and the UK outward code, so a full code finds its area, named after
+  the area's largest place.
+
 ## Building from source
 
 Requires the [.NET SDK](https://dotnet.microsoft.com/download) (10.0 or later)

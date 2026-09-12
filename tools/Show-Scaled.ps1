@@ -64,7 +64,8 @@ function New-Internal($typeName, [object[]]$ctorArgs) {
 }
 
 $client = New-Internal "Weatherspell.Weather.OpenMeteo.OpenMeteoClient" @()
-$dialog = New-Internal "Weatherspell.FindLocationDialog" @($client)
+$search = New-Internal "Weatherspell.Weather.LocationSearch" @($client)
+$dialog = New-Internal "Weatherspell.FindLocationDialog" @($search)
 Snap $dialog "find-location" 2
 
 $settingsPath = Join-Path $OutDir "settings.json"

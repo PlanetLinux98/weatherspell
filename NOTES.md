@@ -93,6 +93,32 @@ Rejected: a keyed provider such as OpenWeatherMap One Call, which would cover
 forecast and global alerts in one API but require every user to create an
 account and paste a key into Settings.
 
+## Postal codes come from a table in the exe
+
+Open-Meteo's geocoder finds places by name everywhere, but its postal code
+search is dependable only for the US, France, Spain, the Netherlands and
+Belgium; it is patchy across the rest of Europe and has nothing for Canada,
+the UK, Australia, New Zealand or Ireland (every GeoNames country was probed
+in September 2026). So the exe carries the GeoNames postal code table (CC BY
+4.0) for those five, the English-speaking countries whose users are likely
+to type a code: about half a megabyte of text, embedded, no network needed.
+The Find Location dialog merges both: the table answers first for its
+countries, the geocoder for everything else.
+
+GeoNames has only the first part of Canadian and Irish codes and the UK
+outward code (the full codes are proprietary), so a full code resolves to
+its area. A code shared by many places (162 in one Scottish district)
+becomes a single entry named after its most populous place, so the results
+list stays short; the forecast is the same across a code anyway.
+
+Rejected: an online postal code service (Zippopotam, Nominatim, GeoNames'
+own web service), which would add a second network dependency, a key or a
+usage policy, and could not tell which country a bare "2000" meant; and
+embedding every country, which would mean a worldwide geocoder several
+megabytes in size for a benefit place-name search already gives. Adding a
+country is one line in `tools\Update-PostalCodes.ps1` when someone asks and
+GeoNames has its codes at town precision.
+
 ## Updates: self-update, deferring to winget
 
 On request, the app fetches the latest GitHub Release, verifies the

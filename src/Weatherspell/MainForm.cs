@@ -184,7 +184,7 @@ internal sealed class MainForm : Form
 
     private void FindLocation()
     {
-        using var dialog = new FindLocationDialog(_client);
+        using var dialog = new FindLocationDialog(new LocationSearch(_client));
         if (dialog.ShowDialog(this) != DialogResult.OK || dialog.Chosen is null) return;
 
         _settings.Locations.Add(SavedLocation.From(dialog.Chosen));
@@ -300,7 +300,7 @@ internal sealed class MainForm : Form
     private void ShowAbout()
     {
         MessageBox.Show(this,
-            $"Weatherspell {AppVersion.Display}\nA text-based weather app for Windows.\n\nForecast data: Open-Meteo (open-meteo.com), licensed CC BY 4.0.",
+            $"Weatherspell {AppVersion.Display}\nA text-based weather app for Windows.\n\nForecast data: {OpenMeteoClient.SourceNote}.\nPostal codes for Canada, the UK, Australia, New Zealand and Ireland: {PostalCodes.SourceNote}.",
             "About Weatherspell", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 }

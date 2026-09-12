@@ -1,4 +1,5 @@
 using Weatherspell.Settings;
+using Weatherspell.Weather;
 using Weatherspell.Weather.OpenMeteo;
 using Xunit;
 
@@ -24,7 +25,7 @@ public class AccessibilityLintTests
     {
         var failures = Sta.Run(() =>
         {
-            using var form = new FindLocationDialog(new OpenMeteoClient());
+            using var form = new FindLocationDialog(new LocationSearch(new OpenMeteoClient()));
             return AccessibilityLint.Check(form).ToList();
         });
 
