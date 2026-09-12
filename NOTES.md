@@ -50,10 +50,10 @@ well.
 ## Settings live in `%APPDATA%\Weatherspell`
 
 Not beside the exe. Storing next to the exe breaks under `Program Files` and,
-as GUARD found the hard way, under winget, whose upgrade and uninstall delete
-the whole package folder. A per-user AppData folder survives both and works
-when the exe sits somewhere read-only. The cost is that settings do not travel
-with the exe on a USB stick; a portable-marker mode can be added later if
+under winget, whose upgrade and uninstall delete the whole package folder. A per-user
+ AppData folder survives both and works when the exe sits somewhere read-only. 
+The only potential cost is that settings do not travel with the exe on a USB 
+stick; a portable-marker mode can be added later if
 anyone asks.
 
 ## Tests reference the exe directly
@@ -77,16 +77,17 @@ drag-and-drop layout. The forms are simple enough that this costs little.
 ## Accessible name is the visible text
 
 Screen readers announce a control by the text it shows. Text-less inputs take
-their visible label's text as `AccessibleName`, verbatim. Never a reworded or
-longer alternative: users who see the screen and hear it must get the same
-words (WCAG 2.5.3). Extra detail goes in a tooltip or help text.
+their visible label's text as `AccessibleName`, verbatim. Not a reworded or
+longer alternative unless necessary: users who see the screen and hear it should get
+the same words (WCAG 2.5.3). Extra detail usually belongs in a tooltip or help text.
 
 ## Weather data: keyless sources only
 
-Forecasts from [Open-Meteo](https://open-meteo.com/) (free, global, no key);
-alerts from government feeds (the US National Weather Service, Environment
-Canada, MeteoAlarm for Europe, others as they are found). Nothing to sign up
-for, so the exe works for everyone on first run.
+Forecasts from federal government sources (assuming free access, no API key or account
+ needed), or [Open-Meteo](https://open-meteo.com/) (free, global, no API 
+key); urgent alerts from government feeds (the US National Weather Service 
+Environment Canada, MeteoAlarm for Europe, others as they are found). 
+Nothing to sign up for, so the exe works for everyone on first run.
 
 Rejected: a keyed provider such as OpenWeatherMap One Call, which would cover
 forecast and global alerts in one API but require every user to create an
@@ -118,8 +119,8 @@ put on the radio, humidex and all.
 
 Candidates for later: Australia (Bureau of Meteorology open data) and Ireland
 (Met Eireann open data), both English. The UK Met Office needs an API key, so
-it stays out. Norway, Germany, Japan and others publish only in their own
-language; generated English serves those better.
+it stays out. Norway, Germany, Japan and others publish only in their respective 
+languages, worth considering alongside translation efforts.
 
 ## Alerts are regional by necessity
 
@@ -159,14 +160,13 @@ already seen. Each saved location has its own "notify me" switch.
 
 New alerts are announced through UI Automation notifications while the app
 is open (all alerts by default; the threshold is a setting). Tray icon,
-Windows toasts and start-with-Windows are deferred: they add a background
+Windows toasts and start-with-Windows are deferred features: they add a background
 mode whose behaviour deserves its own design pass.
 
 ## Updates are checked on request only
 
-No automatic checking. Help > Check for Updates shows the newest version and
-its release notes and offers to install. The app is small and the audience
-prefers not to be interrupted; a manual check is enough.
+No automatic checking at this time. Help > Check for Updates shows the newest 
+version and its release notes and offers to install.
 
 ## Windows scale by font
 
@@ -180,4 +180,4 @@ window that would scale past the screen is clamped to the working area.
 
 Per-monitor DPI stays out (see the single-exe section): moving the window to
 a display with a different scale gets it bitmap-scaled by Windows, correct
-but soft. Revisit if a user with mixed-scale monitors asks.
+but soft. Revisit if a user with mixed-scale monitors asks for other solutions.
