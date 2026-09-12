@@ -2,7 +2,9 @@
 Shows each form at a larger font, as the Windows "Text size" accessibility
 setting would, and screenshots it: a check that layouts grow with the text
 instead of clipping it. Loads the built exe as an assembly (the forms are
-internal, so reflection reaches them); no display setting is changed.
+internal, so reflection reaches them) with WEATHERSPELL_FONT_POINTS set, so
+the forms are built with the large font from the start; no display setting
+is changed.
 
     powershell -NoProfile -ExecutionPolicy Bypass -File tools\Show-Scaled.ps1 [-PointSize 14] [-OutDir <folder>]
 
@@ -28,11 +30,13 @@ public static class ScaledWin {
 [ScaledWin]::SetProcessDPIAware() | Out-Null
 New-Item -ItemType Directory -Force $OutDir | Out-Null
 
+# The forms read this at construction (Scaling.DeveloperFont), which is
+# when a real Text size setting would already be in effect; setting the font
+# afterwards would force a re-layout and hide measurement bugs.
+$env:WEATHERSPELL_FONT_POINTS = $PointSize
 $asm = [System.Reflection.Assembly]::LoadFrom((Resolve-Path $Exe))
-$font = New-Object System.Drawing.Font ("Segoe UI", $PointSize)
 
 function Snap($form, $name, $seconds) {
-    $form.Font = $font
     $form.Show()
     $end = (Get-Date).AddSeconds($seconds)
     while ((Get-Date) -lt $end) { [System.Windows.Forms.Application]::DoEvents(); Start-Sleep -Milliseconds 50 }

@@ -36,10 +36,11 @@ internal sealed class MainForm : Form
         // The exe's embedded icon, so the title bar and Alt+Tab match Explorer
         // without shipping a loose .ico.
         Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-        Scaling.Apply(this);
         StartPosition = FormStartPosition.CenterScreen;
+        // Sizes before Scaling.Apply, or they are never scaled (see Scaling).
         MinimumSize = new Size(480, 360);
         Size = new Size(720, 560);
+        Scaling.Apply(this);
 
         var menu = new MenuStrip { TabIndex = 0 };
         var file = new ToolStripMenuItem("&File");
@@ -63,23 +64,31 @@ internal sealed class MainForm : Form
         {
             Dock = DockStyle.Top,
             ColumnCount = 2,
-            AutoSize = true,
             Padding = new Padding(8, 8, 8, 0),
             TabIndex = 1,
         };
         header.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
         header.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        header.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
         // Alt+O: Alt+L belongs to the Locations menu.
         var locationLabel = new Label { Text = "L&ocation", AutoSize = true, Anchor = AnchorStyles.Left, TabIndex = 0 };
         _locations = new ComboBox
         {
             AccessibleName = "Location",
             DropDownStyle = ComboBoxStyle.DropDownList,
-            Dock = DockStyle.Fill,
+            Anchor = AnchorStyles.Left | AnchorStyles.Right,
             TabIndex = 1,
         };
         header.Controls.Add(locationLabel, 0, 0);
         header.Controls.Add(_locations, 1, 0);
+        // A combo box takes its height from the font only once its handle
+        // exists, after an auto-sized row has already measured it; at large
+        // text sizes the row came out short and clipped the text. So the
+        // header is sized from the combo's real height, whenever that changes.
+        void FitHeader() => header.Height = header.Padding.Vertical + _locations.Margin.Vertical + _locations.Height;
+        _locations.HandleCreated += (_, _) => FitHeader();
+        _locations.SizeChanged += (_, _) => FitHeader();
+        FitHeader();
 
         var forecastLabel = new Label
         {

@@ -22,28 +22,32 @@ internal sealed class FindLocationDialog : Form
         _client = client;
         Text = "Find Location";
         Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-        Scaling.Apply(this);
         FormBorderStyle = FormBorderStyle.Sizable;
         StartPosition = FormStartPosition.CenterParent;
         MinimizeBox = false;
         MaximizeBox = false;
         ShowInTaskbar = false;
+        // Sizes before Scaling.Apply, or they are never scaled (see Scaling).
         MinimumSize = new Size(420, 360);
         Size = new Size(520, 420);
+        Scaling.Apply(this);
 
+        // Fields in a table that fills the window; the status line and the
+        // buttons dock to the bottom, laid out before the table, so a small
+        // screen or a large font shortens the results list rather than
+        // pushing the buttons off the window.
         var layout = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
             ColumnCount = 1,
-            RowCount = 6,
-            Padding = new Padding(10),
+            RowCount = 4,
+            Padding = new Padding(10, 10, 10, 0),
+            TabIndex = 0,
         };
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
         var queryLabel = new Label { Text = "&Place name or postal code", AutoSize = true, TabIndex = 0 };
         var queryRow = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, AutoSize = true, TabIndex = 1 };
@@ -56,9 +60,17 @@ internal sealed class FindLocationDialog : Form
 
         var resultsLabel = new Label { Text = "&Results", AutoSize = true, TabIndex = 2, Margin = new Padding(3, 10, 3, 0) };
         _results = new ListBox { AccessibleName = "Results", Dock = DockStyle.Fill, TabIndex = 3, IntegralHeight = false };
-        _status = new Label { Text = "Type a place name and press Enter.", AutoSize = true, TabIndex = 4, Margin = new Padding(3, 6, 3, 6) };
+        _status = new Label { Text = "Type a place name and press Enter.", AutoSize = true, Dock = DockStyle.Bottom, Padding = new Padding(13, 6, 13, 6), TabIndex = 1 };
 
-        var buttons = new FlowLayoutPanel { FlowDirection = FlowDirection.RightToLeft, Dock = DockStyle.Fill, AutoSize = true, TabIndex = 5 };
+        var buttons = new FlowLayoutPanel
+        {
+            FlowDirection = FlowDirection.RightToLeft,
+            Dock = DockStyle.Bottom,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            Padding = new Padding(10, 0, 10, 10),
+            TabIndex = 2,
+        };
         var cancel = new Button { Text = "Cancel", AutoSize = true, DialogResult = DialogResult.Cancel, TabIndex = 1 };
         _add = new Button { Text = "&Add", AutoSize = true, Enabled = false, TabIndex = 0 };
         buttons.Controls.Add(cancel);
@@ -68,9 +80,11 @@ internal sealed class FindLocationDialog : Form
         layout.Controls.Add(queryRow, 0, 1);
         layout.Controls.Add(resultsLabel, 0, 2);
         layout.Controls.Add(_results, 0, 3);
-        layout.Controls.Add(_status, 0, 4);
-        layout.Controls.Add(buttons, 0, 5);
+        // Fill first, bottom-docked last: WinForms docks the last-added
+        // control first.
         Controls.Add(layout);
+        Controls.Add(_status);
+        Controls.Add(buttons);
 
         // Enter searches while typing and adds once a result is chosen.
         AcceptButton = _search;
