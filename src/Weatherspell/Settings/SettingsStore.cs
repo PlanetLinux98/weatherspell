@@ -30,7 +30,11 @@ internal sealed class SettingsStore
         }
         try
         {
-            using var stream = File.OpenRead(Path);
+            // Read as text first: File.ReadAllText drops a UTF-8 byte-order
+            // mark, which the JSON reader would otherwise reject, and Notepad
+            // and PowerShell both write one.
+            var json = File.ReadAllText(Path, Encoding.UTF8);
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
             var serializer = new DataContractJsonSerializer(typeof(AppSettings));
             var settings = (AppSettings?)serializer.ReadObject(stream) ?? new AppSettings();
             settings.Normalize();

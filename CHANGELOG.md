@@ -19,5 +19,7 @@ versions.
   rather than symbols, and the location's own times with yours in brackets
   when they differ. Units follow the Windows region setting.
 - Ctrl+PageDown and Ctrl+PageUp jump between sections; F5 refreshes.
+- The window follows the Windows display scale and the Text size
+  accessibility setting, in the system font.
 
 [Unreleased]: https://github.com/PlanetLinux98/weatherspell/commits/main

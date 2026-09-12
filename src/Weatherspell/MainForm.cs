@@ -36,7 +36,7 @@ internal sealed class MainForm : Form
         // The exe's embedded icon, so the title bar and Alt+Tab match Explorer
         // without shipping a loose .ico.
         Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-        AutoScaleMode = AutoScaleMode.Dpi;
+        Scaling.Apply(this);
         StartPosition = FormStartPosition.CenterScreen;
         MinimumSize = new Size(480, 360);
         Size = new Size(720, 560);
@@ -101,7 +101,14 @@ internal sealed class MainForm : Form
         };
 
         var statusBar = new StatusStrip { TabIndex = 4 };
-        _status = new ToolStripStatusLabel("Ready");
+        // Spring: a status label wider than the strip is not clipped by
+        // WinForms, it vanishes. Filling the strip truncates with an ellipsis
+        // instead, and the full text stays available to a screen reader.
+        _status = new ToolStripStatusLabel("Ready")
+        {
+            Spring = true,
+            TextAlign = ContentAlignment.MiddleLeft,
+        };
         statusBar.Items.Add(_status);
 
         // Fill first: WinForms docks the last-added control first, so the

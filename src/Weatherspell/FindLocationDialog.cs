@@ -22,7 +22,7 @@ internal sealed class FindLocationDialog : Form
         _client = client;
         Text = "Find Location";
         Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-        AutoScaleMode = AutoScaleMode.Dpi;
+        Scaling.Apply(this);
         FormBorderStyle = FormBorderStyle.Sizable;
         StartPosition = FormStartPosition.CenterParent;
         MinimizeBox = false;

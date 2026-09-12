@@ -62,6 +62,21 @@ public class SettingsStoreTests : IDisposable
     }
 
     [Fact]
+    public void Reads_a_file_saved_with_a_byte_order_mark()
+    {
+        // Notepad and PowerShell's Set-Content both write UTF-8 with a BOM.
+        var store = Store();
+        Directory.CreateDirectory(Path.GetDirectoryName(store.Path)!);
+        File.WriteAllText(store.Path, "{\"version\":1,\"locations\":[{\"name\":\"Toronto\",\"latitude\":43.65,\"longitude\":-79.38}],\"lastLocation\":0}", new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: true));
+
+        var settings = store.Load();
+
+        Assert.Null(store.LoadProblem);
+        Assert.Single(settings.Locations);
+        Assert.Equal("Toronto", settings.Locations[0].Name);
+    }
+
+    [Fact]
     public void Out_of_range_last_location_is_clamped()
     {
         var store = Store();
