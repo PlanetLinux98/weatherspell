@@ -30,7 +30,7 @@
     <Authors>PlanetLinux98</Authors>
     <Company>PlanetLinux98</Company>
     <Copyright>Copyright (c) 2026 PlanetLinux98</Copyright>
-    <Description>A plain-text weather app for Windows.</Description>
+    <Description>A text-based weather app for Windows.</Description>
     <NeutralLanguage>en-CA</NeutralLanguage>
     <Deterministic>true</Deterministic>
 

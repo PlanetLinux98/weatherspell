@@ -51,8 +51,8 @@ well.
 
 Not beside the exe. Storing next to the exe breaks under `Program Files` and,
 under winget, whose upgrade and uninstall delete the whole package folder. A per-user
- AppData folder survives both and works when the exe sits somewhere read-only. 
-The only potential cost is that settings do not travel with the exe on a USB 
+ AppData folder survives both and works when the exe sits somewhere read-only.
+The only potential cost is that settings do not travel with the exe on a USB
 stick; a portable-marker mode can be added later if
 anyone asks.
 
@@ -84,9 +84,9 @@ the same words (WCAG 2.5.3). Extra detail usually belongs in a tooltip or help t
 ## Weather data: keyless sources only
 
 Forecasts from federal government sources (assuming free access, no API key or account
- needed), or [Open-Meteo](https://open-meteo.com/) (free, global, no API 
-key); urgent alerts from government feeds (the US National Weather Service 
-Environment Canada, MeteoAlarm for Europe, others as they are found). 
+ needed), or [Open-Meteo](https://open-meteo.com/) (free, global, no API
+key); urgent alerts from government feeds (the US National Weather Service,
+Environment Canada, MeteoAlarm for Europe, others as they are found).
 Nothing to sign up for, so the exe works for everyone on first run.
 
 Rejected: a keyed provider such as OpenWeatherMap One Call, which would cover
@@ -119,7 +119,7 @@ put on the radio, humidex and all.
 
 Candidates for later: Australia (Bureau of Meteorology open data) and Ireland
 (Met Eireann open data), both English. The UK Met Office needs an API key, so
-it stays out. Norway, Germany, Japan and others publish only in their respective 
+it stays out. Norway, Germany, Japan and others publish only in their respective
 languages, worth considering alongside translation efforts.
 
 ## Alerts are regional by necessity
@@ -165,7 +165,7 @@ mode whose behaviour deserves its own design pass.
 
 ## Updates are checked on request only
 
-No automatic checking at this time. Help > Check for Updates shows the newest 
+No automatic checking at this time. Help > Check for Updates shows the newest
 version and its release notes and offers to install.
 
 ## Windows scale by font

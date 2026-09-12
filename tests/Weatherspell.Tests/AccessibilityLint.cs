@@ -21,8 +21,11 @@ internal static class AccessibilityLint
         typeof(NumericUpDown), typeof(DateTimePicker), typeof(TrackBar), typeof(DataGridView),
     ];
 
-    // Opt-out for a control whose name deliberately has no visible label.
+    // Opt-outs, each a deliberate line in the code with a comment saying why:
+    // a control whose name has no visible label, and a control whose name
+    // must differ from its visible text.
     private const string UnlabelledTag = "a11y:unlabelled";
+    private const string CustomNameTag = "a11y:custom-name";
 
     public static IEnumerable<string> Check(Form form)
     {
@@ -50,7 +53,8 @@ internal static class AccessibilityLint
                     yield return $"{where}: no visible text.";
                 }
                 else if (!string.IsNullOrEmpty(control.AccessibleName)
-                         && !control.AccessibleName!.StartsWith(visible, StringComparison.Ordinal))
+                         && !control.AccessibleName!.StartsWith(visible, StringComparison.Ordinal)
+                         && !HasTag(control, CustomNameTag))
                 {
                     yield return $"{where}: AccessibleName \"{control.AccessibleName}\" does not start with the visible text \"{visible}\".";
                 }
@@ -63,7 +67,7 @@ internal static class AccessibilityLint
                 {
                     yield return $"{where}: no AccessibleName; set it to the visible label's text.";
                 }
-                else if (!labels.Contains(name!) && !IsOptedOut(control))
+                else if (!labels.Contains(name!) && !HasTag(control, UnlabelledTag))
                 {
                     yield return $"{where}: AccessibleName \"{name}\" matches no visible Label on the form.";
                 }
@@ -98,8 +102,8 @@ internal static class AccessibilityLint
         }
     }
 
-    private static bool IsOptedOut(Control control) =>
-        control.Tag is string tag && tag.Contains(UnlabelledTag);
+    private static bool HasTag(Control control, string tag) =>
+        control.Tag is string tags && tags.Contains(tag);
 
     private static string StripMnemonic(string? text)
     {

@@ -48,4 +48,20 @@ public class AccessibilityLintTests
         Assert.Contains(failures, f => f.Contains("\"go\"") && f.Contains("does not start with the visible text"));
         Assert.Contains(failures, f => f.Contains("tab index 0 is shared"));
     }
+
+    // The exceptions must be deliberate: a tag on the control, not a quiet
+    // drift. Tagged controls pass; untagged ones with the same names fail.
+    [Fact]
+    public void Tagged_exceptions_are_accepted()
+    {
+        var failures = Sta.Run(() =>
+        {
+            using var form = new Form { Text = "Probe" };
+            form.Controls.Add(new TextBox { Name = "search", AccessibleName = "Search", Tag = "a11y:unlabelled", TabIndex = 0 });
+            form.Controls.Add(new Button { Name = "go", Text = "Go", AccessibleName = "Fetch the forecast", Tag = "a11y:custom-name", TabIndex = 1 });
+            return AccessibilityLint.Check(form).ToList();
+        });
+
+        Assert.Empty(failures);
+    }
 }

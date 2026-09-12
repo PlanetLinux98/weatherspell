@@ -300,7 +300,7 @@ internal sealed class MainForm : Form
     private void ShowAbout()
     {
         MessageBox.Show(this,
-            $"Weatherspell {AppVersion.Display}\nA plain-text weather app for Windows.\n\nForecast data: Open-Meteo (open-meteo.com), licensed CC BY 4.0.",
+            $"Weatherspell {AppVersion.Display}\nA text-based weather app for Windows.\n\nForecast data: Open-Meteo (open-meteo.com), licensed CC BY 4.0.",
             "About Weatherspell", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 }

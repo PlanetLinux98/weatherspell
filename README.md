@@ -2,11 +2,11 @@
 
 A text-based weather app for Windows: current conditions, the forecast, and
 severe-weather alerts for any place in the world, written out in clear text.
-Built keyboard-first and screen-reader-first, and usable by anyone who wants the 
+Built keyboard-first and screen-reader-first, and usable by anyone who wants the
 weather in a simple and straightforward manner.
 
 > **Pre-release.** Weatherspell is being built in the open and is currently
-pre-release. Keep an eye on the [Releases](https://github.com/PlanetLinux98/weatherspell/releases)
+> pre-release. Keep an eye on the [Releases](https://github.com/PlanetLinux98/weatherspell/releases)
 > page, and the [Changelog](CHANGELOG.md).
 
 ## What it will do
@@ -20,7 +20,7 @@ pre-release. Keep an eye on the [Releases](https://github.com/PlanetLinux98/weat
 ## Running it
 
 Weatherspell is a single `Weatherspell.exe`. Download it from a release, put it
-wherever you like, and run it. It uses the .NET Framework 4.8 that is natively 
+wherever you like, and run it. It uses the .NET Framework 4.8 that is natively
 part of Windows 10 (version 1903 and later) and Windows 11.
 
 Your saved locations and settings live in `%APPDATA%\Weatherspell`, so they
@@ -33,7 +33,7 @@ Once released, it will also be installable with winget:
 
 Every control is a standard Windows Win32 control with its visible text as an
 accessible name, everything is reachable from the keyboard, and the forecast
-itself is plain text you can easily navigate, arrow through, and copy. If something 
+itself is plain text you can easily navigate, arrow through, and copy. If something
 behaves badly with your screen reader, magnifier or other assistive technology, that is
 a bug: please [report it](https://github.com/PlanetLinux98/weatherspell/issues/new/choose).
 

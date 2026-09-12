@@ -6,7 +6,7 @@ keeping it that way and keeping it accessible.
 ## Before you start
 
 Open an issue (or comment on an existing one) before building anything
-substantial, so the approach can be discussed and productively worked on. 
+substantial, so the approach can be discussed and productively worked on.
 Bug reports and feature ideas are welcome via the [issue templates](https://github.com/PlanetLinux98/weatherspell/issues/new/choose).
 
 ## Building and testing
@@ -24,16 +24,19 @@ build alone is not proof that it runs: launch it after any change to a form.
 
 ## Ground rules
 
-- **One exe.** For now, the goal of the shipped program is to remain a single 
- `Weatherspell.exe` with no files beside it. That rules out things like runtime 
-NuGet dependencies, `.exe.config`  settings, and anything that needs to be installed. 
-Build-time-only packages  (analyzers, source generators) are fine.
+- **One exe.** The shipped program is a single `Weatherspell.exe` with no
+  files beside it; how that is achieved may change over time, the single file
+  will not. That rules out things like runtime NuGet dependencies,
+  `.exe.config` settings, and anything that needs to be installed.
+  Build-time-only packages (analyzers, source generators) are fine.
 - **Accessible name = visible text.** A button, menu item or checkbox is
-  announced by the text it shows. Inputs with no text of their own (e.g. those which are 
-linked to a nearby text label) take their visible label's text as `AccessibleName`, 
-verbatim. Rarely should you give a control a reworded or more verbose name than what 
-is on screen; extra detail typically belongs in a tooltip or help text. 
-The `AccessibilityLint` test enforces the mechanical parts of this and runs in CI.
+  announced by the text it shows. Inputs with no text of their own (e.g. those which are
+linked to a nearby text label) take their visible label's text as `AccessibleName`,
+verbatim. Rarely should you give a control a reworded or more verbose name than what
+is on screen; extra detail typically belongs in a tooltip or help text.
+The `AccessibilityLint` test enforces the mechanical parts of this and runs in CI;
+  a deliberate exception is marked on the control with `Tag = "a11y:custom-name"`
+  and a comment saying why.
 - **Keyboard first.** Every action reachable with the keyboard, an explicit
   tab order, mnemonics on menus and buttons where they do not collide.
 - **Logic in plain classes, not in forms.** Anything worth testing (parsing,
@@ -43,9 +46,9 @@ The `AccessibilityLint` test enforces the mechanical parts of this and runs in C
 
 ## Testing UI changes
 
-If you changed anything a user can see or focus, please consider running it through 
-use with assistive technology: ideally at least one screen reader (NVDA is a free option) or 
-screen magnifier (one is built into Windows) and say in the PR what you experienced. 
+If you changed anything a user can see or focus, please consider running it through
+use with assistive technology: ideally at least one screen reader (NVDA is a free option) or
+screen magnifier (one is built into Windows) and say in the PR what you experienced.
 `tools\Dump-A11y.ps1` prints what the running window exposes to
 assistive technology and is a good first check before reaching for NVDA.
 
@@ -53,7 +56,7 @@ assistive technology and is a good first check before reaching for NVDA.
 
 - Branch from `main` and name the branch by type: `feature/`, `fix/`,
   `chore/` or `docs/` plus a short name.
-- One change or small related changes per pull request. 
+- One change or small related changes per pull request.
 Describe what changed and why; link the issue it addresses (`Fixes #12`).
 - Add a line under `[Unreleased]` in `CHANGELOG.md` for anything a user would
   notice. Fixes cite the issue number in parentheses.
