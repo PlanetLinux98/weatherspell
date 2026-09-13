@@ -30,7 +30,7 @@ internal sealed class Clock
     public string Time(DateTime local)
     {
         var text = Bare(local);
-        var utc = new DateTimeOffset(DateTime.SpecifyKind(local, DateTimeKind.Unspecified), _locationOffset).UtcDateTime;
+        var utc = ToUtc(local);
         var pcOffset = _pcZone.GetUtcOffset(utc);
         if (pcOffset == _locationOffset)
         {
@@ -40,6 +40,39 @@ internal sealed class Clock
         var suffix = pcLocal.Date == local.Date ? "" : (pcLocal.Date > local.Date ? " tomorrow" : " yesterday");
         return $"{text} ({Bare(pcLocal)}{suffix} your time)";
     }
+
+    // "4:00 pm today", "6:30 am tomorrow", "6:30 am Sunday", "6:30 am on
+    // September 20": when an alert ends, relative to the location's own
+    // day, and in brackets relative to this PC's day when the zones differ.
+    public string TimeOnDay(DateTime local, DateTime nowLocal)
+    {
+        var text = $"{Bare(local)} {DayWord(local.Date, nowLocal.Date)}";
+        var utc = ToUtc(local);
+        var pcOffset = _pcZone.GetUtcOffset(utc);
+        if (pcOffset == _locationOffset)
+        {
+            return text;
+        }
+        var pcLocal = utc + pcOffset;
+        var pcNow = ToUtc(nowLocal) + pcOffset;
+        return $"{text} ({Bare(pcLocal)} {DayWord(pcLocal.Date, pcNow.Date)} your time)";
+    }
+
+    private string DayWord(DateTime date, DateTime today) =>
+        (date - today).Days switch
+        {
+            0 => "today",
+            1 => "tomorrow",
+            -1 => "yesterday",
+            > 1 and < 7 => date.ToString("dddd", _culture),
+            _ => "on " + date.ToString("MMMM d", _culture),
+        };
+
+    // A service's timestamp as the location's own wall-clock time.
+    public DateTime Local(DateTimeOffset time) => time.ToOffset(_locationOffset).DateTime;
+
+    private DateTime ToUtc(DateTime local) =>
+        new DateTimeOffset(DateTime.SpecifyKind(local, DateTimeKind.Unspecified), _locationOffset).UtcDateTime;
 
     // "2:45 pm": the designator lowercased so it reads as a word, not initials.
     private string Bare(DateTime local) =>

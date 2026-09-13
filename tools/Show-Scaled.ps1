@@ -68,6 +68,19 @@ $search = New-Internal "Weatherspell.Weather.LocationSearch" @($client)
 $dialog = New-Internal "Weatherspell.FindLocationDialog" @($search)
 Snap $dialog "find-location" 2
 
+# The alert dialog takes a list of paragraphs; the single constructor is
+# invoked directly since a string[] is not the exact parameter type.
+$alertCtor = $asm.GetType("Weatherspell.AlertDialog").GetConstructors([System.Reflection.BindingFlags]"Public,NonPublic,Instance")[0]
+$alertText = [string[]]@(
+    "Frost advisory from Environment Canada, in effect until 6:30 am tomorrow.",
+    "Area: Gander and vicinity.",
+    "Issued 10:35 pm today.",
+    "Yellow level, moderate impact, high confidence.",
+    "Areas of frost are expected.",
+    "Locations: Deer Lake - Humber Valley, Buchans and the interior, Grand-Falls-Windsor and vicinity, Green Bay - White Bay, Gander and vicinity and Terra Nova.")
+$alert = $alertCtor.Invoke([object[]]@("Frost advisory", $alertText, "https://weather.gc.ca/"))
+Snap $alert "alert" 2
+
 $settingsPath = Join-Path $OutDir "settings.json"
 '{"version":1,"lastLocation":0,"locations":[{"name":"Toronto","region":"Ontario","country":"Canada","latitude":43.65,"longitude":-79.38,"timeZoneId":"America/Toronto","notifyAlerts":true}]}' |
     Set-Content $settingsPath -Encoding UTF8

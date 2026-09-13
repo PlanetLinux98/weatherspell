@@ -1,9 +1,12 @@
 using System.Globalization;
 using System.Text;
+using Weatherspell.Weather.Alerts;
 
 namespace Weatherspell.Weather;
 
-internal sealed record Section(string Heading, IReadOnlyList<string> Paragraphs);
+// Alerts, when set, runs parallel to Paragraphs: the alert each line stands
+// for, which Enter on that line opens.
+internal sealed record Section(string Heading, IReadOnlyList<string> Paragraphs, IReadOnlyList<WeatherAlert>? Alerts = null);
 
 internal sealed record WriterOptions(
     DateTimeOffset Now,
@@ -19,14 +22,14 @@ internal sealed record WriterOptions(
 // words instead of symbols, whole degrees, one idea per sentence.
 internal static class ForecastWriter
 {
-    public static IReadOnlyList<Section> Write(Forecast f, WriterOptions o)
+    public static IReadOnlyList<Section> Write(Forecast f, WriterOptions o, AlertReport? alerts = null)
     {
         var clock = new Clock(f.UtcOffset, o.PcZone, o.TimePattern, o.Culture);
         var nowLocal = o.Now.ToOffset(f.UtcOffset).DateTime;
 
         var sections = new List<Section>
         {
-            new("Alerts", ["Alert checking is not part of this version yet."]),
+            AlertWriter.Section(alerts, clock, nowLocal),
             RightNow(f, o, clock),
         };
 
@@ -51,7 +54,12 @@ internal static class ForecastWriter
         if (sun is not null) sections.Add(sun);
 
         sections.Add(Details(f, nowLocal));
-        sections.Add(new Section("Sources", f.Sources));
+        var sources = f.Sources;
+        if (alerts is { Attribution: not null })
+        {
+            sources = [.. sources, $"Alerts: {alerts.Attribution}."];
+        }
+        sections.Add(new Section("Sources", sources));
         return sections;
     }
 

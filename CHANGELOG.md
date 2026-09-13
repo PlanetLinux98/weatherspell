@@ -10,6 +10,15 @@ versions.
 ## [Unreleased]
 
 ### Added
+- Weather alerts for Canada and the United States, first in the text, most
+  severe first, each on one line with when it ends and who issued it; Enter
+  on the line opens the full text with an Official page button, and
+  Ctrl+Shift+A jumps to the Alerts heading. Every saved location is checked
+  every ten minutes and a new alert is spoken through the screen reader
+  without moving focus ("Peterborough: severe thunderstorm warning until
+  6:00 pm today"), once per alert. Elsewhere the text says alerts are not
+  available for the region, and a source that cannot be reached is stated,
+  never shown as a quiet day.
 - Find a place by name or postal code (Ctrl+L) and save it; the location
   last viewed comes back on the next launch. Postal codes for Canada, the
   UK, Australia, New Zealand and Ireland come from a GeoNames table built

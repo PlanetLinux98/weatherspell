@@ -176,10 +176,33 @@ No keyless service covers alerts worldwide. Coverage is built one source at
 a time: Environment Canada and the NWS first, MeteoAlarm (Europe) next.
 A location outside every supported region gets an explicit "alerts are not
 available for this region" line, never silence, so nobody mistakes a gap in
-coverage for a quiet day.
+coverage for a quiet day. A source that cannot be reached is stated just as
+plainly ("Alerts couldn't be checked this time"), for the same reason.
+
+Both sources answer a point query with everything the app shows: the NWS
+through `api.weather.gov/alerts/active?point=` and Environment Canada
+through the `weather-alerts` collection of MSC GeoMet-OGC-API
+(`api.weather.gc.ca`), whose features carry the full English text, the
+colour level, the area name, the times and a stable alert id. Alerts are
+told apart by that identity rather than by message: the NWS reissues a
+message for every update (a new id each time) but keeps the VTEC event
+number, and Environment Canada's feature id keeps the alert's number
+through its updates, so each event is announced once and expired ones
+drop off the seen list on the next check. The NWS returns the same product
+twice, once for the forecast zone and once for the county; it is shown once.
+Environment Canada's colour levels (yellow, orange, red) set an alert's
+severity, with its type as a floor (a warning is at least Severe), so that
+"severe and extreme only" means the same on both sides of the border, where
+every NWS warning is Severe or Extreme.
 
 Rejected: a keyed aggregator (OpenWeatherMap One Call carries alerts
 globally) for the reason above: every user would need an account and a key.
+Also rejected, for Canada: reading the city page's `warnings` block and
+fetching the matching CAP file from the datamart for the full text. The
+city page gives only a headline and a link, the CAP files are filed by
+issuing office and hour with nothing in the city page naming the file, so
+finding one means listing every office's hourly folder and downloading
+candidates; the GeoMet collection answers in one request.
 
 ## Words, not symbols
 
@@ -207,9 +230,15 @@ request per location every ten minutes and a per-location list of alert ids
 already seen. Each saved location has its own "notify me" switch.
 
 New alerts are announced through UI Automation notifications while the app
-is open (all alerts by default; the threshold is a setting). Tray icon,
-Windows toasts and start-with-Windows are deferred features: they add a background
-mode whose behaviour deserves its own design pass.
+is open (all alerts by default; the threshold is a setting), naming the
+location and the time the alert ends in the location's own zone. An alert
+found by showing a location from the top (launch, switching, adding) is
+marked seen silently, since the reader is about to meet it on the first
+line; one found by F5 or by the poll is spoken, because the caret may be
+anywhere. The seen ids persist in settings, so a relaunch during a long
+alert does not announce it again. Tray icon, Windows toasts and
+start-with-Windows are deferred features: they add a background mode whose
+behaviour deserves its own design pass.
 
 ## Updates are checked on request only
 

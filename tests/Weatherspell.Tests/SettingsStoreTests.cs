@@ -77,6 +77,55 @@ public class SettingsStoreTests : IDisposable
     }
 
     [Fact]
+    public void Round_trips_alert_state_and_settings()
+    {
+        var store = Store();
+        var settings = new AppSettings { AlertCheckMinutes = 5, AlertAnnouncements = "severe" };
+        var home = SavedLocation.From(new Location("Peterborough", "Ontario", "Canada", 44.3, -78.32, "America/Toronto"));
+        home.SeenAlertIds.Add("ec:64919237566271632202609120507");
+        home.UtcOffsetSeconds = -14400;
+        home.NotifyAlerts = false;
+        settings.Locations.Add(home);
+
+        store.Save(settings);
+        var loaded = Store().Load();
+
+        Assert.Equal(5, loaded.AlertCheckMinutes);
+        Assert.Equal("severe", loaded.AlertAnnouncements);
+        Assert.Equal(["ec:64919237566271632202609120507"], loaded.Locations[0].SeenAlertIds);
+        Assert.Equal(-14400, loaded.Locations[0].UtcOffsetSeconds);
+        Assert.False(loaded.Locations[0].NotifyAlerts);
+    }
+
+    [Fact]
+    public void Older_files_and_odd_values_normalize_to_the_defaults()
+    {
+        var store = Store();
+        Directory.CreateDirectory(Path.GetDirectoryName(store.Path)!);
+        File.WriteAllText(store.Path, "{\"version\":1,\"locations\":[{\"name\":\"X\",\"latitude\":1,\"longitude\":2}],\"lastLocation\":0,\"alertCheckMinutes\":0,\"alertAnnouncements\":\"loud\"}");
+
+        var settings = store.Load();
+
+        Assert.Equal(10, settings.AlertCheckMinutes);
+        Assert.Equal("all", settings.AlertAnnouncements);
+        Assert.Empty(settings.Locations[0].SeenAlertIds);
+        Assert.Null(settings.Locations[0].UtcOffsetSeconds);
+        Assert.True(settings.Locations[0].NotifyAlerts);
+    }
+
+    [Theory]
+    [InlineData("all", "Minor", true)]
+    [InlineData("severe", "Moderate", false)]
+    [InlineData("severe", "Severe", true)]
+    [InlineData("severe", "Extreme", true)]
+    [InlineData("off", "Extreme", false)]
+    public void The_announcement_setting_is_a_severity_threshold(string setting, string severity, bool spoken)
+    {
+        var parsed = (Weather.Alerts.AlertSeverity)Enum.Parse(typeof(Weather.Alerts.AlertSeverity), severity);
+        Assert.Equal(spoken, new AppSettings { AlertAnnouncements = setting }.Announces(parsed));
+    }
+
+    [Fact]
     public void Out_of_range_last_location_is_clamped()
     {
         var store = Store();

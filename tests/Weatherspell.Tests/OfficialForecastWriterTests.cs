@@ -20,7 +20,7 @@ public class OfficialForecastWriterTests
     private static WriterOptions Options(DateTimeOffset? now = null) =>
         new(now ?? Now, TimeZoneInfo.CreateCustomTimeZone("test-eastern", Eastern, "Test Eastern", "Test Eastern"), "h:mm tt", CultureInfo.InvariantCulture);
 
-    private static Forecast Base(UnitSystem units = UnitSystem.Metric)
+    internal static Forecast Base(UnitSystem units = UnitSystem.Metric)
     {
         var current = new CurrentConditions(
             LocalTime: new DateTime(2026, 9, 11, 23, 45, 0),

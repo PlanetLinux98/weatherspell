@@ -32,6 +32,18 @@ public class AccessibilityLintTests
         Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
     }
 
+    [Fact]
+    public void AlertDialog_passes_the_accessibility_lint()
+    {
+        var failures = Sta.Run(() =>
+        {
+            using var form = new AlertDialog("Frost advisory", ["Frost advisory from Environment Canada, in effect until 6:30 am tomorrow.", "Areas of frost are expected."], "https://weather.gc.ca/");
+            return AccessibilityLint.Check(form).ToList();
+        });
+
+        Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
+    }
+
     // Guards the lint itself: an unlabelled input, a renamed button and a
     // duplicate tab index must each be reported, or a green run means nothing.
     [Fact]

@@ -108,3 +108,39 @@ internal sealed class NwsValue
     [DataMember(Name = "unitCode")] public string? UnitCode;
     [DataMember(Name = "value")] public double? Value;
 }
+
+// alerts/active?point=: one feature per alert message. Parameters is a map
+// of string arrays (VTEC, AWIPSidentifier, NWSheadline and others), which the
+// in-box serializer reads only in its simple dictionary format (see Json).
+
+[DataContract]
+internal sealed class NwsAlertsResponse
+{
+    [DataMember(Name = "features")] public NwsAlertFeature[]? Features;
+}
+
+[DataContract]
+internal sealed class NwsAlertFeature
+{
+    [DataMember(Name = "properties")] public NwsAlert? Properties;
+}
+
+[DataContract]
+internal sealed class NwsAlert
+{
+    [DataMember(Name = "id")] public string? Id;
+    [DataMember(Name = "areaDesc")] public string? AreaDesc;
+    [DataMember(Name = "sent")] public string? Sent;
+    [DataMember(Name = "onset")] public string? Onset;
+    [DataMember(Name = "expires")] public string? Expires;
+    [DataMember(Name = "ends")] public string? Ends;
+    [DataMember(Name = "status")] public string? Status;
+    [DataMember(Name = "messageType")] public string? MessageType;
+    [DataMember(Name = "severity")] public string? Severity;
+    [DataMember(Name = "event")] public string? Event;
+    [DataMember(Name = "senderName")] public string? SenderName;
+    [DataMember(Name = "headline")] public string? Headline;
+    [DataMember(Name = "description")] public string? Description;
+    [DataMember(Name = "instruction")] public string? Instruction;
+    [DataMember(Name = "parameters")] public Dictionary<string, string[]>? Parameters;
+}

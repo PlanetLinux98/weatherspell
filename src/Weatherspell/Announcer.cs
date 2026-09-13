@@ -3,17 +3,21 @@ using System.Windows.Forms.Automation;
 namespace Weatherspell;
 
 // Speaks a line through UI Automation without moving focus: how search
-// results counts and, later, new alerts reach a screen reader user.
-// Available from .NET Framework 4.7.3; silently a no-op when the control has
-// no handle yet, since the notification rides on the window's provider.
+// result counts and new alerts reach a screen reader user. Available from
+// .NET Framework 4.7.3; silently a no-op when the control has no handle
+// yet, since the notification rides on the window's provider.
 internal static class Announcer
 {
-    public static void Say(Control control, string text)
+    public static void Say(Control control, string text) =>
+        Raise(control, AutomationNotificationKind.ActionCompleted, AutomationNotificationProcessing.MostRecent, text);
+
+    // An alert must not be dropped behind whatever else is being spoken.
+    public static void Alert(Control control, string text) =>
+        Raise(control, AutomationNotificationKind.Other, AutomationNotificationProcessing.ImportantAll, text);
+
+    private static void Raise(Control control, AutomationNotificationKind kind, AutomationNotificationProcessing processing, string text)
     {
         if (!control.IsHandleCreated) return;
-        control.AccessibilityObject.RaiseAutomationNotification(
-            AutomationNotificationKind.ActionCompleted,
-            AutomationNotificationProcessing.MostRecent,
-            text);
+        control.AccessibilityObject.RaiseAutomationNotification(kind, processing, text);
     }
 }

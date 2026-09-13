@@ -39,4 +39,13 @@ internal static class OfficialText
         s = System.Text.RegularExpressions.Regex.Replace(s, @"\bmph\b", "miles per hour");
         return s;
     }
+
+    // "Flash Flood Watch" as the NWS titles it, or "frost advisory" as
+    // Environment Canada names it, becomes "Flash flood watch": the
+    // sentence case this app's own text uses.
+    public static string SentenceCase(string name)
+    {
+        var s = name.Trim();
+        return s.Length == 0 ? s : char.ToUpperInvariant(s[0]) + s.Substring(1).ToLowerInvariant();
+    }
 }
