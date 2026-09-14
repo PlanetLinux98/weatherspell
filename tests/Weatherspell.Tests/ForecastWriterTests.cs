@@ -78,7 +78,25 @@ public class ForecastWriterTests
         Assert.Equal(
             "As of 2:30 pm, it's 21 degrees and mostly clear, feeling like 20. Wind from the southwest at 12 kilometres an hour, gusting to 30. Humidity 52 percent.",
             section.Paragraphs[0]);
-        Assert.Equal("Updated 3 minutes ago.", section.Paragraphs[1]);
+        Assert.Single(section.Paragraphs);
+    }
+
+    // Fresh text carries no age; from 30 minutes, or after a failed refresh,
+    // the first line under Right now says how old it is and why.
+    [Fact]
+    public void Stale_or_unrefreshed_text_is_dated_on_its_first_line()
+    {
+        var stale = Sample() with { FetchedAt = Now.AddMinutes(-45) };
+        var section = Find(ForecastWriter.Write(stale, Options()), "Right now");
+        Assert.Equal("Showing the forecast from 45 minutes ago.", section.Paragraphs[0]);
+        Assert.StartsWith("As of 2:30 pm, ", section.Paragraphs[1]);
+
+        var failed = Find(ForecastWriter.Write(Sample(), Options() with { RefreshProblem = "couldn't reach the weather service" }), "Right now");
+        Assert.Equal("Showing the forecast from 3 minutes ago; couldn't reach the weather service.", failed.Paragraphs[0]);
+
+        Assert.Null(ForecastWriter.Freshness(TimeSpan.FromMinutes(29), null));
+        Assert.Equal("Showing the forecast from 1 hour ago.", ForecastWriter.Freshness(TimeSpan.FromMinutes(75), null));
+        Assert.Equal("Showing the forecast from less than a minute ago; couldn't reach the weather service.", ForecastWriter.Freshness(TimeSpan.FromSeconds(20), "couldn't reach the weather service"));
     }
 
     [Fact]

@@ -8,11 +8,14 @@ namespace Weatherspell.Weather;
 // for, which Enter on that line opens.
 internal sealed record Section(string Heading, IReadOnlyList<string> Paragraphs, IReadOnlyList<WeatherAlert>? Alerts = null);
 
+// RefreshProblem is why the text on screen was not replaced by the last
+// refresh ("couldn't reach the weather service"), or null when it was.
 internal sealed record WriterOptions(
     DateTimeOffset Now,
     TimeZoneInfo PcZone,
     string TimePattern,
-    CultureInfo Culture)
+    CultureInfo Culture,
+    string? RefreshProblem = null)
 {
     public static WriterOptions Default() =>
         new(DateTimeOffset.UtcNow, TimeZoneInfo.Local, Clock.WindowsTimePattern(), CultureInfo.CurrentCulture);
@@ -113,8 +116,23 @@ internal static class ForecastWriter
         sb.Append(WindSentence(c.WindSpeed, c.WindDirection, c.WindGusts, f.Units));
         sb.Append($" Humidity {c.Humidity} percent.");
 
-        var age = o.Now - f.FetchedAt;
-        return new Section("Right now", [sb.ToString(), $"Updated {Clock.Age(age)}."]);
+        var paragraphs = new List<string>();
+        if (Freshness(o.Now - f.FetchedAt, o.RefreshProblem) is string freshness) paragraphs.Add(freshness);
+        paragraphs.Add(sb.ToString());
+        return new Section("Right now", paragraphs);
+    }
+
+    // Fresh text says nothing about its age (the exact time is in the
+    // status bar). From 30 minutes, or as soon as a refresh has failed and
+    // left older text on screen, the first line under Right now says how
+    // old it is and, when there is one, the reason.
+    public static readonly TimeSpan StaleAfter = TimeSpan.FromMinutes(30);
+
+    public static string? Freshness(TimeSpan age, string? problem)
+    {
+        if (problem is null && age < StaleAfter) return null;
+        var when = age < TimeSpan.FromMinutes(1) ? "less than a minute ago" : Clock.Age(age);
+        return problem is null ? $"Showing the forecast from {when}." : $"Showing the forecast from {when}; {problem}.";
     }
 
     // "Fog/Mist" is how the NWS writes fog or mist; mid-sentence and spoken,

@@ -28,18 +28,18 @@ internal sealed class ForecastService
     public async Task<Forecast> GetAsync(Location location, UnitSystem units, int days, CancellationToken cancellationToken)
     {
         var baseTask = _openMeteo.GetForecastAsync(location, units, days, cancellationToken);
-        var officialTask = OfficialAsync(location, cancellationToken);
+        var officialTask = OfficialAsync(location, units, cancellationToken);
         var baseForecast = await baseTask.ConfigureAwait(false);
         var (official, problem) = await officialTask.ConfigureAwait(false);
         return official is null ? WithProblem(baseForecast, problem) : Compose(baseForecast, official);
     }
 
-    private async Task<(OfficialForecast? Official, string? Problem)> OfficialAsync(Location location, CancellationToken cancellationToken)
+    private async Task<(OfficialForecast? Official, string? Problem)> OfficialAsync(Location location, UnitSystem units, CancellationToken cancellationToken)
     {
         Task<OfficialForecast>? fetch = location.Country switch
         {
             "Canada" => _canada.GetAsync(location, cancellationToken),
-            "United States" => _nws.GetAsync(location, cancellationToken),
+            "United States" => _nws.GetAsync(location, units, cancellationToken),
             _ => null,
         };
         if (fetch is null) return (null, null);

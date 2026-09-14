@@ -40,6 +40,14 @@ public class NwsParsingTests
     }
 
     [Fact]
+    public void The_grid_forecast_is_asked_for_SI_text_for_a_metric_reader()
+    {
+        const string url = "https://api.weather.gov/gridpoints/OTX/144,86/forecast";
+        Assert.Equal(url + "?units=si", NwsClient.ForecastUrl(url, UnitSystem.Metric));
+        Assert.Equal(url, NwsClient.ForecastUrl(url, UnitSystem.Imperial));
+    }
+
+    [Fact]
     public void An_observation_reads_SI_values_and_leaves_unreported_ones_null()
     {
         var o = NwsClient.ParseObservation(Fixtures.Read("nws-observation-kalb.json"), "Albany International Airport");

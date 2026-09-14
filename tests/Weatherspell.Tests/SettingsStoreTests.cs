@@ -80,7 +80,7 @@ public class SettingsStoreTests : IDisposable
     public void Round_trips_alert_state_and_settings()
     {
         var store = Store();
-        var settings = new AppSettings { AlertCheckMinutes = 5, AlertAnnouncements = "severe" };
+        var settings = new AppSettings { ForecastRefreshMinutes = 60, AlertCheckMinutes = 5, AlertAnnouncements = "severe" };
         var home = SavedLocation.From(new Location("Peterborough", "Ontario", "Canada", 44.3, -78.32, "America/Toronto"));
         home.SeenAlertIds.Add("ec:64919237566271632202609120507");
         home.UtcOffsetSeconds = -14400;
@@ -90,6 +90,7 @@ public class SettingsStoreTests : IDisposable
         store.Save(settings);
         var loaded = Store().Load();
 
+        Assert.Equal(60, loaded.ForecastRefreshMinutes);
         Assert.Equal(5, loaded.AlertCheckMinutes);
         Assert.Equal("severe", loaded.AlertAnnouncements);
         Assert.Equal(["ec:64919237566271632202609120507"], loaded.Locations[0].SeenAlertIds);
@@ -102,10 +103,11 @@ public class SettingsStoreTests : IDisposable
     {
         var store = Store();
         Directory.CreateDirectory(Path.GetDirectoryName(store.Path)!);
-        File.WriteAllText(store.Path, "{\"version\":1,\"locations\":[{\"name\":\"X\",\"latitude\":1,\"longitude\":2}],\"lastLocation\":0,\"alertCheckMinutes\":0,\"alertAnnouncements\":\"loud\"}");
+        File.WriteAllText(store.Path, "{\"version\":1,\"locations\":[{\"name\":\"X\",\"latitude\":1,\"longitude\":2}],\"lastLocation\":0,\"forecastRefreshMinutes\":5000,\"alertCheckMinutes\":0,\"alertAnnouncements\":\"loud\"}");
 
         var settings = store.Load();
 
+        Assert.Equal(30, settings.ForecastRefreshMinutes);
         Assert.Equal(10, settings.AlertCheckMinutes);
         Assert.Equal("all", settings.AlertAnnouncements);
         Assert.Empty(settings.Locations[0].SeenAlertIds);
@@ -123,6 +125,31 @@ public class SettingsStoreTests : IDisposable
     {
         var parsed = (Weather.Alerts.AlertSeverity)Enum.Parse(typeof(Weather.Alerts.AlertSeverity), severity);
         Assert.Equal(spoken, new AppSettings { AlertAnnouncements = setting }.Announces(parsed));
+    }
+
+    [Fact]
+    public void A_file_from_before_the_refresh_interval_existed_gets_the_default()
+    {
+        var store = Store();
+        Directory.CreateDirectory(Path.GetDirectoryName(store.Path)!);
+        File.WriteAllText(store.Path, "{\"version\":1,\"locations\":[],\"lastLocation\":0,\"alertCheckMinutes\":10,\"alertAnnouncements\":\"all\"}");
+
+        Assert.Equal(30, store.Load().ForecastRefreshMinutes);
+    }
+
+    // The dialog's lists: the presets, plus a hand-edited value in its place
+    // so opening the dialog never silently changes it.
+    [Fact]
+    public void Interval_choices_keep_an_unlisted_value()
+    {
+        Assert.Equal([15, 30, 60, 120], SettingsChoices.Minutes(SettingsChoices.ForecastMinutes, 30));
+        Assert.Equal([15, 30, 45, 60, 120], SettingsChoices.Minutes(SettingsChoices.ForecastMinutes, 45));
+        Assert.Equal([5, 10, 15, 30, 240], SettingsChoices.Minutes(SettingsChoices.AlertMinutes, 240));
+        Assert.Equal("15 minutes", SettingsChoices.MinutesLabel(15));
+        Assert.Equal("1 hour", SettingsChoices.MinutesLabel(60));
+        Assert.Equal("1 hour and 30 minutes", SettingsChoices.MinutesLabel(90));
+        Assert.Equal("2 hours", SettingsChoices.MinutesLabel(120));
+        Assert.Equal("Severe and extreme only", SettingsChoices.AnnouncementLabel("severe"));
     }
 
     [Fact]

@@ -18,10 +18,10 @@ internal sealed class NwsClient
     private readonly Dictionary<string, NwsGrid> _grids = new(StringComparer.Ordinal);
     private readonly SemaphoreSlim _gridLock = new(1, 1);
 
-    public async Task<OfficialForecast> GetAsync(Location location, CancellationToken cancellationToken)
+    public async Task<OfficialForecast> GetAsync(Location location, UnitSystem units, CancellationToken cancellationToken)
     {
         var grid = await GridAsync(location, cancellationToken).ConfigureAwait(false);
-        var forecastTask = Http.GetStringAsync(grid.ForecastUrl, cancellationToken);
+        var forecastTask = Http.GetStringAsync(ForecastUrl(grid.ForecastUrl, units), cancellationToken);
         var observationTask = LatestObservationAsync(grid.StationId, cancellationToken);
         var periods = ParsePeriods(await forecastTask.ConfigureAwait(false));
         var observationJson = await observationTask.ConfigureAwait(false);
@@ -63,6 +63,12 @@ internal sealed class NwsClient
             return null;
         }
     }
+
+    // The grid's forecast text is written in US units unless asked for SI
+    // ("High near 16. Southwest wind 7 to 13 km/h."), which keeps a metric
+    // reader's whole text in one system.
+    public static string ForecastUrl(string gridForecastUrl, UnitSystem units) =>
+        units == UnitSystem.Metric ? gridForecastUrl + "?units=si" : gridForecastUrl;
 
     internal sealed record NwsGrid(string ForecastUrl, string Attribution, string? StationId, string? StationName);
 

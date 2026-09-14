@@ -12,8 +12,10 @@ internal sealed class AppSettings
     [DataMember(Name = "version")] public int Version = 1;
     [DataMember(Name = "locations")] public List<SavedLocation> Locations = [];
     [DataMember(Name = "lastLocation")] public int LastLocation;
-    // Minutes between checks of every saved location's alerts (#4); the
-    // Settings dialog (#6) will expose it.
+    // Minutes between automatic refreshes of the forecast on screen and
+    // between checks of every saved location's alerts. Any positive value
+    // up to a day is honoured; the Settings dialog offers a short list.
+    [DataMember(Name = "forecastRefreshMinutes")] public int ForecastRefreshMinutes = 30;
     [DataMember(Name = "alertCheckMinutes")] public int AlertCheckMinutes = 10;
     // Which new alerts are spoken: "all", "severe" (severe and extreme
     // only) or "off".
@@ -22,6 +24,7 @@ internal sealed class AppSettings
     [OnDeserializing]
     private void Defaults(StreamingContext context)
     {
+        ForecastRefreshMinutes = 30;
         AlertCheckMinutes = 10;
         AlertAnnouncements = "all";
     }
@@ -32,9 +35,14 @@ internal sealed class AppSettings
         Locations.RemoveAll(l => l is null || string.IsNullOrWhiteSpace(l.Name));
         foreach (var l in Locations) l.SeenAlertIds ??= [];
         if (LastLocation < 0 || LastLocation >= Locations.Count) LastLocation = 0;
-        if (AlertCheckMinutes < 1) AlertCheckMinutes = 10;
+        if (ForecastRefreshMinutes < 1 || ForecastRefreshMinutes > MaxMinutes) ForecastRefreshMinutes = 30;
+        if (AlertCheckMinutes < 1 || AlertCheckMinutes > MaxMinutes) AlertCheckMinutes = 10;
         if (AlertAnnouncements is not ("all" or "severe" or "off")) AlertAnnouncements = "all";
     }
+
+    // A day: a longer interval is a typo, and a Windows timer's interval is
+    // an int of milliseconds.
+    public const int MaxMinutes = 24 * 60;
 
     public bool Announces(Weather.Alerts.AlertSeverity severity) => AlertAnnouncements switch
     {

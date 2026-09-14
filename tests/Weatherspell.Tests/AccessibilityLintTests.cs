@@ -33,6 +33,18 @@ public class AccessibilityLintTests
     }
 
     [Fact]
+    public void SettingsDialog_passes_the_accessibility_lint()
+    {
+        var failures = Sta.Run(() =>
+        {
+            using var form = new SettingsDialog(new AppSettings());
+            return AccessibilityLint.Check(form).ToList();
+        });
+
+        Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void AlertDialog_passes_the_accessibility_lint()
     {
         var failures = Sta.Run(() =>

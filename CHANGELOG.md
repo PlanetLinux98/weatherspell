@@ -9,6 +9,33 @@ versions.
 
 ## [Unreleased]
 
+### Added
+- A Settings dialog (Settings menu): how often the forecast on screen is
+  refreshed (15 minutes to 2 hours, default 30), how often every saved
+  location's alerts are checked (5 to 30 minutes, default 10), and which
+  new alerts are spoken (all, severe and extreme only, off). OK, Cancel
+  and Apply; a value edited by hand into `settings.json` is kept and
+  listed.
+- The forecast refreshes itself while the window is open, without moving
+  focus or the caret: the text is replaced under the reader and the caret
+  stays on the same words, as it now does for F5 too. A refresh that
+  fails leaves the text on screen and dates it on the first line under
+  Right now ("Showing the forecast from 20 minutes ago; couldn't reach the
+  weather service"); the line also appears on its own once the text is 30
+  minutes old, and there is no "Updated just now" line any more.
+
+### Changed
+- Each location's whole text is in one unit system, so its numbers never
+  disagree with the official sentences beside them: Canada is metric, as
+  Environment Canada writes it; the United States follows the Windows
+  region, with the National Weather Service text requested to match
+  (metric text for a metric region); everywhere else follows the Windows
+  region.
+
+### Fixed
+- Alert checks could stay off after the first location was added on a
+  first run, until the next launch.
+
 ## [0.1.0-alpha.1] - 2026-09-13
 
 A first preview for testing, ahead of 0.1.0. Download `Weatherspell.exe`

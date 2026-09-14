@@ -170,9 +170,9 @@ The official text is laid over the Open-Meteo forecast rather than replacing
 it: Open-Meteo still supplies the hourly data, sunrise and sunset, UV and the
 unit conversion, and stands in for anything the service leaves out (a station
 that reports no humidity, a page with no current conditions). The official
-sentences are shown as written, in the service's own units (the NWS speaks
-Fahrenheit whatever the units setting), with one typographic pass so they
-read aloud the way the service says them on air: "km/h" and "mph" become
+sentences are shown as written, in the location's unit system (see "One
+unit system per location"), with one typographic pass so they read aloud
+the way the service says them on air: "km/h" and "mph" become
 words and "90%" becomes "90 percent". The Sources line at the end names what
 was used, and when the official fetch fails the location gets generated
 sentences for that refresh with the reason stated there; Open-Meteo failing
@@ -262,6 +262,55 @@ anywhere. The seen ids persist in settings, so a relaunch during a long
 alert does not announce it again. Tray icon, Windows toasts and
 start-with-Windows are deferred features: they add a background mode whose
 behaviour deserves its own design pass.
+
+## One unit system per location, and no units setting
+
+The plan had per-quantity unit choices in Settings (Celsius or Fahrenheit,
+km/h, mph, m/s or knots, and so on). Dropped before it was built: the
+official sentences carry their own numbers, so a reader who chose
+Fahrenheit for a Canadian city would get Environment Canada's Celsius in
+one paragraph and this app's Fahrenheit in the next. A location's whole
+text is therefore in one system, decided by its weather service: Canada is
+metric, which is all Environment Canada writes; the United States follows
+the Windows region, with the NWS forecast requested in the same system
+(`?units=si` gives "High near 16. Southwest wind 7 to 13 km/h."); everywhere
+else follows the Windows region, since only this app's own numbers are
+involved. The one reader left out is an imperial-minded one looking at
+Canada, which is what #14 (converting the official text) is parked for.
+
+## The forecast refreshes itself, and says when it could not
+
+The forecast on screen is fetched again on a timer (30 minutes by default,
+a setting) and every saved location's alerts are checked on another (10
+minutes). Neither moves focus or the caret: the text is replaced and the
+caret put back the same distance into the section with the same heading,
+so a reader in the middle of Saturday stays on the same words however much
+the Alerts section above grew (`SectionLayout.MapCaret`). F5 and the
+alerts rewrite use the same mapping.
+
+A refresh that fails leaves the text on screen rather than replacing it
+with an error, and dates it: the first line under Right now becomes
+"Showing the forecast from 20 minutes ago; couldn't reach the weather
+service". The same line, without a reason, appears on its own once the
+text is 30 minutes old (a long interval, or the PC asleep), and there is
+no age line at all while the text is fresh; the exact time is in the
+status bar. A failure the user asked for (F5, switching) is also spoken
+through a notification; the timer's failures are not, since the line is
+there when they next read. A once-a-minute tick re-renders the text and
+applies the result only when it differs (the age line, a day heading at
+midnight) and never while the user has a selection, so a copy in progress
+is not lost.
+
+## Settings are a few combo boxes
+
+The intervals are short lists in combo boxes rather than number fields: a
+native combo box is the control screen readers read best, there is nothing
+to mistype, and WinForms' spin box is a composite (an unnamed inner edit
+plus buttons) whose reading would need its own testing. A value outside
+the list, edited by hand into settings.json, is kept and listed in its
+place, so opening the dialog never silently changes it. The dialog has no
+accelerator: Windows has no conventional one for a settings dialog (Ctrl+comma
+is macOS's), and Alt+S, S is two keys.
 
 ## Updates are checked on request only
 

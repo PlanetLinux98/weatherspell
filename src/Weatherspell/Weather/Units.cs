@@ -15,6 +15,16 @@ internal static class Units
     public static UnitSystem FromWindowsRegion() =>
         RegionInfo.CurrentRegion.IsMetric ? UnitSystem.Metric : UnitSystem.Imperial;
 
+    // One system for a location's whole text, so this app's numbers never
+    // disagree with the official sentences beside them. Environment Canada
+    // writes metric only, so Canada is metric whatever the region; the NWS
+    // writes either (units=si), so the US follows the region like everywhere
+    // else. There is no units setting (see NOTES.md).
+    public static UnitSystem For(Location location) => For(location, FromWindowsRegion());
+
+    public static UnitSystem For(Location location, UnitSystem regionDefault) =>
+        location.Country == "Canada" ? UnitSystem.Metric : regionDefault;
+
     // Open-Meteo request parameters, so values arrive already converted.
     public static string TemperatureParameter(UnitSystem u) => u == UnitSystem.Metric ? "celsius" : "fahrenheit";
     public static string WindParameter(UnitSystem u) => u == UnitSystem.Metric ? "kmh" : "mph";

@@ -81,6 +81,10 @@ $alertText = [string[]]@(
 $alert = $alertCtor.Invoke([object[]]@("Frost advisory", $alertText, "https://weather.gc.ca/"))
 Snap $alert "alert" 2
 
+$appSettings = New-Internal "Weatherspell.Settings.AppSettings" @()
+$settings = New-Internal "Weatherspell.SettingsDialog" @($appSettings)
+Snap $settings "settings" 2
+
 $settingsPath = Join-Path $OutDir "settings.json"
 '{"version":1,"lastLocation":0,"locations":[{"name":"Toronto","region":"Ontario","country":"Canada","latitude":43.65,"longitude":-79.38,"timeZoneId":"America/Toronto","notifyAlerts":true}]}' |
     Set-Content $settingsPath -Encoding UTF8

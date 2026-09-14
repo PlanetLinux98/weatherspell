@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Text;
 using Weatherspell.Settings;
 using Weatherspell.Weather;
 using Weatherspell.Weather.Alerts;
@@ -25,16 +24,21 @@ internal sealed class MainForm : Form
     private readonly ComboBox _locations;
     private readonly TextBox _forecast;
     private readonly ToolStripStatusLabel _status;
-    private readonly List<int> _headingOffsets = [];
-    private readonly List<(int Start, int End, WeatherAlert Alert)> _alertRanges = [];
+    private SectionLayout _layout = SectionLayout.Empty;
     private CancellationTokenSource? _refreshing;
     private bool _suppressLocationEvents;
 
-    // What the text box shows, kept so the Alerts section can be rewritten
-    // when a poll finds the on-screen location's alerts changed.
+    // What the text box shows, kept so it can be rewritten in place: the
+    // Alerts section when a poll finds them changed, the age line as the
+    // clock moves, all of it when a refresh brings new data.
     private Forecast? _shown;
     private AlertReport? _shownAlerts;
+    // Why the last refresh left older text on screen; null after a success.
+    private string? _refreshProblem;
+    private readonly System.Windows.Forms.Timer _forecastTimer = new();
     private readonly System.Windows.Forms.Timer _alertTimer = new();
+    // Once a minute: the age line, and the day headings at midnight.
+    private readonly System.Windows.Forms.Timer _clockTimer = new() { Interval = 60_000 };
     private readonly CancellationTokenSource _closing = new();
     private bool _polling;
 
@@ -74,9 +78,13 @@ internal sealed class MainForm : Form
         view.MenuItems.Add(new MenuItem("&Previous Section\tCtrl+PageUp", (_, _) => JumpSection(-1)));
         view.MenuItems.Add(new MenuItem("-"));
         view.MenuItems.Add(new MenuItem("&Alerts", (_, _) => JumpToAlerts(), Shortcut.CtrlShiftA));
+        var settings = new MenuItem("&Settings");
+        // No accelerator: Windows has no conventional one for a settings
+        // dialog (Ctrl+comma is macOS's), and Alt+S, S is two keys.
+        settings.MenuItems.Add(new MenuItem("&Settings...", (_, _) => ShowSettings()));
         var help = new MenuItem("&Help");
         help.MenuItems.Add(new MenuItem("&About Weatherspell", (_, _) => ShowAbout()));
-        Menu = new MainMenu([file, locations, view, help]);
+        Menu = new MainMenu([file, locations, view, settings, help]);
 
         // Header row: the label is the combo box's visible name; AccessibleName
         // repeats it verbatim so the announced name never drifts from the screen.
@@ -152,15 +160,20 @@ internal sealed class MainForm : Form
         Shown += async (_, _) => await OnShownAsync();
         FormClosed += (_, _) =>
         {
+            _forecastTimer.Stop();
             _alertTimer.Stop();
+            _clockTimer.Stop();
             _refreshing?.Cancel();
             _closing.Cancel();
         };
 
-        // Every saved location's alerts, not just the one on screen, so a
-        // warning for home is spoken while reading somewhere else.
-        _alertTimer.Interval = _settings.AlertCheckMinutes * 60_000;
+        // The forecast on screen, then every saved location's alerts, not
+        // just the one on screen, so a warning for home is spoken while
+        // reading somewhere else. Neither moves focus or the caret.
+        _forecastTimer.Tick += async (_, _) => await RefreshAsync(keepCaret: true, automatic: true);
         _alertTimer.Tick += async (_, _) => await PollAlertsAsync();
+        _clockTimer.Tick += (_, _) => RewriteIfChanged();
+        ApplyIntervals();
 
         PopulateLocations();
     }
@@ -172,6 +185,11 @@ internal sealed class MainForm : Form
         {
             _status.Text = problem;
         }
+        // Started before the first location exists, so a first run that
+        // adds one is refreshed and checked like any other.
+        _forecastTimer.Start();
+        _alertTimer.Start();
+        _clockTimer.Start();
         if (_settings.Locations.Count == 0)
         {
             SetText([new Section("Welcome", ["No location yet. Press Ctrl+L, or use Locations > Find Location, to add one."])]);
@@ -182,7 +200,24 @@ internal sealed class MainForm : Form
         // The refresh checked the location on screen; the others now, then
         // all of them on the timer.
         await PollAlertsAsync(includeCurrent: false);
-        _alertTimer.Start();
+    }
+
+    // Timer intervals from the settings; a running timer restarts from now.
+    private void ApplyIntervals()
+    {
+        _forecastTimer.Interval = _settings.ForecastRefreshMinutes * 60_000;
+        _alertTimer.Interval = _settings.AlertCheckMinutes * 60_000;
+    }
+
+    private void ShowSettings()
+    {
+        using var dialog = new SettingsDialog(_settings);
+        dialog.Applied += (_, _) =>
+        {
+            TrySave();
+            ApplyIntervals();
+        };
+        dialog.ShowDialog(this);
     }
 
     private void PopulateLocations()
@@ -231,7 +266,9 @@ internal sealed class MainForm : Form
         _forecast.Focus();
     }
 
-    private async Task RefreshAsync(bool keepCaret)
+    // keepCaret: F5 and the timer replace the text under the reader, who
+    // stays on the same words; a location switch starts from the top.
+    private async Task RefreshAsync(bool keepCaret, bool automatic = false)
     {
         var saved = CurrentSaved;
         var location = saved?.ToLocation();
@@ -240,19 +277,22 @@ internal sealed class MainForm : Form
         _refreshing?.Cancel();
         _refreshing = new CancellationTokenSource();
         var token = _refreshing.Token;
-        var caret = keepCaret ? _forecast.SelectionStart : 0;
 
-        _status.Text = $"Fetching the forecast for {location.DisplayName}...";
+        if (!automatic) _status.Text = $"Fetching the forecast for {location.DisplayName}...";
         try
         {
-            var forecastTask = _forecasts.GetAsync(location, Units.FromWindowsRegion(), ForecastDays, token);
+            var forecastTask = _forecasts.GetAsync(location, Units.For(location), ForecastDays, token);
             var alertsTask = _alerts.GetAsync(location, DateTimeOffset.UtcNow, token);
             var forecast = await forecastTask;
             var alerts = await alertsTask;
             if (token.IsCancellationRequested) return;
             saved.UtcOffsetSeconds = (int)forecast.UtcOffset.TotalSeconds;
-            Show(forecast, alerts, caret);
+            _refreshProblem = null;
+            if (keepCaret) Rewrite(forecast, alerts); else Show(forecast, alerts);
             _status.Text = $"{location.DisplayName}: updated {Clock.PcTime(DateTime.Now)} from {forecast.SourceName}";
+            // The next automatic refresh a full interval from this one.
+            _forecastTimer.Stop();
+            _forecastTimer.Start();
             if (alerts.Checked)
             {
                 var fresh = AlertTracker.Update(saved.SeenAlertIds, alerts.Alerts);
@@ -268,56 +308,68 @@ internal sealed class MainForm : Form
         }
         catch (Exception ex) when (ex is System.Net.Http.HttpRequestException or IOException or InvalidDataException or System.Runtime.Serialization.SerializationException or FormatException)
         {
-            SetText([new Section("Problem", [$"Couldn't fetch the forecast for {location.DisplayName}: {ex.Message}", "Press F5 to try again."])]);
-            _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}.";
+            if (_shown?.Location == location)
+            {
+                // The text on screen is this location's: it stays, dated
+                // by the age line, rather than giving way to an error. A
+                // failure the user asked for is spoken; the timer's is
+                // left for the age line to tell.
+                _refreshProblem = "couldn't reach the weather service";
+                Rewrite(_shown, _shownAlerts);
+                _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}: {ex.Message}";
+                if (!automatic) Announcer.Say(this, $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTime(_shown.FetchedAt.ToLocalTime().DateTime)}.");
+            }
+            else
+            {
+                SetText([new Section("Problem", [$"Couldn't fetch the forecast for {location.DisplayName}: {ex.Message}", "Press F5 to try again."])]);
+                _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}.";
+            }
         }
     }
 
-    private void Show(Forecast forecast, AlertReport alerts, int caret)
+    private IReadOnlyList<Section> Render() =>
+        ForecastWriter.Write(_shown!, WriterOptions.Default() with { RefreshProblem = _refreshProblem }, _shownAlerts);
+
+    private void Show(Forecast forecast, AlertReport alerts)
     {
         _shown = forecast;
         _shownAlerts = alerts;
-        SetText(ForecastWriter.Write(forecast, WriterOptions.Default(), alerts), caret);
+        SetText(Render());
     }
 
-    // Heading line, blank line, paragraphs separated by blank lines, blank
-    // line: a steady rhythm for line-by-line reading, and a heading offset
-    // list for Ctrl+PageDown/PageUp.
-    private void SetText(IReadOnlyList<Section> sections, int caret = 0)
+    // New text with the caret kept on the same words (SectionLayout.MapCaret),
+    // so nothing the user did not ask for moves them.
+    private void Rewrite(Forecast forecast, AlertReport? alerts)
     {
-        var sb = new StringBuilder();
-        _headingOffsets.Clear();
-        _alertRanges.Clear();
-        foreach (var section in sections)
-        {
-            if (sb.Length > 0) sb.Append("\r\n");
-            _headingOffsets.Add(sb.Length);
-            sb.Append(section.Heading).Append("\r\n\r\n");
-            for (var i = 0; i < section.Paragraphs.Count; i++)
-            {
-                var paragraph = section.Paragraphs[i];
-                if (section.Alerts is not null && i < section.Alerts.Count)
-                {
-                    _alertRanges.Add((sb.Length, sb.Length + paragraph.Length, section.Alerts[i]));
-                }
-                sb.Append(paragraph).Append("\r\n\r\n");
-            }
-        }
-        _forecast.Text = sb.ToString();
+        _shown = forecast;
+        _shownAlerts = alerts;
+        var layout = SectionLayout.Build(Render());
+        Apply(layout, layout.MapCaret(_layout, _forecast.SelectionStart));
+    }
+
+    // The clock's tick: only when the rendering has changed (the age line
+    // from 30 minutes, a day heading at midnight), and never under a
+    // selection the user is about to copy.
+    private void RewriteIfChanged()
+    {
+        if (_shown is null || _forecast.SelectionLength > 0) return;
+        var layout = SectionLayout.Build(Render());
+        if (layout.Text == _layout.Text) return;
+        Apply(layout, layout.MapCaret(_layout, _forecast.SelectionStart));
+    }
+
+    private void SetText(IReadOnlyList<Section> sections) => Apply(SectionLayout.Build(sections), 0);
+
+    private void Apply(SectionLayout layout, int caret)
+    {
+        _layout = layout;
+        _forecast.Text = layout.Text;
         _forecast.SelectionStart = Math.Min(Math.Max(caret, 0), _forecast.TextLength);
         _forecast.SelectionLength = 0;
         _forecast.ScrollToCaret();
     }
 
-    private WeatherAlert? AlertAtCaret()
-    {
-        var here = _forecast.SelectionStart;
-        foreach (var (start, end, alert) in _alertRanges)
-        {
-            if (here >= start && here <= end) return alert;
-        }
-        return null;
-    }
+    private WeatherAlert? AlertAtCaret() => _layout.AlertAt(_forecast.SelectionStart);
 
     private void ShowAlertDetails(WeatherAlert alert)
     {
@@ -355,7 +407,7 @@ internal sealed class MainForm : Form
                 // user may have switched while the check was in flight.
                 if (ReferenceEquals(saved, CurrentSaved) && _shown?.Location == location && _shownAlerts is not null && Signature(_shownAlerts) != Signature(report))
                 {
-                    RewriteAlerts(report);
+                    Rewrite(_shown, report);
                 }
             }
             if (changed) TrySave();
@@ -372,22 +424,6 @@ internal sealed class MainForm : Form
     private static string Signature(AlertReport r) =>
         r.Problem ?? string.Join("|", r.Alerts.Select(a => $"{a.Id}@{a.Issued:o}-{a.Ends:o}"));
 
-    // The Alerts section is the first, so a caret further down moves by as
-    // much as the section grew or shrank and stays on the same words.
-    private void RewriteAlerts(AlertReport report)
-    {
-        var caret = _forecast.SelectionStart;
-        var before = _headingOffsets.Count > 1 ? _headingOffsets[1] : 0;
-        Show(_shown!, report, caret);
-        var after = _headingOffsets.Count > 1 ? _headingOffsets[1] : 0;
-        if (caret >= before)
-        {
-            _forecast.SelectionStart = Math.Min(caret + (after - before), _forecast.TextLength);
-            _forecast.SelectionLength = 0;
-            _forecast.ScrollToCaret();
-        }
-    }
-
     private void Announce(SavedLocation saved, IReadOnlyList<WeatherAlert> fresh)
     {
         var spoken = fresh.Where(a => _settings.Announces(a.Severity)).ToList();
@@ -402,17 +438,16 @@ internal sealed class MainForm : Form
 
     private void JumpSection(int direction)
     {
-        if (_headingOffsets.Count == 0) return;
         var here = _forecast.SelectionStart;
         // No FirstOrDefault(pred, fallback) on 4.8: -1 stands in for "none".
         var target = -1;
         if (direction > 0)
         {
-            foreach (var o in _headingOffsets) { if (o > here) { target = o; break; } }
+            foreach (var (_, o) in _layout.Headings) { if (o > here) { target = o; break; } }
         }
         else
         {
-            foreach (var o in _headingOffsets) { if (o < here) target = o; else break; }
+            foreach (var (_, o) in _layout.Headings) { if (o < here) target = o; else break; }
         }
         if (target < 0) return;
         MoveCaret(target);
@@ -420,7 +455,7 @@ internal sealed class MainForm : Form
 
     private void JumpToAlerts()
     {
-        if (_headingOffsets.Count > 0) MoveCaret(_headingOffsets[0]);
+        if (_layout.Headings.Count > 0) MoveCaret(_layout.Headings[0].Offset);
     }
 
     private void MoveCaret(int offset)

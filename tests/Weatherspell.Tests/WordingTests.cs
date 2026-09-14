@@ -71,6 +71,22 @@ public class WordingTests
         Assert.Equal("0.3 inches", Units.PrecipitationAmount(0.33, UnitSystem.Imperial));
     }
 
+    // One system per location's whole text: Environment Canada writes only
+    // metric, the NWS writes either, so only Canada overrides the region.
+    [Theory]
+    [InlineData("Canada", false, true)]
+    [InlineData("Canada", true, true)]
+    [InlineData("United States", false, false)]
+    [InlineData("United States", true, true)]
+    [InlineData("France", false, false)]
+    [InlineData(null, true, true)]
+    public void Units_follow_the_location_s_service_or_else_the_region(string? country, bool metricRegion, bool metric)
+    {
+        var location = new Location("Somewhere", null, country, 45, -75, null);
+        var region = metricRegion ? UnitSystem.Metric : UnitSystem.Imperial;
+        Assert.Equal(metric ? UnitSystem.Metric : UnitSystem.Imperial, Units.For(location, region));
+    }
+
     [Fact]
     public void Ages_and_durations_read_naturally()
     {
