@@ -2,8 +2,9 @@ name: Release
 
 # Pushing a v* tag builds the shipping exe, writes the checksum manifest the
 # in-app updater verifies against, and drafts a GitHub Release with the
-# matching CHANGELOG section as its notes. Publishing the draft is a manual
-# step; that publish is what triggers the winget workflow.
+# matching CHANGELOG section as its notes. A tag with a pre-release suffix
+# (v0.1.0-alpha.1) drafts a pre-release. Publishing the draft is a manual
+# step; publishing a full release is what triggers the winget workflow.
 on:
   push:
     tags: ['v*']
@@ -60,11 +61,12 @@ jobs:
           Get-Content artifacts/notes.md
 
       - name: Draft the GitHub Release
+        shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-        run: >
-          gh release create "${{ github.ref_name }}"
-          artifacts/Weatherspell.exe artifacts/SHA256SUMS
-          --draft
-          --title "Weatherspell ${{ github.ref_name }}"
-          --notes-file artifacts/notes.md
+        run: |
+          # SemVer's hyphen marks a pre-release; GitHub then keeps it out of
+          # "latest" and out of the winget workflow's release event.
+          $flags = @()
+          if ("${{ github.ref_name }}" -match '-') { $flags += '--prerelease' }
+          gh release create "${{ github.ref_name }}" artifacts/Weatherspell.exe artifacts/SHA256SUMS --draft --title "Weatherspell ${{ github.ref_name }}" --notes-file artifacts/notes.md @flags

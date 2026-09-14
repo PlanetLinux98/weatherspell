@@ -9,6 +9,12 @@ versions.
 
 ## [Unreleased]
 
+## [0.1.0-alpha.1] - 2026-09-13
+
+A first preview for testing, ahead of 0.1.0. Download `Weatherspell.exe`
+and run it; there is nothing to install. Windows 10 (version 1903 or later)
+or Windows 11.
+
 ### Added
 - Weather alerts for Canada and the United States, first in the text, most
   severe first, each on one line with when it ends and who issued it; Enter
@@ -42,4 +48,5 @@ versions.
 - The window follows the Windows display scale and the Text size
   accessibility setting, in the system font.
 
-[Unreleased]: https://github.com/PlanetLinux98/weatherspell/commits/main
+[Unreleased]: https://github.com/PlanetLinux98/weatherspell/compare/v0.1.0-alpha.1...HEAD
+[0.1.0-alpha.1]: https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.1.0-alpha.1
