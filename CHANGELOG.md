@@ -37,7 +37,8 @@ versions.
   and pressure. Whole degrees, chances rounded to tens, "kilometres an hour"
   rather than symbols, and the location's own times with yours in brackets
   when they differ. Units follow the Windows region setting.
-- Ctrl+PageDown and Ctrl+PageUp jump between sections; F5 refreshes.
+- Standard Windows menus, so every shortcut is read out where it is shown:
+  Ctrl+PageDown and Ctrl+PageUp jump between sections, F5 refreshes.
 - The window follows the Windows display scale and the Text size
   accessibility setting, in the system font.
 

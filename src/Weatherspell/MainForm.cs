@@ -58,23 +58,25 @@ internal sealed class MainForm : Form
         Size = new Size(720, 560);
         Scaling.Apply(this);
 
-        var menu = new MenuStrip { TabIndex = 0 };
-        var file = new ToolStripMenuItem("&File");
-        file.DropDownItems.Add(new ToolStripMenuItem("&Refresh", null, async (_, _) => await RefreshAsync(keepCaret: true)) { ShortcutKeys = Keys.F5 });
-        file.DropDownItems.Add(new ToolStripSeparator());
-        // Alt+F4 already closes the window; the display string only advertises it.
-        file.DropDownItems.Add(new ToolStripMenuItem("E&xit", null, (_, _) => Close()) { ShortcutKeyDisplayString = "Alt+F4" });
-        var locations = new ToolStripMenuItem("&Locations");
-        locations.DropDownItems.Add(new ToolStripMenuItem("&Find Location...", null, (_, _) => FindLocation()) { ShortcutKeys = Keys.Control | Keys.L });
-        var view = new ToolStripMenuItem("&View");
-        view.DropDownItems.Add(new ToolStripMenuItem("&Next Section", null, (_, _) => JumpSection(+1)) { ShortcutKeys = Keys.Control | Keys.PageDown });
-        view.DropDownItems.Add(new ToolStripMenuItem("&Previous Section", null, (_, _) => JumpSection(-1)) { ShortcutKeys = Keys.Control | Keys.PageUp });
-        view.DropDownItems.Add(new ToolStripSeparator());
-        view.DropDownItems.Add(new ToolStripMenuItem("&Alerts", null, (_, _) => JumpToAlerts()) { ShortcutKeys = Keys.Control | Keys.Shift | Keys.A });
-        var help = new ToolStripMenuItem("&Help");
-        help.DropDownItems.Add(new ToolStripMenuItem("&About Weatherspell", null, (_, _) => ShowAbout()));
-        menu.Items.AddRange([file, locations, view, help]);
-        MainMenuStrip = menu;
+        // The native Windows menu bar, not MenuStrip: on this runtime
+        // MenuStrip tells a screen reader each item's mnemonic and never its
+        // shortcut (see NOTES.md, #15). Ctrl+PageDown/PageUp are not in the
+        // Shortcut enum, so they are written after a tab (the accelerator
+        // column) and caught in ProcessCmdKey; Alt+F4 is the window's own.
+        var file = new MenuItem("&File");
+        file.MenuItems.Add(new MenuItem("&Refresh", async (_, _) => await RefreshAsync(keepCaret: true), Shortcut.F5));
+        file.MenuItems.Add(new MenuItem("-"));
+        file.MenuItems.Add(new MenuItem("E&xit\tAlt+F4", (_, _) => Close()));
+        var locations = new MenuItem("&Locations");
+        locations.MenuItems.Add(new MenuItem("&Find Location...", (_, _) => FindLocation(), Shortcut.CtrlL));
+        var view = new MenuItem("&View");
+        view.MenuItems.Add(new MenuItem("&Next Section\tCtrl+PageDown", (_, _) => JumpSection(+1)));
+        view.MenuItems.Add(new MenuItem("&Previous Section\tCtrl+PageUp", (_, _) => JumpSection(-1)));
+        view.MenuItems.Add(new MenuItem("-"));
+        view.MenuItems.Add(new MenuItem("&Alerts", (_, _) => JumpToAlerts(), Shortcut.CtrlShiftA));
+        var help = new MenuItem("&Help");
+        help.MenuItems.Add(new MenuItem("&About Weatherspell", (_, _) => ShowAbout()));
+        Menu = new MainMenu([file, locations, view, help]);
 
         // Header row: the label is the combo box's visible name; AccessibleName
         // repeats it verbatim so the announced name never drifts from the screen.
@@ -144,7 +146,6 @@ internal sealed class MainForm : Form
         Controls.Add(forecastLabel);
         Controls.Add(header);
         Controls.Add(statusBar);
-        Controls.Add(menu);
 
         _locations.SelectedIndexChanged += async (_, _) => await OnLocationChangedAsync();
         _forecast.KeyDown += OnForecastKeyDown;
@@ -430,21 +431,25 @@ internal sealed class MainForm : Form
         _forecast.ScrollToCaret();
     }
 
-    private void OnForecastKeyDown(object? sender, KeyEventArgs e)
+    // The section keys work wherever focus is, like the menu's own shortcuts.
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
-        if (e.Control && e.KeyCode == Keys.PageDown)
+        if (keyData == (Keys.Control | Keys.PageDown))
         {
             JumpSection(+1);
-            e.Handled = true;
-            e.SuppressKeyPress = true;
+            return true;
         }
-        else if (e.Control && e.KeyCode == Keys.PageUp)
+        if (keyData == (Keys.Control | Keys.PageUp))
         {
             JumpSection(-1);
-            e.Handled = true;
-            e.SuppressKeyPress = true;
+            return true;
         }
-        else if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && AlertAtCaret() is WeatherAlert alert)
+        return base.ProcessCmdKey(ref msg, keyData);
+    }
+
+    private void OnForecastKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && AlertAtCaret() is WeatherAlert alert)
         {
             e.Handled = true;
             e.SuppressKeyPress = true;

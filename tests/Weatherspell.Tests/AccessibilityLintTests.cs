@@ -62,6 +62,26 @@ public class AccessibilityLintTests
         Assert.Contains(failures, f => f.Contains("tab index 0 is shared"));
     }
 
+    [Fact]
+    public void Lint_reports_menu_items_without_a_mnemonic_or_sharing_one()
+    {
+        var failures = Sta.Run(() =>
+        {
+            using var form = new Form { Text = "Probe" };
+            var file = new MenuItem("&File");
+            file.MenuItems.Add(new MenuItem("&Refresh"));
+            file.MenuItems.Add(new MenuItem("-"));
+            file.MenuItems.Add(new MenuItem("&Rename"));
+            file.MenuItems.Add(new MenuItem("Exit	Alt+F4"));
+            form.Menu = new MainMenu([file]);
+            return AccessibilityLint.Check(form).ToList();
+        });
+
+        Assert.Contains(failures, f => f.Contains("\"Rename\"") && f.Contains("mnemonic r is also \"Refresh\"'s"));
+        Assert.Contains(failures, f => f.Contains("\"Exit\"") && f.Contains("no mnemonic"));
+        Assert.Equal(2, failures.Count);
+    }
+
     // The exceptions must be deliberate: a tag on the control, not a quiet
     // drift. Tagged controls pass; untagged ones with the same names fail.
     [Fact]

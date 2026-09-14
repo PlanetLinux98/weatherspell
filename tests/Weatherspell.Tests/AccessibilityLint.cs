@@ -100,6 +100,51 @@ internal static class AccessibilityLint
                 yield return $"ToolStripItem \"{item.Name}\" ({item.GetType().Name}): no text and no AccessibleName.";
             }
         }
+
+        // The native menu bar: every item has text, and within one menu
+        // the mnemonics are distinct, or the second one needs a second press.
+        if (form.Menu is not null)
+        {
+            foreach (var failure in CheckMenu(form.Menu.MenuItems, "menu bar"))
+            {
+                yield return failure;
+            }
+        }
+    }
+
+    private static IEnumerable<string> CheckMenu(Menu.MenuItemCollection items, string where)
+    {
+        var mnemonics = new Dictionary<char, string>();
+        foreach (MenuItem item in items)
+        {
+            if (item.Text == "-")
+            {
+                continue;
+            }
+            var text = StripMnemonic(item.Text).Split('\t')[0];
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                yield return $"MenuItem in the {where}: no text.";
+                continue;
+            }
+            var mnemonic = char.ToLowerInvariant(item.Mnemonic);
+            if (mnemonic == '\0')
+            {
+                yield return $"MenuItem \"{text}\" in the {where}: no mnemonic.";
+            }
+            else if (mnemonics.TryGetValue(mnemonic, out var other))
+            {
+                yield return $"MenuItem \"{text}\" in the {where}: mnemonic {mnemonic} is also \"{other}\"'s.";
+            }
+            else
+            {
+                mnemonics[mnemonic] = text;
+            }
+            foreach (var failure in CheckMenu(item.MenuItems, $"{text} menu"))
+            {
+                yield return failure;
+            }
+        }
     }
 
     private static bool HasTag(Control control, string tag) =>

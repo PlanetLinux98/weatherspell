@@ -74,6 +74,29 @@ Every accessible name, tab index and label association is then visible in one
 readable file and reviewable in a diff, which matters more here than
 drag-and-drop layout. The forms are simple enough that this costs little.
 
+## Menus are the native Windows menu bar
+
+The menu bar is `MainMenu`, the Win32 menu bar, not the WinForms `MenuStrip`
+the designer offers. `MenuStrip` draws its own menus and supplies its own
+accessibility objects, and on .NET Framework 4.8 those hand a screen reader
+each item's mnemonic letter and never its shortcut, so the menus could not
+tell anyone about F5 or Ctrl+PageDown; the popup was even named after the
+internal control ("ViewDropDown"). The native menu bar is what every other
+Windows program's menus are: `menu bar`, popups named for their menu, items
+read as "Refresh F5" and "Next Section Ctrl+PageDown", and the system menu
+font, which the Windows Text size setting scales.
+
+Two things follow. `MainMenu`'s `Shortcut` enum has no PageUp/PageDown, so
+the section keys are written into the item text after a tab (the native
+accelerator column, exposed like any other) and handled by the form itself.
+And `MainMenu` exists only on .NET Framework: if the app ever moves to a
+newer runtime, where `MenuStrip` has proper UI Automation support, the menu
+goes back to `MenuStrip`; it is one block of code in the main form.
+
+Rejected: keeping `MenuStrip` and substituting a custom accessible object
+that adds the shortcut. It would still be a managed imitation of a menu,
+with its own keyboard and announcement quirks, patched from the outside.
+
 ## Accessible name is the visible text
 
 Screen readers announce a control by the text it shows. Text-less inputs take
