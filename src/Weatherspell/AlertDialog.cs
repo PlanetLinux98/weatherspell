@@ -25,24 +25,33 @@ internal sealed class AlertDialog : Form
         Size = new Size(600, 460);
         Scaling.Apply(this);
 
+        // Label before the text box in its own panel, so the native edit
+        // control's accessibility names the box from it (see NativeTextBox
+        // and MainForm).
+        var body = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2, TabIndex = 0 };
+        body.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        body.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
         var label = new Label
         {
             Text = "&Details",
             AutoSize = true,
-            Dock = DockStyle.Top,
-            Padding = new Padding(8, 8, 8, 2),
+            Anchor = AnchorStyles.Left,
+            Margin = new Padding(8, 8, 8, 2),
             TabIndex = 0,
         };
-        _text = new TextBox
+        _text = new NativeTextBox
         {
             AccessibleName = "Details",
             Multiline = true,
             ReadOnly = true,
             ScrollBars = ScrollBars.Vertical,
             Dock = DockStyle.Fill,
+            Margin = new Padding(0),
             WordWrap = true,
             TabIndex = 1,
         };
+        body.Controls.Add(label, 0, 0);
+        body.Controls.Add(_text, 0, 1);
         var sb = new StringBuilder();
         foreach (var paragraph in paragraphs)
         {
@@ -67,8 +76,7 @@ internal sealed class AlertDialog : Form
 
         // Fill first, bottom-docked last: WinForms docks the last-added
         // control first.
-        Controls.Add(_text);
-        Controls.Add(label);
+        Controls.Add(body);
         Controls.Add(buttons);
 
         AcceptButton = close;

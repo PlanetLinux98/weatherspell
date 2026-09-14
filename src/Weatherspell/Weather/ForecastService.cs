@@ -48,9 +48,13 @@ internal sealed class ForecastService
         {
             return (await fetch.ConfigureAwait(false), null);
         }
-        catch (Exception ex) when (ex is HttpRequestException or IOException or InvalidDataException or SerializationException or FormatException or XmlException)
+        catch (Exception ex) when (ex is HttpRequestException or IOException or InvalidDataException or SerializationException or FormatException or XmlException
+                                   || (ex is OperationCanceledException && !cancellationToken.IsCancellationRequested))
         {
-            return (null, $"{name}'s forecast text could not be fetched this time ({ex.Message}), so these sentences are written from Open-Meteo data.");
+            // HttpClient reports its timeout as a cancellation; the token
+            // says whether this one was the caller's.
+            var reason = ex is OperationCanceledException ? "it took too long to answer" : ex.Message;
+            return (null, $"{name}'s forecast text could not be fetched this time ({reason}), so these sentences are written from Open-Meteo data.");
         }
     }
 

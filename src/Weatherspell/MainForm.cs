@@ -21,8 +21,8 @@ internal sealed class MainForm : Form
     private readonly AlertService _alerts = new();
     private AppSettings _settings;
 
-    private readonly ComboBox _locations;
-    private readonly TextBox _forecast;
+    private readonly NativeComboBox _locations;
+    private readonly NativeTextBox _forecast;
     private readonly ToolStripStatusLabel _status;
     private SectionLayout _layout = SectionLayout.Empty;
     private CancellationTokenSource? _refreshing;
@@ -100,7 +100,7 @@ internal sealed class MainForm : Form
         header.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
         // Alt+O: Alt+L belongs to the Locations menu.
         var locationLabel = new Label { Text = "L&ocation", AutoSize = true, Anchor = AnchorStyles.Left, TabIndex = 0 };
-        _locations = new ComboBox
+        _locations = new NativeComboBox
         {
             AccessibleName = "Location",
             DropDownStyle = ComboBoxStyle.DropDownList,
@@ -118,24 +118,35 @@ internal sealed class MainForm : Form
         _locations.SizeChanged += (_, _) => FitHeader();
         FitHeader();
 
+        // Label and text box in their own panel, label first: the native
+        // edit control's accessibility (NativeTextBox) names the box from
+        // the static control just before it in z-order, which is the
+        // sibling order inside this panel; in the form itself the filling
+        // box has to come first for docking.
+        var body = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2, TabIndex = 2 };
+        body.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        body.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
         var forecastLabel = new Label
         {
             Text = "Forecast",
             AutoSize = true,
-            Dock = DockStyle.Top,
-            Padding = new Padding(8, 8, 8, 2),
-            TabIndex = 2,
+            Anchor = AnchorStyles.Left,
+            Margin = new Padding(8, 8, 8, 2),
+            TabIndex = 0,
         };
-        _forecast = new TextBox
+        _forecast = new NativeTextBox
         {
             AccessibleName = "Forecast",
             Multiline = true,
             ReadOnly = true,
             ScrollBars = ScrollBars.Vertical,
             Dock = DockStyle.Fill,
-            TabIndex = 3,
+            Margin = new Padding(0),
+            TabIndex = 1,
             WordWrap = true,
         };
+        body.Controls.Add(forecastLabel, 0, 0);
+        body.Controls.Add(_forecast, 0, 1);
 
         var statusBar = new StatusStrip { TabIndex = 4 };
         // Spring: a status label wider than the strip is not clipped by
@@ -150,8 +161,7 @@ internal sealed class MainForm : Form
 
         // Fill first: WinForms docks the last-added control first, so the
         // filling control must sit at index 0 to take what the others leave.
-        Controls.Add(_forecast);
-        Controls.Add(forecastLabel);
+        Controls.Add(body);
         Controls.Add(header);
         Controls.Add(statusBar);
 
@@ -303,11 +313,14 @@ internal sealed class MainForm : Form
             }
             TrySave();
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
         {
         }
-        catch (Exception ex) when (ex is System.Net.Http.HttpRequestException or IOException or InvalidDataException or System.Runtime.Serialization.SerializationException or FormatException)
+        catch (Exception ex) when (ex is System.Net.Http.HttpRequestException or IOException or InvalidDataException or System.Runtime.Serialization.SerializationException or FormatException or OperationCanceledException)
         {
+            // HttpClient reports its timeout as a cancellation; the token
+            // says whether this one was ours.
+            var reason = ex is OperationCanceledException ? "the weather service took too long to answer" : ex.Message;
             if (_shown?.Location == location)
             {
                 // The text on screen is this location's: it stays, dated
@@ -316,12 +329,12 @@ internal sealed class MainForm : Form
                 // left for the age line to tell.
                 _refreshProblem = "couldn't reach the weather service";
                 Rewrite(_shown, _shownAlerts);
-                _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}: {ex.Message}";
+                _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}: {reason}";
                 if (!automatic) Announcer.Say(this, $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTime(_shown.FetchedAt.ToLocalTime().DateTime)}.");
             }
             else
             {
-                SetText([new Section("Problem", [$"Couldn't fetch the forecast for {location.DisplayName}: {ex.Message}", "Press F5 to try again."])]);
+                SetText([new Section("Problem", [$"Couldn't fetch the forecast for {location.DisplayName}: {reason}", "Press F5 to try again."])]);
                 _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}.";
             }
         }

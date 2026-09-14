@@ -75,6 +75,24 @@ public class AccessibilityLintTests
     }
 
     [Fact]
+    public void Lint_insists_on_the_native_controls_and_the_label_before_a_text_box()
+    {
+        var failures = Sta.Run(() =>
+        {
+            using var form = new Form { Text = "Probe" };
+            form.Controls.Add(new Label { Name = "notesLabel", Text = "Notes", TabIndex = 0 });
+            form.Controls.Add(new ComboBox { Name = "units", AccessibleName = "Notes", TabIndex = 1 });
+            form.Controls.Add(new TextBox { Name = "notes", AccessibleName = "Notes", Multiline = true, TabIndex = 2 });
+            form.Controls.Add(new NativeTextBox { Name = "details", AccessibleName = "Details", Multiline = true, TabIndex = 3 });
+            return AccessibilityLint.Check(form).ToList();
+        });
+
+        Assert.Contains(failures, f => f.Contains("\"units\"") && f.Contains("NativeComboBox"));
+        Assert.Contains(failures, f => f.Contains("\"notes\"") && f.Contains("NativeTextBox"));
+        Assert.Contains(failures, f => f.Contains("\"details\"") && f.Contains("sibling just before"));
+    }
+
+    [Fact]
     public void Lint_reports_menu_items_without_a_mnemonic_or_sharing_one()
     {
         var failures = Sta.Run(() =>

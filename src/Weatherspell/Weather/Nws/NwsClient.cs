@@ -58,7 +58,7 @@ internal sealed class NwsClient
         {
             return await Http.GetStringAsync($"{Endpoint}/stations/{Uri.EscapeDataString(stationId)}/observations/latest", cancellationToken).ConfigureAwait(false);
         }
-        catch (HttpRequestException)
+        catch (Exception ex) when (ex is HttpRequestException || (ex is OperationCanceledException && !cancellationToken.IsCancellationRequested))
         {
             return null;
         }

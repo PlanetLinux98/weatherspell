@@ -60,6 +60,29 @@ internal static class AccessibilityLint
                 }
             }
 
+            // The native accessibility classes (see NativeControls.cs): a
+            // plain ComboBox is silent in NVDA when arrowed collapsed, and a
+            // plain multiline TextBox is read whole when the mouse crosses it.
+            // The native edit proxy takes its name from the static control
+            // just before it among its siblings, so that must be the label.
+            if (control is ComboBox && control is not NativeComboBox)
+            {
+                yield return $"{where}: use NativeComboBox, not ComboBox.";
+            }
+            if (control is TextBox { Multiline: true } && control is not NativeTextBox)
+            {
+                yield return $"{where}: use NativeTextBox for a multiline text box, not TextBox.";
+            }
+            if (control is NativeTextBox && control.Parent is Control parent)
+            {
+                var index = parent.Controls.IndexOf(control);
+                var before = index > 0 ? parent.Controls[index - 1] : null;
+                if (before is not Label label || StripMnemonic(label.Text) != control.AccessibleName)
+                {
+                    yield return $"{where}: the sibling just before a NativeTextBox must be its Label (\"{control.AccessibleName}\").";
+                }
+            }
+
             if (NeedsLabel.Any(t => t.IsAssignableFrom(type)))
             {
                 var name = control.AccessibleName;

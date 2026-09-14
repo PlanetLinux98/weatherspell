@@ -29,9 +29,12 @@ internal sealed class AlertService
         {
             return new AlertReport(Order(await fetch.ConfigureAwait(false)), attribution, null);
         }
-        catch (Exception ex) when (ex is HttpRequestException or IOException or InvalidDataException or SerializationException or FormatException)
+        catch (Exception ex) when (ex is HttpRequestException or IOException or InvalidDataException or SerializationException or FormatException
+                                   || (ex is OperationCanceledException && !cancellationToken.IsCancellationRequested))
         {
-            return new AlertReport([], attribution, ex.Message);
+            // HttpClient reports its timeout as a cancellation; the token
+            // says whether this one was the caller's.
+            return new AlertReport([], attribution, ex is OperationCanceledException ? "the alert service took too long to answer" : ex.Message);
         }
     }
 

@@ -35,6 +35,14 @@ versions.
 ### Fixed
 - Alert checks could stay off after the first location was added on a
   first run, until the next launch.
+- NVDA said nothing when a combo box was arrowed through without opening
+  its list, in the main window and in Settings.
+- NVDA read the whole forecast when the mouse pointer moved across it; it
+  now reads the paragraph under the pointer, as in any edit control.
+- A weather service that took too long to answer was treated as a
+  cancelled refresh: the status bar could stay at "Fetching" and an
+  automatic refresh failed silently. It now counts as a failed fetch, with
+  the reason stated.
 
 ## [0.1.0-alpha.1] - 2026-09-13
 

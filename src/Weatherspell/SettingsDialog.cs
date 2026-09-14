@@ -11,9 +11,9 @@ internal sealed class SettingsDialog : Form
     private readonly AppSettings _settings;
     private readonly int[] _forecastChoices;
     private readonly int[] _alertChoices;
-    private readonly ComboBox _forecastMinutes;
-    private readonly ComboBox _alertMinutes;
-    private readonly ComboBox _announcements;
+    private readonly NativeComboBox _forecastMinutes;
+    private readonly NativeComboBox _alertMinutes;
+    private readonly NativeComboBox _announcements;
 
     // Raised after the AppSettings has taken the fields' values.
     public event EventHandler? Applied;
@@ -140,10 +140,10 @@ internal sealed class SettingsDialog : Form
 
     // Label then combo box in one row and in tab order; the label's text is
     // the combo box's accessible name, verbatim.
-    private static ComboBox AddRow((GroupBox Box, TableLayoutPanel Table, TableLayoutPanel Outer) group, int row, string labelText, string name, IEnumerable<string> items, int selected)
+    private static NativeComboBox AddRow((GroupBox Box, TableLayoutPanel Table, TableLayoutPanel Outer) group, int row, string labelText, string name, IEnumerable<string> items, int selected)
     {
         var label = new Label { Text = labelText, AutoSize = true, Anchor = AnchorStyles.Left, TabIndex = row * 2 };
-        var combo = new ComboBox
+        var combo = new NativeComboBox
         {
             AccessibleName = name,
             DropDownStyle = ComboBoxStyle.DropDownList,

@@ -301,6 +301,37 @@ applies the result only when it differs (the age line, a day heading at
 midnight) and never while the user has a selection, so a copy in progress
 is not lost.
 
+## Two native controls with the classic accessibility
+
+Since .NET Framework 4.7.3, WinForms answers the accessibility requests
+for its controls itself, with objects that also speak UI Automation. NVDA
+(the reference screen reader) reads Win32 controls through MSAA, and two of
+those objects fall between the two APIs, found with NVDA's own event log on
+2026-09-14:
+
+- A combo box arrowed while collapsed was silent. WinForms fires the MSAA
+  value change, but NVDA drops MSAA events from any window that advertises
+  a UIA provider unless its class is on NVDA's Win32 list; the WinForms
+  class normalizes to "COMBOBOX", which is not on it ("Edit" is, so text
+  boxes were fine), and the matching UIA selection event is rejected on
+  the other side. `NativeComboBox` does not answer the UIA root request, so
+  the combo is a plain Win32 combo box to every screen reader.
+- A nudge of the mouse over the forecast read the whole text. NVDA reads
+  the text under the pointer through its edit-control support only when it
+  can identify the object under the pointer as the window's client object
+  (`IAccIdentity`), which WinForms' objects do not implement, so it fell
+  back to the control's name plus its entire value. `NativeTextBox` hands
+  the MSAA client request to the edit control itself, whose standard proxy
+  identifies itself; NVDA then reads the paragraph under the pointer. That
+  proxy names the box from the static control just before it among its
+  siblings, so each multiline box sits in a panel with its label first (the
+  lint checks the order).
+
+Both are one message on one control. Every combo box and every multiline
+text box in the app is one of these (the lint insists); the single-line
+search box keeps WinForms' object, since its label is not a sibling and a
+short value under the mouse is harmless.
+
 ## Settings are a few combo boxes
 
 The intervals are short lists in combo boxes rather than number fields: a
