@@ -53,7 +53,7 @@ internal sealed class ForecastService
         {
             // HttpClient reports its timeout as a cancellation; the token
             // says whether this one was the caller's.
-            var reason = ex is OperationCanceledException ? "it took too long to answer" : ex.Message;
+            var reason = ex is OperationCanceledException ? "it took too long to answer" : ex.GetBaseException().Message;
             return (null, $"{name}'s forecast text could not be fetched this time ({reason}), so these sentences are written from Open-Meteo data.");
         }
     }

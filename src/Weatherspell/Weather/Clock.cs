@@ -117,4 +117,8 @@ internal sealed class Clock
         var d = (int)age.TotalDays;
         return d == 1 ? "1 day ago" : $"{d} days ago";
     }
+
+    // After "from": "just now" would not follow it.
+    public static string AgeAfterFrom(TimeSpan age) =>
+        age < TimeSpan.FromMinutes(1) ? "less than a minute ago" : Age(age);
 }

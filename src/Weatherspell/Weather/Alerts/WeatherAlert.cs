@@ -53,11 +53,23 @@ internal sealed record WeatherAlert(
 // What one check for a location produced. Attribution is null where no
 // source covers the region; Problem is set when the source could not be
 // reached or read, in which case Alerts is empty and must not be read as
-// "none in effect".
-internal sealed record AlertReport(IReadOnlyList<WeatherAlert> Alerts, string? Attribution, string? Problem)
+// "none in effect", unless CheckedAt is also set: then Alerts are the last
+// ones known, from a check at that time, kept so an outage does not hide a
+// warning that may still be in effect (OrLastKnown).
+internal sealed record AlertReport(IReadOnlyList<WeatherAlert> Alerts, string? Attribution, string? Problem, DateTimeOffset? CheckedAt = null)
 {
     public static readonly AlertReport NotAvailable = new([], null, null);
 
     public bool IsAvailable => Attribution is not null;
     public bool Checked => Attribution is not null && Problem is null;
+
+    // This check's failure carrying an earlier report's alerts, dated by
+    // that report: what is shown while the service is unreachable. A check
+    // that succeeded, a region no source covers, and an earlier report that
+    // knew nothing all give this report unchanged. The writer drops alerts
+    // whose end has passed when it reads a dated report.
+    public AlertReport OrLastKnown(AlertReport? earlier) =>
+        Checked || !IsAvailable || earlier?.CheckedAt is null
+            ? this
+            : this with { Alerts = earlier.Alerts, CheckedAt = earlier.CheckedAt };
 }

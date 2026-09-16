@@ -16,7 +16,24 @@ internal static class AlertWriter
     public static Section Section(AlertReport? report, Clock clock, DateTime nowLocal)
     {
         if (report is null || !report.IsAvailable) return new Section(Heading, [NotAvailableLine]);
-        if (report.Problem is not null) return new Section(Heading, [$"Alerts couldn't be checked this time ({report.Problem}). Press F5 to try again."]);
+        if (report.Problem is string problem)
+        {
+            if (report.CheckedAt is not DateTimeOffset checkedAt)
+            {
+                return new Section(Heading, [$"Alerts couldn't be checked this time ({problem}). Press F5 to try again."]);
+            }
+            // The last check's alerts, dated before any of them is read, and
+            // without those whose end has passed: "until" would read as
+            // still in effect. An alert with no end is kept.
+            var age = Clock.AgeAfterFrom(nowLocal - clock.Local(checkedAt));
+            var alerts = report.Alerts.Where(a => a.Ends is null || clock.Local(a.Ends.Value) > nowLocal).ToList();
+            if (alerts.Count == 0)
+            {
+                return new Section(Heading, [$"Alerts couldn't be checked this time ({problem}); none were in effect {age}. Press F5 to try again."]);
+            }
+            var note = $"Alerts couldn't be checked this time ({problem}); showing the alerts from {age}. Press F5 to try again.";
+            return new Section(Heading, [note, .. alerts.Select(a => Line(a, clock, nowLocal))], [null, .. alerts]);
+        }
         if (report.Alerts.Count == 0) return new Section(Heading, [NoneLine]);
         return new Section(Heading, report.Alerts.Select(a => Line(a, clock, nowLocal)).ToList(), report.Alerts);
     }

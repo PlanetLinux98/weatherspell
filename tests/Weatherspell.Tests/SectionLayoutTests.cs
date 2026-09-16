@@ -44,6 +44,17 @@ public class SectionLayoutTests
         Assert.Null(layout.AlertAt(0));
     }
 
+    [Fact]
+    public void A_line_with_no_alert_of_its_own_is_skipped()
+    {
+        var layout = SectionLayout.Build([new Section("Alerts", ["Alerts couldn't be checked this time; showing the alerts from 2 hours ago.", "Frost advisory from Environment Canada. Press Enter for details."], [null, Frost])]);
+        var (start, _, alert) = Assert.Single(layout.AlertRanges);
+
+        Assert.Same(Frost, alert);
+        Assert.Equal("Frost advisory", layout.Text.Substring(start, 14));
+        Assert.Null(layout.AlertAt(layout.Text.IndexOf("checked")));
+    }
+
     // A rewrite keeps the reader on the same words: the same distance into
     // the section with the same heading, however much the text above grew.
     [Fact]

@@ -95,6 +95,8 @@ public class WordingTests
         Assert.Equal("5 minutes ago", Clock.Age(TimeSpan.FromMinutes(5.4)));
         Assert.Equal("2 hours ago", Clock.Age(TimeSpan.FromHours(2.9)));
         Assert.Equal("1 day ago", Clock.Age(TimeSpan.FromHours(30)));
+        Assert.Equal("less than a minute ago", Clock.AgeAfterFrom(TimeSpan.FromSeconds(20)));
+        Assert.Equal("2 hours ago", Clock.AgeAfterFrom(TimeSpan.FromHours(2.9)));
         Assert.Equal("12 hours and 42 minutes", Clock.Duration(45720));
         Assert.Equal("9 hours", Clock.Duration(32400));
         Assert.Equal("1 hour and 1 minute", Clock.Duration(3660));

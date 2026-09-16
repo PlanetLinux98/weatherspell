@@ -171,6 +171,31 @@ public class AlertOrderingAndTrackingTests
         // Issued afresh after ending: new again.
         Assert.Equal(["b"], AlertTracker.Update(seen, [b]).Select(x => x.Id).ToArray());
     }
+
+    [Fact]
+    public void A_failed_check_carries_the_last_known_alerts_and_their_time()
+    {
+        var a = Alert("a", "Rainfall warning", AlertSeverity.Severe, 18);
+        var checkedAt = new DateTimeOffset(2026, 9, 11, 12, 0, 0, TimeSpan.FromHours(-4));
+        var earlier = new AlertReport([a], "Environment Canada (weather.gc.ca)", null, checkedAt);
+        var failed = new AlertReport([], "Environment Canada (weather.gc.ca)", "503 Service Unavailable from api.weather.gc.ca");
+
+        var dated = failed.OrLastKnown(earlier);
+        Assert.Equal([a], dated.Alerts);
+        Assert.Equal(checkedAt, dated.CheckedAt);
+        Assert.Equal(failed.Problem, dated.Problem);
+        Assert.False(dated.Checked);
+
+        // Carried on again through a second outage, still dated by the check that succeeded.
+        Assert.Equal(checkedAt, failed.OrLastKnown(dated).CheckedAt);
+
+        // A check that succeeded, a region no source covers, and nothing known are all left as they are.
+        Assert.Same(earlier, earlier.OrLastKnown(dated));
+        Assert.Same(AlertReport.NotAvailable, AlertReport.NotAvailable.OrLastKnown(earlier));
+        Assert.Same(failed, failed.OrLastKnown(null));
+        Assert.Same(failed, failed.OrLastKnown(failed));
+        Assert.Same(failed, failed.OrLastKnown(AlertReport.NotAvailable));
+    }
 }
 
 public class AlertWriterTests
@@ -229,6 +254,33 @@ public class AlertWriterTests
         Assert.Equal(["Alerts couldn't be checked this time (503 Service Unavailable from api.weather.gc.ca). Press F5 to try again."], failed.Paragraphs);
 
         Assert.Equal(["No alerts in effect."], AlertWriter.Section(new AlertReport([], "Environment Canada (weather.gc.ca)", null), clock, NowLocal).Paragraphs);
+    }
+
+    [Fact]
+    public void A_failed_check_reads_the_last_known_alerts_dated_and_without_those_that_have_ended()
+    {
+        var clock = EasternClock();
+        var over = Alert("Fog advisory", new DateTimeOffset(2026, 9, 11, 14, 0, 0, Eastern));
+        var running = Alert("Rainfall warning", new DateTimeOffset(2026, 9, 11, 18, 0, 0, Eastern));
+        var open = Alert("Special weather statement", null);
+        var checkedAt = new DateTimeOffset(2026, 9, 11, 12, 40, 0, Eastern);
+        var failed = new AlertReport([], "Environment Canada (weather.gc.ca)", "503 Service Unavailable from api.weather.gc.ca");
+
+        var section = AlertWriter.Section(failed.OrLastKnown(new AlertReport([over, running, open], "Environment Canada (weather.gc.ca)", null, checkedAt)), clock, NowLocal);
+
+        Assert.Equal(
+            [
+                "Alerts couldn't be checked this time (503 Service Unavailable from api.weather.gc.ca); showing the alerts from 2 hours ago. Press F5 to try again.",
+                "Rainfall warning until 6:00 pm today, from Environment Canada. Press Enter for details.",
+                "Special weather statement from Environment Canada. Press Enter for details.",
+            ],
+            section.Paragraphs);
+        // The note is not an alert line; the lines after it are.
+        Assert.Equal([null, running, open], section.Alerts);
+
+        var quiet = AlertWriter.Section(failed.OrLastKnown(new AlertReport([over], "Environment Canada (weather.gc.ca)", null, new DateTimeOffset(NowLocal.AddSeconds(-30), Eastern))), clock, NowLocal);
+        Assert.Equal(["Alerts couldn't be checked this time (503 Service Unavailable from api.weather.gc.ca); none were in effect less than a minute ago. Press F5 to try again."], quiet.Paragraphs);
+        Assert.Null(quiet.Alerts);
     }
 
     [Fact]

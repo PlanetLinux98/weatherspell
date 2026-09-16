@@ -27,14 +27,14 @@ internal sealed class AlertService
         var (fetch, attribution) = source.Value;
         try
         {
-            return new AlertReport(Order(await fetch.ConfigureAwait(false)), attribution, null);
+            return new AlertReport(Order(await fetch.ConfigureAwait(false)), attribution, null, now);
         }
         catch (Exception ex) when (ex is HttpRequestException or IOException or InvalidDataException or SerializationException or FormatException
                                    || (ex is OperationCanceledException && !cancellationToken.IsCancellationRequested))
         {
             // HttpClient reports its timeout as a cancellation; the token
             // says whether this one was the caller's.
-            return new AlertReport([], attribution, ex is OperationCanceledException ? "the alert service took too long to answer" : ex.Message);
+            return new AlertReport([], attribution, ex is OperationCanceledException ? "the alert service took too long to answer" : ex.GetBaseException().Message);
         }
     }
 

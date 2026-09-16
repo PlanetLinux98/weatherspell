@@ -23,6 +23,16 @@ versions.
   Right now ("Showing the forecast from 20 minutes ago; couldn't reach the
   weather service"); the line also appears on its own once the text is 30
   minutes old, and there is no "Updated just now" line any more.
+- Each saved location's last forecast and alerts are kept on disk (under
+  `%APPDATA%\Weatherspell\cache`), so a launch or a switch that cannot
+  reach the weather service still shows them, dated the same way. The
+  Alerts section of a location whose check failed says when it was last
+  checked and lists the alerts still in effect from then, in place of
+  "couldn't be checked" alone. While a location is being fetched the text
+  says so, and a short spoken notification says when its forecast is
+  ready; the reason a fetch failed is now the underlying one ("The remote
+  name could not be resolved") rather than "An error occurred while
+  sending the request".
 
 ### Changed
 - Each location's whole text is in one unit system, so its numbers never

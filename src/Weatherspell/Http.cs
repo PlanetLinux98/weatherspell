@@ -19,8 +19,14 @@ internal static class Http
         return client;
     }
 
+    // Developer-only, like WEATHERSPELL_FONT_POINTS: when set, every request
+    // fails as if the network were down, so the cached view and its wording
+    // can be rehearsed without disconnecting the PC (and a remote session).
+    private static readonly bool Offline = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEATHERSPELL_OFFLINE"));
+
     public static async Task<string> GetStringAsync(string url, CancellationToken cancellationToken)
     {
+        if (Offline) throw new HttpRequestException($"{new Uri(url).Host} was not contacted (WEATHERSPELL_OFFLINE is set)");
         using var response = await Client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {

@@ -138,7 +138,7 @@ internal sealed class FindLocationDialog : Form
         }
         catch (Exception ex) when (ex is System.Net.Http.HttpRequestException or IOException or InvalidDataException or System.Runtime.Serialization.SerializationException)
         {
-            SetStatus($"Couldn't search: {ex.Message}");
+            SetStatus($"Couldn't search: {ex.GetBaseException().Message}");
             _query.Focus();
         }
         finally

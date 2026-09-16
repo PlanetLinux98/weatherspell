@@ -301,6 +301,33 @@ applies the result only when it differs (the age line, a day heading at
 midnight) and never while the user has a selection, so a copy in progress
 is not lost.
 
+## The cache is shown only after a fetch has failed
+
+Every successful fetch writes the location's forecast and alerts to one
+file under `%APPDATA%\Weatherspell\cache\`, named by its coordinates so a
+nickname or a rename keeps it. There is one file per saved location,
+overwritten each time and never appended to, so the cache is the size of
+the saved locations and files for removed locations are pruned at startup.
+
+The obvious use, showing the cached text the moment a location is chosen
+and swapping the live text in when it arrives, was rejected: a screen
+reader user who has started reading would have the words replaced under
+them, on every launch, to save a second or two. So a launch or a switch
+shows one line, "Fetching the forecast for Peterborough...", the live text
+replaces it when it lands (with a spoken notification, since the
+replacement itself makes no sound), and the cache is read only once the
+fetch has failed, which is immediate with no network and bounded by the
+HTTP timeout otherwise. What is then shown is the cached text with the
+same age line a failed refresh produces, and the last known alerts, dated
+("showing the alerts from 2 hours ago") and without any whose end has
+passed, since "until" would read as still in effect. A failed alert check
+on its own gets the same treatment, so an outage never leaves "No alerts
+in effect" standing undated.
+
+The live alert check is still awaited when the forecast fetch fails: the
+two services are independent, and an alert service that answers gives
+live alerts over cached text.
+
 ## Two native controls with the classic accessibility
 
 Since .NET Framework 4.7.3, WinForms answers the accessibility requests

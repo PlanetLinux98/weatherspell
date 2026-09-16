@@ -37,9 +37,9 @@ internal sealed class SectionLayout
             for (var i = 0; i < section.Paragraphs.Count; i++)
             {
                 var paragraph = section.Paragraphs[i];
-                if (section.Alerts is not null && i < section.Alerts.Count)
+                if (section.Alerts is not null && i < section.Alerts.Count && section.Alerts[i] is WeatherAlert alert)
                 {
-                    alertRanges.Add((sb.Length, sb.Length + paragraph.Length, section.Alerts[i]));
+                    alertRanges.Add((sb.Length, sb.Length + paragraph.Length, alert));
                 }
                 sb.Append(paragraph).Append("\r\n\r\n");
             }

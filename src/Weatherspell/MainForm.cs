@@ -1,4 +1,5 @@
 using System.Globalization;
+using Weatherspell.Cache;
 using Weatherspell.Settings;
 using Weatherspell.Weather;
 using Weatherspell.Weather.Alerts;
@@ -16,6 +17,7 @@ internal sealed class MainForm : Form
     private const int ForecastDays = 7;
 
     private readonly SettingsStore _store;
+    private readonly ForecastCache _cache;
     private readonly OpenMeteoClient _client = new();
     private readonly ForecastService _forecasts;
     private readonly AlertService _alerts = new();
@@ -50,6 +52,7 @@ internal sealed class MainForm : Form
     {
         _store = store;
         _settings = store.Load();
+        _cache = ForecastCache.Beside(store);
         _forecasts = new ForecastService(_client);
 
         Text = "Weatherspell";
@@ -200,6 +203,7 @@ internal sealed class MainForm : Form
         _forecastTimer.Start();
         _alertTimer.Start();
         _clockTimer.Start();
+        TryCache(() => _cache.Prune(_settings.Locations.Select(l => l.ToLocation())));
         if (_settings.Locations.Count == 0)
         {
             SetText([new Section("Welcome", ["No location yet. Press Ctrl+L, or use Locations > Find Location, to add one."])]);
@@ -289,55 +293,118 @@ internal sealed class MainForm : Form
         var token = _refreshing.Token;
 
         if (!automatic) _status.Text = $"Fetching the forecast for {location.DisplayName}...";
+        // A launch or a switch says what is happening rather than showing
+        // an empty box or the previous location's text; F5 and the timer
+        // keep the text, and the reader's place in it, until there is
+        // something new.
+        if (!keepCaret) ShowFetching(location);
+
+        var forecastTask = _forecasts.GetAsync(location, Units.For(location), ForecastDays, token);
+        var alertsTask = _alerts.GetAsync(location, DateTimeOffset.UtcNow, token);
+        Forecast? forecast = null;
+        var reason = "";
         try
         {
-            var forecastTask = _forecasts.GetAsync(location, Units.For(location), ForecastDays, token);
-            var alertsTask = _alerts.GetAsync(location, DateTimeOffset.UtcNow, token);
-            var forecast = await forecastTask;
-            var alerts = await alertsTask;
-            if (token.IsCancellationRequested) return;
-            saved.UtcOffsetSeconds = (int)forecast.UtcOffset.TotalSeconds;
-            _refreshProblem = null;
-            if (keepCaret) Rewrite(forecast, alerts); else Show(forecast, alerts);
-            _status.Text = $"{location.DisplayName}: updated {Clock.PcTime(DateTime.Now)} from {forecast.SourceName}";
-            // The next automatic refresh a full interval from this one.
-            _forecastTimer.Stop();
-            _forecastTimer.Start();
-            if (alerts.Checked)
-            {
-                var fresh = AlertTracker.Update(saved.SeenAlertIds, alerts.Alerts);
-                // F5 keeps the caret, so an alert that has appeared above it
-                // is spoken; a location shown from the top is read from its
-                // Alerts line anyway.
-                if (keepCaret && saved.NotifyAlerts) Announce(saved, fresh);
-            }
-            TrySave();
+            forecast = await forecastTask;
         }
         catch (OperationCanceledException) when (token.IsCancellationRequested)
         {
+            return;
         }
         catch (Exception ex) when (ex is System.Net.Http.HttpRequestException or IOException or InvalidDataException or System.Runtime.Serialization.SerializationException or FormatException or OperationCanceledException)
         {
             // HttpClient reports its timeout as a cancellation; the token
-            // says whether this one was ours.
-            var reason = ex is OperationCanceledException ? "the weather service took too long to answer" : ex.Message;
-            if (_shown?.Location == location)
-            {
-                // The text on screen is this location's: it stays, dated
-                // by the age line, rather than giving way to an error. A
-                // failure the user asked for is spoken; the timer's is
-                // left for the age line to tell.
-                _refreshProblem = "couldn't reach the weather service";
-                Rewrite(_shown, _shownAlerts);
-                _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}: {reason}";
-                if (!automatic) Announcer.Say(this, $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTime(_shown.FetchedAt.ToLocalTime().DateTime)}.");
-            }
-            else
-            {
-                SetText([new Section("Problem", [$"Couldn't fetch the forecast for {location.DisplayName}: {reason}", "Press F5 to try again."])]);
-                _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}.";
-            }
+            // says whether this one was ours. The innermost message names
+            // the cause ("The remote name could not be resolved"); the
+            // outer one says only that a request failed.
+            reason = ex is OperationCanceledException ? "the weather service took too long to answer" : ex.GetBaseException().Message;
         }
+        // The alert check reduces its own failures to a report, so it is
+        // waited for either way: an alert service that answers while the
+        // forecast's does not still gives live alerts.
+        AlertReport alerts;
+        try
+        {
+            alerts = await alertsTask;
+        }
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
+        {
+            return;
+        }
+        if (token.IsCancellationRequested) return;
+
+        if (forecast is null)
+        {
+            ShowFailure(saved, location, reason, alerts, keepCaret, automatic);
+            return;
+        }
+        saved.UtcOffsetSeconds = (int)forecast.UtcOffset.TotalSeconds;
+        _refreshProblem = null;
+        if (keepCaret) Rewrite(forecast, alerts); else Show(forecast, alerts);
+        _status.Text = $"{location.DisplayName}: updated {Clock.PcTime(DateTime.Now)} from {forecast.SourceName}";
+        // The next automatic refresh a full interval from this one.
+        _forecastTimer.Stop();
+        _forecastTimer.Start();
+        TrackAlerts(saved, alerts, announce: keepCaret);
+        // The reader is waiting on this text and its arrival makes no sound
+        // of its own; the timer's rewrites stay silent by design.
+        if (!keepCaret) Announcer.Say(this, $"{location.DisplayName}: forecast ready.");
+        TrySave();
+        TryCache(() => _cache.Save(location, forecast, alerts.Checked || !alerts.IsAvailable ? alerts : null));
+    }
+
+    private void ShowFetching(Location location)
+    {
+        _shown = null;
+        _shownAlerts = null;
+        _refreshProblem = null;
+        SetText([new Section($"Fetching the forecast for {location.DisplayName}...", [])]);
+    }
+
+    // What a failed fetch leaves on screen, dated by the age line under
+    // Right now rather than giving way to an error: the text already there
+    // (F5, the timer), else the cached text, else a Problem section. A
+    // failure the user asked for is spoken; the timer's is left for the
+    // age line to tell. Live alerts go with whichever text is shown; a
+    // failed check keeps the last known alerts, dated.
+    private void ShowFailure(SavedLocation saved, Location location, string reason, AlertReport alerts, bool keepCaret, bool automatic)
+    {
+        _refreshProblem = "couldn't reach the weather service";
+        if (_shown?.Location == location)
+        {
+            Rewrite(_shown, alerts.OrLastKnown(_shownAlerts));
+            _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}: {reason}";
+            if (!automatic) Announcer.Say(this, $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTime(_shown.FetchedAt.ToLocalTime().DateTime)}.");
+        }
+        else if (_cache.Load(location) is CachedForecast cached)
+        {
+            Show(cached.Forecast, alerts.OrLastKnown(cached.Alerts));
+            _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}: {reason}";
+            if (!automatic) Announcer.Say(this, $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTime(cached.Forecast.FetchedAt.ToLocalTime().DateTime)}.");
+        }
+        else
+        {
+            _refreshProblem = null;
+            SetText([new Section("Problem", [$"Couldn't fetch the forecast for {location.DisplayName}: {reason}", "Press F5 to try again."])]);
+            _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}.";
+            if (!automatic) Announcer.Say(this, $"Couldn't fetch the forecast for {location.DisplayName}.");
+        }
+        if (alerts.Checked)
+        {
+            TrackAlerts(saved, alerts, announce: keepCaret);
+            TrySave();
+            TryCache(() => _cache.SaveAlerts(location, alerts));
+        }
+    }
+
+    // announce: F5 keeps the caret, so an alert that has appeared above it
+    // is spoken; a location shown from the top is read from its Alerts
+    // line anyway.
+    private void TrackAlerts(SavedLocation saved, AlertReport alerts, bool announce)
+    {
+        if (!alerts.Checked) return;
+        var fresh = AlertTracker.Update(saved.SeenAlertIds, alerts.Alerts);
+        if (announce && saved.NotifyAlerts) Announce(saved, fresh);
     }
 
     private IReadOnlyList<Section> Render() =>
@@ -411,16 +478,22 @@ internal sealed class MainForm : Form
                 if (isCurrent ? !includeCurrent : !saved.NotifyAlerts) continue;
                 var location = saved.ToLocation();
                 var report = await _alerts.GetAsync(location, DateTimeOffset.UtcNow, _closing.Token);
-                if (!report.Checked || !_settings.Locations.Contains(saved)) continue;
-                var before = saved.SeenAlertIds.ToList();
-                var fresh = AlertTracker.Update(saved.SeenAlertIds, report.Alerts);
-                if (!before.SequenceEqual(saved.SeenAlertIds)) changed = true;
-                if (saved.NotifyAlerts) Announce(saved, fresh);
-                // Only if the text on screen is still this location's: the
-                // user may have switched while the check was in flight.
-                if (ReferenceEquals(saved, CurrentSaved) && _shown?.Location == location && _shownAlerts is not null && Signature(_shownAlerts) != Signature(report))
+                if (!_settings.Locations.Contains(saved)) continue;
+                if (report.Checked)
                 {
-                    Rewrite(_shown, report);
+                    var before = saved.SeenAlertIds.ToList();
+                    var fresh = AlertTracker.Update(saved.SeenAlertIds, report.Alerts);
+                    if (!before.SequenceEqual(saved.SeenAlertIds)) changed = true;
+                    if (saved.NotifyAlerts) Announce(saved, fresh);
+                    TryCache(() => _cache.SaveAlerts(location, report));
+                }
+                // Only if the text on screen is still this location's: the
+                // user may have switched while the check was in flight. A
+                // check that failed dates the alerts it leaves on screen.
+                if (ReferenceEquals(saved, CurrentSaved) && _shown?.Location == location && _shownAlerts is not null)
+                {
+                    var shown = report.OrLastKnown(_shownAlerts);
+                    if (Signature(_shownAlerts) != Signature(shown)) Rewrite(_shown, shown);
                 }
             }
             if (changed) TrySave();
@@ -435,7 +508,7 @@ internal sealed class MainForm : Form
     }
 
     private static string Signature(AlertReport r) =>
-        r.Problem ?? string.Join("|", r.Alerts.Select(a => $"{a.Id}@{a.Issued:o}-{a.Ends:o}"));
+        $"{r.Problem}|{r.CheckedAt:o}|{string.Join("|", r.Alerts.Select(a => $"{a.Id}@{a.Issued:o}-{a.Ends:o}"))}";
 
     private void Announce(SavedLocation saved, IReadOnlyList<WeatherAlert> fresh)
     {
@@ -502,6 +575,20 @@ internal sealed class MainForm : Form
             e.Handled = true;
             e.SuppressKeyPress = true;
             ShowAlertDetails(alert);
+        }
+    }
+
+    // The cache is a convenience: a folder that cannot be written costs the
+    // offline view, not the forecast.
+    private void TryCache(Action write)
+    {
+        try
+        {
+            write();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            _status.Text = $"Couldn't keep the forecast for offline use: {ex.Message}";
         }
     }
 

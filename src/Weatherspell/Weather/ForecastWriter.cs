@@ -5,8 +5,8 @@ using Weatherspell.Weather.Alerts;
 namespace Weatherspell.Weather;
 
 // Alerts, when set, runs parallel to Paragraphs: the alert each line stands
-// for, which Enter on that line opens.
-internal sealed record Section(string Heading, IReadOnlyList<string> Paragraphs, IReadOnlyList<WeatherAlert>? Alerts = null);
+// for, which Enter on that line opens; null for a line that is not one.
+internal sealed record Section(string Heading, IReadOnlyList<string> Paragraphs, IReadOnlyList<WeatherAlert?>? Alerts = null);
 
 // RefreshProblem is why the text on screen was not replaced by the last
 // refresh ("couldn't reach the weather service"), or null when it was.
@@ -131,7 +131,7 @@ internal static class ForecastWriter
     public static string? Freshness(TimeSpan age, string? problem)
     {
         if (problem is null && age < StaleAfter) return null;
-        var when = age < TimeSpan.FromMinutes(1) ? "less than a minute ago" : Clock.Age(age);
+        var when = Clock.AgeAfterFrom(age);
         return problem is null ? $"Showing the forecast from {when}." : $"Showing the forecast from {when}; {problem}.";
     }
 
