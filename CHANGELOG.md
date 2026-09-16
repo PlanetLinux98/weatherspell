@@ -9,6 +9,12 @@ versions.
 
 ## [Unreleased]
 
+## [0.1.0-alpha.2] - 2026-09-15
+
+A second preview for testing, ahead of 0.1.0. Download `Weatherspell.exe`
+and run it; there is nothing to install. Windows 10 (version 1903 or later)
+or Windows 11. Settings and saved locations from alpha.1 carry over.
+
 ### Added
 - A Settings dialog (Settings menu): how often the forecast on screen is
   refreshed (15 minutes to 2 hours, default 30), how often every saved
@@ -93,5 +99,6 @@ or Windows 11.
 - The window follows the Windows display scale and the Text size
   accessibility setting, in the system font.
 
-[Unreleased]: https://github.com/PlanetLinux98/weatherspell/compare/v0.1.0-alpha.1...HEAD
+[Unreleased]: https://github.com/PlanetLinux98/weatherspell/compare/v0.1.0-alpha.2...HEAD
+[0.1.0-alpha.2]: https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.1.0-alpha.2
 [0.1.0-alpha.1]: https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.1.0-alpha.1
