@@ -98,8 +98,8 @@ internal sealed class CityPageClient
     private static IReadOnlyList<OfficialPeriod> ParsePeriods(XElement root)
     {
         // Some sites (Alert, Eureka) only ever report observations.
-        var group = root.Element("forecastGroup") ?? throw new NoForecastTextException();
-        var issued = LocalDate(group, "forecastIssue") ?? throw new NoForecastTextException();
+        var group = root.Element("forecastGroup") ?? throw new NoForecastTextException("City page has no forecast text.");
+        var issued = LocalDate(group, "forecastIssue") ?? throw new NoForecastTextException("City page has no forecast text.");
 
         // Periods are named, not dated: "Tonight" belongs to the issue date,
         // a weekday name to the first such day from there on, and the names
@@ -173,7 +173,3 @@ internal sealed class CityPageClient
         element is not null && double.TryParse(element.Value.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out var v) ? v : null;
 }
 
-// A city page with no forecast text at all, as for the observation-only
-// Arctic sites: not a failure that another try would fix, so it is worded
-// as a fact (ForecastService) rather than "could not be fetched this time".
-internal sealed class NoForecastTextException() : IOException("City page has no forecast text.");

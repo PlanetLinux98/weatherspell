@@ -26,6 +26,13 @@ internal sealed record Observation(
     double? DewPointC,
     double? VisibilityMetres);
 
+// A service that has no forecast text for a place at all: Environment
+// Canada's observation-only Arctic sites (Alert, Eureka), an NWS point with
+// no forecast grid (American Samoa). Not a failure another try would fix,
+// so ForecastService words it as a fact, not "could not be fetched this
+// time" (#21).
+internal sealed class NoForecastTextException(string message) : IOException(message);
+
 // Official sentences are shown as written, in the service's own units, with
 // one typographic pass so they read aloud the way the service says them on
 // the radio: symbols become words.

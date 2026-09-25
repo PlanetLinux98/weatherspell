@@ -77,7 +77,8 @@ internal sealed class NwsClient
         var p = Json.Read<NwsPointsResponse>(json).Properties ?? throw new InvalidDataException("NWS points response has no properties.");
         if (string.IsNullOrEmpty(p.Forecast) || string.IsNullOrEmpty(p.ObservationStations))
         {
-            throw new InvalidDataException("NWS points response names no forecast grid.");
+            // American Samoa's points have alerts but no forecast grid (#19).
+            throw new NoForecastTextException("NWS points response names no forecast grid.");
         }
         var near = p.RelativeLocation?.Properties;
         var attribution = $"{SourceName} (weather.gov)";

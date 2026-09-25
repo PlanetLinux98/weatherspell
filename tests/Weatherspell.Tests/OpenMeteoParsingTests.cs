@@ -84,6 +84,29 @@ public class OpenMeteoParsingTests
     }
 
     [Fact]
+    public void A_territory_the_geocoder_gives_no_country_is_named_and_covered_by_the_nws()
+    {
+        // As the geocoder answered on 2026-09-25: a country code and no country.
+        const string json = """
+            {"results":[
+              {"id":4568127,"name":"San Juan","latitude":18.46633,"longitude":-66.10572,"country_code":"PR","timezone":"America/Puerto_Rico","population":418140,"admin1":"San Juan"},
+              {"id":5881576,"name":"Pago Pago","latitude":-14.27806,"longitude":-170.7025,"country_code":"AS","timezone":"Pacific/Pago_Pago","admin1":"Eastern District"},
+              {"id":2729907,"name":"Longyearbyen","latitude":78.22334,"longitude":15.64689,"country_code":"SJ","timezone":"Arctic/Longyearbyen"}
+            ]}
+            """;
+
+        var results = OpenMeteoClient.ParseSearch(json);
+
+        Assert.Equal("San Juan, Puerto Rico", results[0].FullName);
+        Assert.True(results[0].IsNwsCovered);
+        Assert.Equal("Pago Pago, Eastern District, American Samoa", results[1].FullName);
+        Assert.True(results[1].IsNwsCovered);
+        // Elsewhere a missing country stays missing.
+        Assert.Null(results[2].Country);
+        Assert.False(results[2].IsNwsCovered);
+    }
+
+    [Fact]
     public void Empty_geocoding_response_yields_no_results()
     {
         Assert.Empty(OpenMeteoClient.ParseSearch("{\"generationtime_ms\":0.5}"));

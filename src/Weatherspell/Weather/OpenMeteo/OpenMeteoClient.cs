@@ -56,7 +56,10 @@ internal sealed class OpenMeteoClient
         foreach (var r in response.Results ?? [])
         {
             if (string.IsNullOrWhiteSpace(r.Name)) continue;
-            list.Add(new Location(r.Name!, r.Admin1, r.Country, r.Latitude, r.Longitude, r.Timezone, Population: r.Population));
+            var country = string.IsNullOrWhiteSpace(r.Country) && r.CountryCode is string code && Location.NwsTerritories.TryGetValue(code, out var territory)
+                ? territory
+                : r.Country;
+            list.Add(new Location(r.Name!, r.Admin1, country, r.Latitude, r.Longitude, r.Timezone, Population: r.Population));
         }
         return list;
     }

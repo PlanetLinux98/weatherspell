@@ -17,12 +17,10 @@ internal sealed class AlertService
 
     public async Task<AlertReport> GetAsync(Location location, DateTimeOffset now, CancellationToken cancellationToken)
     {
-        (Task<IReadOnlyList<WeatherAlert>> Fetch, string Attribution)? source = location.Country switch
-        {
-            "Canada" => (_canada.GetAsync(location, now, cancellationToken), AlertsClient.Attribution),
-            "United States" => (_nws.GetAsync(location, cancellationToken), NwsAlertsClient.Attribution),
-            _ => null,
-        };
+        (Task<IReadOnlyList<WeatherAlert>> Fetch, string Attribution)? source =
+            location.Country == "Canada" ? (_canada.GetAsync(location, now, cancellationToken), AlertsClient.Attribution)
+            : location.IsNwsCovered ? (_nws.GetAsync(location, cancellationToken), NwsAlertsClient.Attribution)
+            : null;
         if (source is null) return AlertReport.NotAvailable;
         var (fetch, attribution) = source.Value;
         try

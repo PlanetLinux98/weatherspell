@@ -36,12 +36,10 @@ internal sealed class ForecastService
 
     private async Task<(OfficialForecast? Official, string? Problem)> OfficialAsync(Location location, UnitSystem units, CancellationToken cancellationToken)
     {
-        Task<OfficialForecast>? fetch = location.Country switch
-        {
-            "Canada" => _canada.GetAsync(location, cancellationToken),
-            "United States" => _nws.GetAsync(location, units, cancellationToken),
-            _ => null,
-        };
+        Task<OfficialForecast>? fetch =
+            location.Country == "Canada" ? _canada.GetAsync(location, cancellationToken)
+            : location.IsNwsCovered ? _nws.GetAsync(location, units, cancellationToken)
+            : null;
         if (fetch is null) return (null, null);
         var name = location.Country == "Canada" ? CityPageClient.SourceName : NwsClient.SourceName;
         try

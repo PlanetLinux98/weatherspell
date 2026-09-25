@@ -41,6 +41,11 @@ versions.
   International Airport"); an Environment Canada site with no forecast text
   says so instead of that the text could not be fetched this time; the
   offline alerts line reads "none were in effect when last checked" (#21).
+- Puerto Rico, the US Virgin Islands, Guam, the Northern Mariana Islands
+  and American Samoa got neither National Weather Service text nor alerts,
+  and were saved with no territory in their name ("San Juan"). They are now
+  named and covered like the states; American Samoa, which has no NWS
+  forecast text, gets its alerts (#19).
 
 ## [0.1.0-alpha.2] - 2026-09-15
 
