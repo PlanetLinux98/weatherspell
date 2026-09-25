@@ -25,6 +25,11 @@ versions.
 - Find Location says how many places it found after moving to the results
   rather than while NVDA is announcing them, and says when a search took
   too long instead of leaving "Searching" (#17).
+- An alert with no end time, such as a hurricane watch, was read as ending
+  when its message expired ("Hurricane watch until 1:00 pm today", the time
+  of the next update), and the offline view dropped it then. Such an alert
+  now reads without "until", and its details say when the message expires
+  (#20).
 
 ## [0.1.0-alpha.2] - 2026-09-15
 

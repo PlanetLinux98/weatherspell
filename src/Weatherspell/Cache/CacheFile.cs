@@ -262,6 +262,7 @@ internal sealed class AlertData
     [DataMember(Name = "description")] public string? Description;
     [DataMember(Name = "instruction")] public string? Instruction;
     [DataMember(Name = "url")] public string? Url;
+    [DataMember(Name = "expires")] public string? Expires;
 
     public static AlertData From(WeatherAlert a) => new()
     {
@@ -278,6 +279,7 @@ internal sealed class AlertData
         Description = a.Description,
         Instruction = a.Instruction,
         Url = a.Url,
+        Expires = Iso.Write(a.Expires),
     };
 
     public WeatherAlert To() => new(
@@ -293,5 +295,6 @@ internal sealed class AlertData
         Level,
         Iso.Required(Description, "alert description"),
         Instruction,
-        Url);
+        Url,
+        Iso.ReadStampOrNull(Expires));
 }

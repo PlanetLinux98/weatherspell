@@ -43,14 +43,15 @@ internal sealed class NwsAlertsClient
                 Severity: Severity(a.Severity),
                 Issued: sent,
                 Onset: Time(a.Onset),
-                Ends: Time(a.Ends) ?? Time(a.Expires),
+                Ends: Time(a.Ends),
                 Source: SpokenSource,
                 Sender: string.IsNullOrWhiteSpace(a.SenderName) ? NwsClient.SourceName : a.SenderName!.Trim(),
                 Area: string.IsNullOrWhiteSpace(a.AreaDesc) ? "" : a.AreaDesc!.Trim(),
                 Level: null,
                 Description: a.Description ?? "",
                 Instruction: string.IsNullOrWhiteSpace(a.Instruction) ? null : a.Instruction,
-                Url: ProductUrl(a)));
+                Url: ProductUrl(a),
+                Expires: Time(a.Expires)));
         }
         return list;
     }

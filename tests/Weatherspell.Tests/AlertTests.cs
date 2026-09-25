@@ -44,6 +44,21 @@ public class NwsAlertParsingTests
     }
 
     [Fact]
+    public void A_message_expiry_is_never_taken_for_the_end()
+    {
+        // Hilo on 2026-09-25: the tropical products give no end, only when
+        // the message runs out (the next update); the flood watch gives both.
+        var alerts = NwsAlertsClient.Parse(Fixtures.Read("nws-alerts-hilo.json"));
+        var hurricane = Assert.Single(alerts, a => a.Event == "Hurricane watch");
+        var flood = Assert.Single(alerts, a => a.Event == "Flood watch");
+
+        Assert.Null(hurricane.Ends);
+        Assert.Equal(new DateTimeOffset(2026, 9, 25, 23, 15, 0, TimeSpan.FromHours(-10)), hurricane.Expires);
+        Assert.Equal(new DateTimeOffset(2026, 9, 26, 18, 0, 0, TimeSpan.FromHours(-10)), flood.Ends);
+        Assert.Equal(new DateTimeOffset(2026, 9, 25, 18, 45, 0, TimeSpan.FromHours(-10)), flood.Expires);
+    }
+
+    [Fact]
     public void An_update_keeps_the_identity_of_the_event_it_continues()
     {
         var a = Assert.Single(NwsAlertsClient.Parse(Fixtures.Read("nws-alerts-pawhuska.json")));
@@ -331,6 +346,21 @@ public class AlertWriterTests
         Assert.Equal("http://www.weather.gov/safety/flood", d[10]);
         Assert.Equal("Instructions: You should monitor later forecasts and be prepared to take action should Flash Flood Warnings be issued.", d[11]);
         Assert.Equal(12, d.Count);
+    }
+
+    [Fact]
+    public void An_alert_with_no_end_reads_without_until_and_its_details_say_when_the_message_expires()
+    {
+        var alert = Assert.Single(NwsAlertsClient.Parse(Fixtures.Read("nws-alerts-hilo.json")), a => a.Event == "Hurricane watch");
+        var hawaii = TimeSpan.FromHours(-10);
+        var clock = new Clock(hawaii, TimeZoneInfo.CreateCustomTimeZone("test-pc", hawaii, "Test", "Test"), "h:mm tt", CultureInfo.InvariantCulture);
+        var now = new DateTime(2026, 9, 25, 11, 30, 0);
+
+        Assert.Equal("Hurricane watch from the National Weather Service. Press Enter for details.", AlertWriter.Line(alert, clock, now));
+        Assert.Equal("Hilo: hurricane watch.", AlertWriter.Announcement("Hilo", [alert], clock, now));
+        var d = AlertWriter.Details(alert, clock, now);
+        Assert.Equal("Hurricane watch from NWS Honolulu HI.", d[0]);
+        Assert.Equal("No end time is given; this message expires at 11:15 pm today.", d[1]);
     }
 
     [Fact]

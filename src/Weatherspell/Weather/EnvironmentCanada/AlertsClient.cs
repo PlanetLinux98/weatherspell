@@ -57,14 +57,15 @@ internal sealed class AlertsClient
                 Severity: Severity(a.Colour, a.AlertType),
                 Issued: Time(a.Published)!.Value,
                 Onset: Time(a.Valid),
-                Ends: Time(a.EventEnd) ?? expires,
+                Ends: Time(a.EventEnd),
                 Source: SourceName,
                 Sender: SourceName,
                 Area: string.IsNullOrWhiteSpace(a.Area) ? "" : a.Area!.Trim(),
                 Level: Level(a),
                 Description: a.Text ?? "",
                 Instruction: null,
-                Url: url));
+                Url: url,
+                Expires: expires));
         }
         return list;
     }

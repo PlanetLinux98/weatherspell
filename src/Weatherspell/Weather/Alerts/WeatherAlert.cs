@@ -17,7 +17,10 @@ internal enum AlertKind { Warning, Watch, Advisory, Statement, Other }
 // Times keep the offset the service gave them; the writer moves them to the
 // location's own zone. Source is the phrase that follows "from" in a
 // sentence ("Environment Canada", "the National Weather Service"); Sender
-// is the issuing office as the service names it.
+// is the issuing office as the service names it. Ends is when the hazard
+// is expected to end, and only that: Expires is when this message runs
+// out, which for a hurricane watch is when the next update is due, not
+// when the watch ends, so it is never read as "until" (#20).
 internal sealed record WeatherAlert(
     string Id,
     string Event,
@@ -31,7 +34,8 @@ internal sealed record WeatherAlert(
     string? Level,
     string Description,
     string? Instruction,
-    string? Url)
+    string? Url,
+    DateTimeOffset? Expires = null)
 {
     public AlertKind Kind
     {

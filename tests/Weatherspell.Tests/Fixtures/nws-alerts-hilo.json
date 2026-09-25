@@ -1,0 +1,1204 @@
+{
+    "@context": [
+        "https://geojson.org/geojson-ld/geojson-context.jsonld",
+        {
+            "@version": "1.1",
+            "wx": "https://api.weather.gov/ontology#",
+            "@vocab": "https://api.weather.gov/ontology#"
+        }
+    ],
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.1266b3e9d07c9dd057cac5d02f1e75c2829c7ea0.001.1",
+            "type": "Feature",
+            "geometry": null,
+            "properties": {
+                "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.1266b3e9d07c9dd057cac5d02f1e75c2829c7ea0.001.1",
+                "@type": "wx:Alert",
+                "id": "urn:oid:2.49.0.1.840.0.1266b3e9d07c9dd057cac5d02f1e75c2829c7ea0.001.1",
+                "areaDesc": "Lanai Mauka; Kahoolawe; Maui Windward West; Maui Leeward West; Haleakala Summit; Kona; Kohala; Big Island Interior; Big Island Summit; Molokai Windward; Molokai Southeast; Molokai North; Molokai West; Molokai Leeward South; Lanai Windward; Lanai Leeward; Lanai South; Maui Central Valley North; Maui Central Valley South; Windward Haleakala; Kipahulu; South Maui/Upcountry; South Haleakala; Big Island South; Big Island Southeast; Big Island East; Big Island North",
+                "geocode": {
+                    "SAME": [
+                        "015009",
+                        "015001"
+                    ],
+                    "UGC": [
+                        "HIZ015",
+                        "HIZ016",
+                        "HIZ017",
+                        "HIZ018",
+                        "HIZ022",
+                        "HIZ023",
+                        "HIZ026",
+                        "HIZ027",
+                        "HIZ028",
+                        "HIZ037",
+                        "HIZ038",
+                        "HIZ039",
+                        "HIZ040",
+                        "HIZ041",
+                        "HIZ042",
+                        "HIZ043",
+                        "HIZ044",
+                        "HIZ045",
+                        "HIZ046",
+                        "HIZ047",
+                        "HIZ048",
+                        "HIZ049",
+                        "HIZ050",
+                        "HIZ051",
+                        "HIZ052",
+                        "HIZ053",
+                        "HIZ054"
+                    ]
+                },
+                "affectedZones": [
+                    "https://api.weather.gov/zones/forecast/HIZ015",
+                    "https://api.weather.gov/zones/forecast/HIZ016",
+                    "https://api.weather.gov/zones/forecast/HIZ017",
+                    "https://api.weather.gov/zones/forecast/HIZ018",
+                    "https://api.weather.gov/zones/forecast/HIZ022",
+                    "https://api.weather.gov/zones/forecast/HIZ023",
+                    "https://api.weather.gov/zones/forecast/HIZ026",
+                    "https://api.weather.gov/zones/forecast/HIZ027",
+                    "https://api.weather.gov/zones/forecast/HIZ028",
+                    "https://api.weather.gov/zones/forecast/HIZ037",
+                    "https://api.weather.gov/zones/forecast/HIZ038",
+                    "https://api.weather.gov/zones/forecast/HIZ039",
+                    "https://api.weather.gov/zones/forecast/HIZ040",
+                    "https://api.weather.gov/zones/forecast/HIZ041",
+                    "https://api.weather.gov/zones/forecast/HIZ042",
+                    "https://api.weather.gov/zones/forecast/HIZ043",
+                    "https://api.weather.gov/zones/forecast/HIZ044",
+                    "https://api.weather.gov/zones/forecast/HIZ045",
+                    "https://api.weather.gov/zones/forecast/HIZ046",
+                    "https://api.weather.gov/zones/forecast/HIZ047",
+                    "https://api.weather.gov/zones/forecast/HIZ048",
+                    "https://api.weather.gov/zones/forecast/HIZ049",
+                    "https://api.weather.gov/zones/forecast/HIZ050",
+                    "https://api.weather.gov/zones/forecast/HIZ051",
+                    "https://api.weather.gov/zones/forecast/HIZ052",
+                    "https://api.weather.gov/zones/forecast/HIZ053",
+                    "https://api.weather.gov/zones/forecast/HIZ054"
+                ],
+                "references": [],
+                "sent": "2026-09-25T11:12:00-10:00",
+                "effective": "2026-09-25T11:12:00-10:00",
+                "onset": "2026-09-25T11:12:00-10:00",
+                "expires": "2026-09-25T19:15:00-10:00",
+                "ends": null,
+                "status": "Actual",
+                "messageType": "Alert",
+                "category": "Met",
+                "severity": "Moderate",
+                "certainty": "Likely",
+                "urgency": "Expected",
+                "event": "Tropical Cyclone Local Statement",
+                "sender": "w-nws.webmaster@noaa.gov",
+                "senderName": "NWS Honolulu HI",
+                "headline": "Tropical Cyclone Local Statement issued September 25 at 11:12AM HST by NWS Honolulu HI",
+                "description": "HLSHFO\n\nThis product covers the Hawaiian islands\n\n**HEAVY RAIN BANDS REMAIN JUST OFFSHORE WHILE A STRENGTHENING NOLO\nSLOWLY MOVES NORTHWARD**\n\nNEW INFORMATION\n---------------\n\n* CHANGES TO WATCHES AND WARNINGS:\n- None\n\n* CURRENT WATCHES AND WARNINGS:\n- A Tropical Storm Warning and Hurricane Watch are in effect for\nBig Island East, Big Island Interior, Big Island North, Big\nIsland South, Big Island Southeast, Big Island Summits, Kohala,\nand Kona\n- A Tropical Storm Watch is in effect for Haleakala Summit,\nKahoolawe, Kipahulu, Lanai Leeward, Lanai Mauka, Lanai South,\nLanai Windward, Maui Central Valley North, Maui Central Valley\nSouth, Maui Leeward West, Maui Windward West, Molokai Leeward\nSouth, Molokai North, Molokai Southeast, Molokai West, Molokai\nWindward, South Haleakala, South Maui/Upcountry, and Windward\nHaleakala\n\n* STORM INFORMATION:\n- About 370 miles south-southeast of Honolulu or about 220 miles\nsouth of Hilo\n- 16.5N 155.4W\n- Storm Intensity 105 mph\n- Movement North-northeast or 15 degrees at 5 mph\n\nSITUATION OVERVIEW\n------------------\n\nHurricane Nolo is moving slowly northward and will continue to do so\nthrough tonight. Nolo is then forecast to make a sharp turn to the\nwest on Saturday as it strengthens to a major hurricane. Nolo is\nforecast to continue westward through the weekend with the center\npassing south of the state. However, impacts from Nolo will be felt\nwell outside the center of the storm.\n\nBands of intense showers and thunderstorms associated with Nolo will\naffect the Big Island and Maui County over the next couple of days,\nbeginning later today over the Big Island and Saturday over Maui.\nExcessive rainfall is possible which could lead to locally\ncatastrophic flash flooding and mudslides across windward and\nsoutheast Big Island. Flooding can occur even in areas not usually\nprone to flooding. Additional rainfall amounts of 10 to 15 inches\nare possible on the Big Island, with localized higher amounts of 20\ninches. On Maui, additional rainfall amounts of 4 to 8 inches are\npossible, with localized higher amounts of 15 inches. Outer rain\nbands associated with Nolo could reach the other smaller islands,\nand would be enhanced by the terrain.\n\nTropical storm force winds are expected to reach the Big Island as\nearly as this afternoon, with hurricane force winds possible by late\ntonight. The earliest reasonable time of arrival for tropical storm\nforce winds is predawn Saturday for Maui County. A Tropical Storm\nWarning and Hurricane Watch is in effect for Big Island, and a\nTropical Storm Watch is in effect for the islands of Maui County. A\nWind Advisory has been issued for the rest of the state.\n\nSwell generated by Nolo could bring very large and rough surf and\ndangerous rip currents for south and southeast facing shores,\nespecially for the Big Island. A High Surf Advisory remains in\neffect for south and east facing shores of Big Island and east\nfacing shores of Maui and Molokai. A High Surf Advisory has also\nbeen issued for east facing shores of Niihau, Kauai, and Oahu\nbeginning tonight.\n\nTornadoes and large waterspouts will be possible associated with\nNolo, mainly over and near the Big Island, along and to the right of\nthe track of the tropical cyclone.\n\nPOTENTIAL IMPACTS\n-----------------\n\n* FLOODING RAIN:\nProtect against life-threatening rainfall flooding having possible\ndevastating impacts across east and southeast Big Island. Potential\nimpacts include:\n- Extreme rainfall flooding may prompt numerous evacuations and\nrescues.\n- Rivers and tributaries may overwhelmingly overflow their banks\nin many places with deep moving water. Small streams, creeks,\ncanals, arroyos, and ditches may become raging rivers. In\nmountain areas, deadly runoff may rage down valleys while\nincreasing susceptibility to rockslides and mudslides. Flood\ncontrol systems and barriers may become stressed.\n- Flood waters can enter numerous structures within multiple\ncommunities, some structures becoming uninhabitable or washed\naway. Numerous places where flood waters may cover escape\nroutes. Streets and parking lots become rivers of raging water\nwith underpasses submerged. Driving conditions become very\ndangerous. Numerous road and bridge closures with some weakened\nor washed out.\n\nProtect against life-threatening rainfall flooding having possible\nlimited to extensive impacts across northwest Big Island and Maui Island.\n\nElsewhere across the Hawaiian islands, little to no impact is\nanticipated.\n\n* WIND:\nProtect against dangerous wind having possible significant impacts\nacross Big Island. Potential impacts in this area include:\n- Some damage to roofing and siding materials, along with damage\nto porches, awnings, carports, and sheds. A few buildings\nexperiencing window, door, and garage door failures. Mobile\nhomes damaged, especially if unanchored. Unsecured lightweight\nobjects become dangerous projectiles.\n- Several large trees snapped or uprooted, but with greater\nnumbers in places where trees are shallow rooted. Several\nfences and roadway signs blown over.\n- Some roads impassable from large debris, and more within urban\nor heavily wooded places. A few bridges, causeways, and access\nroutes impassable.\n- Scattered power and communications outages, but more prevalent\nin areas with above ground lines.\n\nAlso, protect against hazardous wind having possible limited impacts\nacross the rest of the main Hawaiian Islands.\n\n* SURGE:\nProtect against locally hazardous surge having possible limited\nimpacts across Big Island. Potential impacts in this area include:\n- Localized inundation with storm surge flooding mainly along\nimmediate shorelines and in low-lying spots, or in areas\nfarther inland near where higher surge waters move ashore.\n- Sections of near-shore roads and parking lots become overspread\nwith surge water. Driving conditions dangerous in places where\nsurge water covers the road.\n- Moderate beach erosion. Heavy surf also breaching dunes, mainly\nin usually vulnerable locations. Strong rip currents.\n- Minor to locally moderate damage to marinas, docks, boardwalks,\nand piers. A few small craft broken away from moorings.\n\nElsewhere across the Hawaiian islands, little to no impact is\nanticipated.\n\n* TORNADOES:\nProtect against a tornado event having possible limited impacts\nacross the Hawaiian islands. Potential impacts include:\n- The occurrence of isolated tornadoes can hinder the execution\nof emergency plans during tropical events.\n- A few places may experience tornado damage, along with power\nand communications disruptions.\n- Locations could realize roofs peeled off buildings, chimneys\ntoppled, mobile homes pushed off foundations or overturned,\nlarge tree tops and branches snapped off, shallow-rooted trees\nknocked over, moving vehicles blown off roads, and small boats\npulled from moorings.\n\nPRECAUTIONARY/PREPAREDNESS ACTIONS\n----------------------------------\n\n* EVACUATIONS:\nFollow the advice of local officials\n\n* OTHER PREPAREDNESS INFORMATION:\nNow is the time to complete all preparations to protect life and\nproperty in accordance with your emergency plan. Ensure you are in a\nsafe location before the onset of strong winds or possible flooding.\n\nIf you are relocating to safe shelter, leave as early as possible.\nAllow extra time to reach your destination. Many roads and bridges\nwill be closed once strong winds arrive. Check the latest weather\nforecast before departing and drive with caution.\n\nIf heading to a community shelter, become familiar with the shelter\nrules before arrival, especially if you have special needs or have\npets. Take essential items with you from your Emergency Supplies Kit.\n\nFailure to adequately shelter may result in serious injury or loss of\nlife. Always heed the advice of local officials and comply with any\norders that are issued. Remember, during the storm 9 1 1 Emergency\nServices may not be able to immediately respond if conditions are\nunsafe. This should be a big factor in your decision making.\n\nKeep cell phones well charged. Cell phone chargers for automobiles\ncan be helpful, but be aware of your risk for deadly carbon monoxide\npoisoning if your car is left idling in a garage or other poorly\nventilated area.\n\nIt is important to remain calm, informed, and focused during an\nemergency. Be patient and helpful with those you encounter.\n\nIf you are a visitor, be sure to know the name of the city or town in\nwhich you are staying and the name of the county or parish in which\nit resides. Listen for these locations in local news updates. Pay\nattention for instructions from local authorities.\n\nStorm surge is the leading killer associated with tropical storms and\nhurricanes! Make sure you are in a safe area away from the surge\nzone. Even if you are not in a surge-prone area, you could find\nyourself cutoff by flood waters during and after the storm. Heed\nevacuation orders issued by the local authorities.\n\nRapidly rising flood waters are deadly. If you are in a flood-prone\narea, consider moving to higher ground. Never drive through a flooded\nroadway. Remember, turn around don't drown!\n\nIf a Tornado Warning is issued for your area, be ready to shelter\nquickly, preferably away from windows and in an interior room not\nprone to flooding. If driving, scan the roadside for quick shelter\noptions.\n\nIf in a place that is vulnerable to high wind, such as near large\ntrees, a manufactured home, upper floors of a high-rise building, or\non a boat, consider moving to a safer shelter before the onset of\nstrong winds or flooding.\n\nClosely monitor weather.gov, NOAA Weather radio or local news outlets\nfor official storm information. Be ready to adapt to possible changes\nto the forecast. Ensure you have multiple ways to receive weather\nwarnings.\n\n* ADDITIONAL SOURCES OF INFORMATION:\n- For information on appropriate preparations see ready.gov\n- For information on creating an emergency plan see getagameplan.org\n- For additional disaster preparedness information see redcross.org\n\nNEXT UPDATE\n-----------\n\nThe next local statement will be issued by the National Weather\nService in Honolulu HI around 5 PM HST, or sooner if conditions\nwarrant.",
+                "instruction": null,
+                "response": "Monitor",
+                "note": null,
+                "parameters": {
+                    "AWIPSidentifier": [
+                        "HLSHFO"
+                    ],
+                    "WMOidentifier": [
+                        "WTHW80 PHFO 252112"
+                    ],
+                    "NWSheadline": [
+                        "HEAVY RAIN BANDS REMAIN JUST OFFSHORE WHILE A STRENGTHENING NOLO\nSLOWLY MOVES NORTHWARD"
+                    ],
+                    "BLOCKCHANNEL": [
+                        "EAS",
+                        "NWEM",
+                        "CMAS"
+                    ],
+                    "EAS-ORG": [
+                        "WXR"
+                    ]
+                },
+                "scope": "Public",
+                "code": "IPAWSv1.0",
+                "language": "en-US",
+                "web": "http://www.weather.gov",
+                "eventCode": {
+                    "SAME": [
+                        "HLS"
+                    ],
+                    "NationalWeatherService": [
+                        "HLS"
+                    ]
+                }
+            }
+        },
+        {
+            "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.7808c1574e7b0a32c26c9052420d64c7400d6c63.023.1",
+            "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -154.807,
+                            19.519
+                        ],
+                        [
+                            -154.885,
+                            19.448
+                        ],
+                        [
+                            -154.916,
+                            19.426
+                        ],
+                        [
+                            -154.985,
+                            19.395
+                        ],
+                        [
+                            -155.119,
+                            19.362
+                        ],
+                        [
+                            -155.161,
+                            19.354
+                        ],
+                        [
+                            -155.182,
+                            19.353
+                        ],
+                        [
+                            -155.207,
+                            19.36
+                        ],
+                        [
+                            -155.229,
+                            19.374
+                        ],
+                        [
+                            -155.245,
+                            19.394
+                        ],
+                        [
+                            -155.294,
+                            19.503
+                        ],
+                        [
+                            -155.299,
+                            19.512
+                        ],
+                        [
+                            -155.293,
+                            19.519
+                        ],
+                        [
+                            -155.282,
+                            19.546
+                        ],
+                        [
+                            -155.302,
+                            19.596
+                        ],
+                        [
+                            -155.345,
+                            19.695
+                        ],
+                        [
+                            -155.343,
+                            19.723
+                        ],
+                        [
+                            -155.302,
+                            19.757
+                        ],
+                        [
+                            -155.282,
+                            19.811
+                        ],
+                        [
+                            -155.285,
+                            19.857
+                        ],
+                        [
+                            -155.308,
+                            19.906
+                        ],
+                        [
+                            -155.334,
+                            19.924
+                        ],
+                        [
+                            -155.274,
+                            20.018
+                        ],
+                        [
+                            -155.24,
+                            19.996
+                        ],
+                        [
+                            -155.238,
+                            19.99
+                        ],
+                        [
+                            -155.212,
+                            19.977
+                        ],
+                        [
+                            -155.196,
+                            19.958
+                        ],
+                        [
+                            -155.178,
+                            19.951
+                        ],
+                        [
+                            -155.138,
+                            19.918
+                        ],
+                        [
+                            -155.124,
+                            19.901
+                        ],
+                        [
+                            -155.119,
+                            19.885
+                        ],
+                        [
+                            -155.092,
+                            19.867
+                        ],
+                        [
+                            -155.082,
+                            19.85
+                        ],
+                        [
+                            -155.085,
+                            19.829
+                        ],
+                        [
+                            -155.092,
+                            19.823
+                        ],
+                        [
+                            -155.089,
+                            19.813
+                        ],
+                        [
+                            -155.094,
+                            19.813
+                        ],
+                        [
+                            -155.086,
+                            19.803
+                        ],
+                        [
+                            -155.09,
+                            19.797
+                        ],
+                        [
+                            -155.089,
+                            19.765
+                        ],
+                        [
+                            -155.094,
+                            19.76
+                        ],
+                        [
+                            -155.09,
+                            19.729
+                        ],
+                        [
+                            -155.071,
+                            19.725
+                        ],
+                        [
+                            -155.066,
+                            19.733
+                        ],
+                        [
+                            -155.062,
+                            19.727
+                        ],
+                        [
+                            -155.052,
+                            19.734
+                        ],
+                        [
+                            -155.061,
+                            19.743
+                        ],
+                        [
+                            -155.047,
+                            19.734
+                        ],
+                        [
+                            -155.04,
+                            19.742
+                        ],
+                        [
+                            -155.022,
+                            19.735
+                        ],
+                        [
+                            -155.014,
+                            19.74
+                        ],
+                        [
+                            -155.003,
+                            19.738
+                        ],
+                        [
+                            -154.978,
+                            19.69
+                        ],
+                        [
+                            -154.983,
+                            19.675
+                        ],
+                        [
+                            -154.979,
+                            19.639
+                        ],
+                        [
+                            -154.959,
+                            19.625
+                        ],
+                        [
+                            -154.947,
+                            19.626
+                        ],
+                        [
+                            -154.945,
+                            19.604
+                        ],
+                        [
+                            -154.904,
+                            19.571
+                        ],
+                        [
+                            -154.867,
+                            19.551
+                        ],
+                        [
+                            -154.824,
+                            19.537
+                        ],
+                        [
+                            -154.807,
+                            19.519
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.7808c1574e7b0a32c26c9052420d64c7400d6c63.023.1",
+                "@type": "wx:Alert",
+                "id": "urn:oid:2.49.0.1.840.0.7808c1574e7b0a32c26c9052420d64c7400d6c63.023.1",
+                "areaDesc": "Big Island East",
+                "geocode": {
+                    "SAME": [
+                        "015001"
+                    ],
+                    "UGC": [
+                        "HIZ053"
+                    ]
+                },
+                "affectedZones": [
+                    "https://api.weather.gov/zones/forecast/HIZ053"
+                ],
+                "references": [
+                    {
+                        "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.8557e3a0908b5aa519e41745c6d2352969a54c4e.023.1",
+                        "identifier": "urn:oid:2.49.0.1.840.0.8557e3a0908b5aa519e41745c6d2352969a54c4e.023.1",
+                        "sender": "w-nws.webmaster@noaa.gov",
+                        "sent": "2026-09-25T04:59:00-10:00"
+                    }
+                ],
+                "sent": "2026-09-25T11:03:00-10:00",
+                "effective": "2026-09-25T11:03:00-10:00",
+                "onset": "2026-09-25T11:03:00-10:00",
+                "expires": "2026-09-25T23:15:00-10:00",
+                "ends": null,
+                "status": "Actual",
+                "messageType": "Update",
+                "category": "Met",
+                "severity": "Severe",
+                "certainty": "Possible",
+                "urgency": "Future",
+                "event": "Hurricane Watch",
+                "sender": "w-nws.webmaster@noaa.gov",
+                "senderName": "NWS Honolulu HI",
+                "headline": "Hurricane Watch issued September 25 at 11:03AM HST by NWS Honolulu HI",
+                "description": "* LOCATIONS AFFECTED\n- Hilo\n- Pahoa\n- Volcano\n\n* WIND\n- LATEST LOCAL FORECAST: Below tropical storm force wind\n- Peak Wind Forecast: 15-25 mph with gusts to 35 mph\n\n- THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST\nUNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for wind 58\nto 73 mph\n- The wind threat has remained nearly steady from the\nprevious assessment.\n- PLAN: Plan for dangerous wind of equivalent strong tropical\nstorm force.\n- PREPARE: Remaining efforts to protect life and property\nshould be completed as soon as possible. Prepare for\nsignificant wind damage.\n- ACT: Move to safe shelter before the wind becomes hazardous.\n\n- POTENTIAL IMPACTS: Significant\n- Some damage to roofing and siding materials, along with\ndamage to porches, awnings, carports, and sheds. A few\nbuildings experiencing window, door, and garage door\nfailures. Mobile homes damaged, especially if unanchored.\nUnsecured lightweight objects become dangerous projectiles.\n- Several large trees snapped or uprooted, but with greater\nnumbers in places where trees are shallow rooted. Several\nfences and roadway signs blown over.\n- Some roads impassable from large debris, and more within\nurban or heavily wooded places. A few bridges, causeways,\nand access routes impassable.\n- Scattered power and communications outages, but more\nprevalent in areas with above ground lines.\n\n* STORM SURGE\n- LATEST LOCAL FORECAST: Localized storm surge possible\n- Peak Storm Surge Inundation: The potential for 1-3 feet\nabove ground somewhere within surge prone areas\n- Window of concern: Begins this morning\n\n- THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST\nUNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for storm\nsurge flooding greater than 1 foot above ground\n- The storm surge threat has remained nearly steady from the\nprevious assessment.\n- PLAN: Plan for storm surge flooding greater than 1 foot\nabove ground.\n- PREPARE: Complete preparations for storm surge flooding,\nespecially in low-lying vulnerable areas, before conditions\nbecome unsafe.\n- ACT: Leave immediately if evacuation orders are given for\nyour area.\n\n- POTENTIAL IMPACTS: Limited\n- Localized inundation with storm surge flooding mainly along\nimmediate shorelines and in low-lying spots, or in areas\nfarther inland near where higher surge waters move ashore.\n- Sections of near-shore roads and parking lots become\noverspread with surge water. Driving conditions dangerous\nin places where surge water covers the road.\n- Moderate beach erosion. Heavy surf also breaching dunes,\nmainly in usually vulnerable locations. Strong rip currents.\n- Minor to locally moderate damage to marinas, docks,\nboardwalks, and piers. A few small craft broken away from\nmoorings.\n\n* FLOODING RAIN\n- LATEST LOCAL FORECAST: Flood Watch is in effect\n- Peak Rainfall Amounts: Additional 8-12 inches, with locally\nhigher amounts\n\n- THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST\nUNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for extreme\nflooding rain\n- The flooding rain threat has remained nearly steady from\nthe previous assessment.\n- PLAN: Emergency plans should include the potential for\nextreme flooding from heavy rain. Evacuations and rescues\nare likely.\n- PREPARE: Urgently consider protective actions from extreme\nand widespread rainfall flooding.\n- ACT: Heed any flood watches and warnings. Failure to take\naction will likely result in serious injury or loss of life.\n\n- POTENTIAL IMPACTS: Devastating to Catastrophic\n- Extreme rainfall flooding may prompt numerous evacuations\nand rescues.\n- Rivers and tributaries may overwhelmingly overflow their\nbanks in many places with deep moving water. Small streams,\ncreeks, canals, arroyos, and ditches may become raging\nrivers. In mountain areas, deadly runoff may rage down\nvalleys while increasing susceptibility to rockslides and\nmudslides. Flood control systems and barriers may become\nstressed.\n- Flood waters can enter numerous structures within multiple\ncommunities, some structures becoming uninhabitable or\nwashed away. Numerous places where flood waters may cover\nescape routes. Streets and parking lots become rivers of\nraging water with underpasses submerged. Driving conditions\nbecome very dangerous. Numerous road and bridge closures\nwith some weakened or washed out.\n\n* TORNADO\n- LATEST LOCAL FORECAST:\n- Situation is somewhat favorable for tornadoes\n\n- THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST\nUNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for a few\ntornadoes\n- The tornado threat has remained nearly steady from the\nprevious assessment.\n- PLAN: Emergency plans should include the potential for a\nfew tornadoes.\n- PREPARE: If your shelter is particularly vulnerable to\ntornadoes, prepare to relocate to safe shelter before\nhazardous weather arrives.\n- ACT: If a tornado warning is issued, be ready to shelter\nquickly.\n\n- POTENTIAL IMPACTS: Limited\n- The occurrence of isolated tornadoes can hinder the\nexecution of emergency plans during tropical events.\n- A few places may experience tornado damage, along with\npower and communications disruptions.\n- Locations could realize roofs peeled off buildings,\nchimneys toppled, mobile homes pushed off foundations or\noverturned, large tree tops and branches snapped off,\nshallow-rooted trees knocked over, moving vehicles blown\noff roads, and small boats pulled from moorings.\n\n* FOR MORE INFORMATION:\n- https://www.weather.gov/hfo",
+                "instruction": null,
+                "response": "Prepare",
+                "note": null,
+                "parameters": {
+                    "AWIPSidentifier": [
+                        "TCVHFO"
+                    ],
+                    "WMOidentifier": [
+                        "WTHW80 PHFO 252103"
+                    ],
+                    "NWSheadline": [
+                        "TROPICAL STORM WARNING REMAINS IN EFFECT... ...HURRICANE WATCH REMAINS IN EFFECT"
+                    ],
+                    "BLOCKCHANNEL": [
+                        "EAS",
+                        "NWEM",
+                        "CMAS"
+                    ],
+                    "EAS-ORG": [
+                        "WXR"
+                    ],
+                    "VTEC": [
+                        "/O.CON.PHFO.HU.A.2015.000000T0000Z-000000T0000Z/"
+                    ],
+                    "expiredReferences": [
+                        "w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.4ddc2b465ec1aed8541c9a2013ad70c4bced1b08.023.1,2026-09-24T23:00:00-10:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.c7c48b3a72ac7ab3a795372b13d94f0820f4b52d.023.1,2026-09-24T16:53:00-10:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.c3126c4ccaa67bc07dfa47e9cdbf46d65f9328cf.023.1,2026-09-24T11:19:00-10:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.505969b4cd80e20f3a4aca9eec7fe4dbd80d59ec.004.1,2026-09-24T04:54:00-10:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.aaa3742406865941224d445b556f7686eedf4f02.004.1,2026-09-23T22:44:00-10:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.e4252018d6318bfb2a7a9a9d020c61228bd36409.004.1,2026-09-23T16:56:00-10:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.9a0ced30397152a87983a212c3eb87437d305097.004.1,2026-09-23T11:01:00-10:00"
+                    ]
+                },
+                "scope": "Public",
+                "code": "IPAWSv1.0",
+                "language": "en-US",
+                "web": "http://www.weather.gov",
+                "eventCode": {
+                    "SAME": [
+                        "HUA"
+                    ],
+                    "NationalWeatherService": [
+                        "HUA"
+                    ]
+                }
+            }
+        },
+        {
+            "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.7808c1574e7b0a32c26c9052420d64c7400d6c63.023.2",
+            "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -154.807,
+                            19.519
+                        ],
+                        [
+                            -154.885,
+                            19.448
+                        ],
+                        [
+                            -154.916,
+                            19.426
+                        ],
+                        [
+                            -154.985,
+                            19.395
+                        ],
+                        [
+                            -155.119,
+                            19.362
+                        ],
+                        [
+                            -155.161,
+                            19.354
+                        ],
+                        [
+                            -155.182,
+                            19.353
+                        ],
+                        [
+                            -155.207,
+                            19.36
+                        ],
+                        [
+                            -155.229,
+                            19.374
+                        ],
+                        [
+                            -155.245,
+                            19.394
+                        ],
+                        [
+                            -155.294,
+                            19.503
+                        ],
+                        [
+                            -155.299,
+                            19.512
+                        ],
+                        [
+                            -155.293,
+                            19.519
+                        ],
+                        [
+                            -155.282,
+                            19.546
+                        ],
+                        [
+                            -155.302,
+                            19.596
+                        ],
+                        [
+                            -155.345,
+                            19.695
+                        ],
+                        [
+                            -155.343,
+                            19.723
+                        ],
+                        [
+                            -155.302,
+                            19.757
+                        ],
+                        [
+                            -155.282,
+                            19.811
+                        ],
+                        [
+                            -155.285,
+                            19.857
+                        ],
+                        [
+                            -155.308,
+                            19.906
+                        ],
+                        [
+                            -155.334,
+                            19.924
+                        ],
+                        [
+                            -155.274,
+                            20.018
+                        ],
+                        [
+                            -155.24,
+                            19.996
+                        ],
+                        [
+                            -155.238,
+                            19.99
+                        ],
+                        [
+                            -155.212,
+                            19.977
+                        ],
+                        [
+                            -155.196,
+                            19.958
+                        ],
+                        [
+                            -155.178,
+                            19.951
+                        ],
+                        [
+                            -155.138,
+                            19.918
+                        ],
+                        [
+                            -155.124,
+                            19.901
+                        ],
+                        [
+                            -155.119,
+                            19.885
+                        ],
+                        [
+                            -155.092,
+                            19.867
+                        ],
+                        [
+                            -155.082,
+                            19.85
+                        ],
+                        [
+                            -155.085,
+                            19.829
+                        ],
+                        [
+                            -155.092,
+                            19.823
+                        ],
+                        [
+                            -155.089,
+                            19.813
+                        ],
+                        [
+                            -155.094,
+                            19.813
+                        ],
+                        [
+                            -155.086,
+                            19.803
+                        ],
+                        [
+                            -155.09,
+                            19.797
+                        ],
+                        [
+                            -155.089,
+                            19.765
+                        ],
+                        [
+                            -155.094,
+                            19.76
+                        ],
+                        [
+                            -155.09,
+                            19.729
+                        ],
+                        [
+                            -155.071,
+                            19.725
+                        ],
+                        [
+                            -155.066,
+                            19.733
+                        ],
+                        [
+                            -155.062,
+                            19.727
+                        ],
+                        [
+                            -155.052,
+                            19.734
+                        ],
+                        [
+                            -155.061,
+                            19.743
+                        ],
+                        [
+                            -155.047,
+                            19.734
+                        ],
+                        [
+                            -155.04,
+                            19.742
+                        ],
+                        [
+                            -155.022,
+                            19.735
+                        ],
+                        [
+                            -155.014,
+                            19.74
+                        ],
+                        [
+                            -155.003,
+                            19.738
+                        ],
+                        [
+                            -154.978,
+                            19.69
+                        ],
+                        [
+                            -154.983,
+                            19.675
+                        ],
+                        [
+                            -154.979,
+                            19.639
+                        ],
+                        [
+                            -154.959,
+                            19.625
+                        ],
+                        [
+                            -154.947,
+                            19.626
+                        ],
+                        [
+                            -154.945,
+                            19.604
+                        ],
+                        [
+                            -154.904,
+                            19.571
+                        ],
+                        [
+                            -154.867,
+                            19.551
+                        ],
+                        [
+                            -154.824,
+                            19.537
+                        ],
+                        [
+                            -154.807,
+                            19.519
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.7808c1574e7b0a32c26c9052420d64c7400d6c63.023.2",
+                "@type": "wx:Alert",
+                "id": "urn:oid:2.49.0.1.840.0.7808c1574e7b0a32c26c9052420d64c7400d6c63.023.2",
+                "areaDesc": "Big Island East",
+                "geocode": {
+                    "SAME": [
+                        "015001"
+                    ],
+                    "UGC": [
+                        "HIZ053"
+                    ]
+                },
+                "affectedZones": [
+                    "https://api.weather.gov/zones/forecast/HIZ053"
+                ],
+                "references": [
+                    {
+                        "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.8557e3a0908b5aa519e41745c6d2352969a54c4e.023.2",
+                        "identifier": "urn:oid:2.49.0.1.840.0.8557e3a0908b5aa519e41745c6d2352969a54c4e.023.2",
+                        "sender": "w-nws.webmaster@noaa.gov",
+                        "sent": "2026-09-25T04:59:00-10:00"
+                    }
+                ],
+                "sent": "2026-09-25T11:03:00-10:00",
+                "effective": "2026-09-25T11:03:00-10:00",
+                "onset": "2026-09-25T11:03:00-10:00",
+                "expires": "2026-09-25T23:15:00-10:00",
+                "ends": null,
+                "status": "Actual",
+                "messageType": "Update",
+                "category": "Met",
+                "severity": "Severe",
+                "certainty": "Likely",
+                "urgency": "Immediate",
+                "event": "Tropical Storm Warning",
+                "sender": "w-nws.webmaster@noaa.gov",
+                "senderName": "NWS Honolulu HI",
+                "headline": "Tropical Storm Warning issued September 25 at 11:03AM HST by NWS Honolulu HI",
+                "description": "* LOCATIONS AFFECTED\n- Hilo\n- Pahoa\n- Volcano\n\n* WIND\n- LATEST LOCAL FORECAST: Below tropical storm force wind\n- Peak Wind Forecast: 15-25 mph with gusts to 35 mph\n\n- THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST\nUNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for wind 58\nto 73 mph\n- The wind threat has remained nearly steady from the\nprevious assessment.\n- PLAN: Plan for dangerous wind of equivalent strong tropical\nstorm force.\n- PREPARE: Remaining efforts to protect life and property\nshould be completed as soon as possible. Prepare for\nsignificant wind damage.\n- ACT: Move to safe shelter before the wind becomes hazardous.\n\n- POTENTIAL IMPACTS: Significant\n- Some damage to roofing and siding materials, along with\ndamage to porches, awnings, carports, and sheds. A few\nbuildings experiencing window, door, and garage door\nfailures. Mobile homes damaged, especially if unanchored.\nUnsecured lightweight objects become dangerous projectiles.\n- Several large trees snapped or uprooted, but with greater\nnumbers in places where trees are shallow rooted. Several\nfences and roadway signs blown over.\n- Some roads impassable from large debris, and more within\nurban or heavily wooded places. A few bridges, causeways,\nand access routes impassable.\n- Scattered power and communications outages, but more\nprevalent in areas with above ground lines.\n\n* STORM SURGE\n- LATEST LOCAL FORECAST: Localized storm surge possible\n- Peak Storm Surge Inundation: The potential for 1-3 feet\nabove ground somewhere within surge prone areas\n- Window of concern: Begins this morning\n\n- THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST\nUNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for storm\nsurge flooding greater than 1 foot above ground\n- The storm surge threat has remained nearly steady from the\nprevious assessment.\n- PLAN: Plan for storm surge flooding greater than 1 foot\nabove ground.\n- PREPARE: Complete preparations for storm surge flooding,\nespecially in low-lying vulnerable areas, before conditions\nbecome unsafe.\n- ACT: Leave immediately if evacuation orders are given for\nyour area.\n\n- POTENTIAL IMPACTS: Limited\n- Localized inundation with storm surge flooding mainly along\nimmediate shorelines and in low-lying spots, or in areas\nfarther inland near where higher surge waters move ashore.\n- Sections of near-shore roads and parking lots become\noverspread with surge water. Driving conditions dangerous\nin places where surge water covers the road.\n- Moderate beach erosion. Heavy surf also breaching dunes,\nmainly in usually vulnerable locations. Strong rip currents.\n- Minor to locally moderate damage to marinas, docks,\nboardwalks, and piers. A few small craft broken away from\nmoorings.\n\n* FLOODING RAIN\n- LATEST LOCAL FORECAST: Flood Watch is in effect\n- Peak Rainfall Amounts: Additional 8-12 inches, with locally\nhigher amounts\n\n- THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST\nUNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for extreme\nflooding rain\n- The flooding rain threat has remained nearly steady from\nthe previous assessment.\n- PLAN: Emergency plans should include the potential for\nextreme flooding from heavy rain. Evacuations and rescues\nare likely.\n- PREPARE: Urgently consider protective actions from extreme\nand widespread rainfall flooding.\n- ACT: Heed any flood watches and warnings. Failure to take\naction will likely result in serious injury or loss of life.\n\n- POTENTIAL IMPACTS: Devastating to Catastrophic\n- Extreme rainfall flooding may prompt numerous evacuations\nand rescues.\n- Rivers and tributaries may overwhelmingly overflow their\nbanks in many places with deep moving water. Small streams,\ncreeks, canals, arroyos, and ditches may become raging\nrivers. In mountain areas, deadly runoff may rage down\nvalleys while increasing susceptibility to rockslides and\nmudslides. Flood control systems and barriers may become\nstressed.\n- Flood waters can enter numerous structures within multiple\ncommunities, some structures becoming uninhabitable or\nwashed away. Numerous places where flood waters may cover\nescape routes. Streets and parking lots become rivers of\nraging water with underpasses submerged. Driving conditions\nbecome very dangerous. Numerous road and bridge closures\nwith some weakened or washed out.\n\n* TORNADO\n- LATEST LOCAL FORECAST:\n- Situation is somewhat favorable for tornadoes\n\n- THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST\nUNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for a few\ntornadoes\n- The tornado threat has remained nearly steady from the\nprevious assessment.\n- PLAN: Emergency plans should include the potential for a\nfew tornadoes.\n- PREPARE: If your shelter is particularly vulnerable to\ntornadoes, prepare to relocate to safe shelter before\nhazardous weather arrives.\n- ACT: If a tornado warning is issued, be ready to shelter\nquickly.\n\n- POTENTIAL IMPACTS: Limited\n- The occurrence of isolated tornadoes can hinder the\nexecution of emergency plans during tropical events.\n- A few places may experience tornado damage, along with\npower and communications disruptions.\n- Locations could realize roofs peeled off buildings,\nchimneys toppled, mobile homes pushed off foundations or\noverturned, large tree tops and branches snapped off,\nshallow-rooted trees knocked over, moving vehicles blown\noff roads, and small boats pulled from moorings.\n\n* FOR MORE INFORMATION:\n- https://www.weather.gov/hfo",
+                "instruction": null,
+                "response": "Avoid",
+                "note": null,
+                "parameters": {
+                    "AWIPSidentifier": [
+                        "TCVHFO"
+                    ],
+                    "WMOidentifier": [
+                        "WTHW80 PHFO 252103"
+                    ],
+                    "NWSheadline": [
+                        "TROPICAL STORM WARNING REMAINS IN EFFECT... ...HURRICANE WATCH REMAINS IN EFFECT"
+                    ],
+                    "BLOCKCHANNEL": [
+                        "EAS",
+                        "NWEM",
+                        "CMAS"
+                    ],
+                    "EAS-ORG": [
+                        "WXR"
+                    ],
+                    "VTEC": [
+                        "/O.CON.PHFO.TR.W.2015.000000T0000Z-000000T0000Z/"
+                    ],
+                    "expiredReferences": [
+                        "w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.4ddc2b465ec1aed8541c9a2013ad70c4bced1b08.023.2,2026-09-24T23:00:00-10:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.c7c48b3a72ac7ab3a795372b13d94f0820f4b52d.023.2,2026-09-24T16:53:00-10:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.c3126c4ccaa67bc07dfa47e9cdbf46d65f9328cf.023.2,2026-09-24T11:19:00-10:00"
+                    ]
+                },
+                "scope": "Public",
+                "code": "IPAWSv1.0",
+                "language": "en-US",
+                "web": "http://www.weather.gov",
+                "eventCode": {
+                    "SAME": [
+                        "TRW"
+                    ],
+                    "NationalWeatherService": [
+                        "TRW"
+                    ]
+                }
+            }
+        },
+        {
+            "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.2c96a617875240ddef9e1646f0df01606852dc0c.002.1",
+            "type": "Feature",
+            "geometry": null,
+            "properties": {
+                "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.2c96a617875240ddef9e1646f0df01606852dc0c.002.1",
+                "@type": "wx:Alert",
+                "id": "urn:oid:2.49.0.1.840.0.2c96a617875240ddef9e1646f0df01606852dc0c.002.1",
+                "areaDesc": "Maui Windward West; Molokai Windward; Molokai Southeast; Windward Haleakala; Kipahulu; South Haleakala; Big Island Southeast; Big Island East; Big Island North",
+                "geocode": {
+                    "SAME": [
+                        "015009",
+                        "015001"
+                    ],
+                    "UGC": [
+                        "HIZ017",
+                        "HIZ037",
+                        "HIZ038",
+                        "HIZ047",
+                        "HIZ048",
+                        "HIZ050",
+                        "HIZ052",
+                        "HIZ053",
+                        "HIZ054"
+                    ]
+                },
+                "affectedZones": [
+                    "https://api.weather.gov/zones/forecast/HIZ017",
+                    "https://api.weather.gov/zones/forecast/HIZ037",
+                    "https://api.weather.gov/zones/forecast/HIZ038",
+                    "https://api.weather.gov/zones/forecast/HIZ047",
+                    "https://api.weather.gov/zones/forecast/HIZ048",
+                    "https://api.weather.gov/zones/forecast/HIZ050",
+                    "https://api.weather.gov/zones/forecast/HIZ052",
+                    "https://api.weather.gov/zones/forecast/HIZ053",
+                    "https://api.weather.gov/zones/forecast/HIZ054"
+                ],
+                "references": [
+                    {
+                        "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.92cc55947eb5bbaff4d066d1977e0a734a4b915a.001.1",
+                        "identifier": "urn:oid:2.49.0.1.840.0.92cc55947eb5bbaff4d066d1977e0a734a4b915a.001.1",
+                        "sender": "w-nws.webmaster@noaa.gov",
+                        "sent": "2026-09-25T03:56:00-10:00"
+                    },
+                    {
+                        "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.d2811cf2b537d3c174cb64798d667ee56b288886.001.1",
+                        "identifier": "urn:oid:2.49.0.1.840.0.d2811cf2b537d3c174cb64798d667ee56b288886.001.1",
+                        "sender": "w-nws.webmaster@noaa.gov",
+                        "sent": "2026-09-25T07:35:00-10:00"
+                    }
+                ],
+                "sent": "2026-09-25T09:17:00-10:00",
+                "effective": "2026-09-25T09:17:00-10:00",
+                "onset": "2026-09-25T09:17:00-10:00",
+                "expires": "2026-09-26T09:45:00-10:00",
+                "ends": "2026-09-27T18:00:00-10:00",
+                "status": "Actual",
+                "messageType": "Update",
+                "category": "Met",
+                "severity": "Minor",
+                "certainty": "Likely",
+                "urgency": "Expected",
+                "event": "High Surf Advisory",
+                "sender": "w-nws.webmaster@noaa.gov",
+                "senderName": "NWS Honolulu HI",
+                "headline": "High Surf Advisory issued September 25 at 9:17AM HST until September 27 at 6:00PM HST by NWS Honolulu HI",
+                "description": "...HIGH SURF ADVISORY IN EFFECT FOR EAST FACING SHORES OF NIIHAU\nKAUAI AND OAHU TONIGHT THROUGH SUNDAY...\n\n...HIGH SURF ADVISORY FOR EAST AND SOUTHEAST FACING SHORES OF\nMOLOKAI MAUI AND THE BIG ISLAND NOW IN EFFECT THROUGH SUNDAY...\n\n.Hurricane Nolo inches north toward the Big Island then turns\nwest on Saturday while remaining south of the Hawaiian Islands.\nNolo is producing a moderate swell that is causing building surf\nalong east and southeast facing shores of the Big Island, Maui,\nand Molokai. Strengthening trades will then cause building surf\nalong east-facing shorelines beginning tonight and continuing\nthrough Sunday.\n\n* WHAT...Large breaking waves of 8 to 12 feet today, increasing\nto 10 to 14 feet Saturday.\n\n* WHERE...East and southeast facing shores of Big Island Maui\nand Molokai.\n\n* WHEN...Until 6 PM HST Sunday.\n\n* IMPACTS...Moderate to High. Strong breaking waves and strong\ncurrents will make swimming dangerous. Expect very strong\nbreaking waves and powerful currents. Waves breaking in\nchannel entrances may make navigating the channels dangerous.",
+                "instruction": "Heed all advice from ocean safety officials. When in doubt, don't\ngo out.",
+                "response": "Avoid",
+                "note": null,
+                "parameters": {
+                    "AWIPSidentifier": [
+                        "CFWHFO"
+                    ],
+                    "WMOidentifier": [
+                        "WHHW40 PHFO 251917"
+                    ],
+                    "NWSheadline": [
+                        "HIGH SURF ADVISORY NOW IN EFFECT UNTIL 6 PM HST SUNDAY"
+                    ],
+                    "BLOCKCHANNEL": [
+                        "EAS",
+                        "NWEM",
+                        "CMAS"
+                    ],
+                    "VTEC": [
+                        "/O.EXT.PHFO.SU.Y.0039.000000T0000Z-260928T0400Z/"
+                    ],
+                    "eventEndingTime": [
+                        "2026-09-27T18:00:00-10:00"
+                    ],
+                    "expiredReferences": [
+                        "w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.b73608e0380d3924f185c9462ff3222b8f461aea.001.1,2026-09-24T17:13:00-10:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.79557448fbfb08242b850a44bd9fb65bf8aa8604.001.1,2026-09-24T16:02:00-10:00"
+                    ]
+                },
+                "scope": "Public",
+                "code": "IPAWSv1.0",
+                "language": "en-US",
+                "web": "http://www.weather.gov",
+                "eventCode": {
+                    "SAME": [
+                        "NWS"
+                    ],
+                    "NationalWeatherService": [
+                        "SUY"
+                    ]
+                }
+            }
+        },
+        {
+            "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.3d109f0439c9cf60a5bb44538333edf4ed3badaf.001.1",
+            "type": "Feature",
+            "geometry": null,
+            "properties": {
+                "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.3d109f0439c9cf60a5bb44538333edf4ed3badaf.001.1",
+                "@type": "wx:Alert",
+                "id": "urn:oid:2.49.0.1.840.0.3d109f0439c9cf60a5bb44538333edf4ed3badaf.001.1",
+                "areaDesc": "Lanai Mauka; Kahoolawe; Maui Windward West; Maui Leeward West; Haleakala Summit; Kona; Kohala; Big Island Interior; Big Island Summit; Molokai Windward; Molokai Southeast; Molokai North; Molokai West; Molokai Leeward South; Lanai Windward; Lanai Leeward; Lanai South; Maui Central Valley North; Maui Central Valley South; Windward Haleakala; Kipahulu; South Maui/Upcountry; South Haleakala; Big Island South; Big Island Southeast; Big Island East; Big Island North",
+                "geocode": {
+                    "SAME": [
+                        "015009",
+                        "015001"
+                    ],
+                    "UGC": [
+                        "HIZ015",
+                        "HIZ016",
+                        "HIZ017",
+                        "HIZ018",
+                        "HIZ022",
+                        "HIZ023",
+                        "HIZ026",
+                        "HIZ027",
+                        "HIZ028",
+                        "HIZ037",
+                        "HIZ038",
+                        "HIZ039",
+                        "HIZ040",
+                        "HIZ041",
+                        "HIZ042",
+                        "HIZ043",
+                        "HIZ044",
+                        "HIZ045",
+                        "HIZ046",
+                        "HIZ047",
+                        "HIZ048",
+                        "HIZ049",
+                        "HIZ050",
+                        "HIZ051",
+                        "HIZ052",
+                        "HIZ053",
+                        "HIZ054"
+                    ]
+                },
+                "affectedZones": [
+                    "https://api.weather.gov/zones/forecast/HIZ015",
+                    "https://api.weather.gov/zones/forecast/HIZ016",
+                    "https://api.weather.gov/zones/forecast/HIZ017",
+                    "https://api.weather.gov/zones/forecast/HIZ018",
+                    "https://api.weather.gov/zones/forecast/HIZ022",
+                    "https://api.weather.gov/zones/forecast/HIZ023",
+                    "https://api.weather.gov/zones/forecast/HIZ026",
+                    "https://api.weather.gov/zones/forecast/HIZ027",
+                    "https://api.weather.gov/zones/forecast/HIZ028",
+                    "https://api.weather.gov/zones/forecast/HIZ037",
+                    "https://api.weather.gov/zones/forecast/HIZ038",
+                    "https://api.weather.gov/zones/forecast/HIZ039",
+                    "https://api.weather.gov/zones/forecast/HIZ040",
+                    "https://api.weather.gov/zones/forecast/HIZ041",
+                    "https://api.weather.gov/zones/forecast/HIZ042",
+                    "https://api.weather.gov/zones/forecast/HIZ043",
+                    "https://api.weather.gov/zones/forecast/HIZ044",
+                    "https://api.weather.gov/zones/forecast/HIZ045",
+                    "https://api.weather.gov/zones/forecast/HIZ046",
+                    "https://api.weather.gov/zones/forecast/HIZ047",
+                    "https://api.weather.gov/zones/forecast/HIZ048",
+                    "https://api.weather.gov/zones/forecast/HIZ049",
+                    "https://api.weather.gov/zones/forecast/HIZ050",
+                    "https://api.weather.gov/zones/forecast/HIZ051",
+                    "https://api.weather.gov/zones/forecast/HIZ052",
+                    "https://api.weather.gov/zones/forecast/HIZ053",
+                    "https://api.weather.gov/zones/forecast/HIZ054"
+                ],
+                "references": [],
+                "sent": "2026-09-25T05:08:00-10:00",
+                "effective": "2026-09-25T05:08:00-10:00",
+                "onset": "2026-09-25T05:08:00-10:00",
+                "expires": "2026-09-25T13:15:00-10:00",
+                "ends": null,
+                "status": "Actual",
+                "messageType": "Alert",
+                "category": "Met",
+                "severity": "Moderate",
+                "certainty": "Likely",
+                "urgency": "Expected",
+                "event": "Tropical Cyclone Local Statement",
+                "sender": "w-nws.webmaster@noaa.gov",
+                "senderName": "NWS Honolulu HI",
+                "headline": "Tropical Cyclone Local Statement issued September 25 at 5:08AM HST by NWS Honolulu HI",
+                "description": "HLSHFO\n\nThis product covers the Hawaiian islands\n\n**Nolo moving slowly northward and strengthening**\n\nNEW INFORMATION\n---------------\n\n* CHANGES TO WATCHES AND WARNINGS:\n- None\n\n* CURRENT WATCHES AND WARNINGS:\n- A Tropical Storm Warning and Hurricane Watch are in effect for\nBig Island East, Big Island Interior, Big Island North, Big\nIsland South, Big Island Southeast, Big Island Summits, Kohala,\nand Kona\n- A Tropical Storm Watch is in effect for Haleakala Summit,\nKahoolawe, Kipahulu, Lanai Leeward, Lanai Mauka, Lanai South,\nLanai Windward, Maui Central Valley North, Maui Central Valley\nSouth, Maui Leeward West, Maui Windward West, Molokai Leeward\nSouth, Molokai North, Molokai Southeast, Molokai West, Molokai\nWindward, South Haleakala, South Maui/Upcountry, and Windward\nHaleakala\n\n* STORM INFORMATION:\n- About 400 miles south-southeast of Honolulu or about 260 miles\nsouth of Hilo\n- 16.0N 155.5W\n- Storm Intensity 85 mph\n- Movement North-northeast or 25 degrees at 5 mph\n\nSITUATION OVERVIEW\n------------------\n\nHurricane Nolo is moving slowly northward and will continue to do\nso through today. Nolo is then forecast to make a sharp turn to the\nwest late tonight into Saturday as it strengthens to a major\nhurricane. Nolo is forecast to continue westward through the weekend\nwith the center passing south of the state. However, impacts from Nolo\nwill be felt well outside the center of the storm.\n\nBands of intense showers and thunderstorms associated with Nolo will\nreach the Big Island and Maui County over the next couple of days.\nExcessive rainfall is possible which could lead to locally\ncatastrophic flash flooding and mudslides across windward and\nsoutheast Big Island. Flooding can occur even in areas not usually\nprone to flooding. Additional rainfall amounts of 10 to 15 inches wit\nlocalized higher amounts of 20 inches. On Maui, additional rainfall\namounts of 4 to 8 inches are possible, with localized higher amounts.\nOuter rain bands associated with Nolo are expected to reach the other\nsmaller islands, and will be enhanced by the terrain.\n\nTropical storm force winds are expected to reach the Big Island as\nearly as midday today, with hurricane force winds possible by tonight.\nThe earliest reasonable time of arrival for tropical storm force winds\nis predawn Saturday for Maui County. A Tropical Storm Warning and\nHurricane Watch is in effect for Big Island, and a Tropical Storm\nWatch is in effect for the islands of Maui County. Nolo remains under\nclose observation in the event additional islands may need watches and\nwarnings.\n\nSwell generated by Nolo could bring very large and rough surf and\ndangerous rip currents for south and southeast facing shores,\nespecially for the Big Island. A High Surf Advisory remains in effect\nfor south and east facing shores of Big Island and east facing shores\nof Maui and Molokai. Surf is expected to build to advisory levels\nalong all south and east facing shores and will likely be added to the\nadvisory in future updates as Nolo nears.\n\nTornadoes and large waterspouts will be possible associated with Nolo,\nmainly over and near the Big Island, along and to the right of the\ntrack of the tropical cyclone.\n\nPOTENTIAL IMPACTS\n-----------------\n\n* FLOODING RAIN:\nProtect against life-threatening rainfall flooding having possible\ndevastating impacts across Big Island. Potential impacts include:\n- Extreme rainfall flooding may prompt numerous evacuations and\nrescues.\n- Rivers and tributaries may overwhelmingly overflow their banks\nin many places with deep moving water. Small streams, creeks,\ncanals, arroyos, and ditches may become raging rivers. In\nmountain areas, deadly runoff may rage down valleys while\nincreasing susceptibility to rockslides and mudslides. Flood\ncontrol systems and barriers may become stressed.\n- Flood waters can enter numerous structures within multiple\ncommunities, some structures becoming uninhabitable or washed\naway. Numerous places where flood waters may cover escape\nroutes. Streets and parking lots become rivers of raging water\nwith underpasses submerged. Driving conditions become very\ndangerous. Numerous road and bridge closures with some weakened\nor washed out.\n\nProtect against life-threatening rainfall flooding having possible\nlimited to extensive impacts across Maui.\n\nElsewhere across the Hawaiian islands, little to no impact is\nanticipated.\n\n* WIND:\nProtect against dangerous wind having possible significant impacts\nacross Big Island. Potential impacts in this area include:\n- Some damage to roofing and siding materials, along with damage\nto porches, awnings, carports, and sheds. A few buildings\nexperiencing window, door, and garage door failures. Mobile\nhomes damaged, especially if unanchored. Unsecured lightweight\nobjects become dangerous projectiles.\n- Several large trees snapped or uprooted, but with greater\nnumbers in places where trees are shallow rooted. Several\nfences and roadway signs blown over.\n- Some roads impassable from large debris, and more within urban\nor heavily wooded places. A few bridges, causeways, and access\nroutes impassable.\n- Scattered power and communications outages, but more prevalent\nin areas with above ground lines.\n\nAlso, protect against hazardous wind having possible limited impacts\nacross Maui.\n\n* SURGE:\nProtect against locally hazardous surge having possible limited impacts\nacross Big Island. Potential impacts in this area include:\n- Localized inundation with storm surge flooding mainly along\nimmediate shorelines and in low-lying spots, or in areas\nfarther inland near where higher surge waters move ashore.\n- Sections of near-shore roads and parking lots become overspread\nwith surge water. Driving conditions dangerous in places where\nsurge water covers the road.\n- Moderate beach erosion. Heavy surf also breaching dunes, mainly\nin usually vulnerable locations. Strong rip currents.\n- Minor to locally moderate damage to marinas, docks, boardwalks,\nand piers. A few small craft broken away from moorings.\n\nElsewhere across the Hawaiian islands, little to no impact is\nanticipated.\n\n* TORNADOES:\nProtect against a tornado event having possible limited impacts across\nBig Island. Potential impacts include:\n- The occurrence of isolated tornadoes can hinder the execution\nof emergency plans during tropical events.\n- A few places may experience tornado damage, along with power\nand communications disruptions.\n- Locations could realize roofs peeled off buildings, chimneys\ntoppled, mobile homes pushed off foundations or overturned,\nlarge tree tops and branches snapped off, shallow-rooted trees\nknocked over, moving vehicles blown off roads, and small boats\npulled from moorings.\n\nPRECAUTIONARY/PREPAREDNESS ACTIONS\n----------------------------------\n\n* EVACUATIONS:\nFollow the advice of local officials\n\n\n* OTHER PREPAREDNESS INFORMATION:\nNow is the time to complete all preparations to protect life and\nproperty in accordance with your emergency plan. Ensure you are in a\nsafe location before the onset of strong winds or possible flooding.\n\nIf you are relocating to safe shelter, leave as early as possible.\nAllow extra time to reach your destination. Many roads and bridges\nwill be closed once strong winds arrive. Check the latest weather\nforecast before departing and drive with caution.\n\nIf heading to a community shelter, become familiar with the shelter\nrules before arrival, especially if you have special needs or have\npets. Take essential items with you from your Emergency Supplies Kit.\n\nFailure to adequately shelter may result in serious injury or loss of\nlife. Always heed the advice of local officials and comply with any\norders that are issued. Remember, during the storm 9 1 1 Emergency\nServices may not be able to immediately respond if conditions are\nunsafe. This should be a big factor in your decision making.\n\nKeep cell phones well charged. Cell phone chargers for automobiles\ncan be helpful, but be aware of your risk for deadly carbon monoxide\npoisoning if your car is left idling in a garage or other poorly\nventilated area.\n\nIt is important to remain calm, informed, and focused during an\nemergency. Be patient and helpful with those you encounter.\n\nIf you are a visitor, be sure to know the name of the city or town in\nwhich you are staying and the name of the county or parish in which\nit resides. Listen for these locations in local news updates. Pay\nattention for instructions from local authorities.\n\nStorm surge is the leading killer associated with tropical storms and\nhurricanes! Make sure you are in a safe area away from the surge\nzone. Even if you are not in a surge-prone area, you could find\nyourself cutoff by flood waters during and after the storm. Heed\nevacuation orders issued by the local authorities.\n\nRapidly rising flood waters are deadly. If you are in a flood-prone\narea, consider moving to higher ground. Never drive through a flooded\nroadway. Remember, turn around don't drown!\n\nIf a Tornado Warning is issued for your area, be ready to shelter\nquickly, preferably away from windows and in an interior room not\nprone to flooding. If driving, scan the roadside for quick shelter\noptions.\n\nIf in a place that is vulnerable to high wind, such as near large\ntrees, a manufactured home, upper floors of a high-rise building, or\non a boat, consider moving to a safer shelter before the onset of\nstrong winds or flooding.\n\nClosely monitor weather.gov, NOAA Weather radio or local news outlets\nfor official storm information. Be ready to adapt to possible changes\nto the forecast. Ensure you have multiple ways to receive weather\nwarnings.\n\n* ADDITIONAL SOURCES OF INFORMATION:\n- For information on appropriate preparations see ready.gov\n- For information on creating an emergency plan see getagameplan.org\n- For additional disaster preparedness information see redcross.org\n\nNEXT UPDATE\n-----------\n\nThe next local statement will be issued by the National Weather\nService in Honolulu HI around 11 AM HST, or sooner if conditions\nwarrant.",
+                "instruction": null,
+                "response": "Monitor",
+                "note": null,
+                "parameters": {
+                    "AWIPSidentifier": [
+                        "HLSHFO"
+                    ],
+                    "WMOidentifier": [
+                        "WTHW80 PHFO 251508"
+                    ],
+                    "NWSheadline": [
+                        "Nolo moving slowly northward and strengthening"
+                    ],
+                    "BLOCKCHANNEL": [
+                        "EAS",
+                        "NWEM",
+                        "CMAS"
+                    ],
+                    "EAS-ORG": [
+                        "WXR"
+                    ]
+                },
+                "scope": "Public",
+                "code": "IPAWSv1.0",
+                "language": "en-US",
+                "web": "http://www.weather.gov",
+                "eventCode": {
+                    "SAME": [
+                        "HLS"
+                    ],
+                    "NationalWeatherService": [
+                        "HLS"
+                    ]
+                }
+            }
+        },
+        {
+            "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.63236fa3a4fb72ab342348c93af571cd44836a0c.001.1",
+            "type": "Feature",
+            "geometry": null,
+            "properties": {
+                "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.63236fa3a4fb72ab342348c93af571cd44836a0c.001.1",
+                "@type": "wx:Alert",
+                "id": "urn:oid:2.49.0.1.840.0.63236fa3a4fb72ab342348c93af571cd44836a0c.001.1",
+                "areaDesc": "Lanai Mauka; Kahoolawe; Maui Windward West; Maui Leeward West; Haleakala Summit; Kona; Kohala; Big Island Interior; Big Island Summit; Molokai Windward; Molokai Southeast; Molokai North; Molokai West; Molokai Leeward South; Lanai Windward; Lanai Leeward; Lanai South; Maui Central Valley North; Maui Central Valley South; Windward Haleakala; Kipahulu; South Maui/Upcountry; South Haleakala; Big Island South; Big Island Southeast; Big Island East; Big Island North",
+                "geocode": {
+                    "SAME": [
+                        "015009",
+                        "015001"
+                    ],
+                    "UGC": [
+                        "HIZ015",
+                        "HIZ016",
+                        "HIZ017",
+                        "HIZ018",
+                        "HIZ022",
+                        "HIZ023",
+                        "HIZ026",
+                        "HIZ027",
+                        "HIZ028",
+                        "HIZ037",
+                        "HIZ038",
+                        "HIZ039",
+                        "HIZ040",
+                        "HIZ041",
+                        "HIZ042",
+                        "HIZ043",
+                        "HIZ044",
+                        "HIZ045",
+                        "HIZ046",
+                        "HIZ047",
+                        "HIZ048",
+                        "HIZ049",
+                        "HIZ050",
+                        "HIZ051",
+                        "HIZ052",
+                        "HIZ053",
+                        "HIZ054"
+                    ]
+                },
+                "affectedZones": [
+                    "https://api.weather.gov/zones/forecast/HIZ015",
+                    "https://api.weather.gov/zones/forecast/HIZ016",
+                    "https://api.weather.gov/zones/forecast/HIZ017",
+                    "https://api.weather.gov/zones/forecast/HIZ018",
+                    "https://api.weather.gov/zones/forecast/HIZ022",
+                    "https://api.weather.gov/zones/forecast/HIZ023",
+                    "https://api.weather.gov/zones/forecast/HIZ026",
+                    "https://api.weather.gov/zones/forecast/HIZ027",
+                    "https://api.weather.gov/zones/forecast/HIZ028",
+                    "https://api.weather.gov/zones/forecast/HIZ037",
+                    "https://api.weather.gov/zones/forecast/HIZ038",
+                    "https://api.weather.gov/zones/forecast/HIZ039",
+                    "https://api.weather.gov/zones/forecast/HIZ040",
+                    "https://api.weather.gov/zones/forecast/HIZ041",
+                    "https://api.weather.gov/zones/forecast/HIZ042",
+                    "https://api.weather.gov/zones/forecast/HIZ043",
+                    "https://api.weather.gov/zones/forecast/HIZ044",
+                    "https://api.weather.gov/zones/forecast/HIZ045",
+                    "https://api.weather.gov/zones/forecast/HIZ046",
+                    "https://api.weather.gov/zones/forecast/HIZ047",
+                    "https://api.weather.gov/zones/forecast/HIZ048",
+                    "https://api.weather.gov/zones/forecast/HIZ049",
+                    "https://api.weather.gov/zones/forecast/HIZ050",
+                    "https://api.weather.gov/zones/forecast/HIZ051",
+                    "https://api.weather.gov/zones/forecast/HIZ052",
+                    "https://api.weather.gov/zones/forecast/HIZ053",
+                    "https://api.weather.gov/zones/forecast/HIZ054"
+                ],
+                "references": [
+                    {
+                        "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.cb1399e1cc8e8553e0387819fafb629a00062f5b.001.1",
+                        "identifier": "urn:oid:2.49.0.1.840.0.cb1399e1cc8e8553e0387819fafb629a00062f5b.001.1",
+                        "sender": "w-nws.webmaster@noaa.gov",
+                        "sent": "2026-09-24T15:45:00-10:00"
+                    },
+                    {
+                        "@id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.20a785c891f972e0073d00bbea65c5d10779d95f.001.1",
+                        "identifier": "urn:oid:2.49.0.1.840.0.20a785c891f972e0073d00bbea65c5d10779d95f.001.1",
+                        "sender": "w-nws.webmaster@noaa.gov",
+                        "sent": "2026-09-24T16:51:00-10:00"
+                    }
+                ],
+                "sent": "2026-09-25T04:35:00-10:00",
+                "effective": "2026-09-25T04:35:00-10:00",
+                "onset": "2026-09-25T04:35:00-10:00",
+                "expires": "2026-09-25T18:45:00-10:00",
+                "ends": "2026-09-26T18:00:00-10:00",
+                "status": "Actual",
+                "messageType": "Update",
+                "category": "Met",
+                "severity": "Severe",
+                "certainty": "Possible",
+                "urgency": "Future",
+                "event": "Flood Watch",
+                "sender": "w-nws.webmaster@noaa.gov",
+                "senderName": "NWS Honolulu HI",
+                "headline": "Flood Watch issued September 25 at 4:35AM HST until September 26 at 6:00PM HST by NWS Honolulu HI",
+                "description": "Hurricane Nolo is expected to bring heavy showers to the eastern end\nof the state over the next few days. The exact track of the dangerous\ntropical cyclone remains somewhat uncertain, but significant heavy\nrain is likely over windward and southeast Big Island.\n\n* WHAT...Flash flooding caused by excessive rainfall is possible.\n\n* WHERE...Big Island, Maui, Lanai, Molokai, and Kahoolawe.\n\n* WHEN...Through Saturday afternoon.\n\n* IMPACTS...Significant flooding may occur due to the overflow of\nstreams and drainages. Roads in several areas may be closed, along\nwith property damage in urban or low lying spots due to runoff.\nLandslides may also occur in areas with steep terrain.\n\n* ADDITIONAL DETAILS...\n- Deep moisture on the north side of Hurricane Nolo will bring\nheavy showers to the Big Island, and to a lesser extend to Maui\nthrough the Saturday. Windward and southeast Big Island, and\nwindward Maui, are the most likely to experience heavy rain due\nto the slow moving system, with considerable flooding possible\nover the remaining portions of Big Island and Maui today and\nSaturday. The remainder of Maui County has a lower possibility of\nflooding, but remains at risk.",
+                "instruction": "You should monitor later forecasts and be prepared to take action\nshould Flash Flood Warnings be issued.",
+                "response": "Prepare",
+                "note": null,
+                "parameters": {
+                    "AWIPSidentifier": [
+                        "FFAHFO"
+                    ],
+                    "WMOidentifier": [
+                        "WGHW60 PHFO 251435"
+                    ],
+                    "NWSheadline": [
+                        "FLOOD WATCH REMAINS IN EFFECT THROUGH SATURDAY AFTERNOON"
+                    ],
+                    "BLOCKCHANNEL": [
+                        "EAS",
+                        "NWEM",
+                        "CMAS"
+                    ],
+                    "EAS-ORG": [
+                        "WXR"
+                    ],
+                    "VTEC": [
+                        "/O.CON.PHFO.FA.A.0013.000000T0000Z-260927T0400Z/"
+                    ],
+                    "eventEndingTime": [
+                        "2026-09-26T18:00:00-10:00"
+                    ],
+                    "expiredReferences": [
+                        "w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.0be23b1680d7f4f271507185e74b730f908185fa.001.1,2026-09-24T04:48:00-10:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.27c93ef1b29bda3e04166629795fe71aa61e2ea6.001.1,2026-09-23T03:44:00-10:00 w-nws.webmaster@noaa.gov,urn:oid:2.49.0.1.840.0.59599f54f3e9e47644ed14ad1fd6294e24114766.001.1,2026-09-22T14:48:00-10:00"
+                    ]
+                },
+                "scope": "Public",
+                "code": "IPAWSv1.0",
+                "language": "en-US",
+                "web": "http://www.weather.gov",
+                "eventCode": {
+                    "SAME": [
+                        "FFA"
+                    ],
+                    "NationalWeatherService": [
+                        "FAA"
+                    ]
+                }
+            }
+        }
+    ],
+    "title": "Current watches, warnings, and advisories for 19.7299 N, 155.0907 W",
+    "updated": "2026-09-25T21:48:24+00:00"
+}

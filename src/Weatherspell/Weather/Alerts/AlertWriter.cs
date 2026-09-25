@@ -65,6 +65,9 @@ internal static class AlertWriter
                 : $"until {When(ends)}";
         }
         paragraphs.Add(timing is null ? $"{a.Event} from {a.Sender}." : $"{a.Event} from {a.Sender}, in effect {timing}.");
+        // No end given: say when this message runs out, as that, so that
+        // "until" is never heard for a hurricane watch's next update (#20).
+        if (a.Ends is null && a.Expires is DateTimeOffset expires) paragraphs.Add($"No end time is given; this message expires at {When(expires)}.");
         if (a.Area.Length > 0) paragraphs.Add($"Area: {a.Area}.");
         paragraphs.Add($"Issued {When(a.Issued)}.");
         if (a.Level is not null) paragraphs.Add(a.Level + ".");
