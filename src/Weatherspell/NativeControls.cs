@@ -43,6 +43,27 @@ internal sealed class NativeTextBox : TextBox
         }
         base.WndProc(ref m);
     }
+
+    // New text with the caret at the given offset and the view where the
+    // reader left it: setting Text scrolls to the top, so the first visible
+    // line is put back, and the caret is brought into view only if it was
+    // in view before (someone reading with the mouse wheel stays put).
+    public void ReplaceText(string text, int caret)
+    {
+        var top = FirstVisibleLine;
+        var caretLine = GetLineFromCharIndex(SelectionStart);
+        var caretShown = caretLine >= top && caretLine < top + VisibleLines;
+        Text = text;
+        SelectionStart = Math.Min(Math.Max(caret, 0), TextLength);
+        SelectionLength = 0;
+        var scroll = top - FirstVisibleLine;
+        if (scroll != 0) Native.SendMessage(Handle, Native.EM_LINESCROLL, IntPtr.Zero, (IntPtr)scroll);
+        if (caretShown) ScrollToCaret();
+    }
+
+    private int FirstVisibleLine => (int)Native.SendMessage(Handle, Native.EM_GETFIRSTVISIBLELINE, IntPtr.Zero, IntPtr.Zero);
+
+    private int VisibleLines => Math.Max(1, ClientSize.Height / Math.Max(1, Font.Height));
 }
 
 internal static class Native
@@ -50,4 +71,9 @@ internal static class Native
     public const int WM_GETOBJECT = 0x003D;
     public const int OBJID_CLIENT = -4;
     public const int UiaRootObjectId = -25;
+    public const int EM_GETFIRSTVISIBLELINE = 0x00CE;
+    public const int EM_LINESCROLL = 0x00B6;
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 }

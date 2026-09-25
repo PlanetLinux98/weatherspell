@@ -129,12 +129,25 @@ internal sealed class FindLocationDialog : Form
                 _query.Focus();
                 return;
             }
-            SetStatus(found.Count == 1 ? "1 place found." : $"{found.Count} places found.");
+            // Focus first and the count after it: said before the move, the
+            // count was cut into NVDA's report of the list and its first
+            // result, which it then read a second time (#17).
+            var count = found.Count == 1 ? "1 place found." : $"{found.Count} places found.";
+            _status.Text = count;
             _results.SelectedIndex = 0;
             _results.Focus();
+            await Task.Delay(400, token);
+            Announcer.Say(this, count);
+        }
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
+        {
         }
         catch (OperationCanceledException)
         {
+            // HttpClient reports its timeout as a cancellation; only ours
+            // cancels the token.
+            SetStatus("Couldn't search: the search service took too long to answer.");
+            _query.Focus();
         }
         catch (Exception ex) when (ex is System.Net.Http.HttpRequestException or IOException or InvalidDataException or System.Runtime.Serialization.SerializationException)
         {

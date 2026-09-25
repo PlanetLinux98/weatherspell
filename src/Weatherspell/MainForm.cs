@@ -43,6 +43,7 @@ internal sealed class MainForm : Form
     private readonly System.Windows.Forms.Timer _clockTimer = new() { Interval = 60_000 };
     private readonly CancellationTokenSource _closing = new();
     private bool _polling;
+    private int _shownAt;
 
     public MainForm() : this(SettingsStore.Default())
     {
@@ -107,7 +108,10 @@ internal sealed class MainForm : Form
         {
             AccessibleName = "Location",
             DropDownStyle = ComboBoxStyle.DropDownList,
-            Anchor = AnchorStyles.Left | AnchorStyles.Right,
+            // Top, not centred: the table centres at the height the combo
+            // box had before its handle and does not redo it when it grows,
+            // which clipped its bottom at large text sizes (#16).
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
             TabIndex = 1,
         };
         header.Controls.Add(locationLabel, 0, 0);
@@ -193,6 +197,7 @@ internal sealed class MainForm : Form
 
     private async Task OnShownAsync()
     {
+        _shownAt = Environment.TickCount;
         _forecast.Focus();
         if (_store.LoadProblem is string problem)
         {
@@ -291,6 +296,7 @@ internal sealed class MainForm : Form
         _refreshing?.Cancel();
         _refreshing = new CancellationTokenSource();
         var token = _refreshing.Token;
+        var started = Environment.TickCount;
 
         if (!automatic) _status.Text = $"Fetching the forecast for {location.DisplayName}...";
         // A launch or a switch says what is happening rather than showing
@@ -335,22 +341,49 @@ internal sealed class MainForm : Form
 
         if (forecast is null)
         {
-            ShowFailure(saved, location, reason, alerts, keepCaret, automatic);
+            var failure = ShowFailure(saved, location, reason, alerts, keepCaret, automatic);
+            if (failure is not null) await SayAsync(failure, started, token);
             return;
         }
         saved.UtcOffsetSeconds = (int)forecast.UtcOffset.TotalSeconds;
         _refreshProblem = null;
-        if (keepCaret) Rewrite(forecast, alerts); else Show(forecast, alerts);
+        if (keepCaret) Rewrite(forecast, alerts, automatic); else Show(forecast, alerts);
         _status.Text = $"{location.DisplayName}: updated {Clock.PcTime(DateTime.Now)} from {forecast.SourceName}";
         // The next automatic refresh a full interval from this one.
         _forecastTimer.Stop();
         _forecastTimer.Start();
         TrackAlerts(saved, alerts, announce: keepCaret);
-        // The reader is waiting on this text and its arrival makes no sound
-        // of its own; the timer's rewrites stay silent by design.
-        if (!keepCaret) Announcer.Say(this, $"{location.DisplayName}: forecast ready.");
         TrySave();
         TryCache(() => _cache.Save(location, forecast, alerts.Checked || !alerts.IsAvailable ? alerts : null));
+        // Neither the new text nor F5's rewrite makes a sound of its own
+        // (NVDA ignores an edit control's value changing); the timer's
+        // rewrites stay silent by design.
+        if (!automatic) await SayAsync($"{location.DisplayName}: forecast {(keepCaret ? "updated" : "ready")}.", started, token);
+    }
+
+    // NVDA drops a notification from a window it has not yet seen come to
+    // the front, and speaks one raised straight after a key ahead of its
+    // own report of that key (the combo box's new location). A fetch that
+    // fails at once, with no network, did both: at launch the failure was
+    // never heard, and on a switch it came before the location's name. So
+    // what a refresh has to say waits until the window has been up for a
+    // moment and the key that started it has been answered (#17).
+    private async Task SayAsync(string text, int started, CancellationToken token)
+    {
+        var now = Environment.TickCount;
+        var wait = Math.Max(1500 - unchecked(now - _shownAt), 400 - unchecked(now - started));
+        if (wait > 0)
+        {
+            try
+            {
+                await Task.Delay(wait, token);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+        }
+        if (!token.IsCancellationRequested) Announcer.Say(this, text);
     }
 
     private void ShowFetching(Location location)
@@ -364,30 +397,32 @@ internal sealed class MainForm : Form
     // What a failed fetch leaves on screen, dated by the age line under
     // Right now rather than giving way to an error: the text already there
     // (F5, the timer), else the cached text, else a Problem section. A
-    // failure the user asked for is spoken; the timer's is left for the
-    // age line to tell. Live alerts go with whichever text is shown; a
-    // failed check keeps the last known alerts, dated.
-    private void ShowFailure(SavedLocation saved, Location location, string reason, AlertReport alerts, bool keepCaret, bool automatic)
+    // failure the user asked for is spoken (the sentence is returned for
+    // the caller to say); the timer's is left for the age line to tell.
+    // Live alerts go with whichever text is shown; a failed check keeps
+    // the last known alerts, dated.
+    private string? ShowFailure(SavedLocation saved, Location location, string reason, AlertReport alerts, bool keepCaret, bool automatic)
     {
         _refreshProblem = "couldn't reach the weather service";
+        string spoken;
         if (_shown?.Location == location)
         {
-            Rewrite(_shown, alerts.OrLastKnown(_shownAlerts));
+            Rewrite(_shown, alerts.OrLastKnown(_shownAlerts), automatic);
             _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}: {reason}";
-            if (!automatic) Announcer.Say(this, $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTime(_shown.FetchedAt.ToLocalTime().DateTime)}.");
+            spoken = $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTime(_shown.FetchedAt.ToLocalTime().DateTime)}.";
         }
         else if (_cache.Load(location) is CachedForecast cached)
         {
             Show(cached.Forecast, alerts.OrLastKnown(cached.Alerts));
             _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}: {reason}";
-            if (!automatic) Announcer.Say(this, $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTime(cached.Forecast.FetchedAt.ToLocalTime().DateTime)}.");
+            spoken = $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTime(cached.Forecast.FetchedAt.ToLocalTime().DateTime)}.";
         }
         else
         {
             _refreshProblem = null;
             SetText([new Section("Problem", [$"Couldn't fetch the forecast for {location.DisplayName}: {reason}", "Press F5 to try again."])]);
             _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}.";
-            if (!automatic) Announcer.Say(this, $"Couldn't fetch the forecast for {location.DisplayName}.");
+            spoken = $"Couldn't fetch the forecast for {location.DisplayName}.";
         }
         if (alerts.Checked)
         {
@@ -395,6 +430,7 @@ internal sealed class MainForm : Form
             TrySave();
             TryCache(() => _cache.SaveAlerts(location, alerts));
         }
+        return automatic ? null : spoken;
     }
 
     // announce: F5 keeps the caret, so an alert that has appeared above it
@@ -417,25 +453,42 @@ internal sealed class MainForm : Form
         SetText(Render());
     }
 
-    // New text with the caret kept on the same words (SectionLayout.MapCaret),
-    // so nothing the user did not ask for moves them.
-    private void Rewrite(Forecast forecast, AlertReport? alerts)
+    // New text with the caret kept on the same words (SectionLayout.MapCaret)
+    // and the view where it was, so nothing the user did not ask for moves
+    // them; see SectionLayout.Plan for when the text box is left alone.
+    private void Rewrite(Forecast forecast, AlertReport? alerts, bool automatic)
     {
         _shown = forecast;
         _shownAlerts = alerts;
         var layout = SectionLayout.Build(Render());
-        Apply(layout, layout.MapCaret(_layout, _forecast.SelectionStart));
+        switch (SectionLayout.Plan(_layout, layout, _forecast.SelectionLength > 0, automatic))
+        {
+            case RewritePlan.KeepText:
+                _layout = layout;
+                break;
+            case RewritePlan.Replace:
+                Replace(layout);
+                break;
+        }
     }
 
     // The clock's tick: only when the rendering has changed (the age line
-    // from 30 minutes, a day heading at midnight), and never under a
-    // selection the user is about to copy.
+    // from 30 minutes, a day heading at midnight, or a rewrite that waited
+    // for a selection), and never under a selection the user is about to
+    // copy.
     private void RewriteIfChanged()
     {
         if (_shown is null || _forecast.SelectionLength > 0) return;
         var layout = SectionLayout.Build(Render());
         if (layout.Text == _layout.Text) return;
-        Apply(layout, layout.MapCaret(_layout, _forecast.SelectionStart));
+        Replace(layout);
+    }
+
+    private void Replace(SectionLayout layout)
+    {
+        var caret = layout.MapCaret(_layout, _forecast.SelectionStart);
+        _layout = layout;
+        _forecast.ReplaceText(layout.Text, caret);
     }
 
     private void SetText(IReadOnlyList<Section> sections) => Apply(SectionLayout.Build(sections), 0);
@@ -492,8 +545,7 @@ internal sealed class MainForm : Form
                 // check that failed dates the alerts it leaves on screen.
                 if (ReferenceEquals(saved, CurrentSaved) && _shown?.Location == location && _shownAlerts is not null)
                 {
-                    var shown = report.OrLastKnown(_shownAlerts);
-                    if (Signature(_shownAlerts) != Signature(shown)) Rewrite(_shown, shown);
+                    Rewrite(_shown, report.OrLastKnown(_shownAlerts), automatic: true);
                 }
             }
             if (changed) TrySave();
@@ -506,9 +558,6 @@ internal sealed class MainForm : Form
             _polling = false;
         }
     }
-
-    private static string Signature(AlertReport r) =>
-        $"{r.Problem}|{r.CheckedAt:o}|{string.Join("|", r.Alerts.Select(a => $"{a.Id}@{a.Issued:o}-{a.Ends:o}"))}";
 
     private void Announce(SavedLocation saved, IReadOnlyList<WeatherAlert> fresh)
     {
@@ -529,27 +578,37 @@ internal sealed class MainForm : Form
         var target = -1;
         if (direction > 0)
         {
-            foreach (var (_, o) in _layout.Headings) { if (o > here) { target = o; break; } }
+            for (var i = 0; i < _layout.Headings.Count; i++) { if (_layout.Headings[i].Offset > here) { target = i; break; } }
         }
         else
         {
-            foreach (var (_, o) in _layout.Headings) { if (o < here) target = o; else break; }
+            for (var i = 0; i < _layout.Headings.Count; i++) { if (_layout.Headings[i].Offset < here) target = i; else break; }
         }
-        if (target < 0) return;
-        MoveCaret(target);
+        if (target < 0)
+        {
+            Announcer.Say(this, direction > 0 ? "No next section." : "No previous section.");
+            return;
+        }
+        MoveCaret(_layout.Headings[target]);
     }
 
     private void JumpToAlerts()
     {
-        if (_layout.Headings.Count > 0) MoveCaret(_layout.Headings[0].Offset);
+        if (_layout.Headings.Count > 0) MoveCaret(_layout.Headings[0]);
     }
 
-    private void MoveCaret(int offset)
+    // NVDA reads the new line only after the navigation keys it knows
+    // (arrows, Home, End, Ctrl+Home); after these jumps it said nothing,
+    // so the heading is spoken (#17). When the jump moves focus into the
+    // text box, NVDA reads the line itself as focus arrives.
+    private void MoveCaret((string Heading, int Offset) to)
     {
+        var speak = _forecast.Focused;
         _forecast.Focus();
-        _forecast.SelectionStart = offset;
+        _forecast.SelectionStart = to.Offset;
         _forecast.SelectionLength = 0;
         _forecast.ScrollToCaret();
+        if (speak) Announcer.Say(this, to.Heading);
     }
 
     // The section keys work wherever focus is, like the menu's own shortcuts.

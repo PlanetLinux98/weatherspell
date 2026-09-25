@@ -90,6 +90,22 @@ public class SectionLayoutTests
     }
 
     [Fact]
+    public void The_same_words_are_never_set_again_and_a_selection_holds_off_an_automatic_rewrite()
+    {
+        var shown = SectionLayout.Build(Sections());
+        var same = SectionLayout.Build(Sections());
+        var changed = SectionLayout.Build(Sections(alert: true));
+
+        // An alert check that finds nothing new, even while text is selected.
+        Assert.Equal(RewritePlan.KeepText, SectionLayout.Plan(shown, same, selecting: true, automatic: true));
+        Assert.Equal(RewritePlan.KeepText, SectionLayout.Plan(shown, same, selecting: false, automatic: false));
+        // New words from a timer or a poll wait for the selection; F5 does not.
+        Assert.Equal(RewritePlan.Wait, SectionLayout.Plan(shown, changed, selecting: true, automatic: true));
+        Assert.Equal(RewritePlan.Replace, SectionLayout.Plan(shown, changed, selecting: true, automatic: false));
+        Assert.Equal(RewritePlan.Replace, SectionLayout.Plan(shown, changed, selecting: false, automatic: true));
+    }
+
+    [Fact]
     public void An_empty_layout_keeps_the_caret_in_range()
     {
         var before = SectionLayout.Build(Sections());

@@ -9,6 +9,23 @@ versions.
 
 ## [Unreleased]
 
+### Fixed
+- An alert check set the whole text again even when nothing in it had
+  changed, dropping any selection (NVDA said "unselected") and scrolling
+  the view back to the caret. Now only changed text is set, an automatic
+  refresh waits while text is selected, and a refresh keeps the view where
+  it was (#16).
+- The Location box was cut off along the bottom at large text sizes (#16).
+- Ctrl+PageDown, Ctrl+PageUp and Ctrl+Shift+A moved to a heading without
+  NVDA saying anything; the heading is now spoken, and so is "No next
+  section" at the end (#17).
+- A forecast that could not be fetched at launch could go unspoken, and on
+  a switch the failure could be spoken before the location's name. F5 now
+  says when the forecast has been updated (#17).
+- Find Location says how many places it found after moving to the results
+  rather than while NVDA is announcing them, and says when a search took
+  too long instead of leaving "Searching" (#17).
+
 ## [0.1.0-alpha.2] - 2026-09-15
 
 A second preview for testing, ahead of 0.1.0. Download `Weatherspell.exe`

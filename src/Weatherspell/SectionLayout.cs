@@ -67,6 +67,17 @@ internal sealed class SectionLayout
         return index;
     }
 
+    // What a rewrite does with the text box. The same words are never set
+    // again, whatever else changed (an alert check's time, an alert's
+    // details behind the same line): setting them drops a selection, which
+    // NVDA announces as "unselected". A rewrite the user did not ask for
+    // waits while text is selected; the clock's tick applies it once the
+    // selection is gone.
+    public static RewritePlan Plan(SectionLayout shown, SectionLayout next, bool selecting, bool automatic) =>
+        next.Text == shown.Text ? RewritePlan.KeepText
+        : automatic && selecting ? RewritePlan.Wait
+        : RewritePlan.Replace;
+
     // Where a caret in an earlier layout belongs in this one: the same
     // distance into the section with the same heading; the section at the
     // same position when that heading has gone (a day rolled over); the
@@ -87,4 +98,13 @@ internal sealed class SectionLayout
         var distance = caret - from.Headings[i].Offset;
         return distance < end - start ? start + distance : start;
     }
+}
+
+// KeepText: take the new layout (its alert lines may point at newer
+// details) and leave the text box alone. Wait: leave both until later.
+internal enum RewritePlan
+{
+    KeepText,
+    Wait,
+    Replace,
 }
