@@ -95,18 +95,27 @@ internal static class ForecastWriter
     private static Section RightNow(Forecast f, WriterOptions o, Clock clock)
     {
         var c = f.Current;
+        var nowLocal = o.Now.ToOffset(f.UtcOffset).DateTime;
         var sb = new StringBuilder();
         if (c.Station is not null)
         {
             // The station's own words for the sky ("mist", "patchy fog"),
-            // then this app's numbers.
-            sb.Append($"As of {clock.Time(c.LocalTime)}, {c.Station} reports ");
-            if (c.Description is not null) sb.Append($"{SpokenCondition(c.Description)} and ");
+            // then this app's numbers; a comma when the words have their own
+            // "and" ("mostly cloudy and windy, 13 degrees").
+            sb.Append($"As of {clock.Time(c.LocalTime, nowLocal)}, {c.Station} reports ");
+            if (c.Description is not null)
+            {
+                var sky = SpokenCondition(c.Description);
+                sb.Append(sky.Contains(" and ") ? $"{sky}, " : $"{sky} and ");
+            }
             sb.Append(Units.Degrees(c.Temperature));
         }
         else
         {
-            sb.Append($"As of {clock.Time(c.LocalTime)}, it's {Units.Degrees(c.Temperature)} and {WeatherCodes.Describe(c.WeatherCode, c.IsDay)}");
+            // "and clear", but "with drizzle": the precipitation and fog
+            // phrases are nouns (#21).
+            var joiner = WeatherCodes.IsNoun(c.WeatherCode) ? "with" : "and";
+            sb.Append($"As of {clock.Time(c.LocalTime, nowLocal)}, it's {Units.Degrees(c.Temperature)} {joiner} {WeatherCodes.Describe(c.WeatherCode, c.IsDay)}");
         }
         if (Round(c.FeelsLike) != Round(c.Temperature))
         {
@@ -237,6 +246,13 @@ internal static class ForecastWriter
         var worst = hours.OrderByDescending(h => WeatherCodes.Severity(h.WeatherCode)).First().WeatherCode;
         if (worst != common && WeatherCodes.Severity(worst) > WeatherCodes.Severity(common) && WeatherCodes.IsPrecipitation(worst))
         {
+            // The same weather harder is "heavier", not named twice ("light
+            // snow with snow at times", #21); hail is the one thing a
+            // stronger thunderstorm adds.
+            if (WeatherCodes.Kind(worst) == WeatherCodes.Kind(common))
+            {
+                return common == 95 ? "thunderstorms, with hail at times" : $"{WeatherCodes.Describe(common)}, heavier at times";
+            }
             return $"{WeatherCodes.Describe(common)} with {WeatherCodes.Describe(worst)} at times";
         }
         return WeatherCodes.Describe(common);
@@ -291,7 +307,7 @@ internal static class ForecastWriter
         if (day.SnowfallSum >= (units == UnitSystem.Metric ? 1 : 0.5))
         {
             pieces.Add(units == UnitSystem.Metric
-                ? $"snowfall around {(int)Math.Round(day.SnowfallSum)} centimetres"
+                ? $"snowfall around {Units.Centimetres(day.SnowfallSum)}"
                 : $"snowfall around {day.SnowfallSum.ToString("0.#", CultureInfo.InvariantCulture)} inches");
         }
         pieces.Add(WindPhrase(hours, units));
@@ -388,7 +404,7 @@ internal static class ForecastWriter
         if (d.SnowfallSum >= (units == UnitSystem.Metric ? 1 : 0.5))
         {
             sb.Append(units == UnitSystem.Metric
-                ? $" Snowfall around {(int)Math.Round(d.SnowfallSum)} centimetres."
+                ? $" Snowfall around {Units.Centimetres(d.SnowfallSum)}."
                 : $" Snowfall around {d.SnowfallSum.ToString("0.#", CultureInfo.InvariantCulture)} inches.");
         }
         sb.Append($" Wind from the {Compass.FromDegrees(d.WindDirectionDominant)} up to {Units.Speed(d.WindSpeedMax, units)}");
@@ -407,11 +423,21 @@ internal static class ForecastWriter
         var today = f.Days.FirstOrDefault(d => d.Date == nowLocal.Date);
         if (today is null) return null;
         var paragraphs = new List<string>();
-        if (today.Sunrise is DateTime rise && today.Sunset is DateTime set)
+        // Polar day and night: Open-Meteo gives midnight for both sunrise
+        // and sunset, which read "rose at 12:00 am and sets at 12:00 am".
+        if (today.DaylightSeconds is double all && all >= 86400 - 60)
+        {
+            paragraphs.Add("The sun does not set today.");
+        }
+        else if (today.DaylightSeconds is double none && none <= 60)
+        {
+            paragraphs.Add("The sun does not rise today.");
+        }
+        else if (today.Sunrise is DateTime rise && today.Sunset is DateTime set)
         {
             var rises = nowLocal < rise ? "rises" : "rose";
             var sets = nowLocal < set ? "sets" : "set";
-            var s = $"The sun {rises} at {clock.Time(rise)} and {sets} at {clock.Time(set)}";
+            var s = $"The sun {rises} at {clock.Time(rise, nowLocal)} and {sets} at {clock.Time(set, nowLocal)}";
             if (today.DaylightSeconds is double daylight)
             {
                 s += $", {Clock.Duration(daylight)} of daylight";

@@ -134,7 +134,7 @@ internal sealed class NwsClient
         var time = DateTimeOffset.Parse(o.Timestamp, CultureInfo.InvariantCulture, DateTimeStyles.None);
         var pressurePa = o.SeaLevelPressure?.Value ?? o.BarometricPressure?.Value;
         return new Observation(
-            Station: stationName ?? o.StationName ?? "the nearest station",
+            Station: OfficialText.StationName(stationName ?? o.StationName ?? "the nearest station"),
             Time: time,
             Description: string.IsNullOrWhiteSpace(o.TextDescription) ? null : o.TextDescription!.Trim(),
             TemperatureC: o.Temperature?.Value,

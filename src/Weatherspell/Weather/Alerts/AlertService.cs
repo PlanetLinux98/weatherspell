@@ -34,7 +34,7 @@ internal sealed class AlertService
         {
             // HttpClient reports its timeout as a cancellation; the token
             // says whether this one was the caller's.
-            return new AlertReport([], attribution, ex is OperationCanceledException ? "the alert service took too long to answer" : ex.GetBaseException().Message);
+            return new AlertReport([], attribution, ex is OperationCanceledException ? "the alert service took too long to answer" : ex.GetBaseException().Message.TrimEnd('.', ' '));
         }
     }
 

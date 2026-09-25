@@ -29,7 +29,7 @@ internal static class AlertWriter
             var alerts = report.Alerts.Where(a => a.Ends is null || clock.Local(a.Ends.Value) > nowLocal).ToList();
             if (alerts.Count == 0)
             {
-                return new Section(Heading, [$"Alerts couldn't be checked this time ({problem}); none were in effect {age}. Press F5 to try again."]);
+                return new Section(Heading, [$"Alerts couldn't be checked this time ({problem}); none were in effect when last checked, {age}. Press F5 to try again."]);
             }
             var note = $"Alerts couldn't be checked this time ({problem}); showing the alerts from {age}. Press F5 to try again.";
             return new Section(Heading, [note, .. alerts.Select(a => Line(a, clock, nowLocal))], [null, .. alerts]);

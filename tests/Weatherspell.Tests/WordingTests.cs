@@ -48,6 +48,8 @@ public class WordingTests
     [InlineData(21.5, "22 degrees")]
     [InlineData(-0.4, "0 degrees")]
     [InlineData(-4.6, "minus 5 degrees")]
+    [InlineData(1.2, "1 degree")]
+    [InlineData(-0.8, "minus 1 degree")]
     public void Degrees_are_whole_and_say_minus(double value, string expected)
     {
         Assert.Equal(expected, Units.Degrees(value));
@@ -69,6 +71,32 @@ public class WordingTests
         Assert.Equal("1 millimetre", Units.PrecipitationAmount(1.2, UnitSystem.Metric));
         Assert.Equal("8 millimetres", Units.PrecipitationAmount(8.4, UnitSystem.Metric));
         Assert.Equal("0.3 inches", Units.PrecipitationAmount(0.33, UnitSystem.Imperial));
+        Assert.Equal("1 kilometre an hour", Units.Speed(1.2, UnitSystem.Metric));
+        Assert.Equal("1 centimetre", Units.Centimetres(1.4));
+        Assert.Equal("4 centimetres", Units.Centimetres(3.6));
+    }
+
+    [Theory]
+    [InlineData("Gander Int'l Airport", "Gander International Airport")]
+    [InlineData("VISITORS CENTER AT FURNACE CREEK DEATH VALLEY", "Visitors Center at Furnace Creek Death Valley")]
+    [InlineData("Spokane, Spokane International Airport", "Spokane, Spokane International Airport")]
+    [InlineData("Burlington Lift Bridge", "Burlington Lift Bridge")]
+    public void Station_names_read_as_words(string name, string expected)
+    {
+        Assert.Equal(expected, OfficialText.StationName(name));
+    }
+
+    [Fact]
+    public void Heavier_hours_of_the_same_weather_are_not_named_twice()
+    {
+        Assert.Equal(WeatherCodes.Kind(71), WeatherCodes.Kind(73));
+        Assert.Equal(WeatherCodes.Kind(80), WeatherCodes.Kind(81));
+        Assert.NotEqual(WeatherCodes.Kind(51), WeatherCodes.Kind(80));
+        Assert.NotEqual(WeatherCodes.Kind(61), WeatherCodes.Kind(66));
+        Assert.True(WeatherCodes.IsNoun(53));
+        Assert.True(WeatherCodes.IsNoun(48));
+        Assert.False(WeatherCodes.IsNoun(45));
+        Assert.False(WeatherCodes.IsNoun(3));
     }
 
     // One system per location's whole text: Environment Canada writes only

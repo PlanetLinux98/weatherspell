@@ -215,6 +215,62 @@ public class ForecastWriterTests
     }
 
     [Fact]
+    public void The_bracket_names_the_reader_s_own_day_when_it_is_not_all_today()
+    {
+        // A PC in Kathmandu's zone (UTC+5:45) reading Toronto at 2:45 pm
+        // on the 11th is at 12:30 am on the 12th: Toronto's sunrise was the
+        // reader's yesterday afternoon, and its afternoon and sunset fall in
+        // the reader's today, which the bracket now says.
+        var kathmandu = TimeZoneInfo.CreateCustomTimeZone("test-kathmandu", new TimeSpan(5, 45, 0), "Test Kathmandu", "Test Kathmandu");
+        var sections = ForecastWriter.Write(Sample(), Options(kathmandu));
+
+        Assert.StartsWith("As of 2:30 pm (12:15 am today your time), ", Find(sections, "Right now").Paragraphs[0]);
+        Assert.Equal("The sun rose at 6:52 am (4:37 pm yesterday your time) and sets at 7:34 pm (5:19 am today your time), 12 hours and 42 minutes of daylight.", Find(sections, "Sun and UV").Paragraphs[0]);
+
+        // A PC behind the location, as in Honolulu: Toronto's late evening is
+        // the reader's afternoon, all on their today, so no day is named;
+        // Toronto's early tomorrow is still the reader's today.
+        var honolulu = TimeZoneInfo.CreateCustomTimeZone("test-honolulu", TimeSpan.FromHours(-10), "Test Honolulu", "Test Honolulu");
+        var clock = new Clock(Eastern, honolulu, "h:mm tt", CultureInfo.InvariantCulture);
+        var now = new DateTime(2026, 9, 11, 14, 45, 0);
+        Assert.Equal("11:30 pm (5:30 pm your time)", clock.Time(new DateTime(2026, 9, 11, 23, 30, 0), now));
+        Assert.Equal("1:00 am (7:00 pm today your time)", clock.Time(new DateTime(2026, 9, 12, 1, 0, 0), now));
+    }
+
+    [Fact]
+    public void Precipitation_right_now_reads_with_rather_than_and()
+    {
+        var sections = ForecastWriter.Write(Sample(currentCode: 53), Options());
+        Assert.StartsWith("As of 2:30 pm, it's 21 degrees with drizzle, feeling like 20.", Find(sections, "Right now").Paragraphs[0]);
+
+        Assert.StartsWith("As of 2:30 pm, it's 21 degrees and foggy", Find(ForecastWriter.Write(Sample(currentCode: 45), Options()), "Right now").Paragraphs[0]);
+    }
+
+    [Fact]
+    public void A_heavier_hour_of_the_same_weather_reads_heavier_at_times()
+    {
+        var f = Sample();
+        // Saturday's daytime hours all light snow but one hour of snow.
+        var hours = f.Hours.Select(h => h.LocalTime.Date == new DateTime(2026, 9, 12) && h.LocalTime.Hour is >= 7 and < 19
+            ? h with { WeatherCode = h.LocalTime.Hour == 13 ? 73 : 71 }
+            : h).ToList();
+
+        var saturday = Find(ForecastWriter.Write(f with { Hours = hours }, Options()), "Saturday, September 12").Paragraphs[0];
+        Assert.StartsWith("Saturday: light snow, heavier at times, high 23", saturday);
+    }
+
+    [Fact]
+    public void Polar_day_and_night_are_said_outright()
+    {
+        var f = Sample();
+        var day = f.Days[0] with { Sunrise = new DateTime(2026, 9, 11), Sunset = new DateTime(2026, 9, 12), DaylightSeconds = 86400 };
+        var night = f.Days[0] with { Sunrise = new DateTime(2026, 9, 11), Sunset = new DateTime(2026, 9, 11), DaylightSeconds = 0 };
+
+        Assert.Equal("The sun does not set today.", Find(ForecastWriter.Write(f with { Days = [day, .. f.Days.Skip(1)] }, Options()), "Sun and UV").Paragraphs[0]);
+        Assert.Equal("The sun does not rise today.", Find(ForecastWriter.Write(f with { Days = [night, .. f.Days.Skip(1)] }, Options()), "Sun and UV").Paragraphs[0]);
+    }
+
+    [Fact]
     public void Imperial_units_are_worded_in_miles_and_inches()
     {
         var f = Sample(UnitSystem.Imperial);

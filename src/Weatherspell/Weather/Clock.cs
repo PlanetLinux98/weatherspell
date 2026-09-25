@@ -27,7 +27,12 @@ internal sealed class Clock
     public static string PcTime(DateTime local) =>
         Lowercase(local.ToString(WindowsTimePattern(), CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
 
-    public string Time(DateTime local)
+    // "6:40 am (9:40 am your time)". The bracket names the reader's own day
+    // ("today", "tomorrow", "Saturday", as alert times do) unless both times
+    // fall on the reader's today: it used to compare with the location's
+    // date, so a Kathmandu sunrise due that evening read "8:08 pm yesterday
+    // your time" (#21).
+    public string Time(DateTime local, DateTime nowLocal)
     {
         var text = Bare(local);
         var utc = ToUtc(local);
@@ -37,8 +42,9 @@ internal sealed class Clock
             return text;
         }
         var pcLocal = utc + pcOffset;
-        var suffix = pcLocal.Date == local.Date ? "" : (pcLocal.Date > local.Date ? " tomorrow" : " yesterday");
-        return $"{text} ({Bare(pcLocal)}{suffix} your time)";
+        var pcToday = (ToUtc(nowLocal) + _pcZone.GetUtcOffset(ToUtc(nowLocal))).Date;
+        var day = pcLocal.Date == pcToday && local.Date == pcToday ? "" : " " + DayWord(pcLocal.Date, pcToday);
+        return $"{text} ({Bare(pcLocal)}{day} your time)";
     }
 
     // "4:00 pm today", "6:30 am tomorrow", "6:30 am Sunday", "6:30 am on

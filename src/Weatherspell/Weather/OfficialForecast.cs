@@ -40,6 +40,20 @@ internal static class OfficialText
         return s;
     }
 
+    // A station as the services name it, read as words: "Gander Int'l
+    // Airport" spelled out, and the NWS's all-capital names ("VISITORS
+    // CENTER AT FURNACE CREEK DEATH VALLEY") in title case (#21).
+    public static string StationName(string name)
+    {
+        var s = name.Trim();
+        if (s == s.ToUpperInvariant() && s.Any(char.IsLetter))
+        {
+            s = System.Globalization.CultureInfo.InvariantCulture.TextInfo.ToTitleCase(s.ToLowerInvariant());
+            s = System.Text.RegularExpressions.Regex.Replace(s, @"(?<=\S )(At|Of|The|And|On|In)\b", m => m.Value.ToLowerInvariant());
+        }
+        return System.Text.RegularExpressions.Regex.Replace(s, @"\bInt'l(?=\s|$)", "International");
+    }
+
     // "Flash Flood Watch" as the NWS titles it, or "frost advisory" as
     // Environment Canada names it, becomes "Flash flood watch": the
     // sentence case this app's own text uses.

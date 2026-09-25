@@ -134,6 +134,19 @@ public class EnvironmentCanadaTests
 
         Assert.Null(CityPageClient.Parse(stripped).Observation);
     }
+
+    [Fact]
+    public void An_observation_only_site_is_told_apart_from_a_failure()
+    {
+        // Alert and Eureka publish an empty forecast group: a fact about the
+        // site, not something another try would fix.
+        var xml = Fixtures.Read("ec-citypage-peterborough.xml");
+        var start = xml.IndexOf("<forecastGroup>", StringComparison.Ordinal);
+        var end = xml.IndexOf("</forecastGroup>", StringComparison.Ordinal) + "</forecastGroup>".Length;
+
+        Assert.Throws<NoForecastTextException>(() => CityPageClient.Parse(xml.Substring(0, start) + "<forecastGroup/>" + xml.Substring(end)));
+        Assert.Throws<NoForecastTextException>(() => CityPageClient.Parse(xml.Substring(0, start) + xml.Substring(end)));
+    }
 }
 
 public class OfficialTextTests

@@ -39,7 +39,16 @@ internal static class Units
     {
         var rounded = (int)Math.Round(value, MidpointRounding.AwayFromZero);
         // "minus 5 degrees" rather than a hyphen the synth may skip.
-        return rounded < 0 ? $"minus {-rounded} degrees" : $"{rounded} degrees";
+        var unit = Math.Abs(rounded) == 1 ? "degree" : "degrees";
+        return rounded < 0 ? $"minus {-rounded} {unit}" : $"{rounded} {unit}";
+    }
+
+    // Snowfall, always metric's centimetres (imperial snowfall is inches,
+    // written by the caller).
+    public static string Centimetres(double value)
+    {
+        var rounded = (int)Math.Round(value, MidpointRounding.AwayFromZero);
+        return rounded == 1 ? "1 centimetre" : $"{rounded} centimetres";
     }
 
     // Bare number for "high 26, low 15": the unit word was said once already.
@@ -52,7 +61,8 @@ internal static class Units
     public static string Speed(double value, UnitSystem u)
     {
         var rounded = (int)Math.Round(value, MidpointRounding.AwayFromZero);
-        return u == UnitSystem.Metric ? $"{rounded} kilometres an hour" : $"{rounded} miles an hour";
+        if (u == UnitSystem.Metric) return rounded == 1 ? "1 kilometre an hour" : $"{rounded} kilometres an hour";
+        return rounded == 1 ? "1 mile an hour" : $"{rounded} miles an hour";
     }
 
     public static string SpeedBare(double value) =>

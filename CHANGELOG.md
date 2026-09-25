@@ -30,6 +30,17 @@ versions.
   of the next update), and the offline view dropped it then. Such an alert
   now reads without "until", and its details say when the message expires
   (#20).
+- The "your time" in brackets named the wrong day for a location ahead of
+  or behind this PC ("8:08 pm yesterday your time" for a sunrise due that
+  evening). It now names your own day, as alert times do, unless both
+  times fall on your today (#21).
+- Wording: "1 degree" and "1 centimetre"; "it's 13 degrees with drizzle"
+  rather than "and drizzle"; "light snow, heavier at times" rather than
+  "light snow with snow at times"; "The sun does not set today" (or rise)
+  in polar day and night; station names read as words ("Gander
+  International Airport"); an Environment Canada site with no forecast text
+  says so instead of that the text could not be fetched this time; the
+  offline alerts line reads "none were in effect when last checked" (#21).
 
 ## [0.1.0-alpha.2] - 2026-09-15
 

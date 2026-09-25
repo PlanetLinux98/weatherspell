@@ -48,12 +48,17 @@ internal sealed class ForecastService
         {
             return (await fetch.ConfigureAwait(false), null);
         }
+        catch (NoForecastTextException)
+        {
+            return (null, $"{name} has no forecast text for this area, so these sentences are written from Open-Meteo data.");
+        }
         catch (Exception ex) when (ex is HttpRequestException or IOException or InvalidDataException or SerializationException or FormatException or XmlException
                                    || (ex is OperationCanceledException && !cancellationToken.IsCancellationRequested))
         {
             // HttpClient reports its timeout as a cancellation; the token
-            // says whether this one was the caller's.
-            var reason = ex is OperationCanceledException ? "it took too long to answer" : ex.GetBaseException().Message;
+            // says whether this one was the caller's. An exception's own
+            // full stop would sit inside the brackets.
+            var reason = ex is OperationCanceledException ? "it took too long to answer" : ex.GetBaseException().Message.TrimEnd('.', ' ');
             return (null, $"{name}'s forecast text could not be fetched this time ({reason}), so these sentences are written from Open-Meteo data.");
         }
     }

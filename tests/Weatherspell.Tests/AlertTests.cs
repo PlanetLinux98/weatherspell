@@ -294,7 +294,7 @@ public class AlertWriterTests
         Assert.Equal([null, running, open], section.Alerts);
 
         var quiet = AlertWriter.Section(failed.OrLastKnown(new AlertReport([over], "Environment Canada (weather.gc.ca)", null, new DateTimeOffset(NowLocal.AddSeconds(-30), Eastern))), clock, NowLocal);
-        Assert.Equal(["Alerts couldn't be checked this time (503 Service Unavailable from api.weather.gc.ca); none were in effect less than a minute ago. Press F5 to try again."], quiet.Paragraphs);
+        Assert.Equal(["Alerts couldn't be checked this time (503 Service Unavailable from api.weather.gc.ca); none were in effect when last checked, less than a minute ago. Press F5 to try again."], quiet.Paragraphs);
         Assert.Null(quiet.Alerts);
     }
 

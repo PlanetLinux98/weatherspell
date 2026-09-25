@@ -50,6 +50,25 @@ internal static class WeatherCodes
 
     public static bool IsThunder(int code) => code >= 95;
 
+    // The phrases that are nouns ("drizzle", "freezing fog", "thunderstorms"),
+    // which follow "with" rather than "and" in "it's 13 degrees with drizzle".
+    public static bool IsNoun(int code) => IsPrecipitation(code) || code == 48;
+
+    // The same weather at different strengths ("light snow", "snow", "heavy
+    // snow") shares a kind, so a heavier hour reads "heavier at times".
+    public static string Kind(int code) => code switch
+    {
+        51 or 53 or 55 => "drizzle",
+        56 or 57 => "freezing drizzle",
+        61 or 63 or 65 => "rain",
+        66 or 67 => "freezing rain",
+        71 or 73 or 75 => "snow",
+        80 or 81 or 82 => "rain showers",
+        85 or 86 => "snow showers",
+        95 or 96 or 99 => "thunderstorms",
+        _ => code.ToString(System.Globalization.CultureInfo.InvariantCulture),
+    };
+
     // Higher means more worth mentioning: a thunderstorm in one hour matters
     // more than three hours of overcast.
     public static int Severity(int code) => code switch
