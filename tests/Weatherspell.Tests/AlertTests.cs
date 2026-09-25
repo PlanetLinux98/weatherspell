@@ -56,6 +56,11 @@ public class NwsAlertParsingTests
         Assert.Equal(new DateTimeOffset(2026, 9, 25, 23, 15, 0, TimeSpan.FromHours(-10)), hurricane.Expires);
         Assert.Equal(new DateTimeOffset(2026, 9, 26, 18, 0, 0, TimeSpan.FromHours(-10)), flood.Ends);
         Assert.Equal(new DateTimeOffset(2026, 9, 25, 18, 45, 0, TimeSpan.FromHours(-10)), flood.Expires);
+
+        // Ordered by its next update, the watch with no end still comes
+        // before the flood watch that ends tomorrow.
+        var ordered = AlertService.Order(alerts).Select(a => a.Event).ToList();
+        Assert.True(ordered.IndexOf("Hurricane watch") < ordered.IndexOf("Flood watch"));
     }
 
     [Fact]

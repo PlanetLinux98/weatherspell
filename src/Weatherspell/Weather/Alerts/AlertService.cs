@@ -37,12 +37,14 @@ internal sealed class AlertService
     }
 
     // Severity first; within it warnings before watches before advisories
-    // and statements; then whichever ends soonest.
+    // and statements; then whichever ends soonest, or for one with no end
+    // (a hurricane watch) is next updated, so it does not sink below a
+    // flood watch.
     public static IReadOnlyList<WeatherAlert> Order(IEnumerable<WeatherAlert> alerts) =>
         alerts
             .OrderByDescending(a => a.Severity)
             .ThenBy(a => a.Kind)
-            .ThenBy(a => a.Ends ?? DateTimeOffset.MaxValue)
+            .ThenBy(a => a.Ends ?? a.Expires ?? DateTimeOffset.MaxValue)
             .ThenBy(a => a.Event, StringComparer.Ordinal)
             .ToList();
 }
