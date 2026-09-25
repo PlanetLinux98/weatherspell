@@ -46,6 +46,11 @@ versions.
   and were saved with no territory in their name ("San Juan"). They are now
   named and covered like the states; American Samoa, which has no NWS
   forecast text, gets its alerts (#19).
+- Some Canadian postal codes were placed far from their area and got a
+  neighbouring town's forecast (T2P, downtown Calgary, got Strathmore's),
+  and a third of them were named with a long list of neighbourhoods that
+  was spoken in every announcement. Canadian codes now sit at the middle of
+  their area and carry the town's name ("Calgary") (#18).
 
 ## [0.1.0-alpha.2] - 2026-09-15
 

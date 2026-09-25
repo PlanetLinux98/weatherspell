@@ -39,12 +39,26 @@ public class PostalCodesTests
     {
         var place = Assert.Single(PostalCodes.Find("K9J 7B8"));
 
-        Assert.Equal("Peterborough South", place.Name);
+        // The municipality and the median of the area's full codes (#18).
+        Assert.Equal("Peterborough", place.Name);
         Assert.Equal("Ontario", place.Region);
         Assert.Equal("Canada", place.Country);
-        Assert.Equal("Peterborough South, Ontario, Canada", place.SearchResultText);
-        Assert.Equal(44.3104, place.Latitude, 4);
-        Assert.Equal(-78.2396, place.Longitude, 4);
+        Assert.Equal("Peterborough, Ontario, Canada", place.SearchResultText);
+        Assert.Equal(44.2924, place.Latitude, 4);
+        Assert.Equal(-78.3296, place.Longitude, 4);
+    }
+
+    [Theory]
+    [InlineData("T2P", 51.0447, -114.0719)] // downtown Calgary, was 27 km east
+    [InlineData("L8N", 43.2557, -79.8711)] // downtown Hamilton, was 20 km away
+    [InlineData("M5V", 43.6426, -79.3871)] // downtown Toronto
+    public void Canadian_areas_sit_where_they_are_under_a_plain_name(string code, double latitude, double longitude)
+    {
+        var place = Assert.Single(PostalCodes.Find(code));
+
+        Assert.InRange(place.Latitude, latitude - 0.03, latitude + 0.03);
+        Assert.InRange(place.Longitude, longitude - 0.03, longitude + 0.03);
+        Assert.DoesNotContain("(", place.Name);
     }
 
     [Fact]
