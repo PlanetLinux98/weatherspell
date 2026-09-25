@@ -24,7 +24,7 @@ internal sealed class MainForm : Form
     private AppSettings _settings;
 
     private readonly NativeComboBox _locations;
-    private readonly NativeTextBox _forecast;
+    private readonly ReadingBox _forecast;
     private readonly ToolStripStatusLabel _status;
     private SectionLayout _layout = SectionLayout.Empty;
     private CancellationTokenSource? _refreshing;
@@ -125,11 +125,11 @@ internal sealed class MainForm : Form
         _locations.SizeChanged += (_, _) => FitHeader();
         FitHeader();
 
-        // Label and text box in their own panel, label first: the native
-        // edit control's accessibility (NativeTextBox) names the box from
-        // the static control just before it in z-order, which is the
-        // sibling order inside this panel; in the form itself the filling
-        // box has to come first for docking.
+        // Label and text box in their own panel, label first: the control's
+        // own accessibility (ReadingBox) names the box from the static
+        // control just before it in z-order, which is the sibling order
+        // inside this panel; in the form itself the filling box has to come
+        // first for docking.
         var body = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2, TabIndex = 2 };
         body.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         body.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
@@ -141,16 +141,12 @@ internal sealed class MainForm : Form
             Margin = new Padding(8, 8, 8, 2),
             TabIndex = 0,
         };
-        _forecast = new NativeTextBox
+        _forecast = new ReadingBox
         {
             AccessibleName = "Forecast",
-            Multiline = true,
-            ReadOnly = true,
-            ScrollBars = ScrollBars.Vertical,
             Dock = DockStyle.Fill,
             Margin = new Padding(0),
             TabIndex = 1,
-            WordWrap = true,
         };
         body.Controls.Add(forecastLabel, 0, 0);
         body.Controls.Add(_forecast, 0, 1);

@@ -64,6 +64,9 @@ versions.
   saving over the other's settings; it now brings the first window
   forward. A place already saved is switched to instead of being saved
   twice (#22).
+- Narrator read the forecast and an alert's details only as a whole: all
+  of it whenever the text took focus, and nothing as the arrow keys moved
+  through it. Both are now read line by line in Narrator as in NVDA (#23).
 
 ## [0.1.0-alpha.2] - 2026-09-15
 

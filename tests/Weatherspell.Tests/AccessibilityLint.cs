@@ -60,26 +60,26 @@ internal static class AccessibilityLint
                 }
             }
 
-            // The native accessibility classes (see NativeControls.cs): a
-            // plain ComboBox is silent in NVDA when arrowed collapsed, and a
-            // plain multiline TextBox is read whole when the mouse crosses it.
-            // The native edit proxy takes its name from the static control
-            // just before it among its siblings, so that must be the label.
+            // The accessibility classes (see NativeControls.cs): a plain
+            // ComboBox is silent in NVDA when arrowed collapsed, and a
+            // multiline TextBox (or WinForms' own RichTextBox) gives Narrator
+            // no way to read it by line. Text to be read is a ReadingBox, in
+            // a panel with its label just before it.
             if (control is ComboBox && control is not NativeComboBox)
             {
                 yield return $"{where}: use NativeComboBox, not ComboBox.";
             }
-            if (control is TextBox { Multiline: true } && control is not NativeTextBox)
+            if (control is TextBoxBase { Multiline: true } && control is not ReadingBox)
             {
-                yield return $"{where}: use NativeTextBox for a multiline text box, not TextBox.";
+                yield return $"{where}: use ReadingBox for multiline text, not {type.Name}.";
             }
-            if (control is NativeTextBox && control.Parent is Control parent)
+            if (control is ReadingBox && control.Parent is Control parent)
             {
                 var index = parent.Controls.IndexOf(control);
                 var before = index > 0 ? parent.Controls[index - 1] : null;
                 if (before is not Label label || StripMnemonic(label.Text) != control.AccessibleName)
                 {
-                    yield return $"{where}: the sibling just before a NativeTextBox must be its Label (\"{control.AccessibleName}\").";
+                    yield return $"{where}: the sibling just before a ReadingBox must be its Label (\"{control.AccessibleName}\").";
                 }
             }
 

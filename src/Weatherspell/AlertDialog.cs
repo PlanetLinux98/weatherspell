@@ -9,7 +9,7 @@ namespace Weatherspell;
 // closes; the official page opens in the browser.
 internal sealed class AlertDialog : Form
 {
-    private readonly TextBox _text;
+    private readonly ReadingBox _text;
 
     public AlertDialog(string title, IReadOnlyList<string> paragraphs, string? url)
     {
@@ -25,9 +25,8 @@ internal sealed class AlertDialog : Form
         Size = new Size(600, 460);
         Scaling.Apply(this);
 
-        // Label before the text box in its own panel, so the native edit
-        // control's accessibility names the box from it (see NativeTextBox
-        // and MainForm).
+        // Label before the text box in its own panel, so the control's own
+        // accessibility names the box from it (see ReadingBox and MainForm).
         var body = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2, TabIndex = 0 };
         body.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         body.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
@@ -39,23 +38,20 @@ internal sealed class AlertDialog : Form
             Margin = new Padding(8, 8, 8, 2),
             TabIndex = 0,
         };
-        _text = new NativeTextBox
+        _text = new ReadingBox
         {
             AccessibleName = "Details",
-            Multiline = true,
-            ReadOnly = true,
-            ScrollBars = ScrollBars.Vertical,
             Dock = DockStyle.Fill,
             Margin = new Padding(0),
-            WordWrap = true,
             TabIndex = 1,
         };
         body.Controls.Add(label, 0, 0);
         body.Controls.Add(_text, 0, 1);
+        // "\n", RichEdit's one-character break (see ReadingBox).
         var sb = new StringBuilder();
         foreach (var paragraph in paragraphs)
         {
-            if (sb.Length > 0) sb.Append("\r\n\r\n");
+            if (sb.Length > 0) sb.Append("\n\n");
             sb.Append(paragraph);
         }
         _text.Text = sb.ToString();

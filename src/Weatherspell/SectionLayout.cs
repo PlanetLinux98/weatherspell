@@ -8,9 +8,13 @@ namespace Weatherspell;
 // line, a steady rhythm for line-by-line reading. Records where each
 // heading starts (Ctrl+PageDown/PageUp) and which characters are an alert
 // line (Enter opens it), and maps a caret across a rewrite so a refresh
-// the user did not ask for leaves them on the same words.
+// the user did not ask for leaves them on the same words. Line breaks are
+// "\n", one character, as RichEdit counts them (ReadingBox), so offsets
+// here are the box's own.
 internal sealed class SectionLayout
 {
+    private const string Break = "\n";
+
     public static readonly SectionLayout Empty = Build([]);
 
     public string Text { get; }
@@ -31,9 +35,9 @@ internal sealed class SectionLayout
         var alertRanges = new List<(int, int, WeatherAlert)>();
         foreach (var section in sections)
         {
-            if (sb.Length > 0) sb.Append("\r\n");
+            if (sb.Length > 0) sb.Append(Break);
             headings.Add((section.Heading, sb.Length));
-            sb.Append(section.Heading).Append("\r\n\r\n");
+            sb.Append(section.Heading).Append(Break).Append(Break);
             for (var i = 0; i < section.Paragraphs.Count; i++)
             {
                 var paragraph = section.Paragraphs[i];
@@ -41,7 +45,7 @@ internal sealed class SectionLayout
                 {
                     alertRanges.Add((sb.Length, sb.Length + paragraph.Length, alert));
                 }
-                sb.Append(paragraph).Append("\r\n\r\n");
+                sb.Append(paragraph).Append(Break).Append(Break);
             }
         }
         return new SectionLayout(sb.ToString(), headings, alertRanges);

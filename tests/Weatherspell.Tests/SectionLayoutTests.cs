@@ -24,7 +24,7 @@ public class SectionLayoutTests
     {
         var layout = SectionLayout.Build(Sections());
 
-        Assert.StartsWith("Alerts\r\n\r\nNo alerts in effect.\r\n\r\n\r\nRight now\r\n\r\nAs of 2:30 pm, it's 21 degrees.\r\n\r\nHumidity 52 percent.\r\n\r\n\r\nRest of today", layout.Text);
+        Assert.StartsWith("Alerts\n\nNo alerts in effect.\n\n\nRight now\n\nAs of 2:30 pm, it's 21 degrees.\n\nHumidity 52 percent.\n\n\nRest of today", layout.Text);
         Assert.Equal(["Alerts", "Right now", "Rest of today", "Saturday, September 12", "Sources"], layout.Headings.Select(h => h.Heading).ToArray());
         Assert.Equal(0, layout.Headings[0].Offset);
         Assert.Equal("Right now", layout.Text.Substring(layout.Headings[1].Offset, 9));

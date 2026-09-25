@@ -83,12 +83,14 @@ public class AccessibilityLintTests
             form.Controls.Add(new Label { Name = "notesLabel", Text = "Notes", TabIndex = 0 });
             form.Controls.Add(new ComboBox { Name = "units", AccessibleName = "Notes", TabIndex = 1 });
             form.Controls.Add(new TextBox { Name = "notes", AccessibleName = "Notes", Multiline = true, TabIndex = 2 });
-            form.Controls.Add(new NativeTextBox { Name = "details", AccessibleName = "Details", Multiline = true, TabIndex = 3 });
+            form.Controls.Add(new RichTextBox { Name = "rich", AccessibleName = "Notes", TabIndex = 3 });
+            form.Controls.Add(new ReadingBox { Name = "details", AccessibleName = "Details", TabIndex = 4 });
             return AccessibilityLint.Check(form).ToList();
         });
 
         Assert.Contains(failures, f => f.Contains("\"units\"") && f.Contains("NativeComboBox"));
-        Assert.Contains(failures, f => f.Contains("\"notes\"") && f.Contains("NativeTextBox"));
+        Assert.Contains(failures, f => f.Contains("\"notes\"") && f.Contains("use ReadingBox"));
+        Assert.Contains(failures, f => f.Contains("\"rich\"") && f.Contains("use ReadingBox"));
         Assert.Contains(failures, f => f.Contains("\"details\"") && f.Contains("sibling just before"));
     }
 

@@ -328,7 +328,7 @@ The live alert check is still awaited when the forecast fetch fails: the
 two services are independent, and an alert service that answers gives
 live alerts over cached text.
 
-## Two native controls with the classic accessibility
+## Two controls with Windows' own accessibility
 
 Since .NET Framework 4.7.3, WinForms answers the accessibility requests
 for its controls itself, with objects that also speak UI Automation. NVDA
@@ -347,17 +347,35 @@ those objects fall between the two APIs, found with NVDA's own event log on
   the text under the pointer through its edit-control support only when it
   can identify the object under the pointer as the window's client object
   (`IAccIdentity`), which WinForms' objects do not implement, so it fell
-  back to the control's name plus its entire value. `NativeTextBox` hands
-  the MSAA client request to the edit control itself, whose standard proxy
+  back to the control's name plus its entire value. The forecast box hands
+  the MSAA client request to the control itself, whose own object
   identifies itself; NVDA then reads the paragraph under the pointer. That
-  proxy names the box from the static control just before it among its
-  siblings, so each multiline box sits in a panel with its label first (the
+  object names the box from the static control just before it among its
+  siblings, so each such box sits in a panel with its label first (the
   lint checks the order).
 
-Both are one message on one control. Every combo box and every multiline
-text box in the app is one of these (the lint insists); the single-line
-search box keeps WinForms' object, since its label is not a sibling and a
-short value under the mouse is harmless.
+The text to be read, the forecast and an alert's details, is not a
+TextBox but a read-only RichTextBox on msftedit's RICHEDIT50W holding
+plain text (`ReadingBox`). Narrator reads through UI Automation, and on
+this runtime a WinForms TextBox reaches UI Automation only through the MSAA
+proxy, as an edit with a value and no text pattern: Narrator read the whole
+forecast whenever the box took focus and nothing as the arrows moved
+through it (2026-09-25, #23). WinForms' own RichTextBox here is RichEdit20W,
+which is no better; RICHEDIT50W answers UI Automation itself, as a document
+with a text pattern, and NVDA reads it exactly as it read the TextBox.
+msftedit.dll is part of Windows, and RICHEDIT50W is what .NET 10's
+RichTextBox uses by default. A text pattern written for the TextBox was the
+alternative: ranges, units and bounding rectangles that RichEdit already
+implements, and a UI Automation provider on the box that NVDA would then
+prefer to the edit support it reads well. RichEdit counts a line break as
+one character, so the text is built with "\n" and the offsets for the
+section keys and alert lines match the box's own.
+
+The combo box and the forecast box are each one message on one control,
+plus the class for the box. Every combo box and every multiline text in the
+app is one of these (the lint insists); the single-line search box keeps
+WinForms' object, since its label is not a sibling and a short value under
+the mouse is harmless.
 
 ## Settings are a few combo boxes
 
