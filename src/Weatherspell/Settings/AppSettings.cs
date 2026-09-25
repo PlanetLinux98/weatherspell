@@ -44,6 +44,11 @@ internal sealed class AppSettings
     // an int of milliseconds.
     public const int MaxMinutes = 24 * 60;
 
+    // The saved entry for the same place, to the fourth decimal as its
+    // cache file is keyed, or -1.
+    public int IndexOf(Location place) =>
+        Locations.FindIndex(s => Math.Round(s.Latitude, 4) == Math.Round(place.Latitude, 4) && Math.Round(s.Longitude, 4) == Math.Round(place.Longitude, 4));
+
     public bool Announces(Weather.Alerts.AlertSeverity severity) => AlertAnnouncements switch
     {
         "off" => false,

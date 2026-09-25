@@ -95,6 +95,22 @@ public class ForecastCacheTests : IDisposable
     }
 
     [Fact]
+    public void A_damaged_file_is_no_cache_whatever_the_damage()
+    {
+        var cache = Cache();
+        cache.Save(Peterborough, Sample(), Report());
+        var path = Path.Combine(cache.Directory, ForecastCache.FileName(Peterborough));
+        var good = File.ReadAllText(path);
+
+        // A null in a list and an offset out of range once raised the .NET
+        // error dialog from the refresh that read them (#22).
+        File.WriteAllText(path, good.Replace("\"hours\":[", "\"hours\":[null,"));
+        Assert.Null(cache.Load(Peterborough));
+        File.WriteAllText(path, System.Text.RegularExpressions.Regex.Replace(good, "\"utcOffsetSeconds\":-?\\d+", "\"utcOffsetSeconds\":999999"));
+        Assert.Null(cache.Load(Peterborough));
+    }
+
+    [Fact]
     public void The_location_asked_for_is_the_one_read_back()
     {
         var cache = Cache();

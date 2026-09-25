@@ -72,7 +72,7 @@ internal sealed class MainForm : Form
         // Shortcut enum, so they are written after a tab (the accelerator
         // column) and caught in ProcessCmdKey; Alt+F4 is the window's own.
         var file = new MenuItem("&File");
-        file.MenuItems.Add(new MenuItem("&Refresh", async (_, _) => await RefreshAsync(keepCaret: true), Shortcut.F5));
+        file.MenuItems.Add(new MenuItem("&Refresh", async (_, _) => await Guard(() => RefreshAsync(keepCaret: true)), Shortcut.F5));
         file.MenuItems.Add(new MenuItem("-"));
         file.MenuItems.Add(new MenuItem("E&xit\tAlt+F4", (_, _) => Close()));
         var locations = new MenuItem("&Locations");
@@ -172,9 +172,9 @@ internal sealed class MainForm : Form
         Controls.Add(header);
         Controls.Add(statusBar);
 
-        _locations.SelectedIndexChanged += async (_, _) => await OnLocationChangedAsync();
+        _locations.SelectedIndexChanged += async (_, _) => await Guard(OnLocationChangedAsync);
         _forecast.KeyDown += OnForecastKeyDown;
-        Shown += async (_, _) => await OnShownAsync();
+        Shown += async (_, _) => await Guard(OnShownAsync);
         FormClosed += (_, _) =>
         {
             _forecastTimer.Stop();
@@ -187,8 +187,8 @@ internal sealed class MainForm : Form
         // The forecast on screen, then every saved location's alerts, not
         // just the one on screen, so a warning for home is spoken while
         // reading somewhere else. Neither moves focus or the caret.
-        _forecastTimer.Tick += async (_, _) => await RefreshAsync(keepCaret: true, automatic: true);
-        _alertTimer.Tick += async (_, _) => await PollAlertsAsync();
+        _forecastTimer.Tick += async (_, _) => await Guard(() => RefreshAsync(keepCaret: true, automatic: true), automatic: true);
+        _alertTimer.Tick += async (_, _) => await Guard(() => PollAlertsAsync(), automatic: true);
         _clockTimer.Tick += (_, _) => RewriteIfChanged();
         ApplyIntervals();
 
@@ -201,14 +201,19 @@ internal sealed class MainForm : Form
         _forecast.Focus();
         if (_store.LoadProblem is string problem)
         {
-            _status.Text = problem;
+            // Said before the first-run dialog opens over it, where the
+            // status bar alone went unnoticed (#22).
+            _status.Text = $"Settings could not be read: {_store.LoadError}";
+            MessageBox.Show(this, problem, "Weatherspell", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
         // Started before the first location exists, so a first run that
         // adds one is refreshed and checked like any other.
         _forecastTimer.Start();
         _alertTimer.Start();
         _clockTimer.Start();
-        TryCache(() => _cache.Prune(_settings.Locations.Select(l => l.ToLocation())));
+        // Not after settings that could not be read: no location is loaded,
+        // so every location's file would go.
+        if (_store.LoadProblem is null) TryCache(() => _cache.Prune(_settings.Locations.Select(l => l.ToLocation())));
         if (_settings.Locations.Count == 0)
         {
             SetText([new Section("Welcome", ["No location yet. Press Ctrl+L, or use Locations > Find Location, to add one."])]);
@@ -276,13 +281,43 @@ internal sealed class MainForm : Form
         using var dialog = new FindLocationDialog(new LocationSearch(_client));
         if (dialog.ShowDialog(this) != DialogResult.OK || dialog.Chosen is null) return;
 
+        // A place already saved is switched to, not saved twice under the
+        // same name (#22).
+        var saved = _settings.IndexOf(dialog.Chosen);
+        if (saved >= 0)
+        {
+            _ = SayAsync($"{_settings.Locations[saved].ToLocation().DisplayName} is already saved.", Environment.TickCount, CancellationToken.None);
+            _locations.SelectedIndex = saved;
+            _forecast.Focus();
+            return;
+        }
+
         _settings.Locations.Add(SavedLocation.From(dialog.Chosen));
         _settings.LastLocation = _settings.Locations.Count - 1;
         TrySave();
         PopulateLocations();
         // PopulateLocations selects the new entry silently; fetch it now.
-        _ = RefreshAsync(keepCaret: false);
+        _ = Guard(() => RefreshAsync(keepCaret: false));
         _forecast.Focus();
+    }
+
+    // The last resort for a refresh or a poll: whatever the expected
+    // failures (the network, a service's data) do not cover ends in the
+    // status bar and, while the text is still waiting, a Problem section,
+    // rather than the .NET error dialog with the text left at "Fetching"
+    // (#22).
+    private async Task Guard(Func<Task> work, bool automatic = false)
+    {
+        try
+        {
+            await work();
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            _status.Text = $"Something went wrong: {ex.Message}";
+            if (_shown is null) SetText([new Section("Problem", [$"Something went wrong: {ex.Message}", "Press F5 to try again."])]);
+            if (!automatic) Announcer.Say(this, "Something went wrong. Press F5 to try again.");
+        }
     }
 
     // keepCaret: F5 and the timer replace the text under the reader, who

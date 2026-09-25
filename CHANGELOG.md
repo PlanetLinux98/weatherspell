@@ -51,6 +51,18 @@ versions.
   and a third of them were named with a long list of neighbourhoods that
   was spoken in every announcement. Canadian codes now sit at the middle of
   their area and carry the town's name ("Calgary") (#18).
+- A settings file that could not be read was replaced, with every saved
+  location in it, by the next save, and said so only in the status bar
+  behind the first-run dialog. It is now kept as settings.json.bad, and a
+  message says so (#22).
+- An unexpected error in a refresh or an alert check, such as from a
+  damaged cache file, showed the .NET error dialog and left the text at
+  "Fetching"; it now ends in a Problem section or the status bar, and a
+  damaged cache file is ignored (#22).
+- A second launch opened a second window, each announcing every alert and
+  saving over the other's settings; it now brings the first window
+  forward. A place already saved is switched to instead of being saved
+  twice (#22).
 
 ## [0.1.0-alpha.2] - 2026-09-15
 

@@ -41,16 +41,18 @@ internal sealed class ForecastCache
     private string PathFor(Location l) => Path.Combine(Directory, FileName(l));
 
     // Null when there is no file or it cannot be read; the next successful
-    // fetch replaces a bad one, so nothing is reported.
+    // fetch replaces a bad one, so nothing is reported. Any failure, not
+    // only the expected ones: a damaged file (a null entry, an offset out
+    // of range) raised the .NET error dialog (#22), and the cache is only
+    // ever a convenience.
     public CachedForecast? Load(Location location)
     {
-        var file = Read(PathFor(location));
-        if (file?.Forecast is null) return null;
         try
         {
-            return new CachedForecast(file.Forecast.To(location), file.Alerts?.To());
+            var file = Read(PathFor(location));
+            return file?.Forecast is null ? null : new CachedForecast(file.Forecast.To(location), file.Alerts?.To());
         }
-        catch (Exception ex) when (ex is InvalidDataException or FormatException)
+        catch (Exception)
         {
             return null;
         }

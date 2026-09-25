@@ -75,7 +75,9 @@ internal sealed class ForecastData
     public Forecast To(Location location) => new(
         location,
         Iso.ReadStamp(FetchedAt),
-        TimeSpan.FromSeconds(UtcOffsetSeconds),
+        // Beyond 14 hours no DateTimeOffset can hold it, and the writer
+        // would fail on it later, outside anything that catches (#22).
+        Math.Abs(UtcOffsetSeconds) <= 14 * 3600 ? TimeSpan.FromSeconds(UtcOffsetSeconds) : throw new InvalidDataException("The cache file's UTC offset is out of range."),
         Units == "imperial" ? UnitSystem.Imperial : UnitSystem.Metric,
         Iso.Required(Current, "current conditions").To(),
         Iso.Required(Hours, "hours").Select(h => h.To()).ToList(),

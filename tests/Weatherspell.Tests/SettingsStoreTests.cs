@@ -16,6 +16,17 @@ public class SettingsStoreTests : IDisposable
     }
 
     [Fact]
+    public void A_place_already_saved_is_found_by_its_point()
+    {
+        var settings = new AppSettings();
+        settings.Locations.Add(SavedLocation.From(new Location("Peterborough", "England", "United Kingdom", 52.57364, -0.24777, "Europe/London")));
+        settings.Locations.Add(SavedLocation.From(new Location("Peterborough", "Ontario", "Canada", 44.30012, -78.31623, "America/Toronto")));
+
+        Assert.Equal(1, settings.IndexOf(new Location("Peterborough", "Ontario", "Canada", 44.300121, -78.316229, null)));
+        Assert.Equal(-1, settings.IndexOf(new Location("Peterborough", "Ontario", "Canada", 44.3104, -78.2396, null)));
+    }
+
+    [Fact]
     public void Missing_file_gives_defaults_without_a_problem()
     {
         var store = Store();
@@ -57,8 +68,12 @@ public class SettingsStoreTests : IDisposable
         var settings = store.Load();
 
         Assert.Empty(settings.Locations);
-        Assert.NotNull(store.LoadProblem);
-        Assert.Contains("defaults", store.LoadProblem);
+        Assert.NotNull(store.LoadError);
+        Assert.StartsWith("Weatherspell couldn't read its settings, so it has started without your saved locations. The file it couldn't read was kept as settings.json.bad in ", store.LoadProblem);
+        // Kept, so the save that follows cannot lose what it held (#22).
+        Assert.Equal("{ this is not json", File.ReadAllText(store.BadCopyPath));
+        store.Save(settings);
+        Assert.Equal("{ this is not json", File.ReadAllText(store.BadCopyPath));
     }
 
     [Fact]

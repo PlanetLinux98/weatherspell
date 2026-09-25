@@ -9,8 +9,14 @@ internal sealed class SettingsStore
 {
     public string Path { get; }
 
-    // Set when the last Load() fell back to defaults, so the UI can say so once.
+    // Set when the last Load() fell back to defaults, so the UI can say so
+    // once: LoadProblem in plain words, LoadError the reader's own message.
     public string? LoadProblem { get; private set; }
+    public string? LoadError { get; private set; }
+
+    // Where an unreadable settings.json is kept: the next save replaces the
+    // file, and the locations in it would otherwise be lost for good (#22).
+    public string BadCopyPath => Path + ".bad";
 
     public SettingsStore(string path)
     {
@@ -24,6 +30,7 @@ internal sealed class SettingsStore
     public AppSettings Load()
     {
         LoadProblem = null;
+        LoadError = null;
         if (!File.Exists(Path))
         {
             return new AppSettings();
@@ -42,7 +49,17 @@ internal sealed class SettingsStore
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Runtime.Serialization.SerializationException or System.Xml.XmlException)
         {
-            LoadProblem = $"Settings could not be read ({ex.Message}); starting with defaults.";
+            LoadError = ex.Message;
+            var folder = System.IO.Path.GetDirectoryName(Path);
+            try
+            {
+                File.Copy(Path, BadCopyPath, overwrite: true);
+                LoadProblem = $"Weatherspell couldn't read its settings, so it has started without your saved locations. The file it couldn't read was kept as {System.IO.Path.GetFileName(BadCopyPath)} in {folder}.";
+            }
+            catch (Exception copy) when (copy is IOException or UnauthorizedAccessException)
+            {
+                LoadProblem = $"Weatherspell couldn't read its settings, so it has started without your saved locations. The file is settings.json in {folder}.";
+            }
             return new AppSettings();
         }
     }
