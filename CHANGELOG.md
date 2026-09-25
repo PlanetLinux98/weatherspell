@@ -20,8 +20,9 @@ versions.
   NVDA saying anything; the heading is now spoken, and so is "No next
   section" at the end (#17).
 - A forecast that could not be fetched at launch could go unspoken, and on
-  a switch the failure could be spoken before the location's name. F5 now
-  says when the forecast has been updated (#17).
+  a switch the failure could be spoken before the location's name; the
+  forecast it falls back to is now dated with its day when it is not
+  today's. F5 now says when the forecast has been updated (#17).
 - Find Location says how many places it found after moving to the results
   rather than while NVDA is announcing them, and says when a search took
   too long instead of leaving "Searching" (#17).

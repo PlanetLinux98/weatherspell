@@ -76,6 +76,17 @@ public class WordingTests
         Assert.Equal("4 centimetres", Units.Centimetres(3.6));
     }
 
+    [Fact]
+    public void A_spoken_pc_time_names_its_day_unless_it_is_today()
+    {
+        var now = new DateTime(2026, 9, 25, 18, 14, 0);
+        var at = new DateTime(2026, 9, 25, 10, 43, 0);
+
+        Assert.Equal(Clock.PcTime(at), Clock.PcTimeOnDay(at, now));
+        Assert.Equal(Clock.PcTime(at) + " yesterday", Clock.PcTimeOnDay(at.AddDays(-1), now));
+        Assert.Equal(Clock.PcTime(at) + " on " + at.AddDays(-10).ToString("MMMM d", System.Globalization.CultureInfo.CurrentCulture), Clock.PcTimeOnDay(at.AddDays(-10), now));
+    }
+
     [Theory]
     [InlineData("Gander Int'l Airport", "Gander International Airport")]
     [InlineData("VISITORS CENTER AT FURNACE CREEK DEATH VALLEY", "Visitors Center at Furnace Creek Death Valley")]

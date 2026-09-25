@@ -27,6 +27,15 @@ internal sealed class Clock
     public static string PcTime(DateTime local) =>
         Lowercase(local.ToString(WindowsTimePattern(), CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
 
+    // The same, with the day when it is not today ("10:43 pm yesterday",
+    // "10:43 pm on September 15"): a cached forecast days old was spoken
+    // as "from 10:43 pm" (#17).
+    public static string PcTimeOnDay(DateTime local, DateTime now)
+    {
+        var time = PcTime(local);
+        return local.Date == now.Date ? time : $"{time} {DayWord(local.Date, now.Date, CultureInfo.CurrentCulture)}";
+    }
+
     // "6:40 am (9:40 am your time)". The bracket names the reader's own day
     // ("today", "tomorrow", "Saturday", as alert times do) unless both times
     // fall on the reader's today: it used to compare with the location's
@@ -64,14 +73,16 @@ internal sealed class Clock
         return $"{text} ({Bare(pcLocal)} {DayWord(pcLocal.Date, pcNow.Date)} your time)";
     }
 
-    private string DayWord(DateTime date, DateTime today) =>
+    private string DayWord(DateTime date, DateTime today) => DayWord(date, today, _culture);
+
+    private static string DayWord(DateTime date, DateTime today, CultureInfo culture) =>
         (date - today).Days switch
         {
             0 => "today",
             1 => "tomorrow",
             -1 => "yesterday",
-            > 1 and < 7 => date.ToString("dddd", _culture),
-            _ => "on " + date.ToString("MMMM d", _culture),
+            > 1 and < 7 => date.ToString("dddd", culture),
+            _ => "on " + date.ToString("MMMM d", culture),
         };
 
     // A service's timestamp as the location's own wall-clock time.

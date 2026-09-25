@@ -444,13 +444,13 @@ internal sealed class MainForm : Form
         {
             Rewrite(_shown, alerts.OrLastKnown(_shownAlerts), automatic);
             _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}: {reason}";
-            spoken = $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTime(_shown.FetchedAt.ToLocalTime().DateTime)}.";
+            spoken = $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTimeOnDay(_shown.FetchedAt.ToLocalTime().DateTime, DateTime.Now)}.";
         }
         else if (_cache.Load(location) is CachedForecast cached)
         {
             Show(cached.Forecast, alerts.OrLastKnown(cached.Alerts));
             _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}: {reason}";
-            spoken = $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTime(cached.Forecast.FetchedAt.ToLocalTime().DateTime)}.";
+            spoken = $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTimeOnDay(cached.Forecast.FetchedAt.ToLocalTime().DateTime, DateTime.Now)}.";
         }
         else
         {
