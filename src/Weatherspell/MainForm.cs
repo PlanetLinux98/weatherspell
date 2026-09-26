@@ -463,8 +463,10 @@ internal sealed class MainForm : Form
         TryCache(() => _cache.Save(location, forecast, alerts.Checked || !alerts.IsAvailable ? alerts : null));
         // Neither the new text nor F5's rewrite makes a sound of its own
         // (NVDA ignores an edit control's value changing); the timer's
-        // rewrites stay silent by design.
-        if (!automatic) await SayAsync($"{location.DisplayName}: forecast {(keepCaret ? "updated" : "ready")}.", started, token);
+        // rewrites stay silent by design. A launch or a switch names the
+        // alerts in effect, which TrackAlerts has marked seen unspoken;
+        // F5's new ones were announced there.
+        if (!automatic) await SayAsync($"{location.DisplayName}: forecast {(keepCaret ? "updated" : "ready")}{(keepCaret ? "" : InEffect(alerts))}.", started, token);
     }
 
     // NVDA drops a notification from a window it has not yet seen come to
@@ -521,7 +523,7 @@ internal sealed class MainForm : Form
         {
             Show(cached.Forecast, alerts.OrLastKnown(cached.Alerts));
             _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}: {reason}";
-            spoken = $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTimeOnDay(cached.Forecast.FetchedAt.ToLocalTime().DateTime, DateTime.Now)}.";
+            spoken = $"Couldn't fetch the forecast for {location.DisplayName}. Showing the forecast from {Clock.PcTimeOnDay(cached.Forecast.FetchedAt.ToLocalTime().DateTime, DateTime.Now)}{(keepCaret ? "" : InEffect(alerts))}.";
         }
         else
         {
@@ -538,6 +540,10 @@ internal sealed class MainForm : Form
         }
         return automatic ? null : spoken;
     }
+
+    // "; frost advisory in effect", or nothing (see AlertWriter.InEffect).
+    private static string InEffect(AlertReport alerts) =>
+        AlertWriter.InEffect(alerts) is string inEffect ? "; " + inEffect : "";
 
     // announce: F5 keeps the caret, so an alert that has appeared above it
     // is spoken; a location shown from the top is read from its Alerts

@@ -53,6 +53,19 @@ internal static class AlertWriter
         return $"{location}: {JoinAnd(parts)}.";
     }
 
+    // "frost advisory and special weather statement in effect": what a
+    // launch or a switch says after "forecast ready". The text opens with
+    // the Alerts section, but nothing reads it out unless the user does, and
+    // those alerts are marked seen, so this is where they are heard. Each
+    // kind once (a service may issue one per area); null when the check
+    // found none or failed, as the Alerts section then says why itself.
+    public static string? InEffect(AlertReport report)
+    {
+        if (!report.Checked || report.Alerts.Count == 0) return null;
+        var kinds = report.Alerts.Select(a => Lower(a.Event)).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        return $"{JoinAnd(kinds)} in effect";
+    }
+
     public static IReadOnlyList<string> Details(WeatherAlert a, Clock clock, DateTime nowLocal)
     {
         string When(DateTimeOffset t) => clock.TimeOnDay(clock.Local(t), nowLocal);

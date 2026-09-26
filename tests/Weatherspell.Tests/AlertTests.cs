@@ -330,6 +330,23 @@ public class AlertWriterTests
     }
 
     [Fact]
+    public void A_launch_or_a_switch_names_each_kind_of_alert_in_effect_once()
+    {
+        const string source = "National Weather Service (weather.gov)";
+        var a = Alert("Frost advisory", new DateTimeOffset(2026, 9, 12, 9, 0, 0, Eastern));
+        var b = Alert("Special weather statement", null);
+        var b2 = b with { Id = "id-second-area" };
+
+        Assert.Equal("special weather statement in effect", AlertWriter.InEffect(new AlertReport([b, b2], source, null)));
+        Assert.Equal("frost advisory and special weather statement in effect", AlertWriter.InEffect(new AlertReport([a, b], source, null)));
+        Assert.Null(AlertWriter.InEffect(new AlertReport([], source, null)));
+        Assert.Null(AlertWriter.InEffect(AlertReport.NotAvailable));
+        // A failed check carrying the last known alerts: the section dates
+        // them, and "in effect" would claim more than is known.
+        Assert.Null(AlertWriter.InEffect(new AlertReport([], source, "503 Service Unavailable").OrLastKnown(new AlertReport([a], source, null, DateTimeOffset.UtcNow))));
+    }
+
+    [Fact]
     public void Details_of_an_nws_alert_read_the_bullets_as_labelled_paragraphs()
     {
         var alert = Assert.Single(NwsAlertsClient.Parse(Fixtures.Read("nws-alerts-spokane.json")));

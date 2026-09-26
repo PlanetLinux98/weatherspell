@@ -19,6 +19,10 @@ versions.
 ### Changed
 - Find Location is now Add Location, on Ctrl+Shift+L; Ctrl+L opens Manage
   Locations (#1).
+- At launch and on switching locations, the spoken "forecast ready" now
+  names the alerts in effect ("Buckley: forecast ready; special weather
+  statement in effect"). Alerts already out then were never spoken, only
+  shown at the top of the text.
 
 ### Fixed
 - An alert check set the whole text again even when nothing in it had
