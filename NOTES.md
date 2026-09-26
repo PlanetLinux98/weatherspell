@@ -19,8 +19,11 @@ pops a "download .NET" prompt on machines without the runtime.
 
 What is given up: the BCL is frozen, and WinForms on 4.8 has the 2018-era UI
 Automation fixes but not those that landed in .NET 5 to 10. For the control
-set this app uses (labels, text boxes, lists, buttons, menus) those controls
-were already solid. Modern C# syntax still works: PolySharp generates the
+set this app uses (labels, lists, buttons, menus) those controls were
+already solid. The exception was the text box, which has no UI Automation
+text pattern on 4.8, so Narrator could not read it by line; the forecast
+uses Windows' own RichEdit instead (see "Two controls with Windows' own
+accessibility"). Modern C# syntax still works: PolySharp generates the
 compiler-support types at build time. Runtime-backed language features
 (default interface members, static abstract members, ref fields) do not.
 
