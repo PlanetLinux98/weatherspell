@@ -2,7 +2,7 @@ using Weatherspell.Weather.OpenMeteo;
 
 namespace Weatherspell.Weather;
 
-// What the Find Location dialog searches: the embedded postal code table and
+// What the Add Location dialog searches: the embedded postal code table and
 // the Open-Meteo geocoder (place names everywhere, and the postal codes it
 // does index), merged so each country has one source for its codes.
 internal sealed class LocationSearch

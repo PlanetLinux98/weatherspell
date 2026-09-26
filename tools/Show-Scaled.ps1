@@ -65,8 +65,8 @@ function New-Internal($typeName, [object[]]$ctorArgs) {
 
 $client = New-Internal "Weatherspell.Weather.OpenMeteo.OpenMeteoClient" @()
 $search = New-Internal "Weatherspell.Weather.LocationSearch" @($client)
-$dialog = New-Internal "Weatherspell.FindLocationDialog" @($search)
-Snap $dialog "find-location" 2
+$dialog = New-Internal "Weatherspell.AddLocationDialog" @($search)
+Snap $dialog "add-location" 2
 
 # The alert dialog takes a list of paragraphs; the single constructor is
 # invoked directly since a string[] is not the exact parameter type.
@@ -84,6 +84,28 @@ Snap $alert "alert" 2
 $appSettings = New-Internal "Weatherspell.Settings.AppSettings" @()
 $settings = New-Internal "Weatherspell.SettingsDialog" @($appSettings)
 Snap $settings "settings" 2
+
+# Three saved locations, one with a nickname and one with alerts off, so
+# the list shows both kinds of line. Location's constructor takes every
+# parameter, optional ones included.
+$all = [System.Reflection.BindingFlags]"Public,NonPublic,Instance,Static"
+$newLocation = $asm.GetType("Weatherspell.Weather.Location").GetConstructors($all)[0]
+$savedType = $asm.GetType("Weatherspell.Settings.SavedLocation")
+$from = $savedType.GetMethod("From", $all)
+$saved = [Activator]::CreateInstance([System.Collections.Generic.List`1].MakeGenericType($savedType))
+foreach ($l in @(
+    @("Peterborough", "Ontario", "Canada", 44.30012, -78.31623, "Home"),
+    @("Albany", "New York", "United States", 42.65258, -73.75623, $null),
+    @("Saint-Jean-sur-Richelieu", "Quebec", "Canada", 45.30713, -73.26259, $null))) {
+    $place = $newLocation.Invoke([object[]]@($l[0], $l[1], $l[2], [double]$l[3], [double]$l[4], $null, $l[5], $null))
+    $saved.Add($from.Invoke($null, @(,$place)))
+}
+$saved[2].NotifyAlerts = $false
+$manage = $asm.GetType("Weatherspell.ManageLocationsDialog").GetConstructors($all)[0].Invoke([object[]]@($saved, 0, $search))
+Snap $manage "manage-locations" 2
+
+$rename = New-Internal "Weatherspell.RenameLocationDialog" @("Saint-Jean-sur-Richelieu, Quebec, Canada", "Cottage")
+Snap $rename "rename-location" 2
 
 $settingsPath = Join-Path $OutDir "settings.json"
 '{"version":1,"lastLocation":0,"locations":[{"name":"Toronto","region":"Ontario","country":"Canada","latitude":43.65,"longitude":-79.38,"timeZoneId":"America/Toronto","notifyAlerts":true}]}' |

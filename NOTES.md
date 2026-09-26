@@ -128,7 +128,7 @@ the UK, Australia, New Zealand or Ireland (every GeoNames country was probed
 in September 2026). So the exe carries the GeoNames postal code table (CC BY
 4.0) for those five, the English-speaking countries whose users are likely
 to type a code: about half a megabyte of text, embedded, no network needed.
-The Find Location dialog merges both: the table answers first for its
+The Add Location dialog merges both: the table answers first for its
 countries, the geocoder for everything else.
 
 GeoNames has only the first part of Canadian and Irish codes and the UK

@@ -27,6 +27,13 @@ internal sealed record Location(
 
     public string DisplayName => string.IsNullOrWhiteSpace(Nickname) ? FullName : Nickname!;
 
+    // The same place, to the fourth decimal as its cache file is keyed,
+    // whatever it is called: a renamed location is still the one on screen.
+    public bool IsSamePlace(Location? other) =>
+        other is not null
+        && Math.Round(Latitude, 4) == Math.Round(other.Latitude, 4)
+        && Math.Round(Longitude, 4) == Math.Round(other.Longitude, 4);
+
     // Where the National Weather Service writes the forecast and the alerts:
     // the states and the territories it has offices for (San Juan, Guam,
     // Pago Pago). Open-Meteo's geocoder gives the territories only a country

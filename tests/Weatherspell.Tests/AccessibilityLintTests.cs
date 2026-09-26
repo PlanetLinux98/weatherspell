@@ -21,11 +21,64 @@ public class AccessibilityLintTests
     }
 
     [Fact]
-    public void FindLocationDialog_passes_the_accessibility_lint()
+    public void AddLocationDialog_passes_the_accessibility_lint()
     {
         var failures = Sta.Run(() =>
         {
-            using var form = new FindLocationDialog(new LocationSearch(new OpenMeteoClient()));
+            using var form = new AddLocationDialog(new LocationSearch(new OpenMeteoClient()));
+            return AccessibilityLint.Check(form).ToList();
+        });
+
+        Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
+    }
+
+    // With saved locations, so the Locations menu's "&1 Home" entries are
+    // checked too; the form is never shown, so nothing is fetched.
+    [Fact]
+    public void MainForm_with_saved_locations_passes_the_accessibility_lint()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "weatherspell-lint-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            var store = new SettingsStore(Path.Combine(dir, "settings.json"));
+            var settings = new AppSettings();
+            settings.Locations.Add(SavedLocation.From(new Location("Peterborough", "Ontario", "Canada", 44.30012, -78.31623, null, Nickname: "Home")));
+            settings.Locations.Add(SavedLocation.From(new Location("Albany", "New York", "United States", 42.65258, -73.75623, null)));
+            store.Save(settings);
+
+            var failures = Sta.Run(() =>
+            {
+                using var form = new MainForm(store);
+                return AccessibilityLint.Check(form).ToList();
+            });
+
+            Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
+        }
+        finally
+        {
+            if (Directory.Exists(dir)) Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void ManageLocationsDialog_passes_the_accessibility_lint()
+    {
+        var failures = Sta.Run(() =>
+        {
+            var saved = new List<SavedLocation> { SavedLocation.From(new Location("Peterborough", "Ontario", "Canada", 44.30012, -78.31623, null)) };
+            using var form = new ManageLocationsDialog(saved, 0, new LocationSearch(new OpenMeteoClient()));
+            return AccessibilityLint.Check(form).ToList();
+        });
+
+        Assert.True(failures.Count == 0, string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
+    public void RenameLocationDialog_passes_the_accessibility_lint()
+    {
+        var failures = Sta.Run(() =>
+        {
+            using var form = new RenameLocationDialog("Peterborough, Ontario, Canada", "Home");
             return AccessibilityLint.Check(form).ToList();
         });
 

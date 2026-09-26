@@ -9,6 +9,17 @@ versions.
 
 ## [Unreleased]
 
+### Added
+- Manage Locations (Ctrl+L): put saved locations in order with Move Up
+  and Move Down (Alt+U, Alt+D), add, rename with a nickname such as
+  "Home" (F2), remove (Delete), and choose for each whether its new alerts
+  are spoken. Nothing changes until OK. Ctrl+1 to Ctrl+9 switch to the
+  first nine locations, which the Locations menu also lists (#1).
+
+### Changed
+- Find Location is now Add Location, on Ctrl+Shift+L; Ctrl+L opens Manage
+  Locations (#1).
+
 ### Fixed
 - An alert check set the whole text again even when nothing in it had
   changed, dropping any selection (NVDA said "unselected") and scrolling

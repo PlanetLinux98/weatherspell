@@ -8,18 +8,20 @@ follows for comparison; on this runtime UIA sees WinForms controls only
 through the HWND bridge, so it reports less than MSAA does and must not be
 taken as the screen-reader view.
 
-    powershell -NoProfile -File tools\Dump-A11y.ps1 [-ProcessName Weatherspell] [-Depth 12] [-NoUia]
+    powershell -NoProfile -File tools\Dump-A11y.ps1 [-ProcessName Weatherspell] [-ProcessId <id>] [-Depth 12] [-NoUia]
 
-Launch the app first. Windows PowerShell 5.1 is enough: oleacc and
+Launch the app first. -ProcessId picks one process instead, such as a
+PowerShell host that has loaded the exe to show a dialog on its own. Windows PowerShell 5.1 is enough: oleacc and
 UIAutomationClient are part of Windows and .NET Framework.
 #>
 param(
     [string]$ProcessName = "Weatherspell",
+    [int]$ProcessId = 0,
     [int]$Depth = 12,
     [switch]$NoUia
 )
 
-$proc = Get-Process -Name $ProcessName -ErrorAction SilentlyContinue | Select-Object -First 1
+$proc = if ($ProcessId) { Get-Process -Id $ProcessId -ErrorAction SilentlyContinue } else { Get-Process -Name $ProcessName -ErrorAction SilentlyContinue | Select-Object -First 1 }
 if (-not $proc) {
     Write-Error "No running $ProcessName process found. Launch the app first."
     exit 1

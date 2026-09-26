@@ -4,7 +4,7 @@ namespace Weatherspell;
 
 // Type a place, press Enter to search, arrow through the results, Enter to
 // add. The list only changes when the user asks, never as they type.
-internal sealed class FindLocationDialog : Form
+internal sealed class AddLocationDialog : Form
 {
     private readonly LocationSearch _locations;
     private readonly TextBox _query;
@@ -16,10 +16,10 @@ internal sealed class FindLocationDialog : Form
 
     public Location? Chosen { get; private set; }
 
-    public FindLocationDialog(LocationSearch search)
+    public AddLocationDialog(LocationSearch search)
     {
         _locations = search;
-        Text = "Find Location";
+        Text = "Add Location";
         Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
         FormBorderStyle = FormBorderStyle.Sizable;
         StartPosition = FormStartPosition.CenterParent;

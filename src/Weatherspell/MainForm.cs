@@ -24,6 +24,9 @@ internal sealed class MainForm : Form
     private AppSettings _settings;
 
     private readonly NativeComboBox _locations;
+    private readonly MenuItem _locationsMenu = new("&Locations");
+    // The Locations menu's entries for the first nine saved locations.
+    private readonly List<MenuItem> _locationItems = [];
     private readonly ReadingBox _forecast;
     private readonly ToolStripStatusLabel _status;
     private SectionLayout _layout = SectionLayout.Empty;
@@ -75,8 +78,10 @@ internal sealed class MainForm : Form
         file.MenuItems.Add(new MenuItem("&Refresh", async (_, _) => await Guard(() => RefreshAsync(keepCaret: true)), Shortcut.F5));
         file.MenuItems.Add(new MenuItem("-"));
         file.MenuItems.Add(new MenuItem("E&xit\tAlt+F4", (_, _) => Close()));
-        var locations = new MenuItem("&Locations");
-        locations.MenuItems.Add(new MenuItem("&Find Location...", (_, _) => FindLocation(), Shortcut.CtrlL));
+        // The saved locations are added below these by PopulateLocations;
+        // the one on screen is checked as the menu opens.
+        _locationsMenu.MenuItems.Add(new MenuItem("&Manage Locations...", (_, _) => ManageLocations(), Shortcut.CtrlL));
+        _locationsMenu.MenuItems.Add(new MenuItem("&Add Location...", (_, _) => AddLocation(), Shortcut.CtrlShiftL));
         var view = new MenuItem("&View");
         view.MenuItems.Add(new MenuItem("&Next Section\tCtrl+PageDown", (_, _) => JumpSection(+1)));
         view.MenuItems.Add(new MenuItem("&Previous Section\tCtrl+PageUp", (_, _) => JumpSection(-1)));
@@ -88,7 +93,7 @@ internal sealed class MainForm : Form
         settings.MenuItems.Add(new MenuItem("&Settings...", (_, _) => ShowSettings()));
         var help = new MenuItem("&Help");
         help.MenuItems.Add(new MenuItem("&About Weatherspell", (_, _) => ShowAbout()));
-        Menu = new MainMenu([file, locations, view, settings, help]);
+        Menu = new MainMenu([file, _locationsMenu, view, settings, help]);
 
         // Header row: the label is the combo box's visible name; AccessibleName
         // repeats it verbatim so the announced name never drifts from the screen.
@@ -169,6 +174,10 @@ internal sealed class MainForm : Form
         Controls.Add(statusBar);
 
         _locations.SelectedIndexChanged += async (_, _) => await Guard(OnLocationChangedAsync);
+        _locationsMenu.Popup += (_, _) =>
+        {
+            for (var i = 0; i < _locationItems.Count; i++) _locationItems[i].Checked = i == _locations.SelectedIndex;
+        };
         _forecast.KeyDown += OnForecastKeyDown;
         Shown += async (_, _) => await Guard(OnShownAsync);
         FormClosed += (_, _) =>
@@ -212,8 +221,8 @@ internal sealed class MainForm : Form
         if (_store.LoadProblem is null) TryCache(() => _cache.Prune(_settings.Locations.Select(l => l.ToLocation())));
         if (_settings.Locations.Count == 0)
         {
-            SetText([new Section("Welcome", ["No location yet. Press Ctrl+L, or use Locations > Find Location, to add one."])]);
-            FindLocation();
+            ShowWelcome();
+            AddLocation();
             return;
         }
         await RefreshAsync(keepCaret: false);
@@ -255,6 +264,42 @@ internal sealed class MainForm : Form
             _locations.SelectedIndex = Math.Min(_settings.LastLocation, _locations.Items.Count - 1);
         }
         _suppressLocationEvents = false;
+
+        // "&1 Home" with Ctrl+1, to "&9" with Ctrl+9: the menu shows each
+        // shortcut, and a location past the ninth is reached in the box.
+        while (_locationsMenu.MenuItems.Count > LocationsMenuCommands) _locationsMenu.MenuItems.RemoveAt(LocationsMenuCommands);
+        _locationItems.Clear();
+        var count = Math.Min(9, _settings.Locations.Count);
+        if (count > 0) _locationsMenu.MenuItems.Add(new MenuItem("-"));
+        for (var i = 0; i < count; i++)
+        {
+            var index = i;
+            var name = _settings.Locations[i].ToLocation().DisplayName.Replace("&", "&&");
+            var item = new MenuItem($"&{i + 1} {name}", (_, _) => ShowLocation(index), (Shortcut)((int)Shortcut.Ctrl1 + i)) { RadioCheck = true };
+            _locationItems.Add(item);
+            _locationsMenu.MenuItems.Add(item);
+        }
+    }
+
+    // Manage Locations and Add Location, above the saved locations.
+    private const int LocationsMenuCommands = 2;
+
+    // Ctrl+1 to Ctrl+9. Focus stays where it is, so the location is named;
+    // the refresh then says when its forecast is ready, as for the box.
+    private void ShowLocation(int index)
+    {
+        if (index >= _locations.Items.Count) return;
+        _locations.SelectedIndex = index;
+        Announcer.Say(this, _settings.Locations[index].ToLocation().DisplayName);
+    }
+
+    private void ShowWelcome()
+    {
+        _refreshing?.Cancel();
+        _shown = null;
+        _shownAlerts = null;
+        _refreshProblem = null;
+        SetText([new Section("Welcome", ["No location yet. Press Ctrl+Shift+L, or use Locations > Add Location, to add one."])]);
     }
 
     private SavedLocation? CurrentSaved =>
@@ -272,9 +317,39 @@ internal sealed class MainForm : Form
         await RefreshAsync(keepCaret: false);
     }
 
-    private void FindLocation()
+    // The edits land only on OK (see LocationEditor). The location on
+    // screen stays on screen wherever it has moved, and a rename leaves its
+    // text as it is; if it was removed, the one now in its place is shown.
+    private void ManageLocations()
     {
-        using var dialog = new FindLocationDialog(new LocationSearch(_client));
+        var before = CurrentSaved;
+        var beforeIndex = _locations.SelectedIndex;
+        using var dialog = new ManageLocationsDialog(_settings.Locations, beforeIndex, new LocationSearch(_client));
+        if (dialog.ShowDialog(this) != DialogResult.OK) return;
+
+        var committed = dialog.Editor.Commit();
+        var show = LocationEditor.Shown(committed, before, beforeIndex);
+        _settings.Locations = committed;
+        _settings.LastLocation = Math.Max(show, 0);
+        TrySave();
+        // A removed location's file goes now rather than at the next launch;
+        // not after settings that could not be read (see OnShownAsync).
+        if (_store.LoadProblem is null) TryCache(() => _cache.Prune(committed.Select(l => l.ToLocation())));
+        PopulateLocations();
+        if (show < 0)
+        {
+            ShowWelcome();
+            _status.Text = "Ready";
+        }
+        else if (!ReferenceEquals(committed[show], before))
+        {
+            _ = Guard(() => RefreshAsync(keepCaret: false));
+        }
+    }
+
+    private void AddLocation()
+    {
+        using var dialog = new AddLocationDialog(new LocationSearch(_client));
         if (dialog.ShowDialog(this) != DialogResult.OK || dialog.Chosen is null) return;
 
         // A place already saved is switched to, not saved twice under the
@@ -436,7 +511,7 @@ internal sealed class MainForm : Form
     {
         _refreshProblem = "couldn't reach the weather service";
         string spoken;
-        if (_shown?.Location == location)
+        if (_shown?.Location.IsSamePlace(location) == true)
         {
             Rewrite(_shown, alerts.OrLastKnown(_shownAlerts), automatic);
             _status.Text = $"Couldn't fetch the forecast for {location.DisplayName}: {reason}";
@@ -574,7 +649,7 @@ internal sealed class MainForm : Form
                 // Only if the text on screen is still this location's: the
                 // user may have switched while the check was in flight. A
                 // check that failed dates the alerts it leaves on screen.
-                if (ReferenceEquals(saved, CurrentSaved) && _shown?.Location == location && _shownAlerts is not null)
+                if (ReferenceEquals(saved, CurrentSaved) && _shown?.Location.IsSamePlace(location) == true && _shownAlerts is not null)
                 {
                     Rewrite(_shown, report.OrLastKnown(_shownAlerts), automatic: true);
                 }
