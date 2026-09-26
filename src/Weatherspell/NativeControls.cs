@@ -89,6 +89,25 @@ internal sealed class ReadingBox : RichTextBox
         Native.SendMessage(Handle, Native.EM_SETMARGINS, (IntPtr)(Native.EC_LEFTMARGIN | Native.EC_RIGHTMARGIN), (IntPtr)(margin | (margin << 16)));
     }
 
+    // Select All and Copy here rather than in RichEdit: after Shift+F10
+    // opens the menu, RichEdit never sees Shift let go and reads the next
+    // Ctrl+A as Ctrl+Shift+A, so the keys did nothing until Shift was
+    // pressed again. The key data here is the keyboard's real state.
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        switch (keyData)
+        {
+            case Keys.Control | Keys.A:
+                SelectAll();
+                return true;
+            case Keys.Control | Keys.C:
+            case Keys.Control | Keys.Insert:
+                if (SelectionLength > 0) Copy();
+                return true;
+        }
+        return base.ProcessCmdKey(ref msg, keyData);
+    }
+
     // Enter belongs to the form: it opens an alert's details in the
     // forecast and closes the details dialog, as it did in the TextBox.
     protected override bool IsInputKey(Keys keyData) =>
