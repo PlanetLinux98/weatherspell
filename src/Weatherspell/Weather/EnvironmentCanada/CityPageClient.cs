@@ -13,6 +13,10 @@ namespace Weatherspell.Weather.EnvironmentCanada;
 internal sealed class CityPageClient
 {
     public const string SourceName = "Environment Canada";
+    // Its licence asks for the full name in the credit ("Data Source:
+    // Environment and Climate Change Canada"); speech and the status bar
+    // keep the name people say.
+    public const string FullName = "Environment and Climate Change Canada";
     private const string Base = "https://dd.weather.gc.ca/today/citypage_weather";
 
     // A site further than this is not this location's forecast.
@@ -88,7 +92,7 @@ internal sealed class CityPageClient
         var location = root.Element("location");
         var siteName = location?.Element("name")?.Value.Trim();
         var region = location?.Element("region")?.Value.Trim();
-        var attribution = $"{SourceName} (weather.gc.ca)";
+        var attribution = $"{FullName} (weather.gc.ca)";
         if (!string.IsNullOrEmpty(region)) attribution += $", forecast for {region}";
         else if (!string.IsNullOrEmpty(siteName)) attribution += $", forecast for {siteName}";
 

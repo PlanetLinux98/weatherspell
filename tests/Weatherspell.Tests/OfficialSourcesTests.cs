@@ -165,7 +165,7 @@ public class EnvironmentCanadaTests
         var official = CityPageClient.Parse(Fixtures.Read("ec-citypage-peterborough.xml"));
 
         Assert.Equal("Environment Canada", official.SourceName);
-        Assert.Equal("Environment Canada (weather.gc.ca), forecast for Peterborough City - Lakefield - Southern Peterborough County", official.Attribution);
+        Assert.Equal("Environment and Climate Change Canada (weather.gc.ca), forecast for Peterborough City - Lakefield - Southern Peterborough County", official.Attribution);
         // Issued Friday the 11th at 3:30 pm: Tonight is the 11th, the named
         // days follow, nights belong to their day.
         Assert.Equal(12, official.Periods.Count);

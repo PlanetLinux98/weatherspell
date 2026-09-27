@@ -12,8 +12,8 @@
     <AssemblyName>Weatherspell</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <!-- Embedded as a Win32 resource, so Explorer, the taskbar and the form
-         all read it from the exe; nothing ships beside it. Placeholder art
-         from Assets\make-placeholder-icon.ps1 until the designed icon lands. -->
+         all read it from the exe; nothing ships beside it. Drawn by
+         Assets\make-icon.ps1, which also writes the SVGs beside it. -->
     <ApplicationIcon>..\..\Assets\Weatherspell.ico</ApplicationIcon>
 
     <Nullable>enable</Nullable>
@@ -63,7 +63,32 @@
          geocoder lacks, inside the exe like everything else (about half a
          megabyte of text). tools\Update-PostalCodes.ps1 regenerates it. -->
     <EmbeddedResource Include="Weather\PostalCodes.tsv" LogicalName="PostalCodes.tsv" />
+    <!-- The user guide F1 opens (see UserGuide), built from USER_GUIDE.md by
+         the BuildUserGuide target below. -->
+    <EmbeddedResource Include="$(IntermediateOutputPath)user-guide.html" LogicalName="user-guide.html" />
   </ItemGroup>
+
+  <ItemGroup>
+    <!-- Built first so it can run below. No reference and no copy: Markdig
+         stays with the tool (PrivateAssets there) and nothing ships. -->
+    <ProjectReference Include="..\..\tools\GuideBuilder\GuideBuilder.csproj" ReferenceOutputAssembly="false" PrivateAssets="all" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <UserGuideSource>$(MSBuildThisFileDirectory)..\..\USER_GUIDE.md</UserGuideSource>
+    <UserGuideTemplate>$(MSBuildThisFileDirectory)..\..\tools\GuideBuilder\template.html</UserGuideTemplate>
+    <GuideBuilderExe>$(MSBuildThisFileDirectory)..\..\tools\GuideBuilder\bin\$(Configuration)\net48\GuideBuilder.exe</GuideBuilderExe>
+  </PropertyGroup>
+
+  <!-- USER_GUIDE.md is the guide as GitHub shows it; this makes the same text
+       the page inside the exe. -->
+  <Target Name="BuildUserGuide" AfterTargets="ResolveProjectReferences" BeforeTargets="PrepareResources"
+          Inputs="$(UserGuideSource);$(UserGuideTemplate);$(GuideBuilderExe)" Outputs="$(IntermediateOutputPath)user-guide.html">
+    <Exec Command="&quot;$(GuideBuilderExe)&quot; &quot;$(UserGuideSource)&quot; &quot;$(UserGuideTemplate)&quot; &quot;$(IntermediateOutputPath)user-guide.html&quot;" />
+    <ItemGroup>
+      <FileWrites Include="$(IntermediateOutputPath)user-guide.html" />
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <!-- Tests reference this exe directly; internals stay internal. -->

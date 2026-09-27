@@ -107,6 +107,9 @@ Snap $manage "manage-locations" 2
 $rename = New-Internal "Weatherspell.RenameLocationDialog" @("Saint-Jean-sur-Richelieu, Quebec, Canada", "Cottage")
 Snap $rename "rename-location" 2
 
+$about = New-Internal "Weatherspell.AboutDialog" @()
+Snap $about "about" 2
+
 $settingsPath = Join-Path $OutDir "settings.json"
 '{"version":1,"lastLocation":0,"locations":[{"name":"Toronto","region":"Ontario","country":"Canada","latitude":43.65,"longitude":-79.38,"timeZoneId":"America/Toronto","notifyAlerts":true}]}' |
     Set-Content $settingsPath -Encoding UTF8

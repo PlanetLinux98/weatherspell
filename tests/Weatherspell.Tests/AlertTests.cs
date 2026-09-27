@@ -423,7 +423,7 @@ public class AlertWriterTests
     {
         var f = OfficialForecastWriterTests.Base();
         var a = Alert("Rainfall warning", new DateTimeOffset(2026, 9, 11, 23, 0, 0, Eastern));
-        var report = new AlertReport([a], "Environment Canada (weather.gc.ca)", null);
+        var report = new AlertReport([a], AlertsClient.Attribution, null);
         var options = new WriterOptions(new DateTimeOffset(NowLocal, Eastern), TimeZoneInfo.CreateCustomTimeZone("test-eastern", Eastern, "Test Eastern", "Test Eastern"), "h:mm tt", CultureInfo.InvariantCulture);
 
         var sections = ForecastWriter.Write(f, options, report);
@@ -431,7 +431,7 @@ public class AlertWriterTests
         Assert.Equal("Alerts", sections[0].Heading);
         Assert.Equal(["Rainfall warning until 11:00 pm today, from Environment Canada. Press Enter for details."], sections[0].Paragraphs);
         Assert.Equal([a], sections[0].Alerts);
-        Assert.Equal("Alerts: Environment Canada (weather.gc.ca).", sections[sections.Count - 1].Paragraphs[sections[sections.Count - 1].Paragraphs.Count - 1]);
+        Assert.Equal("Alerts: Environment and Climate Change Canada (weather.gc.ca).", sections[sections.Count - 1].Paragraphs[sections[sections.Count - 1].Paragraphs.Count - 1]);
 
         var quiet = ForecastWriter.Write(f, options, AlertReport.NotAvailable);
         Assert.Equal(["Alerts are not available for this region."], quiet[0].Paragraphs);

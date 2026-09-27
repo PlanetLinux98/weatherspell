@@ -5,4 +5,7 @@
   <Folder Name="/tests/">
     <Project Path="tests/Weatherspell.Tests/Weatherspell.Tests.csproj" />
   </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/GuideBuilder/GuideBuilder.csproj" />
+  </Folder>
 </Solution>

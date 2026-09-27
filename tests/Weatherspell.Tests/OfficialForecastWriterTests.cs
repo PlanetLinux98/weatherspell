@@ -66,7 +66,7 @@ public class OfficialForecastWriterTests
         Assert.Equal(6400, c.VisibilityMetres);
         Assert.Equal(20, c.CloudCover); // the base's; stations do not report it
         Assert.Equal(
-            ["Forecast text and current conditions: Environment Canada (weather.gc.ca), forecast for Peterborough City - Lakefield - Southern Peterborough County, observed at Peterborough Municipal Airport.",
+            ["Forecast text and current conditions: Environment and Climate Change Canada (weather.gc.ca), forecast for Peterborough City - Lakefield - Southern Peterborough County, observed at Peterborough Municipal Airport.",
              "Hourly data, sun and UV: Open-Meteo (open-meteo.com), licensed CC BY 4.0."],
             f.Sources);
     }
@@ -89,7 +89,7 @@ public class OfficialForecastWriterTests
         Assert.Null(f.Current.Station);
         Assert.Equal(12.4, f.Current.Temperature);
         Assert.Equal(
-            ["Forecast text: Environment Canada (weather.gc.ca), forecast for Peterborough City - Lakefield - Southern Peterborough County.",
+            ["Forecast text: Environment and Climate Change Canada (weather.gc.ca), forecast for Peterborough City - Lakefield - Southern Peterborough County.",
              "Current conditions, hourly data, sun and UV: Open-Meteo (open-meteo.com), licensed CC BY 4.0."],
             f.Sources);
     }

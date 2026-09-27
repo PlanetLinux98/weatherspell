@@ -14,7 +14,7 @@ namespace Weatherspell.Weather.EnvironmentCanada;
 internal sealed class AlertsClient
 {
     public const string SourceName = CityPageClient.SourceName;
-    public const string Attribution = "Environment Canada (weather.gc.ca)";
+    public const string Attribution = CityPageClient.FullName + " (weather.gc.ca)";
     private const string Endpoint = "https://api.weather.gc.ca/collections/weather-alerts/items";
 
     public async Task<IReadOnlyList<WeatherAlert>> GetAsync(Location location, DateTimeOffset now, CancellationToken cancellationToken)

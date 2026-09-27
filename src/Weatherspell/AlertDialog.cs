@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Text;
 
 namespace Weatherspell;
@@ -77,7 +75,7 @@ internal sealed class AlertDialog : Form
 
         AcceptButton = close;
         CancelButton = close;
-        official.Click += (_, _) => OpenOfficialPage(url!);
+        official.Click += (_, _) => Browser.Open(this, url!, Text);
         // Focus lands in the text with the caret at the top and nothing
         // selected; a text box given focus would otherwise select it all.
         Shown += (_, _) =>
@@ -86,17 +84,5 @@ internal sealed class AlertDialog : Form
             _text.SelectionStart = 0;
             _text.SelectionLength = 0;
         };
-    }
-
-    private void OpenOfficialPage(string url)
-    {
-        try
-        {
-            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
-        }
-        catch (Exception ex) when (ex is Win32Exception or InvalidOperationException)
-        {
-            MessageBox.Show(this, $"Couldn't open the browser: {ex.Message}\n\n{url}", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
     }
 }

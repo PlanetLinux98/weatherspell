@@ -3,9 +3,6 @@ using Weatherspell.Cache;
 using Weatherspell.Settings;
 using Weatherspell.Weather;
 using Weatherspell.Weather.Alerts;
-using Weatherspell.Weather.EnvironmentCanada;
-using Weatherspell.Weather.Nominatim;
-using Weatherspell.Weather.Nws;
 using Weatherspell.Weather.OpenMeteo;
 
 namespace Weatherspell;
@@ -95,6 +92,8 @@ internal sealed class MainForm : Form
         // dialog (Ctrl+comma is macOS's), and Alt+S, S is two keys.
         settings.MenuItems.Add(new MenuItem("&Settings...", (_, _) => ShowSettings()));
         var help = new MenuItem("&Help");
+        help.MenuItems.Add(new MenuItem("&User Guide", (_, _) => Browser.OpenGuide(this), Shortcut.F1));
+        help.MenuItems.Add(new MenuItem("-"));
         help.MenuItems.Add(new MenuItem("&About Weatherspell", (_, _) => ShowAbout()));
         Menu = new MainMenu([file, _locationsMenu, view, settings, help]);
 
@@ -816,8 +815,7 @@ internal sealed class MainForm : Form
 
     private void ShowAbout()
     {
-        MessageBox.Show(this,
-            $"Weatherspell {AppVersion.Display}\nA text-based weather app for Windows.\n\nForecast data: {OpenMeteoClient.SourceNote}.\nForecast text, current conditions and alerts: {CityPageClient.SourceName} (weather.gc.ca) in Canada, {NwsClient.SourceName} (weather.gov) in the United States.\nPostal codes for Canada, the UK, Australia, New Zealand and Ireland: {PostalCodes.SourceNote}.\nNames for places found by their coordinates: {NominatimClient.SourceNote}.",
-            "About Weatherspell", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        using var dialog = new AboutDialog();
+        dialog.ShowDialog(this);
     }
 }

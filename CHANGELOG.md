@@ -11,10 +11,10 @@ versions.
 
 ### Added
 - Manage Locations (Ctrl+L): put saved locations in order with Move Up
-  and Move Down (Alt+U, Alt+D), add, rename with a nickname such as
-  "Home" (F2), remove (Delete), and choose for each whether its new alerts
-  are spoken. Nothing changes until OK. Ctrl+1 to Ctrl+9 switch to the
-  first nine locations, which the Locations menu also lists (#1).
+  and Move Down (Alt+U, Alt+D), add (Alt+A), rename with a nickname such
+  as "Home" (Alt+M or F2), remove (Alt+R or Delete), and choose for each
+  whether its new alerts are spoken (Alt+N). Ctrl+1 to Ctrl+9 switch to
+  the first nine locations, which the Locations menu also lists (#1).
 - Add Location also finds a place by its coordinates, typed or pasted in
   the usual forms ("44.54, -78.54", 44°32'24"N 78°32'24"W, a map link).
   The forecast is for the exact point, named after the place it falls in,
@@ -23,6 +23,8 @@ versions.
   if it was. One last seen on a screen that is no longer attached opens
   centred, and a change of display scale or Text size since then resizes
   it to match (#5).
+- Help > User Guide (F1) opens the user guide in your web browser, or
+  default HTML viewer (#8).
 
 ### Changed
 - Find Location is now Add Location, on Ctrl+Shift+L; Ctrl+L opens Manage
@@ -41,6 +43,12 @@ versions.
   sunset and the UV index now close Rest of today. After sunset they give
   tomorrow's sunrise instead, and the UV index is left out then and when
   Environment Canada's text already gives it (#5).
+- Help > About gives the version, a short credit for each source, and
+  buttons for the full credits and licences in the user guide and for the
+  website. Canadian data is credited to Environment and Climate Change
+  Canada, as its licence asks (#8).
+- A new app icon: a sun and cloud on sky blue, with lines of text falling
+  from the cloud like rain (#8).
 
 ### Fixed
 - An alert check set the whole text again even when nothing in it had
