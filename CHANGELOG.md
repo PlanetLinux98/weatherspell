@@ -15,6 +15,10 @@ versions.
   "Home" (F2), remove (Delete), and choose for each whether its new alerts
   are spoken. Nothing changes until OK. Ctrl+1 to Ctrl+9 switch to the
   first nine locations, which the Locations menu also lists (#1).
+- Add Location also finds a place by its coordinates, typed or pasted in
+  the usual forms ("44.54, -78.54", 44°32'24"N 78°32'24"W, a map link).
+  The forecast is for the exact point, named after the place it falls in,
+  with names from OpenStreetMap (#1).
 
 ### Changed
 - Find Location is now Add Location, on Ctrl+Shift+L; Ctrl+L opens Manage

@@ -54,4 +54,12 @@ internal sealed record Location(
         Population is long p && p > 0
             ? $"{FullName} (population {p.ToString("N0", System.Globalization.CultureInfo.CurrentCulture)})"
             : FullName;
+
+    // Result line for typed coordinates: the name is the nearest place's,
+    // the point is the one typed, so both are said.
+    public string NearText => $"Near {FullName} ({Coordinates.Words(Latitude, Longitude)})";
+
+    // A point nothing nearby names (open sea) goes by its coordinates.
+    public static Location AtPoint(double latitude, double longitude) =>
+        new(Coordinates.Words(latitude, longitude), null, null, latitude, longitude, null);
 }

@@ -145,6 +145,37 @@ megabytes in size for a benefit place-name search already gives. Adding a
 country is one line in `tools\Update-PostalCodes.ps1` when someone asks and
 GeoNames has its codes at town precision.
 
+## Coordinates are named by OpenStreetMap
+
+The Add Location field also takes coordinates, in the forms people copy
+them: decimals with signs or compass letters, degrees with minutes and
+seconds, degrees and decimal minutes, decimal commas, and map links
+(`Weather/Coordinates.cs` lists them; its tests hold the examples). There is
+no separate coordinates mode: one field, one Enter, one list, as for a
+name. Text counts as coordinates only when it can be nothing else, so
+postal codes such as "060-0001", "114 55" or "N1" still go to the search.
+
+The point is kept exactly as typed, since the reason to type coordinates
+is usually a place that is not the town centre, and it is named after the
+place it falls in: "Near Bobcaygeon, Ontario, Canada (44.54 north, 78.54
+west)". Open-Meteo's geocoder only goes from names to coordinates, so the
+name comes from OpenStreetMap's Nominatim, asked once per search: no key,
+and its usage policy allows lookups a user asks for, with a User-Agent
+naming the app and at most one request a second. The name matters beyond
+the list: its country is what turns on official text and alerts for the
+US and Canada, so a lookup that fails is reported as a failure rather than
+saved as a point with no country. Where nothing has an address (open sea),
+the point is offered under its coordinates, with generated text and no
+alerts.
+
+Rejected: a Coordinates button switching the dialog to latitude and
+longitude fields, the first plan (a second mode to learn, and a point with
+no name or country); naming from the weather services themselves (the NWS
+names only US points, and Environment Canada's 800 or so forecast sites are
+too sparse to name a cottage); BigDataCloud's free reverse geocoder, which
+is only for a device's own location; and GeoNames' web service, which needs
+an account.
+
 ## Updates: self-update, deferring to winget
 
 On request, the app fetches the latest GitHub Release, verifies the

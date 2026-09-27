@@ -58,6 +58,11 @@ sources are added.
   other countries. GeoNames has only the first part of Canadian and Irish
   codes and the UK outward code, so a full code finds its area, named after
   the area's largest place.
+- Names for places found by their coordinates:
+  [OpenStreetMap](https://www.openstreetmap.org/copyright) data,
+  © OpenStreetMap contributors, licensed
+  [ODbL](https://opendatacommons.org/licenses/odbl/), looked up through
+  [Nominatim](https://nominatim.org/) once per search.
 
 ## Building from source
 

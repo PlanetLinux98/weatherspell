@@ -4,6 +4,7 @@ using Weatherspell.Settings;
 using Weatherspell.Weather;
 using Weatherspell.Weather.Alerts;
 using Weatherspell.Weather.EnvironmentCanada;
+using Weatherspell.Weather.Nominatim;
 using Weatherspell.Weather.Nws;
 using Weatherspell.Weather.OpenMeteo;
 
@@ -778,7 +779,7 @@ internal sealed class MainForm : Form
     private void ShowAbout()
     {
         MessageBox.Show(this,
-            $"Weatherspell {AppVersion.Display}\nA text-based weather app for Windows.\n\nForecast data: {OpenMeteoClient.SourceNote}.\nForecast text, current conditions and alerts: {CityPageClient.SourceName} (weather.gc.ca) in Canada, {NwsClient.SourceName} (weather.gov) in the United States.\nPostal codes for Canada, the UK, Australia, New Zealand and Ireland: {PostalCodes.SourceNote}.",
+            $"Weatherspell {AppVersion.Display}\nA text-based weather app for Windows.\n\nForecast data: {OpenMeteoClient.SourceNote}.\nForecast text, current conditions and alerts: {CityPageClient.SourceName} (weather.gc.ca) in Canada, {NwsClient.SourceName} (weather.gov) in the United States.\nPostal codes for Canada, the UK, Australia, New Zealand and Ireland: {PostalCodes.SourceNote}.\nNames for places found by their coordinates: {NominatimClient.SourceNote}.",
             "About Weatherspell", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 }

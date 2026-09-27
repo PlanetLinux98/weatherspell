@@ -1,18 +1,25 @@
+using Weatherspell.Weather.Nominatim;
 using Weatherspell.Weather.OpenMeteo;
 
 namespace Weatherspell.Weather;
 
 // What the Add Location dialog searches: the embedded postal code table and
 // the Open-Meteo geocoder (place names everywhere, and the postal codes it
-// does index), merged so each country has one source for its codes.
+// does index), merged so each country has one source for its codes; and
+// for typed coordinates, Nominatim's name for the place they fall in.
 internal sealed class LocationSearch
 {
     private readonly OpenMeteoClient _client;
+    private readonly NominatimClient _names = new();
 
     public LocationSearch(OpenMeteoClient client)
     {
         _client = client;
     }
+
+    // Null when nothing near the point has a name.
+    public Task<Location?> NameAsync(double latitude, double longitude, CancellationToken cancellationToken) =>
+        _names.ReverseAsync(latitude, longitude, cancellationToken);
 
     public async Task<IReadOnlyList<Location>> SearchAsync(string query, CancellationToken cancellationToken)
     {

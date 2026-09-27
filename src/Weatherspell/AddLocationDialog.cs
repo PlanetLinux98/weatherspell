@@ -4,6 +4,8 @@ namespace Weatherspell;
 
 // Type a place, press Enter to search, arrow through the results, Enter to
 // add. The list only changes when the user asks, never as they type.
+// Coordinates go in the same field (Coordinates says what it reads) and
+// come back as one result named after the place they fall in.
 internal sealed class AddLocationDialog : Form
 {
     private readonly LocationSearch _locations;
@@ -48,11 +50,11 @@ internal sealed class AddLocationDialog : Form
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
-        var queryLabel = new Label { Text = "&Place name or postal code", AutoSize = true, TabIndex = 0 };
+        var queryLabel = new Label { Text = "&Place name, postal code or coordinates", AutoSize = true, TabIndex = 0 };
         var queryRow = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, AutoSize = true, TabIndex = 1 };
         queryRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
         queryRow.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-        _query = new TextBox { AccessibleName = "Place name or postal code", Dock = DockStyle.Fill, TabIndex = 0 };
+        _query = new TextBox { AccessibleName = "Place name, postal code or coordinates", Dock = DockStyle.Fill, TabIndex = 0 };
         _search = new Button { Text = "&Search", AutoSize = true, TabIndex = 1 };
         queryRow.Controls.Add(_query, 0, 0);
         queryRow.Controls.Add(_search, 1, 0);
@@ -100,7 +102,13 @@ internal sealed class AddLocationDialog : Form
     private async Task SearchAsync()
     {
         var query = _query.Text.Trim();
-        if (query.Length < 2)
+        var point = Coordinates.Read(query);
+        if (point?.Problem is string problem)
+        {
+            SetStatus(problem);
+            return;
+        }
+        if (point is null && query.Length < 2)
         {
             SetStatus("Type at least two characters, then press Enter.");
             return;
@@ -109,17 +117,33 @@ internal sealed class AddLocationDialog : Form
         _searching?.Cancel();
         _searching = new CancellationTokenSource();
         var token = _searching.Token;
-        SetStatus($"Searching for {query}...");
+        var failed = point is null ? "Couldn't search" : "Couldn't look up those coordinates";
+        SetStatus(point is null ? $"Searching for {query}..." : $"Looking up {Coordinates.Words(point.Latitude, point.Longitude)}...");
         _search.Enabled = false;
         try
         {
-            var found = await _locations.SearchAsync(query, token);
-            if (token.IsCancellationRequested) return;
+            List<ResultItem> found;
+            string count;
+            if (point is null)
+            {
+                var places = await _locations.SearchAsync(query, token);
+                if (token.IsCancellationRequested) return;
+                found = places.Select(p => new ResultItem(p, p.SearchResultText)).ToList();
+                count = found.Count == 1 ? "1 place found." : $"{found.Count} places found.";
+            }
+            else
+            {
+                var named = await _locations.NameAsync(point.Latitude, point.Longitude, token);
+                if (token.IsCancellationRequested) return;
+                var place = named ?? Weather.Location.AtPoint(point.Latitude, point.Longitude);
+                found = [new ResultItem(place, named is null ? place.Name : named.NearText)];
+                count = named is null ? "Nothing nearby has a name; the point itself can be added." : "1 place found.";
+            }
             _results.BeginUpdate();
             _results.Items.Clear();
-            foreach (var location in found)
+            foreach (var item in found)
             {
-                _results.Items.Add(new ResultItem(location));
+                _results.Items.Add(item);
             }
             _results.EndUpdate();
 
@@ -132,7 +156,6 @@ internal sealed class AddLocationDialog : Form
             // Focus first and the count after it: said before the move, the
             // count was cut into NVDA's report of the list and its first
             // result, which it then read a second time (#17).
-            var count = found.Count == 1 ? "1 place found." : $"{found.Count} places found.";
             _status.Text = count;
             _results.SelectedIndex = 0;
             _results.Focus();
@@ -146,12 +169,12 @@ internal sealed class AddLocationDialog : Form
         {
             // HttpClient reports its timeout as a cancellation; only ours
             // cancels the token.
-            SetStatus("Couldn't search: the search service took too long to answer.");
+            SetStatus($"{failed}: the search service took too long to answer.");
             _query.Focus();
         }
         catch (Exception ex) when (ex is System.Net.Http.HttpRequestException or IOException or InvalidDataException or System.Runtime.Serialization.SerializationException)
         {
-            SetStatus($"Couldn't search: {ex.GetBaseException().Message}");
+            SetStatus($"{failed}: {ex.GetBaseException().Message}");
             _query.Focus();
         }
         finally
@@ -174,9 +197,9 @@ internal sealed class AddLocationDialog : Form
         Close();
     }
 
-    private sealed class ResultItem(Location location)
+    private sealed class ResultItem(Location location, string text)
     {
         public Location Location { get; } = location;
-        public override string ToString() => Location.SearchResultText;
+        public override string ToString() => text;
     }
 }
