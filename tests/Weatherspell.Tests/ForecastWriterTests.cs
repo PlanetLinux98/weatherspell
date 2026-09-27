@@ -66,7 +66,7 @@ public class ForecastWriterTests
         var sections = ForecastWriter.Write(Sample(), Options());
 
         Assert.Equal(
-            ["Alerts", "Right now", "Rest of today", "Saturday, September 12", "Sunday, September 13", "Sun and UV", "Details", "Sources"],
+            ["Alerts", "Right now", "Rest of today", "Saturday, September 12", "Sunday, September 13", "Sources"],
             sections.Select(s => s.Heading).ToArray());
     }
 
@@ -76,9 +76,10 @@ public class ForecastWriterTests
         var section = Find(ForecastWriter.Write(Sample(), Options()), "Right now");
 
         Assert.Equal(
-            "As of 2:30 pm, it's 21 degrees and mostly clear, feeling like 20. Wind from the southwest at 12 kilometres an hour, gusting to 30. Humidity 52 percent.",
+            "As of 2:30 pm, it's 21 degrees and mostly clear, feeling like 20. Wind from the southwest at 12 kilometres an hour, gusting to 30.",
             section.Paragraphs[0]);
-        Assert.Single(section.Paragraphs);
+        Assert.Equal("Humidity 52 percent, dew point 11 degrees, pressure 1017 hectopascals, visibility 24 kilometres, cloud cover 40 percent.", section.Paragraphs[1]);
+        Assert.Equal(2, section.Paragraphs.Count);
     }
 
     // Fresh text carries no age; from 30 minutes, or after a failed refresh,
@@ -115,11 +116,11 @@ public class ForecastWriterTests
         Assert.Contains("The air is calm.", Find(ForecastWriter.Write(calm, Options()), "Right now").Paragraphs[0]);
 
         var steady = Sample() with { Current = Sample().Current with { WindSpeed = 12, WindGusts = 15 } };
-        Assert.Contains("Wind from the southwest at 12 kilometres an hour. ", Find(ForecastWriter.Write(steady, Options()), "Right now").Paragraphs[0]);
+        Assert.EndsWith("Wind from the southwest at 12 kilometres an hour.", Find(ForecastWriter.Write(steady, Options()), "Right now").Paragraphs[0]);
     }
 
     [Fact]
-    public void Rest_of_today_covers_the_remaining_parts_of_the_day()
+    public void Rest_of_today_covers_the_remaining_parts_of_the_day_then_the_sun_and_uv()
     {
         var section = Find(ForecastWriter.Write(Sample(), Options()), "Rest of today");
 
@@ -127,7 +128,9 @@ public class ForecastWriterTests
         Assert.Equal("This afternoon: partly cloudy, around 24 degrees, wind up to 20 kilometres an hour.", section.Paragraphs[1]);
         Assert.Equal("This evening: partly cloudy with light rain showers at times, cooling from 23 to 20 degrees, 60 percent chance of rain, wind up to 20 kilometres an hour.", section.Paragraphs[2]);
         Assert.Equal("Overnight: mostly clear, cooling from 19 to 12 degrees, 30 percent chance of rain, wind up to 22 kilometres an hour.", section.Paragraphs[3]);
-        Assert.Equal(4, section.Paragraphs.Count);
+        Assert.Equal("The sun rose at 6:52 am and sets at 7:34 pm, 12 hours and 42 minutes of daylight.", section.Paragraphs[4]);
+        Assert.Equal("UV index 6, high.", section.Paragraphs[5]);
+        Assert.Equal(6, section.Paragraphs.Count);
     }
 
     [Fact]
@@ -186,22 +189,34 @@ public class ForecastWriterTests
         Assert.StartsWith("Saturday: light rain, high 23, 50 percent chance of rain, about 8 millimetres, ", saturday.Paragraphs[0]);
     }
 
+    // After sunset the next sunrise is the news, and the UV index, the
+    // day's highest, is nothing to act on.
     [Fact]
-    public void Sun_and_uv_use_past_tense_once_the_sun_has_risen()
+    public void After_sunset_the_next_sunrise_is_given_and_the_uv_index_left_out()
     {
-        var section = Find(ForecastWriter.Write(Sample(), Options()), "Sun and UV");
+        var evening = Options() with { Now = new DateTimeOffset(2026, 9, 11, 20, 15, 0, Eastern) };
+        var section = Find(ForecastWriter.Write(Sample(), evening), "Rest of today");
 
-        Assert.Equal("The sun rose at 6:52 am and sets at 7:34 pm, 12 hours and 42 minutes of daylight.", section.Paragraphs[0]);
-        Assert.Equal("UV index 6, high.", section.Paragraphs[1]);
+        Assert.Equal("The sun set at 7:34 pm and rises at 6:53 am tomorrow.", section.Paragraphs[section.Paragraphs.Count - 1]);
+        Assert.DoesNotContain(section.Paragraphs, p => p.StartsWith("UV index", StringComparison.Ordinal));
+
+        var pacific = TimeZoneInfo.CreateCustomTimeZone("test-pacific", TimeSpan.FromHours(-7), "Test Pacific", "Test Pacific");
+        var away = Find(ForecastWriter.Write(Sample(), Options(pacific) with { Now = evening.Now }), "Rest of today");
+        Assert.Equal("The sun set at 7:34 pm (4:34 pm your time) and rises at 6:53 am tomorrow (3:53 am tomorrow your time).", away.Paragraphs[away.Paragraphs.Count - 1]);
+
+        // Without the next day's sunrise, the day's own times as before.
+        var lastDay = Sample() with { Days = [Sample().Days[0]] };
+        var alone = Find(ForecastWriter.Write(lastDay, evening), "Rest of today");
+        Assert.Equal("The sun rose at 6:52 am and set at 7:34 pm, 12 hours and 42 minutes of daylight.", alone.Paragraphs[alone.Paragraphs.Count - 1]);
     }
 
     [Fact]
-    public void Details_and_sources_close_the_reading()
+    public void Sources_close_the_reading()
     {
         var sections = ForecastWriter.Write(Sample(), Options());
 
-        Assert.Equal("Humidity 52 percent, dew point 11 degrees, pressure 1017 hectopascals, visibility 24 kilometres, cloud cover 40 percent.", Find(sections, "Details").Paragraphs[0]);
-        Assert.Equal("Forecast and current conditions: Open-Meteo (open-meteo.com), licensed CC BY 4.0.", Find(sections, "Sources").Paragraphs[0]);
+        Assert.Equal("Sources", sections[sections.Count - 1].Heading);
+        Assert.Equal("Forecast and current conditions: Open-Meteo (open-meteo.com), licensed CC BY 4.0.", sections[sections.Count - 1].Paragraphs[0]);
     }
 
     [Fact]
@@ -211,7 +226,7 @@ public class ForecastWriterTests
         var sections = ForecastWriter.Write(Sample(), Options(pacific));
 
         Assert.StartsWith("As of 2:30 pm (11:30 am your time), ", Find(sections, "Right now").Paragraphs[0]);
-        Assert.Equal("The sun rose at 6:52 am (3:52 am your time) and sets at 7:34 pm (4:34 pm your time), 12 hours and 42 minutes of daylight.", Find(sections, "Sun and UV").Paragraphs[0]);
+        Assert.Contains("The sun rose at 6:52 am (3:52 am your time) and sets at 7:34 pm (4:34 pm your time), 12 hours and 42 minutes of daylight.", Find(sections, "Rest of today").Paragraphs);
     }
 
     [Fact]
@@ -225,7 +240,7 @@ public class ForecastWriterTests
         var sections = ForecastWriter.Write(Sample(), Options(kathmandu));
 
         Assert.StartsWith("As of 2:30 pm (12:15 am today your time), ", Find(sections, "Right now").Paragraphs[0]);
-        Assert.Equal("The sun rose at 6:52 am (4:37 pm yesterday your time) and sets at 7:34 pm (5:19 am today your time), 12 hours and 42 minutes of daylight.", Find(sections, "Sun and UV").Paragraphs[0]);
+        Assert.Contains("The sun rose at 6:52 am (4:37 pm yesterday your time) and sets at 7:34 pm (5:19 am today your time), 12 hours and 42 minutes of daylight.", Find(sections, "Rest of today").Paragraphs);
 
         // A PC behind the location, as in Honolulu: Toronto's late evening is
         // the reader's afternoon, all on their today, so no day is named;
@@ -266,8 +281,10 @@ public class ForecastWriterTests
         var day = f.Days[0] with { Sunrise = new DateTime(2026, 9, 11), Sunset = new DateTime(2026, 9, 12), DaylightSeconds = 86400 };
         var night = f.Days[0] with { Sunrise = new DateTime(2026, 9, 11), Sunset = new DateTime(2026, 9, 11), DaylightSeconds = 0 };
 
-        Assert.Equal("The sun does not set today.", Find(ForecastWriter.Write(f with { Days = [day, .. f.Days.Skip(1)] }, Options()), "Sun and UV").Paragraphs[0]);
-        Assert.Equal("The sun does not rise today.", Find(ForecastWriter.Write(f with { Days = [night, .. f.Days.Skip(1)] }, Options()), "Sun and UV").Paragraphs[0]);
+        var midsummer = Find(ForecastWriter.Write(f with { Days = [day, .. f.Days.Skip(1)] }, Options()), "Rest of today").Paragraphs;
+        Assert.Equal(["The sun does not set today.", "UV index 6, high."], midsummer.Skip(midsummer.Count - 2).ToArray());
+        var midwinter = Find(ForecastWriter.Write(f with { Days = [night, .. f.Days.Skip(1)] }, Options()), "Rest of today").Paragraphs;
+        Assert.Equal("The sun does not rise today.", midwinter[midwinter.Count - 1]);
     }
 
     [Fact]
@@ -277,7 +294,7 @@ public class ForecastWriterTests
         var sections = ForecastWriter.Write(f, Options());
 
         Assert.Contains("Wind from the southwest at 12 miles an hour, gusting to 30.", Find(sections, "Right now").Paragraphs[0]);
-        Assert.Contains("pressure 30.03 inches of mercury, visibility 15 miles", Find(sections, "Details").Paragraphs[0]);
+        Assert.Contains("pressure 30.03 inches of mercury, visibility 15 miles", Find(sections, "Right now").Paragraphs[1]);
     }
 
     [Fact]

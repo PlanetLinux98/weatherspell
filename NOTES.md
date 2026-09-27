@@ -293,6 +293,19 @@ editable text (paragraph navigation, a user setting) and JAWS users expect
 the same pair to move by paragraph. Ctrl+PageUp/Down is unbound in edit
 controls and in both screen readers.
 
+## What goes where in the text
+
+Alerts, Right now, Rest of today, each coming day, and the Sources line.
+Right now holds everything measured now: the sky, temperature and wind on
+one line, then humidity, dew point, pressure, visibility and cloud cover on
+another that a listener can move past. The sun and UV close Rest of today
+because they are today's; in a section of their own after the coming days
+they were read out of time. After sunset the line gives the next sunrise
+("The sun set at 7:01 pm and rises at 7:07 am tomorrow"), since that is
+what a listener is waiting for then. The UV index is the day's highest, so
+it is left out after sunset, and when Environment Canada's own text for
+today already gives it.
+
 ## Alerts poll every saved location
 
 Polling only the location on screen would miss a warning for home while the
@@ -450,6 +463,15 @@ display scale; scaling by font follows both, so a low-vision user who turns
 Text size up gets a window that grows with its text instead of clipping it.
 Layouts are auto-sizing wherever possible so they follow the font too, and a
 window that would scale past the screen is clamped to the working area.
+
+The main window reopens where it was closed, and its saved size is kept
+with the font's average character size at the time, so after a change of
+display scale or Text size it grows or shrinks as the text did, across and
+down separately (a font does not grow in proportion: Segoe UI 9 pt is 7 by
+15 pixels at 100 percent and 10 by 25 at 150). A saved place where no
+screen shows enough of the title bar to take hold of opens centred instead,
+and a window overhanging its screen by more than the invisible resize
+border is moved back onto it.
 
 Per-monitor DPI stays out (see the single-exe section): moving the window to
 a display with a different scale gets it bitmap-scaled by Windows, correct

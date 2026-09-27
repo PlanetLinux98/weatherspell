@@ -48,6 +48,7 @@ internal sealed class MainForm : Form
     private readonly CancellationTokenSource _closing = new();
     private bool _polling;
     private int _shownAt;
+    private bool _maximized;
 
     public MainForm() : this(SettingsStore.Default())
     {
@@ -69,6 +70,7 @@ internal sealed class MainForm : Form
         MinimumSize = new Size(480, 360);
         Size = new Size(720, 560);
         Scaling.Apply(this);
+        RestoreWindow();
 
         // The native Windows menu bar, not MenuStrip: on this runtime
         // MenuStrip tells a screen reader each item's mnemonic and never its
@@ -181,6 +183,13 @@ internal sealed class MainForm : Form
         };
         _forecast.KeyDown += OnForecastKeyDown;
         Shown += async (_, _) => await Guard(OnShownAsync);
+        // Minimized from maximized, the state alone no longer says which it
+        // will return to, so the last one that was not minimized is kept.
+        Resize += (_, _) =>
+        {
+            if (WindowState != FormWindowState.Minimized) _maximized = WindowState == FormWindowState.Maximized;
+        };
+        FormClosing += (_, _) => RememberWindow();
         FormClosed += (_, _) =>
         {
             _forecastTimer.Stop();
@@ -762,6 +771,35 @@ internal sealed class MainForm : Form
         {
             _status.Text = $"Couldn't keep the forecast for offline use: {ex.Message}";
         }
+    }
+
+    // After Scaling.Apply, so the saved pixels are not scaled a second time.
+    // A place no current screen shows opens centred; maximized stays
+    // maximized either way.
+    private void RestoreWindow()
+    {
+        if (_settings.Window is not SavedWindow saved) return;
+        var workingAreas = Screen.AllScreens.Select(s => s.WorkingArea).ToList();
+        if (WindowPlacement.Restore(saved, CurrentAutoScaleDimensions, workingAreas, SystemInformation.CaptionHeight) is Rectangle bounds)
+        {
+            StartPosition = FormStartPosition.Manual;
+            Bounds = bounds;
+        }
+        if (saved.Maximized) WindowState = FormWindowState.Maximized;
+        _maximized = saved.Maximized;
+    }
+
+    // Written only when it changed, so an ordinary close does not rewrite
+    // settings.json, and never after settings that could not be read: the
+    // user may be mending that file by hand while the app is open.
+    private void RememberWindow()
+    {
+        if (_store.LoadProblem is not null) return;
+        var normal = WindowState == FormWindowState.Normal ? Bounds : RestoreBounds;
+        var window = WindowPlacement.Save(normal, _maximized, CurrentAutoScaleDimensions);
+        if (window == _settings.Window) return;
+        _settings.Window = window;
+        TrySave();
     }
 
     private void TrySave()

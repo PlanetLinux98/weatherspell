@@ -36,27 +36,28 @@ internal static class ForecastWriter
             RightNow(f, o, clock),
         };
 
+        IReadOnlyList<string> today;
+        IEnumerable<Section> days;
         if (f.Periods.Count > 0)
         {
-            sections.AddRange(OfficialSections(f, nowLocal, clock));
+            today = OfficialToday(f, nowLocal);
+            days = OfficialDays(f, nowLocal, clock);
         }
         else
         {
-            var rest = RestOfToday(f, nowLocal);
-            if (rest is not null) sections.Add(rest);
-
-            foreach (var day in f.Days)
-            {
-                if (day.Date <= nowLocal.Date) continue;
-                var following = f.Days.FirstOrDefault(d => d.Date == day.Date.AddDays(1));
-                sections.Add(new Section(clock.DayHeading(day.Date), DayAndNight(day, following, f, o.Culture)));
-            }
+            today = RestOfToday(f, nowLocal);
+            days = f.Days
+                .Where(d => d.Date > nowLocal.Date)
+                .Select(day => new Section(clock.DayHeading(day.Date), DayAndNight(day, f.Days.FirstOrDefault(d => d.Date == day.Date.AddDays(1)), f, o.Culture)))
+                .ToList();
         }
 
-        var sun = SunAndUv(f, nowLocal, clock);
-        if (sun is not null) sections.Add(sun);
+        // The sun and UV are today's, so they close Rest of today rather
+        // than wait in a section of their own after the coming days.
+        var rest = today.Concat(SunAndUv(f, nowLocal, clock, today)).ToList();
+        if (rest.Count > 0) sections.Add(new Section("Rest of today", rest));
+        sections.AddRange(days);
 
-        sections.Add(Details(f, nowLocal));
         var sources = f.Sources;
         if (alerts is { Attribution: not null })
         {
@@ -71,21 +72,21 @@ internal static class ForecastWriter
     // paragraph led by the service's own period name. A night period is
     // dated by the day it follows, so before dawn yesterday's is still
     // today's news.
-    private static IEnumerable<Section> OfficialSections(Forecast f, DateTime nowLocal, Clock clock)
+    private static IReadOnlyList<string> OfficialToday(Forecast f, DateTime nowLocal)
     {
         var today = nowLocal.Date;
-        var current = f.Periods
+        return f.Periods
             .Where(p => p.Date == today || (p.Date == today.AddDays(-1) && IsNight(p.Name) && nowLocal.Hour < 6))
+            .Select(Paragraph)
             .ToList();
-        if (current.Count > 0)
-        {
-            yield return new Section("Rest of today", current.Select(Paragraph).ToList());
-        }
-        foreach (var day in f.Periods.Where(p => p.Date > today).GroupBy(p => p.Date))
-        {
-            yield return new Section(clock.DayHeading(day.Key), day.Select(Paragraph).ToList());
-        }
     }
+
+    private static IEnumerable<Section> OfficialDays(Forecast f, DateTime nowLocal, Clock clock) =>
+        f.Periods
+            .Where(p => p.Date > nowLocal.Date)
+            .GroupBy(p => p.Date)
+            .Select(day => new Section(clock.DayHeading(day.Key), day.Select(Paragraph).ToList()))
+            .ToList();
 
     private static string Paragraph(OfficialPeriod p) => $"{p.Name}: {p.Text}";
 
@@ -123,12 +124,29 @@ internal static class ForecastWriter
         }
         sb.Append(". ");
         sb.Append(WindSentence(c.WindSpeed, c.WindDirection, c.WindGusts, f.Units));
-        sb.Append($" Humidity {c.Humidity} percent.");
 
         var paragraphs = new List<string>();
         if (Freshness(o.Now - f.FetchedAt, o.RefreshProblem) is string freshness) paragraphs.Add(freshness);
         paragraphs.Add(sb.ToString());
+        paragraphs.Add(Measurements(f, nowLocal));
         return new Section("Right now", paragraphs);
+    }
+
+    // The finer measurements get a line of their own after the sky, the
+    // temperature and the wind, so a listener who wants only those can
+    // move on after one line. They were once a Details section near the
+    // end, far from the conditions they belong to (#5).
+    private static string Measurements(Forecast f, DateTime nowLocal)
+    {
+        var c = f.Current;
+        // Dew point and visibility are hourly-only; take the hour nearest now.
+        var nearest = f.Hours.OrderBy(h => Math.Abs((h.LocalTime - nowLocal).Ticks)).FirstOrDefault();
+        var pieces = new List<string> { $"Humidity {c.Humidity} percent" };
+        if ((c.DewPoint ?? nearest?.DewPoint) is double dew) pieces.Add($"dew point {Units.Degrees(dew)}");
+        if (c.PressureHpa > 0) pieces.Add($"pressure {Units.Pressure(c.PressureHpa, f.Units)}");
+        if ((c.VisibilityMetres ?? nearest?.VisibilityMetres) is double vis) pieces.Add($"visibility {Units.Distance(vis, f.Units)}");
+        pieces.Add($"cloud cover {c.CloudCover} percent");
+        return string.Join(", ", pieces) + ".";
     }
 
     // Fresh text says nothing about its age (the exact time is in the
@@ -166,7 +184,7 @@ internal static class ForecastWriter
 
     private sealed record Part(string Label, DateTime Start, DateTime End);
 
-    private static Section? RestOfToday(Forecast f, DateTime nowLocal)
+    private static IReadOnlyList<string> RestOfToday(Forecast f, DateTime nowLocal)
     {
         var today = nowLocal.Date;
         var parts = new List<Part>();
@@ -200,7 +218,7 @@ internal static class ForecastWriter
             paragraphs.Add(PartSentence(part.Label, hours, f.Units));
         }
 
-        return paragraphs.Count == 0 ? null : new Section("Rest of today", paragraphs);
+        return paragraphs;
     }
 
     private static string PartSentence(string label, List<HourPoint> hours, UnitSystem units)
@@ -418,20 +436,33 @@ internal static class ForecastWriter
 
     private static double MinimumMentionedAmount(UnitSystem units) => units == UnitSystem.Metric ? 1 : 0.05;
 
-    private static Section? SunAndUv(Forecast f, DateTime nowLocal, Clock clock)
+    // The UV index is the day's highest, so it is left out once the sun has
+    // set, and where the text above already gives it: Environment Canada
+    // ends a daytime period with its own "UV index 6 or high."
+    private static IReadOnlyList<string> SunAndUv(Forecast f, DateTime nowLocal, Clock clock, IReadOnlyList<string> todayText)
     {
         var today = f.Days.FirstOrDefault(d => d.Date == nowLocal.Date);
-        if (today is null) return null;
+        if (today is null) return [];
         var paragraphs = new List<string>();
         // Polar day and night: Open-Meteo gives midnight for both sunrise
         // and sunset, which read "rose at 12:00 am and sets at 12:00 am".
-        if (today.DaylightSeconds is double all && all >= 86400 - 60)
+        var polarDay = today.DaylightSeconds >= FullDay;
+        var polarNight = today.DaylightSeconds <= NoDay;
+        if (polarDay)
         {
             paragraphs.Add("The sun does not set today.");
         }
-        else if (today.DaylightSeconds is double none && none <= 60)
+        else if (polarNight)
         {
             paragraphs.Add("The sun does not rise today.");
+        }
+        else if (today.Sunset is DateTime spent && nowLocal >= spent
+            && f.Days.FirstOrDefault(d => d.Date == today.Date.AddDays(1)) is { Sunrise: DateTime next } tomorrow
+            && !IsPolar(tomorrow))
+        {
+            // After sunset the day's own times are spent; the next sunrise
+            // is what a listener is waiting for. Its daylight is tomorrow's.
+            paragraphs.Add($"The sun set at {clock.Time(spent, nowLocal)} and rises at {clock.TimeOnDay(next, nowLocal)}.");
         }
         else if (today.Sunrise is DateTime rise && today.Sunset is DateTime set)
         {
@@ -444,13 +475,20 @@ internal static class ForecastWriter
             }
             paragraphs.Add(s + ".");
         }
-        if (today.UvIndexMax is double uv)
+
+        var sunUp = polarDay || (!polarNight && !(today.Sunset is DateTime sunset && nowLocal >= sunset));
+        var givenAbove = todayText.Any(p => p.IndexOf("UV index", StringComparison.OrdinalIgnoreCase) >= 0);
+        if (today.UvIndexMax is double uv && sunUp && !givenAbove)
         {
             var level = (int)Math.Round(uv);
             paragraphs.Add($"UV index {level}, {UvBand(level)}.");
         }
-        return paragraphs.Count == 0 ? null : new Section("Sun and UV", paragraphs);
+        return paragraphs;
     }
+
+    private const double FullDay = 86400 - 60;
+    private const double NoDay = 60;
+    private static bool IsPolar(DayForecast d) => d.DaylightSeconds >= FullDay || d.DaylightSeconds <= NoDay;
 
     private static string UvBand(int uv) => uv switch
     {
@@ -461,20 +499,6 @@ internal static class ForecastWriter
         _ => "extreme",
     };
 
-    private static Section Details(Forecast f, DateTime nowLocal)
-    {
-        var c = f.Current;
-        // Dew point and visibility are hourly-only; take the hour nearest now.
-        var nearest = f.Hours.OrderBy(h => Math.Abs((h.LocalTime - nowLocal).Ticks)).FirstOrDefault();
-        var pieces = new List<string> { $"Humidity {c.Humidity} percent" };
-        if ((c.DewPoint ?? nearest?.DewPoint) is double dew) pieces.Add($"dew point {Units.Degrees(dew)}");
-        if (c.PressureHpa > 0) pieces.Add($"pressure {Units.Pressure(c.PressureHpa, f.Units)}");
-        if ((c.VisibilityMetres ?? nearest?.VisibilityMetres) is double vis) pieces.Add($"visibility {Units.Distance(vis, f.Units)}");
-        pieces.Add($"cloud cover {c.CloudCover} percent");
-        return new Section("Details", [Capitalize(string.Join(", ", pieces)) + "."]);
-    }
-
-    private static string Capitalize(string s) => char.ToUpperInvariant(s[0]) + s.Substring(1);
     private static int Round(double v) => (int)Math.Round(v, MidpointRounding.AwayFromZero);
     private static DateTime Max(DateTime a, DateTime b) => a > b ? a : b;
 }

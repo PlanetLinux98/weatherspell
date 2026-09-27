@@ -100,9 +100,11 @@ public class OfficialForecastWriterTests
         var sections = ForecastWriter.Write(ForecastService.Compose(Base(), Official()), Options());
 
         Assert.Equal(
-            ["Alerts", "Right now", "Rest of today", "Saturday, September 12", "Sunday, September 13", "Monday, September 14", "Tuesday, September 15", "Wednesday, September 16", "Thursday, September 17", "Sun and UV", "Details", "Sources"],
+            ["Alerts", "Right now", "Rest of today", "Saturday, September 12", "Sunday, September 13", "Monday, September 14", "Tuesday, September 15", "Wednesday, September 16", "Thursday, September 17", "Sources"],
             sections.Select(s => s.Heading).ToArray());
-        Assert.Equal(["Tonight: Clear. Fog patches developing near midnight. Low 7."], Find(sections, "Rest of today").Paragraphs);
+        Assert.Equal(["Tonight: Clear. Fog patches developing near midnight. Low 7.",
+                      "The sun set at 7:32 pm and rises at 6:48 am tomorrow."],
+            Find(sections, "Rest of today").Paragraphs);
         var saturday = Find(sections, "Saturday, September 12");
         Assert.Equal("Saturday: Sunny. Fog patches dissipating early in the morning. Wind becoming south 20 kilometres per hour in the afternoon. High 26. Humidex 31. UV index 6 or high.", saturday.Paragraphs[0]);
         Assert.Equal("Saturday night: Increasing cloudiness early in the evening. 40 percent chance of showers late in the evening and overnight with risk of thunderstorms. Low 18.", saturday.Paragraphs[1]);
@@ -114,29 +116,32 @@ public class OfficialForecastWriterTests
     {
         var section = Find(ForecastWriter.Write(ForecastService.Compose(Base(), Official()), Options()), "Right now");
 
-        Assert.Equal("As of 11:57 pm, Peterborough Municipal Airport reports mist and 9 degrees. Wind from the west at 4 kilometres an hour. Humidity 100 percent.", section.Paragraphs[0]);
+        Assert.Equal("As of 11:57 pm, Peterborough Municipal Airport reports mist and 9 degrees. Wind from the west at 4 kilometres an hour.", section.Paragraphs[0]);
     }
 
     [Fact]
-    public void Details_prefer_observed_dew_point_and_visibility()
+    public void Measurements_prefer_observed_dew_point_and_visibility()
     {
-        var section = Find(ForecastWriter.Write(ForecastService.Compose(Base(), Official()), Options()), "Details");
+        var section = Find(ForecastWriter.Write(ForecastService.Compose(Base(), Official()), Options()), "Right now");
 
-        Assert.Equal("Humidity 100 percent, dew point 9 degrees, pressure 1018 hectopascals, visibility 6 kilometres, cloud cover 20 percent.", section.Paragraphs[0]);
+        Assert.Equal("Humidity 100 percent, dew point 9 degrees, pressure 1018 hectopascals, visibility 6 kilometres, cloud cover 20 percent.", section.Paragraphs[1]);
     }
 
     [Fact]
     public void Before_dawn_last_nights_period_is_still_todays()
     {
         // 1:30 am Saturday: "Tonight" (Friday's) is in progress and leads
-        // the day, with Saturday's own periods after it.
+        // the day, with Saturday's own periods after it. Saturday's text
+        // gives the UV index, so the sun line is not followed by another.
         var sections = ForecastWriter.Write(ForecastService.Compose(Base(), Official()), Options(new DateTimeOffset(2026, 9, 12, 1, 30, 0, Eastern)));
 
         var today = Find(sections, "Rest of today");
-        Assert.Equal(3, today.Paragraphs.Count);
+        Assert.Equal(4, today.Paragraphs.Count);
         Assert.StartsWith("Tonight: ", today.Paragraphs[0]);
         Assert.StartsWith("Saturday: ", today.Paragraphs[1]);
+        Assert.EndsWith("UV index 6 or high.", today.Paragraphs[1]);
         Assert.StartsWith("Saturday night: ", today.Paragraphs[2]);
+        Assert.Equal("The sun rises at 6:48 am and sets at 7:30 pm, 12 hours and 42 minutes of daylight.", today.Paragraphs[3]);
         Assert.Equal("Sunday, September 13", sections[3].Heading);
     }
 
@@ -160,9 +165,11 @@ public class OfficialForecastWriterTests
 
         Assert.Equal(["Overnight: Patchy fog after 3am. Mostly clear, with a low around 48. Wind around 0 miles per hour.",
                       "Saturday: Patchy fog before 9am. Mostly sunny, with a high near 77. South wind 0 to 12 miles per hour.",
-                      "Saturday night: A slight chance of rain showers between 8pm and 11pm, then showers and thunderstorms. Mostly cloudy, with a low around 60. South wind 7 to 10 miles per hour, with gusts as high as 21 miles per hour. Chance of precipitation is 90 percent. New rainfall amounts between a half and three quarters of an inch possible."],
+                      "Saturday night: A slight chance of rain showers between 8pm and 11pm, then showers and thunderstorms. Mostly cloudy, with a low around 60. South wind 7 to 10 miles per hour, with gusts as high as 21 miles per hour. Chance of precipitation is 90 percent. New rainfall amounts between a half and three quarters of an inch possible.",
+                      "The sun rises at 6:48 am and sets at 7:30 pm, 12 hours and 42 minutes of daylight.",
+                      "UV index 6, high."],
             Find(sections, "Rest of today").Paragraphs);
-        Assert.Equal("Friday, September 18", sections[sections.Count - 4].Heading);
+        Assert.Equal("Friday, September 18", sections[sections.Count - 2].Heading);
     }
 
     [Fact]
@@ -170,7 +177,7 @@ public class OfficialForecastWriterTests
     {
         var sections = ForecastWriter.Write(Base(), Options());
 
-        Assert.Equal(["Alerts", "Right now", "Rest of today", "Saturday, September 12", "Sun and UV", "Details", "Sources"], sections.Select(s => s.Heading).ToArray());
+        Assert.Equal(["Alerts", "Right now", "Rest of today", "Saturday, September 12", "Sources"], sections.Select(s => s.Heading).ToArray());
         Assert.StartsWith("As of 11:45 pm, it's 12 degrees and foggy", Find(sections, "Right now").Paragraphs[0]);
     }
 }

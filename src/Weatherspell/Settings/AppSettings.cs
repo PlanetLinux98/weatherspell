@@ -20,6 +20,8 @@ internal sealed class AppSettings
     // Which new alerts are spoken: "all", "severe" (severe and extreme
     // only) or "off".
     [DataMember(Name = "alertAnnouncements")] public string AlertAnnouncements = "all";
+    // Where the main window was when it last closed; null until then.
+    [DataMember(Name = "window")] public SavedWindow? Window;
 
     [OnDeserializing]
     private void Defaults(StreamingContext context)
@@ -38,6 +40,7 @@ internal sealed class AppSettings
         if (ForecastRefreshMinutes < 1 || ForecastRefreshMinutes > MaxMinutes) ForecastRefreshMinutes = 30;
         if (AlertCheckMinutes < 1 || AlertCheckMinutes > MaxMinutes) AlertCheckMinutes = 10;
         if (AlertAnnouncements is not ("all" or "severe" or "off")) AlertAnnouncements = "all";
+        if (Window is { Width: <= 0 } or { Height: <= 0 }) Window = null;
     }
 
     // A day: a longer interval is a typo, and a Windows timer's interval is
@@ -97,4 +100,20 @@ internal sealed class SavedLocation
 
     public Location ToLocation() =>
         new(Name ?? "", Region, Country, Latitude, Longitude, TimeZoneId, Nickname);
+}
+
+// The window's normal (not maximized) bounds in screen pixels, whether it
+// was maximized, and the average character size of its font in pixels (7
+// by 15 for Segoe UI 9 pt at 96 DPI), so a size saved before the display
+// scale or Text size changed can follow it (WindowPlacement).
+[DataContract]
+internal sealed record SavedWindow
+{
+    [DataMember(Name = "left")] public int Left;
+    [DataMember(Name = "top")] public int Top;
+    [DataMember(Name = "width")] public int Width;
+    [DataMember(Name = "height")] public int Height;
+    [DataMember(Name = "maximized")] public bool Maximized;
+    [DataMember(Name = "charWidth")] public double CharWidth;
+    [DataMember(Name = "charHeight")] public double CharHeight;
 }

@@ -19,6 +19,10 @@ versions.
   the usual forms ("44.54, -78.54", 44°32'24"N 78°32'24"W, a map link).
   The forecast is for the exact point, named after the place it falls in,
   with names from OpenStreetMap (#1).
+- The window opens where it was last closed, at the same size, maximized
+  if it was. One last seen on a screen that is no longer attached opens
+  centred, and a change of display scale or Text size since then resizes
+  it to match (#5).
 
 ### Changed
 - Find Location is now Add Location, on Ctrl+Shift+L; Ctrl+L opens Manage
@@ -31,6 +35,12 @@ versions.
   wind" rather than "East wind around 0 miles per hour"). The National
   Weather Service API's own wording, which can also differ in timing, is
   used only when the page's text cannot be fetched.
+- Right now carries all of the current conditions: the humidity, dew point,
+  pressure, visibility and cloud cover follow on a line of their own, where
+  a Details section near the end used to repeat the humidity. Sunrise,
+  sunset and the UV index now close Rest of today. After sunset they give
+  tomorrow's sunrise instead, and the UV index is left out then and when
+  Environment Canada's text already gives it (#5).
 
 ### Fixed
 - An alert check set the whole text again even when nothing in it had
