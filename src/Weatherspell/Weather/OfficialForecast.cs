@@ -40,7 +40,8 @@ internal static class OfficialText
 {
     public static string Spoken(string text)
     {
-        var s = text.Trim();
+        // The weather.gov page's text has two spaces after a full stop.
+        var s = System.Text.RegularExpressions.Regex.Replace(text.Trim(), @"\s{2,}", " ");
         s = System.Text.RegularExpressions.Regex.Replace(s, @"(\d)\s*%", "$1 percent");
         s = System.Text.RegularExpressions.Regex.Replace(s, @"\bkm/h\b", "kilometres per hour");
         s = System.Text.RegularExpressions.Regex.Replace(s, @"\bmph\b", "miles per hour");

@@ -48,6 +48,76 @@ public class NwsParsingTests
     }
 
     [Fact]
+    public void The_page_text_is_the_weather_gov_forecast_page_word_for_word()
+    {
+        var periods = NwsClient.ParsePagePeriods(Fixtures.Read("nws-page-buckley.json"));
+
+        // Where the API said "East wind around 0 mph" and "Northeast wind 0
+        // to 5 mph"; the page's double spaces close up.
+        Assert.Equal(14, periods.Count);
+        Assert.Equal(new OfficialPeriod("Tonight", new DateTime(2026, 9, 26), "Patchy fog after 2am. Otherwise, mostly clear, with a low around 42. Calm wind."), periods[0]);
+        Assert.Equal("Patchy fog before 10am. Otherwise, sunny, with a high near 72. Calm wind becoming north around 5 miles per hour in the afternoon.", periods[1].Text);
+        Assert.Equal("Sunday night", periods[2].Name);
+        Assert.Equal(new DateTime(2026, 9, 27), periods[2].Date);
+        Assert.Equal("A 50 percent chance of showers after 2am. Mostly cloudy, with a low around 56.", periods[6].Text);
+        Assert.Equal(new OfficialPeriod("Saturday", new DateTime(2026, 10, 3), "Mostly sunny, with a high near 66."), periods[13]);
+    }
+
+    [Fact]
+    public void The_page_is_asked_for_SI_text_for_a_metric_reader()
+    {
+        var buckley = new Location("Buckley", "Michigan", "United States", 44.5045, -85.677, null);
+        Assert.Equal("https://forecast.weather.gov/MapClick.php?lat=44.5045&lon=-85.677&FcstType=json", NwsClient.PageUrl(buckley, UnitSystem.Imperial));
+        Assert.Equal("https://forecast.weather.gov/MapClick.php?lat=44.5045&lon=-85.677&FcstType=json&unit=1", NwsClient.PageUrl(buckley, UnitSystem.Metric));
+
+        var periods = NwsClient.ParsePagePeriods(Fixtures.Read("nws-page-buckley-si.json"));
+        Assert.Equal("Patchy fog before 10am. Otherwise, sunny, with a high near 22. Calm wind becoming north 5 to 10 kilometres per hour in the afternoon.", periods[1].Text);
+    }
+
+    [Fact]
+    public async Task The_page_text_is_used_and_the_API_is_not_asked()
+    {
+        var periods = await NwsClient.PeriodsAsync(
+            _ => Task.FromResult(Fixtures.Read("nws-page-buckley.json")),
+            _ => throw new InvalidOperationException("The API was asked."),
+            CancellationToken.None);
+
+        Assert.Equal("Tonight", periods[0].Name);
+        Assert.EndsWith("Calm wind.", periods[0].Text);
+    }
+
+    public static IEnumerable<object[]> PageFailures() =>
+    [
+        [new Func<CancellationToken, Task<string>>(_ => throw new System.Net.Http.HttpRequestException("503 Service Unavailable from forecast.weather.gov"))],
+        [new Func<CancellationToken, Task<string>>(_ => Task.FromResult("<html><title>Forecast Error</title></html>"))],
+        [new Func<CancellationToken, Task<string>>(_ => Task.FromResult("{\"time\":{\"startPeriodName\":[\"Tonight\"],\"startValidTime\":[]},\"data\":{\"text\":[\"Clear.\"]}}"))],
+        [new Func<CancellationToken, Task<string>>(_ => Task.FromResult("{\"operationalMode\":\"Production\"}"))],
+        [new Func<CancellationToken, Task<string>>(_ => throw new TaskCanceledException("HttpClient timed out"))],
+    ];
+
+    [Theory]
+    [MemberData(nameof(PageFailures))]
+    public async Task The_API_text_stands_in_when_the_page_cannot_be_had_or_read(Func<CancellationToken, Task<string>> page)
+    {
+        var periods = await NwsClient.PeriodsAsync(page, _ => Task.FromResult(Fixtures.Read("nws-forecast-albany.json")), CancellationToken.None);
+
+        Assert.Equal("Overnight", periods[0].Name);
+        Assert.EndsWith("Wind around 0 miles per hour.", periods[0].Text);
+    }
+
+    [Fact]
+    public async Task Cancelling_the_refresh_does_not_fall_back_to_the_API()
+    {
+        using var cancel = new CancellationTokenSource();
+        cancel.Cancel();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => NwsClient.PeriodsAsync(
+            token => Task.FromException<string>(new OperationCanceledException(token)),
+            _ => throw new InvalidOperationException("The API was asked."),
+            cancel.Token));
+    }
+
+    [Fact]
     public void An_observation_reads_SI_values_and_leaves_unreported_ones_null()
     {
         var o = NwsClient.ParseObservation(Fixtures.Read("nws-observation-kalb.json"), "Albany International Airport");

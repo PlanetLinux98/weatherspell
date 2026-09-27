@@ -50,7 +50,8 @@ sources are added.
   [MSC Datamart](https://eccc-msc.github.io/open-data/), under its
   [data licence](https://eccc-msc.github.io/open-data/licence/readme_en/).
 - Forecast text and current conditions in the United States: the
-  [National Weather Service](https://www.weather.gov/) API, public domain.
+  [National Weather Service](https://www.weather.gov/), from its weather.gov
+  forecast pages and its API, public domain.
 - Postal codes for Canada, the UK, Australia, New Zealand and Ireland:
   [GeoNames](https://www.geonames.org/) postal code data, licensed
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), built into the

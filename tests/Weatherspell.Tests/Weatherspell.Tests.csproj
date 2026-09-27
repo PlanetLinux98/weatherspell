@@ -29,6 +29,8 @@
          library to keep the shipped program a single file. Logic under test
          must therefore live in plain classes, not in the forms. -->
     <ProjectReference Include="..\..\src\Weatherspell\Weatherspell.csproj" />
+    <!-- In-box on 4.8, as in the app: for the HTTP failures the tests stage. -->
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
 </Project>

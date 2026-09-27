@@ -212,6 +212,20 @@ was used, and when the official fetch fails the location gets generated
 sentences for that refresh with the reason stated there; Open-Meteo failing
 still fails the refresh.
 
+In the US the sentences are the ones the weather.gov forecast page shows,
+read from that page's data (`forecast.weather.gov/MapClick.php`, JSON)
+rather than the API's `detailedForecast`. Both are written from the same
+forecast, but the API has its own sentence generator, which reads worse and
+at times says something else: "East wind around 0 mph" where the page says
+"Calm wind", "Northeast wind 0 to 5 mph" for "Calm wind becoming north
+around 5 mph in the afternoon", and one night's showers "after 8pm" where
+the page had "a 50 percent chance of showers after 2am". The page's data is
+not a documented API, and the NWS points developers to api.weather.gov, so
+the API's text stands in whenever the page's cannot be had or read: the
+worst case is the API's wording, never a missing forecast. Rejected:
+rewording the API's text in this app, which would fix the zeros but not
+the disagreements, and would put this app's words in the service's mouth.
+
 Coverage is decided by the geocoded country and then by the service: the NWS
 rejects points outside the US, and a Canadian location further than 200 km
 from any Environment Canada site gets generated text. Environment Canada's

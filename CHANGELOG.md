@@ -27,6 +27,10 @@ versions.
   names the alerts in effect ("Buckley: forecast ready; special weather
   statement in effect"). Alerts already out then were never spoken, only
   shown at the top of the text.
+- US forecast text now reads as the weather.gov forecast page does ("Calm
+  wind" rather than "East wind around 0 miles per hour"). The National
+  Weather Service API's own wording, which can also differ in timing, is
+  used only when the page's text cannot be fetched.
 
 ### Fixed
 - An alert check set the whole text again even when nothing in it had

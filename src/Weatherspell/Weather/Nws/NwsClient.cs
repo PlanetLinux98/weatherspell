@@ -6,8 +6,9 @@ namespace Weatherspell.Weather.Nws;
 // The US National Weather Service API (api.weather.gov): no key, but a
 // User-Agent naming the app and a contact (Http sets it). points/{lat},{lon}
 // resolves a location to a forecast grid and its nearby stations, and 404s
-// outside the US, which is how coverage is decided; the grid's forecast
-// carries the written periods, the nearest station the latest observation.
+// outside the US, which is how coverage is decided; the weather.gov page's
+// data (or failing that, the grid's forecast) carries the written periods,
+// the nearest station the latest observation.
 internal sealed class NwsClient
 {
     public const string SourceName = "National Weather Service";
@@ -21,9 +22,12 @@ internal sealed class NwsClient
     public async Task<OfficialForecast> GetAsync(Location location, UnitSystem units, CancellationToken cancellationToken)
     {
         var grid = await GridAsync(location, cancellationToken).ConfigureAwait(false);
-        var forecastTask = Http.GetStringAsync(ForecastUrl(grid.ForecastUrl, units), cancellationToken);
+        var periodsTask = PeriodsAsync(
+            token => Http.GetStringAsync(PageUrl(location, units), token),
+            token => Http.GetStringAsync(ForecastUrl(grid.ForecastUrl, units), token),
+            cancellationToken);
         var observationTask = LatestObservationAsync(grid.StationId, cancellationToken);
-        var periods = ParsePeriods(await forecastTask.ConfigureAwait(false));
+        var periods = await periodsTask.ConfigureAwait(false);
         var observationJson = await observationTask.ConfigureAwait(false);
         var observation = observationJson is null ? null : ParseObservation(observationJson, grid.StationName);
         return new OfficialForecast(SourceName, grid.Attribution, periods, observation);
@@ -69,6 +73,66 @@ internal sealed class NwsClient
     // reader's whole text in one system.
     public static string ForecastUrl(string gridForecastUrl, UnitSystem units) =>
         units == UnitSystem.Metric ? gridForecastUrl + "?units=si" : gridForecastUrl;
+
+    // The forecast page's data, in SI when asked as the API is.
+    public static string PageUrl(Location location, UnitSystem units)
+    {
+        var inv = CultureInfo.InvariantCulture;
+        var url = "https://forecast.weather.gov/MapClick.php?lat=" + location.Latitude.ToString("0.####", inv)
+            + "&lon=" + location.Longitude.ToString("0.####", inv) + "&FcstType=json";
+        return units == UnitSystem.Metric ? url + "&unit=1" : url;
+    }
+
+    private static readonly TimeSpan PageTimeout = TimeSpan.FromSeconds(10);
+
+    // The text the weather.gov forecast page shows, and the API's own when
+    // the page's data cannot be had or read. Both are written from the same
+    // forecast, but the API has its own sentence generator: "East wind around
+    // 0 mph" where the page says "Calm wind", "0 to 5 mph" where it says
+    // "Calm wind becoming north around 5 mph in the afternoon", and at times
+    // a different timing for the same showers. The page's data is not a
+    // documented API and may change or go, hence the fallback, and a shorter
+    // wait so a hung request costs seconds rather than the whole timeout.
+    internal static async Task<IReadOnlyList<OfficialPeriod>> PeriodsAsync(
+        Func<CancellationToken, Task<string>> page,
+        Func<CancellationToken, Task<string>> api,
+        CancellationToken cancellationToken)
+    {
+        using (var pageToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
+        {
+            pageToken.CancelAfter(PageTimeout);
+            try
+            {
+                return ParsePagePeriods(await page(pageToken.Token).ConfigureAwait(false));
+            }
+            catch (Exception ex) when (!cancellationToken.IsCancellationRequested
+                && ex is HttpRequestException or IOException or InvalidDataException or System.Runtime.Serialization.SerializationException or FormatException or OperationCanceledException)
+            {
+            }
+        }
+        return ParsePeriods(await api(cancellationToken).ConfigureAwait(false));
+    }
+
+    public static IReadOnlyList<OfficialPeriod> ParsePagePeriods(string json)
+    {
+        var page = Json.Read<NwsPageResponse>(json);
+        var names = page.Time?.StartPeriodName;
+        var starts = page.Time?.StartValidTime;
+        var texts = page.Data?.Text;
+        if (names is null || starts is null || texts is null || names.Length != starts.Length || names.Length != texts.Length)
+        {
+            throw new InvalidDataException("Forecast page data has no periods, or periods that do not line up.");
+        }
+        var list = new List<OfficialPeriod>();
+        for (var i = 0; i < names.Length; i++)
+        {
+            if (string.IsNullOrWhiteSpace(names[i]) || string.IsNullOrWhiteSpace(texts[i]) || string.IsNullOrEmpty(starts[i])) continue;
+            var start = DateTimeOffset.Parse(starts[i], CultureInfo.InvariantCulture, DateTimeStyles.None);
+            list.Add(new OfficialPeriod(PeriodName(names[i]), start.Date, OfficialText.Spoken(texts[i])));
+        }
+        if (list.Count == 0) throw new InvalidDataException("Forecast page data has no periods.");
+        return list;
+    }
 
     internal sealed record NwsGrid(string ForecastUrl, string Attribution, string? StationId, string? StationName);
 
@@ -124,7 +188,7 @@ internal sealed class NwsClient
     {
         var n = name.Trim();
         if (n.EndsWith(" Night", StringComparison.Ordinal)) n = n.Substring(0, n.Length - 6) + " night";
-        if (n == "This Afternoon") n = "This afternoon";
+        if (n is "This Afternoon" or "Late Afternoon") n = n.Substring(0, n.Length - 9) + "afternoon";
         return n;
     }
 

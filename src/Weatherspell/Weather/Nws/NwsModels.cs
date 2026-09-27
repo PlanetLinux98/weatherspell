@@ -58,6 +58,29 @@ internal sealed class NwsPeriod
     [DataMember(Name = "detailedForecast")] public string? DetailedForecast;
 }
 
+// forecast.weather.gov/MapClick.php?FcstType=json: the data behind the
+// weather.gov forecast page, not part of the API. Periods are parallel
+// arrays, every value a string.
+[DataContract]
+internal sealed class NwsPageResponse
+{
+    [DataMember(Name = "time")] public NwsPageTime? Time;
+    [DataMember(Name = "data")] public NwsPageData? Data;
+}
+
+[DataContract]
+internal sealed class NwsPageTime
+{
+    [DataMember(Name = "startPeriodName")] public string[]? StartPeriodName;
+    [DataMember(Name = "startValidTime")] public string[]? StartValidTime;
+}
+
+[DataContract]
+internal sealed class NwsPageData
+{
+    [DataMember(Name = "text")] public string[]? Text;
+}
+
 [DataContract]
 internal sealed class NwsStationsResponse
 {
