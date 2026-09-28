@@ -56,8 +56,8 @@ versions.
 - An alert check set the whole text again even when nothing in it had
   changed, dropping any selection (NVDA said "unselected") and scrolling
   the view back to the caret. Now only changed text is set, an automatic
-  refresh waits while text is selected, and a refresh keeps the view where
-  it was (#16).
+  refresh waits up to 5 minutes while text is selected, and a refresh keeps
+  the view where it was (#16).
 - The Location box was cut off along the bottom at large text sizes (#16).
 - Ctrl+PageDown, Ctrl+PageUp and Ctrl+Shift+A moved to a heading without
   NVDA saying anything; the heading is now spoken, and so is "No next

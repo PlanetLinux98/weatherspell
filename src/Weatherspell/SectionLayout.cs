@@ -76,7 +76,7 @@ internal sealed class SectionLayout
     // details behind the same line): setting them drops a selection, which
     // NVDA announces as "unselected". A rewrite the user did not ask for
     // waits while text is selected; the clock's tick applies it once the
-    // selection is gone.
+    // selection is gone, or has held it for SelectionHold.Limit.
     public static RewritePlan Plan(SectionLayout shown, SectionLayout next, bool selecting, bool automatic) =>
         next.Text == shown.Text ? RewritePlan.KeepText
         : automatic && selecting ? RewritePlan.Wait
@@ -111,4 +111,31 @@ internal enum RewritePlan
     KeepText,
     Wait,
     Replace,
+}
+
+// How long a selection keeps a waiting rewrite off the screen: time enough
+// to finish a copy, but bounded, since a selection left behind by accident
+// would otherwise keep the text (its age line too) from ever updating while
+// the status bar reports a fresh fetch. Five minutes is well inside the
+// shortest forecast interval, so a held rewrite lands before the next one.
+internal sealed class SelectionHold
+{
+    public static readonly TimeSpan Limit = TimeSpan.FromMinutes(5);
+
+    private DateTime? _since;
+
+    // Asked while a rewrite is waiting; the first ask with text selected
+    // starts the clock.
+    public bool Holds(bool selecting, DateTime now)
+    {
+        if (!selecting)
+        {
+            _since = null;
+            return false;
+        }
+        _since ??= now;
+        return now - _since.Value < Limit;
+    }
+
+    public void Release() => _since = null;
 }

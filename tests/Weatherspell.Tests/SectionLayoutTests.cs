@@ -106,10 +106,31 @@ public class SectionLayoutTests
     }
 
     [Fact]
+    public void A_selection_holds_a_rewrite_off_for_five_minutes_at_most()
+    {
+        var hold = new SelectionHold();
+        var t0 = new DateTime(2026, 9, 27, 20, 0, 0, DateTimeKind.Utc);
+
+        Assert.False(hold.Holds(selecting: false, t0));
+        Assert.True(hold.Holds(selecting: true, t0));
+        Assert.True(hold.Holds(selecting: true, t0.AddMinutes(4)));
+        // Left behind: the rewrite goes ahead on the next tick.
+        Assert.False(hold.Holds(selecting: true, t0.AddMinutes(5)));
+
+        // Once the text is set, a new selection gets the full time again.
+        hold.Release();
+        Assert.True(hold.Holds(selecting: true, t0.AddMinutes(6)));
+        Assert.True(hold.Holds(selecting: true, t0.AddMinutes(10)));
+        // A moment with nothing selected starts it over too.
+        Assert.False(hold.Holds(selecting: false, t0.AddMinutes(10)));
+        Assert.True(hold.Holds(selecting: true, t0.AddMinutes(14)));
+    }
+
+    [Fact]
     public void An_empty_layout_keeps_the_caret_in_range()
     {
         var before = SectionLayout.Build(Sections());
         Assert.Equal(0, SectionLayout.Empty.MapCaret(before, 40));
-        Assert.Equal(0, SectionLayout.Empty.Headings.Count);
+        Assert.Empty(SectionLayout.Empty.Headings);
     }
 }

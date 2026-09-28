@@ -42,6 +42,7 @@ internal sealed class MainForm : Form
     private readonly System.Windows.Forms.Timer _alertTimer = new();
     // Once a minute: the age line, and the day headings at midnight.
     private readonly System.Windows.Forms.Timer _clockTimer = new() { Interval = 60_000 };
+    private readonly SelectionHold _hold = new();
     private readonly CancellationTokenSource _closing = new();
     private bool _polling;
     private int _shownAt;
@@ -583,10 +584,12 @@ internal sealed class MainForm : Form
         _shown = forecast;
         _shownAlerts = alerts;
         var layout = SectionLayout.Build(Render());
-        switch (SectionLayout.Plan(_layout, layout, _forecast.SelectionLength > 0, automatic))
+        var selecting = _hold.Holds(_forecast.SelectionLength > 0, DateTime.UtcNow);
+        switch (SectionLayout.Plan(_layout, layout, selecting, automatic))
         {
             case RewritePlan.KeepText:
                 _layout = layout;
+                _hold.Release();
                 break;
             case RewritePlan.Replace:
                 Replace(layout);
@@ -596,18 +599,24 @@ internal sealed class MainForm : Form
 
     // The clock's tick: only when the rendering has changed (the age line
     // from 30 minutes, a day heading at midnight, or a rewrite that waited
-    // for a selection), and never under a selection the user is about to
-    // copy.
+    // for a selection), and not under a selection the user may be about to
+    // copy, unless it has been there too long (SelectionHold).
     private void RewriteIfChanged()
     {
-        if (_shown is null || _forecast.SelectionLength > 0) return;
+        if (_shown is null) return;
         var layout = SectionLayout.Build(Render());
-        if (layout.Text == _layout.Text) return;
+        if (layout.Text == _layout.Text)
+        {
+            _hold.Release();
+            return;
+        }
+        if (_hold.Holds(_forecast.SelectionLength > 0, DateTime.UtcNow)) return;
         Replace(layout);
     }
 
     private void Replace(SectionLayout layout)
     {
+        _hold.Release();
         var caret = layout.MapCaret(_layout, _forecast.SelectionStart);
         _layout = layout;
         _forecast.ReplaceText(layout.Text, caret);
@@ -617,6 +626,7 @@ internal sealed class MainForm : Form
 
     private void Apply(SectionLayout layout, int caret)
     {
+        _hold.Release();
         _layout = layout;
         _forecast.Text = layout.Text;
         _forecast.SelectionStart = Math.Min(Math.Max(caret, 0), _forecast.TextLength);
