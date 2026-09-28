@@ -25,6 +25,8 @@ versions.
   it to match (#5).
 - Help > User Guide (F1) opens the user guide in your web browser, or
   default HTML viewer (#8).
+- Double-clicking an alert in the forecast opens its details, as pressing
+  Enter on it does.
 
 ### Changed
 - Find Location is now Add Location, on Ctrl+Shift+L; Ctrl+L opens Manage

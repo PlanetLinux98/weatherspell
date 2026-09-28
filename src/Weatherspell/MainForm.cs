@@ -181,6 +181,7 @@ internal sealed class MainForm : Form
             for (var i = 0; i < _locationItems.Count; i++) _locationItems[i].Checked = i == _locations.SelectedIndex;
         };
         _forecast.KeyDown += OnForecastKeyDown;
+        _forecast.MouseDoubleClick += OnForecastDoubleClick;
         Shown += async (_, _) => await Guard(OnShownAsync);
         // Minimized from maximized, the state alone no longer says which it
         // will return to, so the last one that was not minimized is kept.
@@ -756,6 +757,18 @@ internal sealed class MainForm : Form
             e.SuppressKeyPress = true;
             ShowAlertDetails(alert);
         }
+    }
+
+    // RichEdit has already selected the word under the pointer; the caret
+    // goes back to that point, since a selection left behind would hold off
+    // the next automatic refresh.
+    private void OnForecastDoubleClick(object? sender, MouseEventArgs e)
+    {
+        if (e.Button != MouseButtons.Left) return;
+        var index = _forecast.GetCharIndexFromPosition(e.Location);
+        if (_layout.AlertAt(index) is not WeatherAlert alert) return;
+        _forecast.Select(index, 0);
+        ShowAlertDetails(alert);
     }
 
     // The cache is a convenience: a folder that cannot be written costs the
