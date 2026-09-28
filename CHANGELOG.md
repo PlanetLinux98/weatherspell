@@ -9,6 +9,8 @@ versions.
 
 ## [Unreleased]
 
+## [0.1.0-beta.1] - 2026-09-28
+
 ### Added
 - Manage Locations (Ctrl+L): put saved locations in order with Move Up
   and Move Down (Alt+U, Alt+D), add (Alt+A), rename with a nickname such
@@ -201,6 +203,7 @@ or Windows 11.
 - The window follows the Windows display scale and the Text size
   accessibility setting, in the system font.
 
-[Unreleased]: https://github.com/PlanetLinux98/weatherspell/compare/v0.1.0-alpha.2...HEAD
+[Unreleased]: https://github.com/PlanetLinux98/weatherspell/compare/v0.1.0-beta.1...HEAD
+[0.1.0-beta.1]: https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.1.0-beta.1
 [0.1.0-alpha.2]: https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.1.0-alpha.2
 [0.1.0-alpha.1]: https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.1.0-alpha.1
