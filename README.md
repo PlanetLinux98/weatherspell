@@ -5,29 +5,36 @@ severe-weather alerts for any place in the world, written out in clear text.
 Built keyboard-first and screen-reader-first, and usable by anyone who wants the
 weather in a simple and straightforward manner.
 
-> **Pre-release.** Weatherspell is being built in the open and is currently
-> pre-release. Keep an eye on the [Releases](https://github.com/PlanetLinux98/weatherspell/releases)
-> page, and the [Changelog](CHANGELOG.md).
+- [Download the latest release](https://github.com/PlanetLinux98/weatherspell/releases/latest)
+- [User guide](USER_GUIDE.md): every feature and shortcut
+- [Changelog](CHANGELOG.md): what's new in each version
 
-## What it will do
+## What it does
 
-- Show current conditions and a multi-day forecast for any location you
+- Shows current conditions and a multi-day forecast for any location you
   choose, as readable text.
-- Remember your locations so switching between them is a keystroke away.
-- Surface urgent and severe weather alerts for the selected location.
-- Run solely as a single exe: no account, no API key, no installer.
+- Remembers your locations so switching between them is a keystroke away.
+- Shows urgent weather alerts for your locations, and can announce new ones
+  as they arrive. Alerts are available for Canada and the United States at
+  this time, with more regions planned.
+- Runs as a single executable: no account, no API key, no installer.
 
 ## Running it
 
-Weatherspell is a single `Weatherspell.exe`. Download it from a release, put it
-wherever you like, and run it. It uses the .NET Framework 4.8 that is natively
-part of Windows 10 (version 1903 and later) and Windows 11.
+Weatherspell is a single `Weatherspell.exe`. Download it from the
+[latest release](https://github.com/PlanetLinux98/weatherspell/releases/latest),
+put it wherever you like, and run it. It uses the .NET Framework 4.8 that is
+natively part of Windows 10 (version 1903 and later) and Windows 11.
+
+You can also install it with winget:
+
+```
+winget install PlanetLinux98.Weatherspell
+```
 
 Your saved locations and settings live in `%APPDATA%\Weatherspell`, so they
-survive moving or updating the exe.
-
-Once released, it will also be installable with winget:
-`winget install PlanetLinux98.Weatherspell`.
+survive moving or updating the exe. The user guide covers updating and
+removing Weatherspell.
 
 ## Accessibility
 
@@ -45,11 +52,11 @@ sources are added.
 
 - Forecasts and place-name search: [Open-Meteo](https://open-meteo.com/),
   licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-- Forecast text and current conditions in Canada:
+- Forecast text, current conditions and alerts in Canada:
   [Environment and Climate Change Canada](https://weather.gc.ca/), from the
   [MSC Datamart](https://eccc-msc.github.io/open-data/), under its
   [data licence](https://eccc-msc.github.io/open-data/licence/readme_en/).
-- Forecast text and current conditions in the United States: the
+- Forecast text, current conditions and alerts in the United States: the
   [National Weather Service](https://www.weather.gov/), from its weather.gov
   forecast pages and its API, public domain.
 - Postal codes for Canada, the UK, Australia, New Zealand and Ireland:
