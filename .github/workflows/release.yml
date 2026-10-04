@@ -57,7 +57,27 @@ jobs:
           $section = if ($next) { $rest[0..($next.LineNumber - 2)] } else { $rest }
           # Drop the link-reference lines that Keep a Changelog puts at the end.
           $section = $section | Where-Object { $_ -notmatch '^\[[^\]]+\]: https?://' }
-          ($section -join "`n").Trim() | Set-Content artifacts/notes.md
+          # GitHub renders every newline of a release body as a line break, so
+          # the changelog's hard-wrapped lines are joined: a paragraph's or a
+          # list item's continuation lines join it with one space, while blank
+          # lines, headings and each new "- " item start afresh.
+          $joined = [Collections.Generic.List[string]]::new()
+          $buffer = $null
+          foreach ($line in $section) {
+            if ($line -match '^\s*$' -or $line -match '^#') {
+              if ($null -ne $buffer) { $joined.Add($buffer); $buffer = $null }
+              $joined.Add($line)
+            } elseif ($line -match '^- ') {
+              if ($null -ne $buffer) { $joined.Add($buffer) }
+              $buffer = $line
+            } elseif ($null -ne $buffer) {
+              $buffer += ' ' + $line.TrimStart()
+            } else {
+              $buffer = $line.TrimStart()
+            }
+          }
+          if ($null -ne $buffer) { $joined.Add($buffer) }
+          ($joined -join "`n").Trim() | Set-Content artifacts/notes.md
           Get-Content artifacts/notes.md
 
       - name: Draft the GitHub Release
