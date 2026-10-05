@@ -14,9 +14,10 @@ use jiff::tz::{Offset, TimeZone};
 use serde::Deserialize;
 use weatherspell_core::clock::TimeFormat;
 use weatherspell_core::location::Location;
-use weatherspell_core::open_meteo;
+use weatherspell_core::official::{OfficialForecast, compose};
 use weatherspell_core::units::UnitSystem;
 use weatherspell_core::writer::{self, Section, WriterOptions};
+use weatherspell_core::{environment_canada, nws, open_meteo};
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -32,6 +33,47 @@ struct Case {
     am: String,
     pm: String,
     refresh_problem: Option<String>,
+    #[serde(default)]
+    official: Option<Official>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct Official {
+    kind: String,
+    city_page: Option<String>,
+    points: Option<String>,
+    stations: Option<String>,
+    forecast: Option<String>,
+    page: Option<String>,
+    observation: Option<String>,
+}
+
+// A national weather service's text and observation, from captured
+// responses, as the forecast service would lay them over the base.
+fn official(o: &Official) -> OfficialForecast {
+    let read = |name: &Option<String>| fixture(name.as_deref().unwrap());
+    if o.kind == "ec" {
+        return environment_canada::parse(&read(&o.city_page)).unwrap();
+    }
+    let points = nws::parse_points(&read(&o.points)).unwrap();
+    let station = nws::parse_stations(&read(&o.stations)).unwrap();
+    let periods = match &o.page {
+        Some(_) => nws::parse_page_periods(&read(&o.page)),
+        None => nws::parse_periods(&read(&o.forecast)),
+    }
+    .unwrap();
+    let station_name = station.as_ref().and_then(|(_, name)| name.as_deref());
+    let observation = o
+        .observation
+        .as_ref()
+        .map(|_| nws::parse_observation(&read(&o.observation), station_name).unwrap());
+    OfficialForecast {
+        source_name: nws::SOURCE_NAME.to_string(),
+        attribution: points.attribution,
+        periods,
+        observation,
+    }
 }
 
 #[derive(Deserialize)]
@@ -85,7 +127,11 @@ fn the_port_writes_what_0_1_wrote() {
             UnitSystem::Metric
         };
         let fetched: Timestamp = c.fetched.parse().unwrap();
-        let forecast = open_meteo::parse(&fixture(&c.fixture), &location, units, fetched).unwrap();
+        let mut forecast =
+            open_meteo::parse(&fixture(&c.fixture), &location, units, fetched).unwrap();
+        if let Some(o) = &c.official {
+            forecast = compose(&forecast, &official(o));
+        }
         let options = WriterOptions {
             now: c.now.parse().unwrap(),
             pc_zone: TimeZone::fixed(Offset::from_seconds(c.pc_offset_minutes * 60).unwrap()),

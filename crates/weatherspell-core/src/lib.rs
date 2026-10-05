@@ -7,8 +7,11 @@
 pub mod alerts;
 pub mod clock;
 pub mod compass;
+pub mod environment_canada;
 pub mod forecast;
 pub mod location;
+pub mod nws;
+pub mod official;
 pub mod open_meteo;
 pub mod units;
 pub mod weather_codes;
