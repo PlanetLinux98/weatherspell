@@ -5,15 +5,20 @@ use jiff::civil::{Date, DateTime};
 use jiff::tz::TimeZone;
 use jiff::{SignedDuration, Timestamp};
 
+use crate::alerts::{self, AlertReport, WeatherAlert};
 use crate::clock::{self, Clock, TimeFormat};
 use crate::forecast::{DayForecast, Forecast, HourPoint, OfficialPeriod};
 use crate::units::{self, UnitSystem};
-use crate::{alerts, compass, round_away, round_even, weather_codes as codes};
+use crate::{compass, round_away, round_even, weather_codes as codes};
 
+// Alerts, when set, runs parallel to paragraphs: the alert each line
+// stands for, which Enter on that line opens; None for a line that is not
+// one.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Section {
     pub heading: String,
     pub paragraphs: Vec<String>,
+    pub alerts: Option<Vec<Option<WeatherAlert>>>,
 }
 
 impl Section {
@@ -21,6 +26,7 @@ impl Section {
         Section {
             heading: heading.to_string(),
             paragraphs,
+            alerts: None,
         }
     }
 }
@@ -35,15 +41,14 @@ pub struct WriterOptions {
     pub refresh_problem: Option<String>,
 }
 
-pub fn write(f: &Forecast, o: &WriterOptions) -> Vec<Section> {
+// The alerts, when a check was made, lead the text; None reads as a region
+// no service covers.
+pub fn write(f: &Forecast, o: &WriterOptions, alerts: Option<&AlertReport>) -> Vec<Section> {
     let clock = Clock::new(f.utc_offset, o.pc_zone.clone(), o.time_format.clone());
     let now_local = f.utc_offset.to_datetime(o.now);
 
     let mut sections = vec![
-        Section::new(
-            alerts::HEADING,
-            vec![alerts::NOT_AVAILABLE_LINE.to_string()],
-        ),
+        alerts::section(alerts, &clock, now_local),
         right_now(f, o, &clock, now_local),
     ];
 
@@ -59,10 +64,10 @@ pub fn write(f: &Forecast, o: &WriterOptions) -> Vec<Section> {
                     .days
                     .iter()
                     .find(|d| Some(d.date) == day.date.tomorrow().ok());
-                Section {
-                    heading: clock::day_heading(day.date),
-                    paragraphs: day_and_night(day, following, f),
-                }
+                Section::new(
+                    &clock::day_heading(day.date),
+                    day_and_night(day, following, f),
+                )
             })
             .collect();
         (rest_of_today(f, now_local), days)
@@ -76,7 +81,11 @@ pub fn write(f: &Forecast, o: &WriterOptions) -> Vec<Section> {
         sections.push(Section::new("Rest of today", rest));
     }
     sections.extend(days);
-    sections.push(Section::new("Sources", f.sources.clone()));
+    let mut sources = f.sources.clone();
+    if let Some(attribution) = alerts.and_then(|a| a.attribution.as_ref()) {
+        sources.push(format!("Alerts: {attribution}."));
+    }
+    sections.push(Section::new("Sources", sources));
     sections
 }
 
@@ -107,10 +116,7 @@ fn official_days(f: &Forecast, now_local: DateTime) -> Vec<Section> {
     }
     groups
         .into_iter()
-        .map(|(date, paragraphs)| Section {
-            heading: clock::day_heading(date),
-            paragraphs,
-        })
+        .map(|(date, paragraphs)| Section::new(&clock::day_heading(date), paragraphs))
         .collect()
 }
 

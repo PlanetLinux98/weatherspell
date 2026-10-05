@@ -12,7 +12,9 @@ use std::time::Duration;
 use common::fixture;
 use jiff::Timestamp;
 use weatherspell_core::environment_canada as ec;
-use weatherspell_core::fetch::{Fetch, FetchError, ForecastError, ForecastService, PAGE_TIMEOUT};
+use weatherspell_core::fetch::{
+    Fetch, FetchError, ForecastError, ForecastService, PAGE_TIMEOUT, check_alerts,
+};
 use weatherspell_core::location::Location;
 use weatherspell_core::units::UnitSystem;
 use weatherspell_core::{nws, open_meteo};
@@ -506,4 +508,104 @@ fn elsewhere_only_open_meteo_is_asked() {
         f.sources,
         ["Forecast and current conditions: Open-Meteo (open-meteo.com), licensed CC BY 4.0."]
     );
+}
+
+// AlertService: the service that covers the country, most severe first,
+// and a failure named rather than read as a quiet day.
+
+#[test]
+fn canada_s_alerts_come_from_environment_canada_with_the_location_page() {
+    let place = Location::new(
+        "Gander",
+        Some("Newfoundland and Labrador"),
+        Some("Canada"),
+        48.9569,
+        -54.6089,
+    );
+    let http = Fake::default().with(&ec::alerts_url(&place), "ec-alerts-gander.json");
+    let report = check_alerts(&http, &place, at("2026-09-13T04:00:00Z"));
+
+    assert!(report.checked());
+    assert_eq!(report.checked_at, Some(at("2026-09-13T04:00:00Z")));
+    assert_eq!(
+        report.attribution.as_deref(),
+        Some("Environment and Climate Change Canada (weather.gc.ca)")
+    );
+    assert_eq!(report.alerts.len(), 1);
+    assert_eq!(
+        report.alerts[0].url.as_deref(),
+        Some("https://weather.gc.ca/en/location/index.html?coords=48.957,-54.609")
+    );
+    assert!(
+        ec::alerts_url(&place)
+            .ends_with("&skipGeometry=true&bbox=-54.6089,48.9569,-54.6089,48.9569")
+    );
+}
+
+#[test]
+fn us_alerts_come_from_the_nws_most_severe_first() {
+    let place = Location::new(
+        "Hilo",
+        Some("Hawaii"),
+        Some("United States"),
+        19.7297,
+        -155.09,
+    );
+    let http = Fake::default().with(&nws::alerts_url(&place), "nws-alerts-hilo.json");
+    let report = check_alerts(&http, &place, at("2026-09-25T21:30:00Z"));
+
+    assert!(report.checked());
+    assert_eq!(
+        report.attribution.as_deref(),
+        Some("National Weather Service (weather.gov)")
+    );
+    let severities: Vec<_> = report.alerts.iter().map(|a| a.severity).collect();
+    let mut sorted = severities.clone();
+    sorted.sort_by(|a, b| b.cmp(a));
+    assert_eq!(severities, sorted);
+    assert_eq!(
+        nws::alerts_url(&place),
+        "https://api.weather.gov/alerts/active?point=19.7297,-155.09&status=actual"
+    );
+}
+
+#[test]
+fn a_failed_alert_check_names_the_problem() {
+    let place = peterborough();
+    let url = ec::alerts_url(&place);
+    let unavailable = Fake::default().answer(&url, Err(status(503, "Service Unavailable", &url)));
+    let report = check_alerts(&unavailable, &place, at("2026-09-13T04:00:00Z"));
+    assert!(!report.checked());
+    assert!(report.is_available());
+    assert_eq!(report.checked_at, None);
+    assert_eq!(
+        report.problem.as_deref(),
+        Some("503 Service Unavailable from api.weather.gc.ca")
+    );
+
+    let slow = Fake::default().answer(&url, Err(FetchError::TimedOut { host: host(&url) }));
+    assert_eq!(
+        check_alerts(&slow, &place, at("2026-09-13T04:00:00Z"))
+            .problem
+            .as_deref(),
+        Some("the alert service took too long to answer")
+    );
+}
+
+#[test]
+fn elsewhere_alerts_are_not_available_and_nothing_is_asked() {
+    let place = Location::new(
+        "Paris",
+        Some("\u{ce}le-de-France"),
+        Some("France"),
+        48.8534,
+        2.3488,
+    );
+    let http = Fake::default();
+    let report = check_alerts(&http, &place, at("2026-09-13T04:00:00Z"));
+    assert_eq!(
+        report,
+        weatherspell_core::alerts::AlertReport::not_available()
+    );
+    assert!(http.asked().is_empty());
 }

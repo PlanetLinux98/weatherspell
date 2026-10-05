@@ -12,7 +12,8 @@ use common::fixture;
 use jiff::Timestamp;
 use jiff::tz::{Offset, TimeZone};
 use serde::Deserialize;
-use weatherspell_core::clock::TimeFormat;
+use weatherspell_core::alerts::{self, AlertReport};
+use weatherspell_core::clock::{Clock, TimeFormat};
 use weatherspell_core::location::Location;
 use weatherspell_core::official::{OfficialForecast, compose};
 use weatherspell_core::units::UnitSystem;
@@ -35,6 +36,52 @@ struct Case {
     refresh_problem: Option<String>,
     #[serde(default)]
     official: Option<Official>,
+    #[serde(default)]
+    alerts: Option<AlertsCase>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct AlertsCase {
+    kind: String,
+    fixture: String,
+    problem: Option<String>,
+    last_checked: Option<String>,
+}
+
+// A service's alerts from a captured response, as the alert check would
+// have reported them, or a failed check carrying an earlier one's alerts.
+fn alert_report(a: &AlertsCase, now: Timestamp) -> AlertReport {
+    let json = fixture(&a.fixture);
+    let parsed_at: Timestamp = a
+        .last_checked
+        .as_deref()
+        .map_or(now, |t| t.parse().unwrap());
+    let (list, attribution) = if a.kind == "ec" {
+        (
+            environment_canada::parse_alerts(&json, parsed_at, None).unwrap(),
+            environment_canada::ALERTS_ATTRIBUTION,
+        )
+    } else {
+        (nws::parse_alerts(&json).unwrap(), nws::ALERTS_ATTRIBUTION)
+    };
+    let report = |alerts, problem: Option<&String>, checked_at| AlertReport {
+        alerts,
+        attribution: Some(attribution.to_string()),
+        problem: problem.cloned(),
+        checked_at,
+    };
+    let ordered = alerts::order(list);
+    match &a.problem {
+        None => report(ordered, None, Some(now)),
+        Some(problem) => {
+            let failed = report(Vec::new(), Some(problem), None);
+            match a.last_checked {
+                None => failed,
+                Some(_) => failed.or_last_known(Some(&report(ordered, None, Some(parsed_at)))),
+            }
+        }
+    }
 }
 
 #[derive(Deserialize)]
@@ -138,7 +185,35 @@ fn the_port_writes_what_0_1_wrote() {
             time_format: TimeFormat::new(&c.time_pattern, &c.am, &c.pm),
             refresh_problem: c.refresh_problem.clone(),
         };
-        let ours = layout(&writer::write(&forecast, &options));
+        let report = c.alerts.as_ref().map(|a| alert_report(a, options.now));
+        let mut ours = layout(&writer::write(&forecast, &options, report.as_ref()));
+        if let Some(report) = &report {
+            // What a reader hears about the alerts beyond the text: the
+            // details dialog, the announcement of new ones, and what a
+            // switch says.
+            let clock = Clock::new(
+                forecast.utc_offset,
+                options.pc_zone.clone(),
+                options.time_format.clone(),
+            );
+            let now_local = forecast.utc_offset.to_datetime(options.now);
+            for alert in &report.alerts {
+                ours += &format!("Details: {}\n\n", alert.event);
+                for paragraph in alerts::details(alert, &clock, now_local) {
+                    ours += &format!("{paragraph}\n\n");
+                }
+            }
+            if !report.alerts.is_empty() {
+                ours += &format!(
+                    "Announcement: {}\n\n",
+                    alerts::announcement(&c.place.name, &report.alerts, &clock, now_local)
+                );
+            }
+            ours += &format!(
+                "In effect: {}\n\n",
+                alerts::in_effect(report).as_deref().unwrap_or("nothing")
+            );
+        }
         // Git may have checked the reference out with Windows line breaks.
         let theirs = std::fs::read_to_string(reference_dir().join(format!("{}.txt", c.name)))
             .unwrap()

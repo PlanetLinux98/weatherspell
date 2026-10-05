@@ -1,0 +1,115 @@
+Alerts
+
+Alerts couldn't be checked this time (503 Service Unavailable from api.weather.gc.ca); showing the alerts from 2 hours ago. Press F5 to try again.
+
+Storm surge warning until 5:00 pm tomorrow, from Environment Canada. Press Enter for details.
+
+Storm surge warning until 2:00 pm Tuesday, from Environment Canada. Press Enter for details.
+
+
+Right now
+
+As of 4:30 pm, it's 21 degrees and clear, feeling like 20. Wind from the southeast at 10 kilometres an hour.
+
+Humidity 53 percent, dew point 18 degrees, pressure 1016 hectopascals, visibility 13 kilometres, cloud cover 2 percent.
+
+
+Rest of today
+
+Today's high 26, tonight's low 15.
+
+Early this morning: mostly clear, around 19 degrees, wind up to 11 kilometres an hour.
+
+This morning: overcast, around 19 degrees, light wind.
+
+This afternoon: overcast, warming from 23 to 26 degrees, 20 percent chance of rain, light wind.
+
+This evening: overcast, cooling from 26 to 20 degrees, 20 percent chance of rain, wind up to 24 kilometres an hour.
+
+Overnight: clear, cooling from 19 to 15 degrees, 30 percent chance of rain, wind up to 18 kilometres an hour.
+
+The sun rises at 6:54 am and sets at 7:31 pm, 12 hours and 37 minutes of daylight.
+
+UV index 5, moderate.
+
+
+Monday, September 14
+
+Monday: clear, high 20, feeling like 17 at the warmest, wind from the north up to 15 kilometres an hour, gusting to 28.
+
+Monday night: overcast, low 15, wind from the south up to 14 kilometres an hour.
+
+
+Tuesday, September 15
+
+Tuesday: overcast, high 19, 20 percent chance of rain, wind from the south-southeast up to 18 kilometres an hour.
+
+Tuesday night: overcast with light drizzle at times, low 17, 50 percent chance of rain, wind from the southeast up to 12 kilometres an hour.
+
+
+Wednesday, September 16
+
+Wednesday: overcast, high 24, 40 percent chance of rain, light wind.
+
+Wednesday night: overcast with light drizzle at times, low 20, 40 percent chance of rain, wind from the south-southwest up to 15 kilometres an hour, gusting to 51.
+
+
+Thursday, September 17
+
+Thursday: light drizzle, high 24, feeling like 27 at the warmest, 40 percent chance of rain, about 4 millimetres, wind from the southwest up to 20 kilometres an hour, gusting to 53.
+
+Thursday night: mostly clear, low 18, 30 percent chance of rain, wind from the northwest up to 20 kilometres an hour, gusting to 45.
+
+
+Sources
+
+Forecast and current conditions: Open-Meteo (open-meteo.com), licensed CC BY 4.0.
+
+Alerts: Environment and Climate Change Canada (weather.gc.ca).
+
+Details: Storm surge warning
+
+Storm surge warning from Environment Canada, in effect from 7:00 pm today until 5:00 pm tomorrow.
+
+Area: Coastline from Mackenzie Bay to McKinley Bay incl. Tuktoyaktuk.
+
+Issued 5:38 pm yesterday.
+
+Yellow level, moderate impact, high confidence.
+
+Coastal flooding due to storm surge is expected Sunday evening and early Monday morning in Tuktoyaktuk.
+
+Moderate flooding is possible beginning late Sunday evening with water levels possibly reaching 85 cm above highest astronomical tide.
+
+However, moderate flooding is more likely early Monday morning, where water levels could reach as high as 1 metre above highest astronomical tide.
+
+Water levels will recede Monday evening.
+
+This warning is issued when high water levels pose a threat to coastal regions due to tides, storm surge and/or waves.
+
+Please continue to monitor alerts and forecasts issued by Environment Canada. To report severe weather, send an email to NTstorm@ec.gc.ca, call 1-800-239-0484 or post reports on social media using #NTStorm.
+
+Details: Storm surge warning
+
+Storm surge warning from Environment Canada, in effect until 2:00 pm Tuesday.
+
+Area: Coastline of Yukon incl. Herschel Island.
+
+Issued 5:46 pm yesterday.
+
+Yellow level, moderate impact, high confidence.
+
+A multi day storm surge event continues for Herschel Island.
+
+Moderate flooding is expected at each high tide until early next week, with the highest water levels reaching 25 to 40 cm above highest astronomical tide in the mornings and afternoons.
+
+These conditions will cause damage to infrastructure near the coast, including boats beached or anchored along the shoreline.
+
+This warning is issued when high water levels pose a threat to coastal regions due to tides, storm surge and/or waves.
+
+Please continue to monitor alerts and forecasts issued by Environment Canada. To report severe weather, send an email to YTstorm@ec.gc.ca or post reports on social media using #YTStorm.
+
+Announcement: Gander: storm surge warning until 5:00 pm tomorrow and storm surge warning until 2:00 pm Tuesday.
+
+In effect: nothing
+

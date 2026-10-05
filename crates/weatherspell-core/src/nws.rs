@@ -12,6 +12,7 @@ use jiff::civil::Date;
 use jiff::fmt::temporal::Pieces;
 use serde::Deserialize;
 
+use crate::alerts::{AlertSeverity, WeatherAlert};
 use crate::forecast::OfficialPeriod;
 use crate::location::Location;
 use crate::official::{self, Observation, OfficialError};
@@ -371,4 +372,177 @@ pub fn parse_observation(
         dew_point_c: value(&o.dewpoint),
         visibility_metres: value(&o.visibility),
     })
+}
+
+// Active alerts for a point (alerts/active?point=), GeoJSON with the CAP
+// fields in "properties". The same product often comes back twice, once
+// for the forecast zone and once for the county, so alerts are told apart
+// by their VTEC event (office, phenomenon, significance and event number),
+// which also stays the same through the NWS's updates of one event; a
+// product with no VTEC (a special weather statement) is known by its
+// message id and is announced again when reissued.
+pub const ALERTS_ATTRIBUTION: &str = "National Weather Service (weather.gov)";
+// As spoken mid-sentence ("from the National Weather Service").
+pub const SPOKEN_SOURCE: &str = "the National Weather Service";
+
+pub fn alerts_url(location: &Location) -> String {
+    format!(
+        "{ENDPOINT}/alerts/active?point={}&status=actual",
+        point_key(location)
+    )
+}
+
+#[derive(Deserialize)]
+struct AlertsResponse {
+    features: Option<Vec<AlertFeature>>,
+}
+
+#[derive(Deserialize)]
+struct AlertFeature {
+    properties: Option<Alert>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct Alert {
+    id: Option<String>,
+    area_desc: Option<String>,
+    sent: Option<String>,
+    onset: Option<String>,
+    expires: Option<String>,
+    ends: Option<String>,
+    status: Option<String>,
+    severity: Option<String>,
+    event: Option<String>,
+    sender_name: Option<String>,
+    description: Option<String>,
+    instruction: Option<String>,
+    // VTEC, AWIPSidentifier, NWSheadline and others, each a list.
+    parameters: Option<std::collections::HashMap<String, serde_json::Value>>,
+}
+
+pub fn parse_alerts(json: &str) -> Result<Vec<WeatherAlert>, OfficialError> {
+    let response: AlertsResponse = serde_json::from_str(json)?;
+    let mut list = Vec::new();
+    let mut seen = std::collections::HashSet::new();
+    for feature in response.features.unwrap_or_default() {
+        let Some(a) = feature.properties else {
+            continue;
+        };
+        let (Some(event), Some(id), Some(sent)) = (
+            a.event.as_deref().filter(|e| !e.trim().is_empty()),
+            a.id.as_deref().filter(|i| !i.is_empty()),
+            a.sent.as_deref().filter(|s| !s.is_empty()),
+        ) else {
+            continue;
+        };
+        if a.status.as_deref().is_some_and(|s| s != "Actual") {
+            continue;
+        }
+        let issued = alert_time(sent)?;
+        let identity = identity(&a, id, local_date(sent)?.year());
+        if !seen.insert(identity.clone()) {
+            continue;
+        }
+        list.push(WeatherAlert {
+            id: identity,
+            event: official::sentence_case(event),
+            severity: alert_severity(a.severity.as_deref()),
+            issued,
+            onset: optional_time(&a.onset)?,
+            ends: optional_time(&a.ends)?,
+            source: SPOKEN_SOURCE.to_string(),
+            sender: a
+                .sender_name
+                .as_deref()
+                .map(str::trim)
+                .filter(|s| !s.is_empty())
+                .unwrap_or(SOURCE_NAME)
+                .to_string(),
+            area: a
+                .area_desc
+                .as_deref()
+                .map(str::trim)
+                .unwrap_or_default()
+                .to_string(),
+            level: None,
+            description: a.description.clone().unwrap_or_default(),
+            instruction: a.instruction.clone().filter(|i| !i.trim().is_empty()),
+            url: product_url(&a, event),
+            expires: optional_time(&a.expires)?,
+        });
+    }
+    Ok(list)
+}
+
+fn alert_time(text: &str) -> Result<Timestamp, OfficialError> {
+    text.parse().map_err(|_| {
+        OfficialError::Unreadable(format!("NWS alert time \"{text}\" could not be read."))
+    })
+}
+
+fn optional_time(text: &Option<String>) -> Result<Option<Timestamp>, OfficialError> {
+    match text.as_deref() {
+        Some(t) if !t.is_empty() => alert_time(t).map(Some),
+        _ => Ok(None),
+    }
+}
+
+fn first_parameter<'a>(a: &'a Alert, key: &str) -> Option<&'a str> {
+    a.parameters
+        .as_ref()?
+        .get(key)?
+        .as_array()?
+        .first()?
+        .as_str()
+}
+
+// "/O.NEW.KOTX.FF.A.0001.260913T0900Z-260913T2300Z/": the four middle
+// fields name the event; the number restarts each year, so the year the
+// message was sent completes it.
+fn identity(a: &Alert, id: &str, year: i16) -> String {
+    if let Some(event) = first_parameter(a, "VTEC").and_then(vtec_event) {
+        return format!("nws:{event}.{year}");
+    }
+    format!("nws:{id}")
+}
+
+// ^/[A-Z]\.[A-Z]{3}\.([A-Z]{4}\.[A-Z]{2}\.[A-Z]\.\d{4})\.
+fn vtec_event(vtec: &str) -> Option<String> {
+    let f: Vec<&str> = vtec.strip_prefix('/')?.splitn(7, '.').collect();
+    let upper = |s: &str, n: usize| s.len() == n && s.bytes().all(|b| b.is_ascii_uppercase());
+    let digits = |s: &str| s.len() == 4 && s.bytes().all(|b| b.is_ascii_digit());
+    // Seven pieces: a full stop follows the event number.
+    (f.len() == 7
+        && upper(f[0], 1)
+        && upper(f[1], 3)
+        && upper(f[2], 4)
+        && upper(f[3], 2)
+        && upper(f[4], 1)
+        && digits(f[5]))
+    .then(|| format!("{}.{}.{}.{}", f[2], f[3], f[4], f[5]))
+}
+
+fn alert_severity(word: Option<&str>) -> AlertSeverity {
+    match word {
+        Some("Extreme") => AlertSeverity::Extreme,
+        Some("Severe") => AlertSeverity::Severe,
+        Some("Moderate") => AlertSeverity::Moderate,
+        Some("Minor") => AlertSeverity::Minor,
+        _ => AlertSeverity::Unknown,
+    }
+}
+
+// The office's own text page for the product: the AWIPS identifier ends in
+// the office code ("FFAOTX" is Spokane's flash flood watch).
+fn product_url(a: &Alert, event: &str) -> Option<String> {
+    let awips = first_parameter(a, "AWIPSidentifier")?;
+    if awips.chars().count() < 5 || !awips.is_ascii() {
+        return None;
+    }
+    let office = &awips[awips.len() - 3..];
+    Some(format!(
+        "https://forecast.weather.gov/wwamap/wwatxtget.php?cwa={office}&wwa={}",
+        crate::open_meteo::escape(&event.to_lowercase())
+    ))
 }

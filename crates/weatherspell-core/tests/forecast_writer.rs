@@ -285,7 +285,7 @@ fn find(sections: &[Section], heading: &str) -> Section {
 }
 
 fn write(f: &Forecast) -> Vec<Section> {
-    writer::write(f, &options())
+    writer::write(f, &options(), None)
 }
 
 #[test]
@@ -333,7 +333,7 @@ fn stale_or_unrefreshed_text_is_dated_on_its_first_line() {
 
     let mut failing = options();
     failing.refresh_problem = Some("couldn't reach the weather service".to_string());
-    let failed = find(&writer::write(&sample(), &failing), "Right now");
+    let failed = find(&writer::write(&sample(), &failing, None), "Right now");
     assert_eq!(
         failed.paragraphs[0],
         "Showing the forecast from 3 minutes ago; couldn't reach the weather service."
@@ -489,7 +489,7 @@ fn precipitation_timing_is_omitted_when_the_chance_spans_the_day() {
 fn after_sunset_the_next_sunrise_is_given_and_the_uv_index_left_out() {
     let mut evening = options();
     evening.now = at(date(2026, 9, 11).at(20, 15, 0, 0), -4);
-    let p = find(&writer::write(&sample(), &evening), "Rest of today").paragraphs;
+    let p = find(&writer::write(&sample(), &evening, None), "Rest of today").paragraphs;
     assert_eq!(
         p.last().unwrap(),
         "The sun set at 7:34 pm and rises at 6:53 am tomorrow."
@@ -498,7 +498,7 @@ fn after_sunset_the_next_sunrise_is_given_and_the_uv_index_left_out() {
 
     let mut away = options_in(minutes_zone(-7 * 60));
     away.now = evening.now;
-    let p = find(&writer::write(&sample(), &away), "Rest of today").paragraphs;
+    let p = find(&writer::write(&sample(), &away, None), "Rest of today").paragraphs;
     assert_eq!(
         p.last().unwrap(),
         "The sun set at 7:34 pm (4:34 pm your time) and rises at 6:53 am tomorrow (3:53 am tomorrow your time)."
@@ -507,7 +507,7 @@ fn after_sunset_the_next_sunrise_is_given_and_the_uv_index_left_out() {
     // Without the next day's sunrise, the day's own times as before.
     let mut last_day = sample();
     last_day.days.truncate(1);
-    let p = find(&writer::write(&last_day, &evening), "Rest of today").paragraphs;
+    let p = find(&writer::write(&last_day, &evening, None), "Rest of today").paragraphs;
     assert_eq!(
         p.last().unwrap(),
         "The sun rose at 6:52 am and set at 7:34 pm, 12 hours and 42 minutes of daylight."
@@ -527,7 +527,7 @@ fn sources_close_the_reading() {
 
 #[test]
 fn times_carry_the_pc_time_in_brackets_when_zones_differ() {
-    let sections = writer::write(&sample(), &options_in(minutes_zone(-7 * 60)));
+    let sections = writer::write(&sample(), &options_in(minutes_zone(-7 * 60)), None);
     assert!(
         find(&sections, "Right now").paragraphs[0]
             .starts_with("As of 2:30 pm (11:30 am your time), ")
@@ -546,7 +546,7 @@ fn the_bracket_names_the_reader_s_own_day_when_it_is_not_all_today() {
     // 11th is at 12:30 am on the 12th: Toronto's sunrise was the reader's
     // yesterday afternoon, and its afternoon and sunset fall in the
     // reader's today, which the bracket now says.
-    let sections = writer::write(&sample(), &options_in(minutes_zone(5 * 60 + 45)));
+    let sections = writer::write(&sample(), &options_in(minutes_zone(5 * 60 + 45)), None);
     assert!(
         find(&sections, "Right now").paragraphs[0]
             .starts_with("As of 2:30 pm (12:15 am today your time), ")

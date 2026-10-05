@@ -168,7 +168,7 @@ fn is_word(c: char) -> bool {
 
 // Regex.Replace(s, @"\s{2,}", " "): a run of two or more becomes one
 // space; a lone line break stays as it is.
-fn collapse_whitespace_runs(s: &str) -> String {
+pub(crate) fn collapse_whitespace_runs(s: &str) -> String {
     let mut out = String::new();
     let mut run = String::new();
     for c in s.chars() {

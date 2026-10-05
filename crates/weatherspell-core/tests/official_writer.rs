@@ -239,7 +239,7 @@ fn without_an_observation_the_base_conditions_stay_and_the_sources_say_so() {
 
 #[test]
 fn the_reading_keeps_its_order_with_official_periods_under_the_day_headings() {
-    let sections = writer::write(&official::compose(&base(), &official()), &options());
+    let sections = writer::write(&official::compose(&base(), &official()), &options(), None);
 
     assert_eq!(
         headings(&sections),
@@ -281,7 +281,7 @@ fn the_reading_keeps_its_order_with_official_periods_under_the_day_headings() {
 #[test]
 fn right_now_names_the_station_and_uses_its_words() {
     let section = find(
-        &writer::write(&official::compose(&base(), &official()), &options()),
+        &writer::write(&official::compose(&base(), &official()), &options(), None),
         "Right now",
     );
     assert_eq!(
@@ -293,7 +293,7 @@ fn right_now_names_the_station_and_uses_its_words() {
 #[test]
 fn measurements_prefer_observed_dew_point_and_visibility() {
     let section = find(
-        &writer::write(&official::compose(&base(), &official()), &options()),
+        &writer::write(&official::compose(&base(), &official()), &options(), None),
         "Right now",
     );
     assert_eq!(
@@ -308,7 +308,7 @@ fn before_dawn_last_nights_period_is_still_todays() {
     // day, with Saturday's own periods after it. Saturday's text gives the
     // UV index, so the sun line is not followed by another.
     let at = options_at(eastern(date(2026, 9, 12).at(1, 30, 0, 0)));
-    let sections = writer::write(&official::compose(&base(), &official()), &at);
+    let sections = writer::write(&official::compose(&base(), &official()), &at, None);
 
     let today = find(&sections, "Rest of today").paragraphs;
     assert_eq!(today.len(), 4);
@@ -328,7 +328,7 @@ fn a_failed_official_fetch_is_explained_ahead_of_the_sources() {
     let problem =
         official::fetch_problem("Environment Canada", "404 Not Found from dd.weather.gc.ca");
     let f = official::with_problem(base(), Some(problem));
-    let section = find(&writer::write(&f, &options()), "Sources");
+    let section = find(&writer::write(&f, &options(), None), "Sources");
 
     assert_eq!(section.paragraphs.len(), 2);
     assert!(
@@ -347,7 +347,7 @@ fn the_nws_words_read_the_same_way() {
         observation: None,
     };
     let at = options_at(eastern(date(2026, 9, 12).at(2, 30, 0, 0)));
-    let sections = writer::write(&official::compose(&base(), &official), &at);
+    let sections = writer::write(&official::compose(&base(), &official), &at, None);
 
     assert_eq!(
         find(&sections, "Rest of today").paragraphs,
@@ -364,7 +364,7 @@ fn the_nws_words_read_the_same_way() {
 
 #[test]
 fn open_meteo_alone_still_reads_as_before() {
-    let sections = writer::write(&base(), &options());
+    let sections = writer::write(&base(), &options(), None);
     assert_eq!(
         headings(&sections),
         [
@@ -378,5 +378,62 @@ fn open_meteo_alone_still_reads_as_before() {
     assert!(
         find(&sections, "Right now").paragraphs[0]
             .starts_with("As of 11:45 pm, it's 12 degrees and foggy")
+    );
+}
+
+// From AlertWriterTests: the alerts lead the text and are credited last.
+#[test]
+fn the_forecast_text_leads_with_the_alerts_and_credits_their_source() {
+    use weatherspell_core::alerts::{AlertReport, AlertSeverity, WeatherAlert};
+    let a = WeatherAlert {
+        id: "id-Rainfall warning".to_string(),
+        event: "Rainfall warning".to_string(),
+        severity: AlertSeverity::Severe,
+        issued: eastern(date(2026, 9, 11).at(13, 10, 0, 0)),
+        onset: None,
+        ends: Some(eastern(date(2026, 9, 11).at(23, 0, 0, 0))),
+        source: "Environment Canada".to_string(),
+        sender: "Environment Canada".to_string(),
+        area: "Peterborough City - Lakefield - Southern Peterborough County".to_string(),
+        level: None,
+        description: "Text.".to_string(),
+        instruction: None,
+        url: None,
+        expires: None,
+    };
+    let report = AlertReport {
+        alerts: vec![a.clone()],
+        attribution: Some(ec::ALERTS_ATTRIBUTION.to_string()),
+        problem: None,
+        checked_at: None,
+    };
+    let at = options_at(eastern(date(2026, 9, 11).at(14, 45, 0, 0)));
+
+    let sections = writer::write(&base(), &at, Some(&report));
+    assert_eq!(sections[0].heading, "Alerts");
+    assert_eq!(
+        sections[0].paragraphs,
+        [
+            "Rainfall warning until 11:00 pm today, from Environment Canada. Press Enter for details."
+        ]
+    );
+    assert_eq!(sections[0].alerts, Some(vec![Some(a)]));
+    assert_eq!(
+        sections.last().unwrap().paragraphs.last().unwrap(),
+        "Alerts: Environment and Climate Change Canada (weather.gc.ca)."
+    );
+
+    let quiet = writer::write(&base(), &at, Some(&AlertReport::not_available()));
+    assert_eq!(
+        quiet[0].paragraphs,
+        ["Alerts are not available for this region."]
+    );
+    assert!(
+        !quiet
+            .last()
+            .unwrap()
+            .paragraphs
+            .iter()
+            .any(|p| p.starts_with("Alerts:"))
     );
 }

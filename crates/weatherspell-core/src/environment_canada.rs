@@ -9,6 +9,7 @@
 use jiff::Timestamp;
 use jiff::civil::{Date, DateTime, Weekday};
 
+use crate::alerts::{AlertSeverity, WeatherAlert};
 use crate::forecast::OfficialPeriod;
 use crate::official::{self, Observation, OfficialError, OfficialForecast};
 
@@ -310,4 +311,203 @@ fn utc_stamp(stamp: &str) -> Option<Timestamp> {
     )
     .ok()?;
     jiff::tz::Offset::UTC.to_timestamp(local).ok()
+}
+
+// Environment Canada's alerts in effect at a point, from the weather-alerts
+// collection of MSC GeoMet-OGC-API: one request gives each alert with its
+// full English text, colour level, area and times, which the city page's
+// warnings block (a headline and a link) and the CAP files on the datamart
+// (one file per message, findable only by walking every office's hourly
+// folder) could not do between them. The feature id is "{alert}_{area}":
+// the alert part stays the same through EC's updates of one alert, so it
+// is the identity. Times are UTC ISO 8601; the French fields are not read.
+pub const ALERTS_ATTRIBUTION: &str = "Environment and Climate Change Canada (weather.gc.ca)";
+const ALERTS_ENDPOINT: &str = "https://api.weather.gc.ca/collections/weather-alerts/items";
+
+// A point-sized bbox: the polygons are forecast regions, and the geometry
+// itself (megabytes for a province-wide alert) is not needed.
+pub fn alerts_url(location: &crate::location::Location) -> String {
+    let lat = crate::open_meteo::coordinate(location.latitude);
+    let lon = crate::open_meteo::coordinate(location.longitude);
+    format!("{ALERTS_ENDPOINT}?f=json&limit=100&skipGeometry=true&bbox={lon},{lat},{lon},{lat}")
+}
+
+// The location page on weather.gc.ca lists the same alerts with links to
+// each one's full report.
+pub fn location_url(location: &crate::location::Location) -> String {
+    format!(
+        "https://weather.gc.ca/en/location/index.html?coords={},{}",
+        three_decimals(location.latitude),
+        three_decimals(location.longitude)
+    )
+}
+
+// .NET's "0.###".
+fn three_decimals(value: f64) -> String {
+    let text = crate::units::fixed(value, 3);
+    let text = text.trim_end_matches('0').trim_end_matches('.');
+    if text.is_empty() || text == "-" {
+        "0".to_string()
+    } else {
+        text.to_string()
+    }
+}
+
+#[derive(serde::Deserialize)]
+struct AlertsResponse {
+    features: Option<Vec<AlertFeature>>,
+}
+
+#[derive(serde::Deserialize)]
+struct AlertFeature {
+    id: Option<String>,
+    properties: Option<Alert>,
+}
+
+#[derive(serde::Deserialize)]
+struct Alert {
+    alert_type: Option<String>,
+    alert_name_en: Option<String>,
+    alert_text_en: Option<String>,
+    publication_datetime: Option<String>,
+    expiration_datetime: Option<String>,
+    validity_datetime: Option<String>,
+    event_end_datetime: Option<String>,
+    risk_colour_en: Option<String>,
+    impact_en: Option<String>,
+    confidence_en: Option<String>,
+    feature_name_en: Option<String>,
+    status_en: Option<String>,
+}
+
+pub fn parse_alerts(
+    json: &str,
+    now: Timestamp,
+    url: Option<&str>,
+) -> Result<Vec<WeatherAlert>, OfficialError> {
+    let response: AlertsResponse = serde_json::from_str(json)?;
+    let mut list = Vec::new();
+    let mut seen = std::collections::HashSet::new();
+    for feature in response.features.unwrap_or_default() {
+        let Some(a) = feature.properties else {
+            continue;
+        };
+        let (Some(name), Some(feature_id), Some(published)) = (
+            a.alert_name_en.as_deref().filter(|n| !n.trim().is_empty()),
+            feature.id.as_deref().filter(|i| !i.is_empty()),
+            a.publication_datetime.as_deref().filter(|p| !p.is_empty()),
+        ) else {
+            continue;
+        };
+        // The collection is meant to hold only alerts in effect; an ended or
+        // stale one is dropped in case it lingers.
+        if a.status_en.as_deref() == Some("ended") {
+            continue;
+        }
+        let expires = alert_time(&a.expiration_datetime)?;
+        if expires.is_some_and(|e| e < now) {
+            continue;
+        }
+        let id = format!("ec:{}", feature_id.split('_').next().unwrap_or(feature_id));
+        if !seen.insert(id.clone()) {
+            continue;
+        }
+        let issued = alert_time(&Some(published.to_string()))?.expect("checked present above");
+        list.push(WeatherAlert {
+            id,
+            event: official::sentence_case(name),
+            severity: alert_severity(a.risk_colour_en.as_deref(), a.alert_type.as_deref()),
+            issued,
+            onset: alert_time(&a.validity_datetime)?,
+            ends: alert_time(&a.event_end_datetime)?,
+            source: SOURCE_NAME.to_string(),
+            sender: SOURCE_NAME.to_string(),
+            area: a
+                .feature_name_en
+                .as_deref()
+                .map(str::trim)
+                .unwrap_or_default()
+                .to_string(),
+            level: level(&a),
+            description: a.alert_text_en.clone().unwrap_or_default(),
+            instruction: None,
+            url: url.map(str::to_string),
+            expires,
+        });
+    }
+    Ok(list)
+}
+
+// UTC when no offset is given, as DateTimeStyles.AssumeUniversal had it.
+fn alert_time(text: &Option<String>) -> Result<Option<Timestamp>, OfficialError> {
+    let Some(text) = text.as_deref().filter(|t| !t.is_empty()) else {
+        return Ok(None);
+    };
+    if let Ok(t) = text.parse::<Timestamp>() {
+        return Ok(Some(t));
+    }
+    text.parse::<DateTime>()
+        .ok()
+        .and_then(|local| jiff::tz::Offset::UTC.to_timestamp(local).ok())
+        .map(Some)
+        .ok_or_else(|| {
+            OfficialError::Unreadable(format!(
+                "Environment Canada alert time \"{text}\" could not be read."
+            ))
+        })
+}
+
+// EC's colour levels (yellow: be aware; orange: be prepared; red: take
+// action) set the severity, and the alert type is a floor under them: a
+// warning is at least Severe whatever its colour, so that the "severe and
+// extreme only" announcement setting means the same on both sides of the
+// border, where every NWS warning is Severe or Extreme.
+pub fn alert_severity(colour: Option<&str>, kind: Option<&str>) -> AlertSeverity {
+    let by_colour = match colour.map(str::to_lowercase).as_deref() {
+        Some("red") => AlertSeverity::Extreme,
+        Some("orange") => AlertSeverity::Severe,
+        Some("yellow") => AlertSeverity::Moderate,
+        _ => AlertSeverity::Unknown,
+    };
+    let by_type = match kind.map(str::to_lowercase).as_deref() {
+        Some("warning") => AlertSeverity::Severe,
+        Some("watch") => AlertSeverity::Moderate,
+        Some("advisory") | Some("statement") => AlertSeverity::Minor,
+        _ => AlertSeverity::Unknown,
+    };
+    by_colour.max(by_type)
+}
+
+// "Yellow level, moderate impact, high confidence": EC's tiered ranking as
+// the public alert pages state it, when the alert carries one.
+fn level(a: &Alert) -> Option<String> {
+    let blank = |v: &Option<String>| v.as_deref().is_none_or(|s| s.trim().is_empty());
+    if blank(&a.risk_colour_en) {
+        return None;
+    }
+    let mut s = format!(
+        "{} level",
+        official::sentence_case(a.risk_colour_en.as_deref().unwrap_or_default())
+    );
+    if !blank(&a.impact_en) {
+        s += &format!(
+            ", {} impact",
+            a.impact_en
+                .as_deref()
+                .unwrap_or_default()
+                .trim()
+                .to_lowercase()
+        );
+    }
+    if !blank(&a.confidence_en) {
+        s += &format!(
+            ", {} confidence",
+            a.confidence_en
+                .as_deref()
+                .unwrap_or_default()
+                .trim()
+                .to_lowercase()
+        );
+    }
+    Some(s)
 }

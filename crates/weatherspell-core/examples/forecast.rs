@@ -9,7 +9,7 @@
 use jiff::Timestamp;
 use jiff::tz::TimeZone;
 use weatherspell_core::clock::TimeFormat;
-use weatherspell_core::fetch::{Fetch, ForecastService};
+use weatherspell_core::fetch::{Fetch, ForecastService, check_alerts};
 use weatherspell_core::net::UreqFetch;
 use weatherspell_core::open_meteo;
 use weatherspell_core::units::{self, UnitSystem};
@@ -63,7 +63,8 @@ fn main() {
         time_format: TimeFormat::new("h:mm tt", "AM", "PM"),
         refresh_problem: None,
     };
-    for section in writer::write(&forecast, &options) {
+    let alerts = check_alerts(&http, &place, now);
+    for section in writer::write(&forecast, &options, Some(&alerts)) {
         println!("{}\n", section.heading);
         for paragraph in section.paragraphs {
             println!("{paragraph}\n");

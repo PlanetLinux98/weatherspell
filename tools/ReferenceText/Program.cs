@@ -4,6 +4,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using Weatherspell;
 using Weatherspell.Weather;
+using Weatherspell.Weather.Alerts;
 using Weatherspell.Weather.EnvironmentCanada;
 using Weatherspell.Weather.Nws;
 using Weatherspell.Weather.OpenMeteo;
@@ -47,7 +48,22 @@ foreach (var c in cases)
     culture.DateTimeFormat.PMDesignator = c.Pm ?? "";
     var options = new WriterOptions(now, zone, c.TimePattern!, culture, c.RefreshProblem);
 
-    var text = SectionLayout.Build(ForecastWriter.Write(forecast, options)).Text;
+    var report = c.Alerts is AlertsCase a ? ReadAlerts(a, now) : null;
+    var text = SectionLayout.Build(ForecastWriter.Write(forecast, options, report)).Text;
+    if (report is not null)
+    {
+        // What a reader hears about the alerts beyond the text: the details
+        // dialog, the announcement of new ones, and what a switch says.
+        var clock = new Clock(forecast.UtcOffset, zone, c.TimePattern!, culture);
+        var nowLocal = now.ToOffset(forecast.UtcOffset).DateTime;
+        var gap = new string((char)10, 2);
+        foreach (var alert in report.Alerts)
+        {
+            text += $"Details: {alert.Event}{gap}" + string.Join("", AlertWriter.Details(alert, clock, nowLocal).Select(d => d + gap));
+        }
+        if (report.Alerts.Count > 0) text += $"Announcement: {AlertWriter.Announcement(p.Name!, report.Alerts, clock, nowLocal)}{gap}";
+        text += $"In effect: {AlertWriter.InEffect(report) ?? "nothing"}{gap}";
+    }
     File.WriteAllText(Path.Combine(referenceDir, c.Name + ".txt"), text, new UTF8Encoding(false));
     Console.WriteLine($"{c.Name}: {text.Length} characters");
 }
@@ -63,6 +79,21 @@ OfficialForecast Read(Official o)
     var periods = o.Page is string page ? NwsClient.ParsePagePeriods(Fixture(page)) : NwsClient.ParsePeriods(Fixture(o.Forecast!));
     var observation = o.Observation is string obs ? NwsClient.ParseObservation(Fixture(obs), station.Name) : null;
     return new OfficialForecast(NwsClient.SourceName, points.Attribution, periods, observation);
+}
+
+// A service's alerts from a captured response, as AlertService would have
+// reported them, or a failed check carrying an earlier one's alerts.
+AlertReport ReadAlerts(AlertsCase a, DateTimeOffset now)
+{
+    var json = File.ReadAllText(Path.Combine(fixtures, a.Fixture!));
+    var parsedAt = a.LastChecked is string last ? DateTimeOffset.Parse(last, CultureInfo.InvariantCulture) : now;
+    var (alerts, attribution) = a.Kind == "ec"
+        ? (AlertsClient.Parse(json, parsedAt, null), AlertsClient.Attribution)
+        : (NwsAlertsClient.Parse(json), NwsAlertsClient.Attribution);
+    var ordered = AlertService.Order(alerts);
+    if (a.Problem is null) return new AlertReport(ordered, attribution, null, now);
+    var failed = new AlertReport([], attribution, a.Problem);
+    return a.LastChecked is null ? failed : failed.OrLastKnown(new AlertReport(ordered, attribution, null, parsedAt));
 }
 
 // Filled by the JSON reader, which the compiler cannot see.
@@ -83,6 +114,16 @@ internal sealed class Case
     [DataMember(Name = "pm")] public string? Pm;
     [DataMember(Name = "refreshProblem")] public string? RefreshProblem;
     [DataMember(Name = "official")] public Official? Official;
+    [DataMember(Name = "alerts")] public AlertsCase? Alerts;
+}
+
+[DataContract]
+internal sealed class AlertsCase
+{
+    [DataMember(Name = "kind")] public string? Kind;
+    [DataMember(Name = "fixture")] public string? Fixture;
+    [DataMember(Name = "problem")] public string? Problem;
+    [DataMember(Name = "lastChecked")] public string? LastChecked;
 }
 
 [DataContract]

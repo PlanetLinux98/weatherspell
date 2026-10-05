@@ -1,0 +1,600 @@
+Alerts
+
+Tropical storm warning from the National Weather Service. Press Enter for details.
+
+Hurricane watch from the National Weather Service. Press Enter for details.
+
+Flood watch until 12:00 am Sunday (6:00 pm tomorrow your time), from the National Weather Service. Press Enter for details.
+
+Tropical cyclone local statement from the National Weather Service. Press Enter for details.
+
+Tropical cyclone local statement from the National Weather Service. Press Enter for details.
+
+High surf advisory until 12:00 am Monday (6:00 pm Sunday your time), from the National Weather Service. Press Enter for details.
+
+
+Right now
+
+As of 4:30 pm (10:30 am on September 11 your time), it's 21 degrees and clear, feeling like 20. Wind from the southeast at 10 miles an hour.
+
+Humidity 53 percent, dew point 9 degrees, pressure 30.01 inches of mercury, visibility 15 miles, cloud cover 2 percent.
+
+
+Sources
+
+Forecast and current conditions: Open-Meteo (open-meteo.com), licensed CC BY 4.0.
+
+Alerts: National Weather Service (weather.gov).
+
+Details: Tropical storm warning
+
+Tropical storm warning from NWS Honolulu HI.
+
+No end time is given; this message expires at 5:15 am tomorrow (11:15 pm today your time).
+
+Area: Big Island East.
+
+Issued 5:03 pm today (11:03 am today your time).
+
+* LOCATIONS AFFECTED
+
+Hilo
+
+Pahoa
+
+Volcano
+
+* WIND
+
+LATEST LOCAL FORECAST: Below tropical storm force wind
+
+Peak Wind Forecast: 15-25 miles per hour with gusts to 35 miles per hour
+
+THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST UNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for wind 58 to 73 miles per hour
+
+The wind threat has remained nearly steady from the previous assessment.
+
+PLAN: Plan for dangerous wind of equivalent strong tropical storm force.
+
+PREPARE: Remaining efforts to protect life and property should be completed as soon as possible. Prepare for significant wind damage.
+
+ACT: Move to safe shelter before the wind becomes hazardous.
+
+POTENTIAL IMPACTS: Significant
+
+Some damage to roofing and siding materials, along with damage to porches, awnings, carports, and sheds. A few buildings experiencing window, door, and garage door failures. Mobile homes damaged, especially if unanchored. Unsecured lightweight objects become dangerous projectiles.
+
+Several large trees snapped or uprooted, but with greater numbers in places where trees are shallow rooted. Several fences and roadway signs blown over.
+
+Some roads impassable from large debris, and more within urban or heavily wooded places. A few bridges, causeways, and access routes impassable.
+
+Scattered power and communications outages, but more prevalent in areas with above ground lines.
+
+* STORM SURGE
+
+LATEST LOCAL FORECAST: Localized storm surge possible
+
+Peak Storm Surge Inundation: The potential for 1-3 feet above ground somewhere within surge prone areas
+
+Window of concern: Begins this morning
+
+THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST UNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for storm surge flooding greater than 1 foot above ground
+
+The storm surge threat has remained nearly steady from the previous assessment.
+
+PLAN: Plan for storm surge flooding greater than 1 foot above ground.
+
+PREPARE: Complete preparations for storm surge flooding, especially in low-lying vulnerable areas, before conditions become unsafe.
+
+ACT: Leave immediately if evacuation orders are given for your area.
+
+POTENTIAL IMPACTS: Limited
+
+Localized inundation with storm surge flooding mainly along immediate shorelines and in low-lying spots, or in areas farther inland near where higher surge waters move ashore.
+
+Sections of near-shore roads and parking lots become overspread with surge water. Driving conditions dangerous in places where surge water covers the road.
+
+Moderate beach erosion. Heavy surf also breaching dunes, mainly in usually vulnerable locations. Strong rip currents.
+
+Minor to locally moderate damage to marinas, docks, boardwalks, and piers. A few small craft broken away from moorings.
+
+* FLOODING RAIN
+
+LATEST LOCAL FORECAST: Flood Watch is in effect
+
+Peak Rainfall Amounts: Additional 8-12 inches, with locally higher amounts
+
+THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST UNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for extreme flooding rain
+
+The flooding rain threat has remained nearly steady from the previous assessment.
+
+PLAN: Emergency plans should include the potential for extreme flooding from heavy rain. Evacuations and rescues are likely.
+
+PREPARE: Urgently consider protective actions from extreme and widespread rainfall flooding.
+
+ACT: Heed any flood watches and warnings. Failure to take action will likely result in serious injury or loss of life.
+
+POTENTIAL IMPACTS: Devastating to Catastrophic
+
+Extreme rainfall flooding may prompt numerous evacuations and rescues.
+
+Rivers and tributaries may overwhelmingly overflow their banks in many places with deep moving water. Small streams, creeks, canals, arroyos, and ditches may become raging rivers. In mountain areas, deadly runoff may rage down valleys while increasing susceptibility to rockslides and mudslides. Flood control systems and barriers may become stressed.
+
+Flood waters can enter numerous structures within multiple communities, some structures becoming uninhabitable or washed away. Numerous places where flood waters may cover escape routes. Streets and parking lots become rivers of raging water with underpasses submerged. Driving conditions become very dangerous. Numerous road and bridge closures with some weakened or washed out.
+
+* TORNADO
+
+LATEST LOCAL FORECAST:
+
+Situation is somewhat favorable for tornadoes
+
+THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST UNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for a few tornadoes
+
+The tornado threat has remained nearly steady from the previous assessment.
+
+PLAN: Emergency plans should include the potential for a few tornadoes.
+
+PREPARE: If your shelter is particularly vulnerable to tornadoes, prepare to relocate to safe shelter before hazardous weather arrives.
+
+ACT: If a tornado warning is issued, be ready to shelter quickly.
+
+POTENTIAL IMPACTS: Limited
+
+The occurrence of isolated tornadoes can hinder the execution of emergency plans during tropical events.
+
+A few places may experience tornado damage, along with power and communications disruptions.
+
+Locations could realize roofs peeled off buildings, chimneys toppled, mobile homes pushed off foundations or overturned, large tree tops and branches snapped off, shallow-rooted trees knocked over, moving vehicles blown off roads, and small boats pulled from moorings.
+
+* FOR MORE INFORMATION:
+
+https://www.weather.gov/hfo
+
+Details: Hurricane watch
+
+Hurricane watch from NWS Honolulu HI.
+
+No end time is given; this message expires at 5:15 am tomorrow (11:15 pm today your time).
+
+Area: Big Island East.
+
+Issued 5:03 pm today (11:03 am today your time).
+
+* LOCATIONS AFFECTED
+
+Hilo
+
+Pahoa
+
+Volcano
+
+* WIND
+
+LATEST LOCAL FORECAST: Below tropical storm force wind
+
+Peak Wind Forecast: 15-25 miles per hour with gusts to 35 miles per hour
+
+THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST UNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for wind 58 to 73 miles per hour
+
+The wind threat has remained nearly steady from the previous assessment.
+
+PLAN: Plan for dangerous wind of equivalent strong tropical storm force.
+
+PREPARE: Remaining efforts to protect life and property should be completed as soon as possible. Prepare for significant wind damage.
+
+ACT: Move to safe shelter before the wind becomes hazardous.
+
+POTENTIAL IMPACTS: Significant
+
+Some damage to roofing and siding materials, along with damage to porches, awnings, carports, and sheds. A few buildings experiencing window, door, and garage door failures. Mobile homes damaged, especially if unanchored. Unsecured lightweight objects become dangerous projectiles.
+
+Several large trees snapped or uprooted, but with greater numbers in places where trees are shallow rooted. Several fences and roadway signs blown over.
+
+Some roads impassable from large debris, and more within urban or heavily wooded places. A few bridges, causeways, and access routes impassable.
+
+Scattered power and communications outages, but more prevalent in areas with above ground lines.
+
+* STORM SURGE
+
+LATEST LOCAL FORECAST: Localized storm surge possible
+
+Peak Storm Surge Inundation: The potential for 1-3 feet above ground somewhere within surge prone areas
+
+Window of concern: Begins this morning
+
+THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST UNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for storm surge flooding greater than 1 foot above ground
+
+The storm surge threat has remained nearly steady from the previous assessment.
+
+PLAN: Plan for storm surge flooding greater than 1 foot above ground.
+
+PREPARE: Complete preparations for storm surge flooding, especially in low-lying vulnerable areas, before conditions become unsafe.
+
+ACT: Leave immediately if evacuation orders are given for your area.
+
+POTENTIAL IMPACTS: Limited
+
+Localized inundation with storm surge flooding mainly along immediate shorelines and in low-lying spots, or in areas farther inland near where higher surge waters move ashore.
+
+Sections of near-shore roads and parking lots become overspread with surge water. Driving conditions dangerous in places where surge water covers the road.
+
+Moderate beach erosion. Heavy surf also breaching dunes, mainly in usually vulnerable locations. Strong rip currents.
+
+Minor to locally moderate damage to marinas, docks, boardwalks, and piers. A few small craft broken away from moorings.
+
+* FLOODING RAIN
+
+LATEST LOCAL FORECAST: Flood Watch is in effect
+
+Peak Rainfall Amounts: Additional 8-12 inches, with locally higher amounts
+
+THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST UNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for extreme flooding rain
+
+The flooding rain threat has remained nearly steady from the previous assessment.
+
+PLAN: Emergency plans should include the potential for extreme flooding from heavy rain. Evacuations and rescues are likely.
+
+PREPARE: Urgently consider protective actions from extreme and widespread rainfall flooding.
+
+ACT: Heed any flood watches and warnings. Failure to take action will likely result in serious injury or loss of life.
+
+POTENTIAL IMPACTS: Devastating to Catastrophic
+
+Extreme rainfall flooding may prompt numerous evacuations and rescues.
+
+Rivers and tributaries may overwhelmingly overflow their banks in many places with deep moving water. Small streams, creeks, canals, arroyos, and ditches may become raging rivers. In mountain areas, deadly runoff may rage down valleys while increasing susceptibility to rockslides and mudslides. Flood control systems and barriers may become stressed.
+
+Flood waters can enter numerous structures within multiple communities, some structures becoming uninhabitable or washed away. Numerous places where flood waters may cover escape routes. Streets and parking lots become rivers of raging water with underpasses submerged. Driving conditions become very dangerous. Numerous road and bridge closures with some weakened or washed out.
+
+* TORNADO
+
+LATEST LOCAL FORECAST:
+
+Situation is somewhat favorable for tornadoes
+
+THREAT TO LIFE AND PROPERTY THAT INCLUDES TYPICAL FORECAST UNCERTAINTY IN TRACK, SIZE AND INTENSITY: Potential for a few tornadoes
+
+The tornado threat has remained nearly steady from the previous assessment.
+
+PLAN: Emergency plans should include the potential for a few tornadoes.
+
+PREPARE: If your shelter is particularly vulnerable to tornadoes, prepare to relocate to safe shelter before hazardous weather arrives.
+
+ACT: If a tornado warning is issued, be ready to shelter quickly.
+
+POTENTIAL IMPACTS: Limited
+
+The occurrence of isolated tornadoes can hinder the execution of emergency plans during tropical events.
+
+A few places may experience tornado damage, along with power and communications disruptions.
+
+Locations could realize roofs peeled off buildings, chimneys toppled, mobile homes pushed off foundations or overturned, large tree tops and branches snapped off, shallow-rooted trees knocked over, moving vehicles blown off roads, and small boats pulled from moorings.
+
+* FOR MORE INFORMATION:
+
+https://www.weather.gov/hfo
+
+Details: Flood watch
+
+Flood watch from NWS Honolulu HI, in effect until 12:00 am Sunday (6:00 pm tomorrow your time).
+
+Area: Lanai Mauka; Kahoolawe; Maui Windward West; Maui Leeward West; Haleakala Summit; Kona; Kohala; Big Island Interior; Big Island Summit; Molokai Windward; Molokai Southeast; Molokai North; Molokai West; Molokai Leeward South; Lanai Windward; Lanai Leeward; Lanai South; Maui Central Valley North; Maui Central Valley South; Windward Haleakala; Kipahulu; South Maui/Upcountry; South Haleakala; Big Island South; Big Island Southeast; Big Island East; Big Island North.
+
+Issued 10:35 am today (4:35 am today your time).
+
+Hurricane Nolo is expected to bring heavy showers to the eastern end of the state over the next few days. The exact track of the dangerous tropical cyclone remains somewhat uncertain, but significant heavy rain is likely over windward and southeast Big Island.
+
+What: Flash flooding caused by excessive rainfall is possible.
+
+Where: Big Island, Maui, Lanai, Molokai, and Kahoolawe.
+
+When: Through Saturday afternoon.
+
+Impacts: Significant flooding may occur due to the overflow of streams and drainages. Roads in several areas may be closed, along with property damage in urban or low lying spots due to runoff. Landslides may also occur in areas with steep terrain.
+
+Additional details:
+
+Deep moisture on the north side of Hurricane Nolo will bring heavy showers to the Big Island, and to a lesser extend to Maui through the Saturday. Windward and southeast Big Island, and windward Maui, are the most likely to experience heavy rain due to the slow moving system, with considerable flooding possible over the remaining portions of Big Island and Maui today and Saturday. The remainder of Maui County has a lower possibility of flooding, but remains at risk.
+
+Instructions: You should monitor later forecasts and be prepared to take action should Flash Flood Warnings be issued.
+
+Details: Tropical cyclone local statement
+
+Tropical cyclone local statement from NWS Honolulu HI.
+
+No end time is given; this message expires at 7:15 pm today (1:15 pm today your time).
+
+Area: Lanai Mauka; Kahoolawe; Maui Windward West; Maui Leeward West; Haleakala Summit; Kona; Kohala; Big Island Interior; Big Island Summit; Molokai Windward; Molokai Southeast; Molokai North; Molokai West; Molokai Leeward South; Lanai Windward; Lanai Leeward; Lanai South; Maui Central Valley North; Maui Central Valley South; Windward Haleakala; Kipahulu; South Maui/Upcountry; South Haleakala; Big Island South; Big Island Southeast; Big Island East; Big Island North.
+
+Issued 11:08 am today (5:08 am today your time).
+
+HLSHFO
+
+This product covers the Hawaiian islands
+
+**Nolo moving slowly northward and strengthening**
+
+NEW INFORMATION ---------------
+
+* CHANGES TO WATCHES AND WARNINGS:
+
+None
+
+* CURRENT WATCHES AND WARNINGS:
+
+A Tropical Storm Warning and Hurricane Watch are in effect for Big Island East, Big Island Interior, Big Island North, Big Island South, Big Island Southeast, Big Island Summits, Kohala, and Kona
+
+A Tropical Storm Watch is in effect for Haleakala Summit, Kahoolawe, Kipahulu, Lanai Leeward, Lanai Mauka, Lanai South, Lanai Windward, Maui Central Valley North, Maui Central Valley South, Maui Leeward West, Maui Windward West, Molokai Leeward South, Molokai North, Molokai Southeast, Molokai West, Molokai Windward, South Haleakala, South Maui/Upcountry, and Windward Haleakala
+
+* STORM INFORMATION:
+
+About 400 miles south-southeast of Honolulu or about 260 miles south of Hilo
+
+16.0N 155.5W
+
+Storm Intensity 85 miles per hour
+
+Movement North-northeast or 25 degrees at 5 miles per hour
+
+SITUATION OVERVIEW ------------------
+
+Hurricane Nolo is moving slowly northward and will continue to do so through today. Nolo is then forecast to make a sharp turn to the west late tonight into Saturday as it strengthens to a major hurricane. Nolo is forecast to continue westward through the weekend with the center passing south of the state. However, impacts from Nolo will be felt well outside the center of the storm.
+
+Bands of intense showers and thunderstorms associated with Nolo will reach the Big Island and Maui County over the next couple of days. Excessive rainfall is possible which could lead to locally catastrophic flash flooding and mudslides across windward and southeast Big Island. Flooding can occur even in areas not usually prone to flooding. Additional rainfall amounts of 10 to 15 inches wit localized higher amounts of 20 inches. On Maui, additional rainfall amounts of 4 to 8 inches are possible, with localized higher amounts. Outer rain bands associated with Nolo are expected to reach the other smaller islands, and will be enhanced by the terrain.
+
+Tropical storm force winds are expected to reach the Big Island as early as midday today, with hurricane force winds possible by tonight. The earliest reasonable time of arrival for tropical storm force winds is predawn Saturday for Maui County. A Tropical Storm Warning and Hurricane Watch is in effect for Big Island, and a Tropical Storm Watch is in effect for the islands of Maui County. Nolo remains under close observation in the event additional islands may need watches and warnings.
+
+Swell generated by Nolo could bring very large and rough surf and dangerous rip currents for south and southeast facing shores, especially for the Big Island. A High Surf Advisory remains in effect for south and east facing shores of Big Island and east facing shores of Maui and Molokai. Surf is expected to build to advisory levels along all south and east facing shores and will likely be added to the advisory in future updates as Nolo nears.
+
+Tornadoes and large waterspouts will be possible associated with Nolo, mainly over and near the Big Island, along and to the right of the track of the tropical cyclone.
+
+POTENTIAL IMPACTS -----------------
+
+* FLOODING RAIN: Protect against life-threatening rainfall flooding having possible devastating impacts across Big Island. Potential impacts include:
+
+Extreme rainfall flooding may prompt numerous evacuations and rescues.
+
+Rivers and tributaries may overwhelmingly overflow their banks in many places with deep moving water. Small streams, creeks, canals, arroyos, and ditches may become raging rivers. In mountain areas, deadly runoff may rage down valleys while increasing susceptibility to rockslides and mudslides. Flood control systems and barriers may become stressed.
+
+Flood waters can enter numerous structures within multiple communities, some structures becoming uninhabitable or washed away. Numerous places where flood waters may cover escape routes. Streets and parking lots become rivers of raging water with underpasses submerged. Driving conditions become very dangerous. Numerous road and bridge closures with some weakened or washed out.
+
+Protect against life-threatening rainfall flooding having possible limited to extensive impacts across Maui.
+
+Elsewhere across the Hawaiian islands, little to no impact is anticipated.
+
+* WIND: Protect against dangerous wind having possible significant impacts across Big Island. Potential impacts in this area include:
+
+Some damage to roofing and siding materials, along with damage to porches, awnings, carports, and sheds. A few buildings experiencing window, door, and garage door failures. Mobile homes damaged, especially if unanchored. Unsecured lightweight objects become dangerous projectiles.
+
+Several large trees snapped or uprooted, but with greater numbers in places where trees are shallow rooted. Several fences and roadway signs blown over.
+
+Some roads impassable from large debris, and more within urban or heavily wooded places. A few bridges, causeways, and access routes impassable.
+
+Scattered power and communications outages, but more prevalent in areas with above ground lines.
+
+Also, protect against hazardous wind having possible limited impacts across Maui.
+
+* SURGE: Protect against locally hazardous surge having possible limited impacts across Big Island. Potential impacts in this area include:
+
+Localized inundation with storm surge flooding mainly along immediate shorelines and in low-lying spots, or in areas farther inland near where higher surge waters move ashore.
+
+Sections of near-shore roads and parking lots become overspread with surge water. Driving conditions dangerous in places where surge water covers the road.
+
+Moderate beach erosion. Heavy surf also breaching dunes, mainly in usually vulnerable locations. Strong rip currents.
+
+Minor to locally moderate damage to marinas, docks, boardwalks, and piers. A few small craft broken away from moorings.
+
+Elsewhere across the Hawaiian islands, little to no impact is anticipated.
+
+* TORNADOES: Protect against a tornado event having possible limited impacts across Big Island. Potential impacts include:
+
+The occurrence of isolated tornadoes can hinder the execution of emergency plans during tropical events.
+
+A few places may experience tornado damage, along with power and communications disruptions.
+
+Locations could realize roofs peeled off buildings, chimneys toppled, mobile homes pushed off foundations or overturned, large tree tops and branches snapped off, shallow-rooted trees knocked over, moving vehicles blown off roads, and small boats pulled from moorings.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS ----------------------------------
+
+* EVACUATIONS: Follow the advice of local officials
+
+* OTHER PREPAREDNESS INFORMATION: Now is the time to complete all preparations to protect life and property in accordance with your emergency plan. Ensure you are in a safe location before the onset of strong winds or possible flooding.
+
+If you are relocating to safe shelter, leave as early as possible. Allow extra time to reach your destination. Many roads and bridges will be closed once strong winds arrive. Check the latest weather forecast before departing and drive with caution.
+
+If heading to a community shelter, become familiar with the shelter rules before arrival, especially if you have special needs or have pets. Take essential items with you from your Emergency Supplies Kit.
+
+Failure to adequately shelter may result in serious injury or loss of life. Always heed the advice of local officials and comply with any orders that are issued. Remember, during the storm 9 1 1 Emergency Services may not be able to immediately respond if conditions are unsafe. This should be a big factor in your decision making.
+
+Keep cell phones well charged. Cell phone chargers for automobiles can be helpful, but be aware of your risk for deadly carbon monoxide poisoning if your car is left idling in a garage or other poorly ventilated area.
+
+It is important to remain calm, informed, and focused during an emergency. Be patient and helpful with those you encounter.
+
+If you are a visitor, be sure to know the name of the city or town in which you are staying and the name of the county or parish in which it resides. Listen for these locations in local news updates. Pay attention for instructions from local authorities.
+
+Storm surge is the leading killer associated with tropical storms and hurricanes! Make sure you are in a safe area away from the surge zone. Even if you are not in a surge-prone area, you could find yourself cutoff by flood waters during and after the storm. Heed evacuation orders issued by the local authorities.
+
+Rapidly rising flood waters are deadly. If you are in a flood-prone area, consider moving to higher ground. Never drive through a flooded roadway. Remember, turn around don't drown!
+
+If a Tornado Warning is issued for your area, be ready to shelter quickly, preferably away from windows and in an interior room not prone to flooding. If driving, scan the roadside for quick shelter options.
+
+If in a place that is vulnerable to high wind, such as near large trees, a manufactured home, upper floors of a high-rise building, or on a boat, consider moving to a safer shelter before the onset of strong winds or flooding.
+
+Closely monitor weather.gov, NOAA Weather radio or local news outlets for official storm information. Be ready to adapt to possible changes to the forecast. Ensure you have multiple ways to receive weather warnings.
+
+* ADDITIONAL SOURCES OF INFORMATION:
+
+For information on appropriate preparations see ready.gov
+
+For information on creating an emergency plan see getagameplan.org
+
+For additional disaster preparedness information see redcross.org
+
+NEXT UPDATE -----------
+
+The next local statement will be issued by the National Weather Service in Honolulu HI around 11 AM HST, or sooner if conditions warrant.
+
+Details: Tropical cyclone local statement
+
+Tropical cyclone local statement from NWS Honolulu HI.
+
+No end time is given; this message expires at 1:15 am tomorrow (7:15 pm today your time).
+
+Area: Lanai Mauka; Kahoolawe; Maui Windward West; Maui Leeward West; Haleakala Summit; Kona; Kohala; Big Island Interior; Big Island Summit; Molokai Windward; Molokai Southeast; Molokai North; Molokai West; Molokai Leeward South; Lanai Windward; Lanai Leeward; Lanai South; Maui Central Valley North; Maui Central Valley South; Windward Haleakala; Kipahulu; South Maui/Upcountry; South Haleakala; Big Island South; Big Island Southeast; Big Island East; Big Island North.
+
+Issued 5:12 pm today (11:12 am today your time).
+
+HLSHFO
+
+This product covers the Hawaiian islands
+
+**HEAVY RAIN BANDS REMAIN JUST OFFSHORE WHILE A STRENGTHENING NOLO SLOWLY MOVES NORTHWARD**
+
+NEW INFORMATION ---------------
+
+* CHANGES TO WATCHES AND WARNINGS:
+
+None
+
+* CURRENT WATCHES AND WARNINGS:
+
+A Tropical Storm Warning and Hurricane Watch are in effect for Big Island East, Big Island Interior, Big Island North, Big Island South, Big Island Southeast, Big Island Summits, Kohala, and Kona
+
+A Tropical Storm Watch is in effect for Haleakala Summit, Kahoolawe, Kipahulu, Lanai Leeward, Lanai Mauka, Lanai South, Lanai Windward, Maui Central Valley North, Maui Central Valley South, Maui Leeward West, Maui Windward West, Molokai Leeward South, Molokai North, Molokai Southeast, Molokai West, Molokai Windward, South Haleakala, South Maui/Upcountry, and Windward Haleakala
+
+* STORM INFORMATION:
+
+About 370 miles south-southeast of Honolulu or about 220 miles south of Hilo
+
+16.5N 155.4W
+
+Storm Intensity 105 miles per hour
+
+Movement North-northeast or 15 degrees at 5 miles per hour
+
+SITUATION OVERVIEW ------------------
+
+Hurricane Nolo is moving slowly northward and will continue to do so through tonight. Nolo is then forecast to make a sharp turn to the west on Saturday as it strengthens to a major hurricane. Nolo is forecast to continue westward through the weekend with the center passing south of the state. However, impacts from Nolo will be felt well outside the center of the storm.
+
+Bands of intense showers and thunderstorms associated with Nolo will affect the Big Island and Maui County over the next couple of days, beginning later today over the Big Island and Saturday over Maui. Excessive rainfall is possible which could lead to locally catastrophic flash flooding and mudslides across windward and southeast Big Island. Flooding can occur even in areas not usually prone to flooding. Additional rainfall amounts of 10 to 15 inches are possible on the Big Island, with localized higher amounts of 20 inches. On Maui, additional rainfall amounts of 4 to 8 inches are possible, with localized higher amounts of 15 inches. Outer rain bands associated with Nolo could reach the other smaller islands, and would be enhanced by the terrain.
+
+Tropical storm force winds are expected to reach the Big Island as early as this afternoon, with hurricane force winds possible by late tonight. The earliest reasonable time of arrival for tropical storm force winds is predawn Saturday for Maui County. A Tropical Storm Warning and Hurricane Watch is in effect for Big Island, and a Tropical Storm Watch is in effect for the islands of Maui County. A Wind Advisory has been issued for the rest of the state.
+
+Swell generated by Nolo could bring very large and rough surf and dangerous rip currents for south and southeast facing shores, especially for the Big Island. A High Surf Advisory remains in effect for south and east facing shores of Big Island and east facing shores of Maui and Molokai. A High Surf Advisory has also been issued for east facing shores of Niihau, Kauai, and Oahu beginning tonight.
+
+Tornadoes and large waterspouts will be possible associated with Nolo, mainly over and near the Big Island, along and to the right of the track of the tropical cyclone.
+
+POTENTIAL IMPACTS -----------------
+
+* FLOODING RAIN: Protect against life-threatening rainfall flooding having possible devastating impacts across east and southeast Big Island. Potential impacts include:
+
+Extreme rainfall flooding may prompt numerous evacuations and rescues.
+
+Rivers and tributaries may overwhelmingly overflow their banks in many places with deep moving water. Small streams, creeks, canals, arroyos, and ditches may become raging rivers. In mountain areas, deadly runoff may rage down valleys while increasing susceptibility to rockslides and mudslides. Flood control systems and barriers may become stressed.
+
+Flood waters can enter numerous structures within multiple communities, some structures becoming uninhabitable or washed away. Numerous places where flood waters may cover escape routes. Streets and parking lots become rivers of raging water with underpasses submerged. Driving conditions become very dangerous. Numerous road and bridge closures with some weakened or washed out.
+
+Protect against life-threatening rainfall flooding having possible limited to extensive impacts across northwest Big Island and Maui Island.
+
+Elsewhere across the Hawaiian islands, little to no impact is anticipated.
+
+* WIND: Protect against dangerous wind having possible significant impacts across Big Island. Potential impacts in this area include:
+
+Some damage to roofing and siding materials, along with damage to porches, awnings, carports, and sheds. A few buildings experiencing window, door, and garage door failures. Mobile homes damaged, especially if unanchored. Unsecured lightweight objects become dangerous projectiles.
+
+Several large trees snapped or uprooted, but with greater numbers in places where trees are shallow rooted. Several fences and roadway signs blown over.
+
+Some roads impassable from large debris, and more within urban or heavily wooded places. A few bridges, causeways, and access routes impassable.
+
+Scattered power and communications outages, but more prevalent in areas with above ground lines.
+
+Also, protect against hazardous wind having possible limited impacts across the rest of the main Hawaiian Islands.
+
+* SURGE: Protect against locally hazardous surge having possible limited impacts across Big Island. Potential impacts in this area include:
+
+Localized inundation with storm surge flooding mainly along immediate shorelines and in low-lying spots, or in areas farther inland near where higher surge waters move ashore.
+
+Sections of near-shore roads and parking lots become overspread with surge water. Driving conditions dangerous in places where surge water covers the road.
+
+Moderate beach erosion. Heavy surf also breaching dunes, mainly in usually vulnerable locations. Strong rip currents.
+
+Minor to locally moderate damage to marinas, docks, boardwalks, and piers. A few small craft broken away from moorings.
+
+Elsewhere across the Hawaiian islands, little to no impact is anticipated.
+
+* TORNADOES: Protect against a tornado event having possible limited impacts across the Hawaiian islands. Potential impacts include:
+
+The occurrence of isolated tornadoes can hinder the execution of emergency plans during tropical events.
+
+A few places may experience tornado damage, along with power and communications disruptions.
+
+Locations could realize roofs peeled off buildings, chimneys toppled, mobile homes pushed off foundations or overturned, large tree tops and branches snapped off, shallow-rooted trees knocked over, moving vehicles blown off roads, and small boats pulled from moorings.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS ----------------------------------
+
+* EVACUATIONS: Follow the advice of local officials
+
+* OTHER PREPAREDNESS INFORMATION: Now is the time to complete all preparations to protect life and property in accordance with your emergency plan. Ensure you are in a safe location before the onset of strong winds or possible flooding.
+
+If you are relocating to safe shelter, leave as early as possible. Allow extra time to reach your destination. Many roads and bridges will be closed once strong winds arrive. Check the latest weather forecast before departing and drive with caution.
+
+If heading to a community shelter, become familiar with the shelter rules before arrival, especially if you have special needs or have pets. Take essential items with you from your Emergency Supplies Kit.
+
+Failure to adequately shelter may result in serious injury or loss of life. Always heed the advice of local officials and comply with any orders that are issued. Remember, during the storm 9 1 1 Emergency Services may not be able to immediately respond if conditions are unsafe. This should be a big factor in your decision making.
+
+Keep cell phones well charged. Cell phone chargers for automobiles can be helpful, but be aware of your risk for deadly carbon monoxide poisoning if your car is left idling in a garage or other poorly ventilated area.
+
+It is important to remain calm, informed, and focused during an emergency. Be patient and helpful with those you encounter.
+
+If you are a visitor, be sure to know the name of the city or town in which you are staying and the name of the county or parish in which it resides. Listen for these locations in local news updates. Pay attention for instructions from local authorities.
+
+Storm surge is the leading killer associated with tropical storms and hurricanes! Make sure you are in a safe area away from the surge zone. Even if you are not in a surge-prone area, you could find yourself cutoff by flood waters during and after the storm. Heed evacuation orders issued by the local authorities.
+
+Rapidly rising flood waters are deadly. If you are in a flood-prone area, consider moving to higher ground. Never drive through a flooded roadway. Remember, turn around don't drown!
+
+If a Tornado Warning is issued for your area, be ready to shelter quickly, preferably away from windows and in an interior room not prone to flooding. If driving, scan the roadside for quick shelter options.
+
+If in a place that is vulnerable to high wind, such as near large trees, a manufactured home, upper floors of a high-rise building, or on a boat, consider moving to a safer shelter before the onset of strong winds or flooding.
+
+Closely monitor weather.gov, NOAA Weather radio or local news outlets for official storm information. Be ready to adapt to possible changes to the forecast. Ensure you have multiple ways to receive weather warnings.
+
+* ADDITIONAL SOURCES OF INFORMATION:
+
+For information on appropriate preparations see ready.gov
+
+For information on creating an emergency plan see getagameplan.org
+
+For additional disaster preparedness information see redcross.org
+
+NEXT UPDATE -----------
+
+The next local statement will be issued by the National Weather Service in Honolulu HI around 5 PM HST, or sooner if conditions warrant.
+
+Details: High surf advisory
+
+High surf advisory from NWS Honolulu HI, in effect until 12:00 am Monday (6:00 pm Sunday your time).
+
+Area: Maui Windward West; Molokai Windward; Molokai Southeast; Windward Haleakala; Kipahulu; South Haleakala; Big Island Southeast; Big Island East; Big Island North.
+
+Issued 3:17 pm today (9:17 am today your time).
+
+...HIGH SURF ADVISORY IN EFFECT FOR EAST FACING SHORES OF NIIHAU KAUAI AND OAHU TONIGHT THROUGH SUNDAY...
+
+...HIGH SURF ADVISORY FOR EAST AND SOUTHEAST FACING SHORES OF MOLOKAI MAUI AND THE BIG ISLAND NOW IN EFFECT THROUGH SUNDAY...
+
+.Hurricane Nolo inches north toward the Big Island then turns west on Saturday while remaining south of the Hawaiian Islands. Nolo is producing a moderate swell that is causing building surf along east and southeast facing shores of the Big Island, Maui, and Molokai. Strengthening trades will then cause building surf along east-facing shorelines beginning tonight and continuing through Sunday.
+
+What: Large breaking waves of 8 to 12 feet today, increasing to 10 to 14 feet Saturday.
+
+Where: East and southeast facing shores of Big Island Maui and Molokai.
+
+When: Until 6 PM HST Sunday.
+
+Impacts: Moderate to High. Strong breaking waves and strong currents will make swimming dangerous. Expect very strong breaking waves and powerful currents. Waves breaking in channel entrances may make navigating the channels dangerous.
+
+Instructions: Heed all advice from ocean safety officials. When in doubt, don't go out.
+
+Announcement: Hilo: tropical storm warning, hurricane watch, flood watch until 12:00 am Sunday (6:00 pm tomorrow your time), tropical cyclone local statement, tropical cyclone local statement and high surf advisory until 12:00 am Monday (6:00 pm Sunday your time).
+
+In effect: tropical storm warning, hurricane watch, flood watch, tropical cyclone local statement and high surf advisory in effect
+

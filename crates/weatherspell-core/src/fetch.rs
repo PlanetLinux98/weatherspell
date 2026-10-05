@@ -19,6 +19,7 @@ use std::time::Duration;
 use jiff::Timestamp;
 use jiff::tz::Offset;
 
+use crate::alerts::{self, AlertReport};
 use crate::environment_canada::{self as ec, Site};
 use crate::forecast::{Forecast, OfficialPeriod};
 use crate::location::Location;
@@ -337,4 +338,53 @@ fn latest_city_page(http: &dyn Fetch, site: &Site, now: Timestamp) -> Result<Str
         site.name
     ))
     .into())
+}
+
+// Alerts in effect for a location, from the service that covers its
+// country, most severe first. A location outside every covered region
+// gets a report that is not available, which the text states outright; a
+// source that cannot be reached gets a report with the problem named,
+// never an empty list that would read as a quiet day.
+pub fn check_alerts(http: &dyn Fetch, location: &Location, now: Timestamp) -> AlertReport {
+    let (attribution, result) = if location.country.as_deref() == Some("Canada") {
+        let alerts = http
+            .get(&ec::alerts_url(location), None)
+            .map_err(Problem::from)
+            .and_then(|json| {
+                Ok(ec::parse_alerts(
+                    &json,
+                    now,
+                    Some(&ec::location_url(location)),
+                )?)
+            });
+        (ec::ALERTS_ATTRIBUTION, alerts)
+    } else if location.is_nws_covered() {
+        let alerts = http
+            .get(&nws::alerts_url(location), None)
+            .map_err(Problem::from)
+            .and_then(|json| Ok(nws::parse_alerts(&json)?));
+        (nws::ALERTS_ATTRIBUTION, alerts)
+    } else {
+        return AlertReport::not_available();
+    };
+    match result {
+        Ok(alerts) => AlertReport {
+            alerts: alerts::order(alerts),
+            attribution: Some(attribution.to_string()),
+            problem: None,
+            checked_at: Some(now),
+        },
+        Err(problem) => AlertReport {
+            alerts: Vec::new(),
+            attribution: Some(attribution.to_string()),
+            problem: Some(match problem {
+                Problem::Fetch(FetchError::TimedOut { .. }) => {
+                    "the alert service took too long to answer".to_string()
+                }
+                Problem::Fetch(e) => e.to_string(),
+                Problem::Official(e) => e.to_string().trim_end_matches(['.', ' ']).to_string(),
+            }),
+            checked_at: None,
+        },
+    }
 }
