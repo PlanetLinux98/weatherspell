@@ -20,6 +20,12 @@ const FOLDER: &str = "Weatherspell Preview";
 const FOLDER_0_1: &str = "Weatherspell";
 
 pub fn data_folder() -> PathBuf {
+    // Developer-only, like WEATHERSPELL_OFFLINE: another folder, nothing
+    // copied in, so a first run can be rehearsed without touching the
+    // real settings.
+    if let Some(folder) = std::env::var_os("WEATHERSPELL_DATA").filter(|v| !v.is_empty()) {
+        return PathBuf::from(folder);
+    }
     let base = app_data();
     let ours = base.join(FOLDER);
     if !ours.join(settings::FILE_NAME).exists() {

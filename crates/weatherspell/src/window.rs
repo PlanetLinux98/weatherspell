@@ -24,14 +24,15 @@ use weatherspell_core::forecast::Forecast;
 use weatherspell_core::layout::{RewritePlan, SectionLayout, SelectionHold};
 use weatherspell_core::location::Location;
 use weatherspell_core::net::UreqFetch;
-use weatherspell_core::settings::{AppSettings, LoadProblem, SettingsStore};
+use weatherspell_core::search::LocationSearch;
+use weatherspell_core::settings::{AppSettings, LoadProblem, SavedLocation, SettingsStore};
 use weatherspell_core::units;
 use weatherspell_core::writer::{self, Section, WriterOptions};
 use wx_accessibility::{Announcer, ScreenReaders};
 use wxdragon::prelude::*;
 
 use crate::system::{self, Region};
-use crate::{details, edit, on_ui};
+use crate::{about, add_location, details, edit, manage, on_ui, settings_dialog};
 
 pub const APP_NAME: &str = "Weatherspell";
 // The preview says what it is in its title bar, so it is never taken for
@@ -43,6 +44,11 @@ const ID_REFRESH: Id = ID_HIGHEST + 1;
 const ID_NEXT_SECTION: Id = ID_HIGHEST + 2;
 const ID_PREVIOUS_SECTION: Id = ID_HIGHEST + 3;
 const ID_ALERTS: Id = ID_HIGHEST + 4;
+// wxID_PREFERENCES, which wxDragon does not name: the Mac moves it to the
+// app menu as Settings with Cmd+comma.
+const ID_PREFERENCES: Id = 5022;
+const ID_MANAGE: Id = ID_HIGHEST + 5;
+const ID_ADD: Id = ID_HIGHEST + 6;
 // Ctrl+1 to Ctrl+9: the first nine saved locations.
 const ID_LOCATION: Id = ID_HIGHEST + 10;
 const MENU_LOCATIONS: usize = 9;
@@ -59,6 +65,7 @@ pub struct MainWindow {
     cache: ForecastCache,
     http: Arc<UreqFetch>,
     service: Arc<ForecastService>,
+    search: Arc<LocationSearch>,
     region: Region,
 
     // What the text box shows, kept so it can be rewritten in place: the
@@ -174,6 +181,7 @@ pub fn build() -> Rc<MainWindow> {
             env!("CARGO_PKG_VERSION")
         ))),
         service: Arc::new(ForecastService::new()),
+        search: Arc::new(LocationSearch::new()),
         region: system::region(),
         layout: RefCell::new(SectionLayout::default()),
         shown: RefCell::new(None),
@@ -240,29 +248,52 @@ fn menu_bar(settings: &AppSettings) -> MenuBar {
         .append_separator()
         .append_item(ID_EXIT, "E&xit\tAlt+F4", "")
         .build();
-    // "&1 Home" with Ctrl+1, to "&9" with Ctrl+9: the menu shows each
-    // shortcut, and a location past the ninth is reached in the box. The
-    // one on screen is checked.
-    let mut locations = Menu::builder();
-    for (i, saved) in settings.locations.iter().take(MENU_LOCATIONS).enumerate() {
-        let name = saved.to_location().display_name().replace('&', "&&");
-        locations = locations.append_check_item(
-            ID_LOCATION + i as Id,
-            &format!("&{} {name}\tCtrl+{}", i + 1, i + 1),
-            "",
-        );
-    }
     let view = Menu::builder()
         .append_item(ID_NEXT_SECTION, "&Next Section\tCtrl+PageDown", "")
         .append_item(ID_PREVIOUS_SECTION, "&Previous Section\tCtrl+PageUp", "")
         .append_separator()
         .append_item(ID_ALERTS, "&Alerts\tCtrl+Shift+A", "")
         .build();
+    // No shortcut: Windows has no convention for a settings dialog
+    // (Ctrl+comma is the Mac's, which wx gives it there through
+    // ID_PREFERENCES), and Alt+S, S is two keys.
+    let settings_menu = Menu::builder()
+        .append_item(ID_PREFERENCES, "&Settings...", "")
+        .build();
+    let help = Menu::builder()
+        .append_item(ID_ABOUT, "&About Weatherspell", "")
+        .build();
     MenuBar::builder()
         .append(file, "&File")
-        .append(locations.build(), "&Locations")
+        .append(locations_menu(settings), LOCATIONS_TITLE)
         .append(view, "&View")
+        .append(settings_menu, "&Settings")
+        .append(help, "&Help")
         .build()
+}
+
+const LOCATIONS_TITLE: &str = "&Locations";
+const LOCATIONS_MENU: usize = 1;
+
+// "&1 Home" with Ctrl+1, to "&9" with Ctrl+9, below Manage and Add: the
+// menu shows each shortcut, and a location past the ninth is reached in
+// the box. The one on screen is checked.
+fn locations_menu(settings: &AppSettings) -> Menu {
+    let mut menu = Menu::builder()
+        .append_item(ID_MANAGE, "&Manage Locations...\tCtrl+L", "")
+        .append_item(ID_ADD, "&Add Location...\tCtrl+Shift+L", "");
+    if !settings.locations.is_empty() {
+        menu = menu.append_separator();
+    }
+    for (i, saved) in settings.locations.iter().take(MENU_LOCATIONS).enumerate() {
+        let name = saved.to_location().display_name().replace('&', "&&");
+        menu = menu.append_check_item(
+            ID_LOCATION + i as Id,
+            &format!("&{} {name}\tCtrl+{}", i + 1, i + 1),
+            "",
+        );
+    }
+    menu.build()
 }
 
 // From the text box's subclass, as the control finishes selecting the
@@ -319,8 +350,11 @@ impl MainWindow {
                 .collect();
             self.try_cache(|c| c.prune(&keep));
         }
+        // A first run: the window with Add Location open over it, focus in
+        // the search field.
         if self.settings.borrow().locations.is_empty() {
             self.show_welcome();
+            self.add_location();
             return;
         }
         self.first_poll.set(true);
@@ -352,11 +386,110 @@ impl MainWindow {
                     self.move_caret(&heading, at);
                 }
             }
+            ID_MANAGE => self.manage_locations(),
+            ID_ADD => self.add_location(),
+            ID_PREFERENCES => self.show_settings(),
+            ID_ABOUT => about::show(&self.frame),
             _ if (ID_LOCATION..ID_LOCATION + MENU_LOCATIONS as Id).contains(&id) => {
                 self.show_location((id - ID_LOCATION) as usize);
             }
             _ => {}
         }
+    }
+
+    // A place already saved is switched to, not saved twice under the same
+    // name (#22).
+    fn add_location(&self) {
+        let Some(place) = add_location::show(&self.frame, &self.http, &self.search) else {
+            return;
+        };
+        let saved = self.settings.borrow().index_of(&place);
+        if let Some(index) = saved {
+            let name = self.settings.borrow().locations[index]
+                .to_location()
+                .display_name();
+            self.say_later(format!("{name} is already saved."), Instant::now(), None);
+            if self.current_index() != Some(index) {
+                self.choice.set_selection(index as u32);
+                self.location_changed();
+            }
+            self.text.set_focus();
+            return;
+        }
+        {
+            let mut settings = self.settings.borrow_mut();
+            settings
+                .locations
+                .push(SavedLocation::from_location(&place));
+            settings.last_location = settings.locations.len() - 1;
+        }
+        self.save_settings();
+        self.populate_locations();
+        self.refresh(false, false);
+        self.text.set_focus();
+    }
+
+    // The edits land only on OK (see LocationEditor). The location on
+    // screen stays on screen wherever it has moved, and a rename leaves its
+    // text as it is; if it was removed, the one now in its place is shown.
+    fn manage_locations(&self) {
+        let before = self.current_index();
+        let saved = self.settings.borrow().locations.clone();
+        let Some(editor) = manage::show(&self.frame, &saved, before, &self.http, &self.search)
+        else {
+            return;
+        };
+        // From the saved list as it is now: an alert check may have marked
+        // alerts seen while the dialog was open.
+        let committed = editor.commit(&self.settings.borrow().locations);
+        let show = editor.shown(before);
+        let still_shown =
+            before.is_some() && show.is_some_and(|i| editor.entries()[i].original == before);
+        {
+            let mut settings = self.settings.borrow_mut();
+            settings.locations = committed;
+            settings.last_location = show.unwrap_or(0);
+        }
+        self.save_settings();
+        // A removed location's file goes now rather than at the next
+        // launch; not after settings that could not be read (see show).
+        if self.load_problem.is_none() {
+            let keep: Vec<Location> = self
+                .settings
+                .borrow()
+                .locations
+                .iter()
+                .map(|s| s.to_location())
+                .collect();
+            self.try_cache(|c| c.prune(&keep));
+        }
+        self.populate_locations();
+        if show.is_none() {
+            self.show_welcome();
+            self.status("Ready");
+        } else if !still_shown {
+            self.refresh(false, false);
+        }
+    }
+
+    fn show_settings(&self) {
+        let settings = self.settings.borrow().clone();
+        settings_dialog::show(&self.frame, &settings, |chosen| {
+            on_ui(move |w| w.apply_settings(chosen))
+        });
+    }
+
+    // The new intervals start from now.
+    fn apply_settings(&self, chosen: settings_dialog::Chosen) {
+        {
+            let mut settings = self.settings.borrow_mut();
+            settings.forecast_refresh_minutes = chosen.forecast_minutes;
+            settings.alert_check_minutes = chosen.alert_minutes;
+            settings.alert_announcements = chosen.announcements;
+        }
+        self.save_settings();
+        self.start_forecast_timer();
+        self.start_alert_timer();
     }
 
     fn status(&self, text: &str) {
@@ -369,9 +502,16 @@ impl MainWindow {
         for saved in &settings.locations {
             self.choice.append(&saved.to_location().display_name());
         }
+        if let Some(bar) = self.frame.get_menu_bar()
+            && let Some(mut old) =
+                bar.replace(LOCATIONS_MENU, locations_menu(&settings), LOCATIONS_TITLE)
+        {
+            old.destroy_menu();
+        }
         if !settings.locations.is_empty() {
             let index = settings.last_location.min(settings.locations.len() - 1);
             self.choice.set_selection(index as u32);
+            drop(settings);
             self.check_location(index);
         }
     }
@@ -415,8 +555,6 @@ impl MainWindow {
         self.refresh(false, false);
     }
 
-    // Adding a location comes with the Add Location dialog; until then a
-    // preview starts from 0.1's saved locations.
     fn show_welcome(&self) {
         self.generation.set(self.generation.get() + 1);
         *self.shown.borrow_mut() = None;
@@ -424,7 +562,10 @@ impl MainWindow {
         *self.refresh_problem.borrow_mut() = None;
         self.set_text(&[Section::new(
             "Welcome",
-            vec!["No location yet. This preview cannot add one yet; it starts with the locations saved in Weatherspell 0.1, copied the first time it runs.".to_string()],
+            vec![
+                "No location yet. Press Ctrl+Shift+L, or use Locations > Add Location, to add one."
+                    .to_string(),
+            ],
         )]);
     }
 
@@ -536,7 +677,7 @@ impl MainWindow {
                     f.automatic,
                 );
                 if let Some(text) = failure {
-                    self.say_later(text, f.started, f.generation);
+                    self.say_later(text, f.started, Some(f.generation));
                 }
             }
             Ok(forecast) => {
@@ -574,7 +715,7 @@ impl MainWindow {
                     } else {
                         format!("{name}: forecast ready{}.", in_effect(&f.alerts))
                     };
-                    self.say_later(text, f.started, f.generation);
+                    self.say_later(text, f.started, Some(f.generation));
                 }
             }
         }
@@ -589,7 +730,9 @@ impl MainWindow {
     // at once did both, so what a refresh has to say waits until the window
     // has been up for a moment and the key that started it has been
     // answered (#17).
-    fn say_later(&self, text: String, started: Instant, generation: u64) {
+    // generation: dropped if a later refresh has started; None for what
+    // holds whatever happens next.
+    fn say_later(&self, text: String, started: Instant, generation: Option<u64>) {
         let wait = Duration::from_millis(1500)
             .saturating_sub(self.shown_at.get().elapsed())
             .max(Duration::from_millis(400).saturating_sub(started.elapsed()));
@@ -600,7 +743,7 @@ impl MainWindow {
         std::thread::spawn(move || {
             std::thread::sleep(wait);
             on_ui(move |w| {
-                if w.generation.get() == generation {
+                if generation.is_none_or(|g| g == w.generation.get()) {
                     w.announcer.say(&text);
                 }
             });

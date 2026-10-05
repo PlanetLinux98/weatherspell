@@ -4,8 +4,13 @@
 
 #![windows_subsystem = "windows"]
 
+mod about;
+mod add_location;
 mod details;
+mod dialogs;
 mod edit;
+mod manage;
+mod settings_dialog;
 mod system;
 mod window;
 
@@ -21,14 +26,20 @@ thread_local! {
 // Runs on the UI thread, from any thread: a fetch's result, an
 // announcement that waited. Dropped once the window is closing.
 pub fn on_ui(work: impl FnOnce(&MainWindow) + Send + 'static) {
-    wxdragon::call_after(Box::new(move || {
+    on_ui_thread(move || {
         let window = WINDOW.with(|w| w.borrow().clone());
         if let Some(window) = window
             && !window.closed()
         {
             work(&window);
         }
-    }));
+    });
+}
+
+// The same for a dialog, which finds its own state (add_location.rs). The
+// queue is run in a modal dialog's loop too.
+pub fn on_ui_thread(work: impl FnOnce() + Send + 'static) {
+    wxdragon::call_after(Box::new(work));
     wxdragon::wake_up_idle();
 }
 
