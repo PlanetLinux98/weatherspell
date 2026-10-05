@@ -3,52 +3,43 @@
 Why Weatherspell is built the way it is, including the roads not taken, so
 they are not re-proposed without new information.
 
-## One exe, and what that rules out
+## Rust and wxWidgets
+
+After 0.1.0, Weatherspell is being rewritten in Rust with wxWidgets
+(through the wxDragon bindings), Windows first, so that the same code can
+later run on macOS and Linux. The released C# app gets fixes only until
+the new one replaces it (#24).
+
+wxWidgets drives each system's own controls: Win32 on Windows, AppKit on
+macOS, GTK on Linux. Those are the controls screen readers know best, and
+most of what the C# app's testing found (see "The C# app") came from a
+toolkit layer standing between the screen reader and them. Rust compiles
+to one native program with wxWidgets and the C runtime linked in, so the
+single exe survives without .NET Framework, and the Mac and Linux
+versions need nothing installed either. A first test build on Windows
+came to 7.5 MB, using only Windows' own DLLs.
+
+Rejected: modern .NET with a native app for each system (C# and AppKit on
+the Mac), and Eto.Forms (C# over each system's controls), which keep C#
+but carry .NET inside the Mac and Linux apps or depend on compiling it
+ahead of time. Also rejected: toolkits that draw their own controls
+(Avalonia, Flutter, Qt Quick, the Rust toolkits built on AccessKit),
+whose accessibility is only what the toolkit implements, and where
+reading a long read-only text line by line, this app's main control, is
+the least proven part; and a web page in a window (Tauri, Electron),
+where a screen reader's browse mode and a text that refreshes itself are
+an awkward pair.
+
+wxDragon is young. Where it falls short, it gets patched or worked
+around; the fallback is the same Rust code with each system's own UI
+written directly.
+
+## One exe
 
 The whole program is a single `Weatherspell.exe` that runs the moment it is
-downloaded. Everything below follows from that.
-
-### .NET Framework 4.8 over .NET 10
-
-.NET Framework 4.8 is part of Windows 10 (1903+) and Windows 11, so the exe is
-tens of kilobytes and needs nothing installed. A .NET 10 self-contained
-single-file build is also "one exe", but it carries the runtime inside: about
-65 MB, a visible decompression pause on first launch, and WinForms cannot be
-trimmed to shrink it. A framework-dependent .NET 10 build would be small but
-pops a "download .NET" prompt on machines without the runtime.
-
-What is given up: the BCL is frozen, and WinForms on 4.8 has the 2018-era UI
-Automation fixes but not those that landed in .NET 5 to 10. For the control
-set this app uses (labels, lists, buttons, menus) those controls were
-already solid. The exception was the text box, which has no UI Automation
-text pattern on 4.8, so Narrator could not read it by line; the forecast
-uses Windows' own RichEdit instead (see "Two controls with Windows' own
-accessibility"). Modern C# syntax still works: PolySharp generates the
-compiler-support types at build time. Runtime-backed language features
-(default interface members, static abstract members, ref fields) do not.
-
-Revisit if the app ever needs a control whose 4.8 accessibility is genuinely
-broken, or if the size of a .NET 10 build stops mattering.
-
-### No `Weatherspell.exe.config`
-
-The SDK would normally generate one beside the exe. It is switched off
-(`GenerateSupportedRuntime=false`) so the exe is provably self-sufficient.
-Consequences:
-
-- **No binding redirects**, so no runtime NuGet dependencies. Build-time-only
-  packages (MinVer, PolySharp) are fine because nothing of theirs ships.
-- **System DPI awareness, not per-monitor.** WinForms 4.8 only rescales on a
-  DPI change when told to through the config file. The manifest declares the
-  app system-DPI-aware instead: crisp on the primary display at any scale,
-  bitmap-scaled by Windows on a display with a different scale. Per-monitor
-  v2 is a two-line change if the config file is ever accepted.
-- **JSON and HTTP come from the in-box BCL.** Settings and API responses use
-  what 4.8 ships; no System.Text.Json (it would be a DLL).
-
-Rejected: merging a class library into the exe with ILRepack. It works, but
-adds a build tool to maintain for a boundary that convention keeps just as
-well.
+downloaded, with nothing installed first and nothing beside it. The C# app
+gets there with .NET Framework 4.8, which Windows already has (see "The C#
+app"); the Rust app by linking everything into the exe.
 
 ## Settings live in `%APPDATA%\Weatherspell`
 
@@ -59,46 +50,13 @@ The only potential cost is that settings do not travel with the exe on a USB
 stick; a portable-marker mode can be added later if
 anyone asks.
 
-## Tests reference the exe directly
+## Windows are built in code
 
-The xUnit project takes a `ProjectReference` to the app; a .NET Framework exe
-is an ordinary assembly, and `InternalsVisibleTo` opens the internals. No
-separate Core library (a second DLL) and no linked-source tricks. The
-discipline it imposes is the one wanted anyway: logic in plain classes, forms
-kept thin.
-
-The `AccessibilityLint` test constructs the forms on an STA thread without
-creating window handles, so it runs on a headless CI runner.
-
-## Hand-coded forms, no designer files
-
-Controls are created in code rather than in `.Designer.cs` + `.resx` pairs.
-Every accessible name, tab index and label association is then visible in one
-readable file and reviewable in a diff, which matters more here than
-drag-and-drop layout. The forms are simple enough that this costs little.
-
-## Menus are the native Windows menu bar
-
-The menu bar is `MainMenu`, the Win32 menu bar, not the WinForms `MenuStrip`
-the designer offers. `MenuStrip` draws its own menus and supplies its own
-accessibility objects, and on .NET Framework 4.8 those hand a screen reader
-each item's mnemonic letter and never its shortcut, so the menus could not
-tell anyone about F5 or Ctrl+PageDown; the popup was even named after the
-internal control ("ViewDropDown"). The native menu bar is what every other
-Windows program's menus are: `menu bar`, popups named for their menu, items
-read as "Refresh F5" and "Next Section Ctrl+PageDown", and the system menu
-font, which the Windows Text size setting scales.
-
-Two things follow. `MainMenu`'s `Shortcut` enum has no PageUp/PageDown, so
-the section keys are written into the item text after a tab (the native
-accelerator column, exposed like any other) and handled by the form itself.
-And `MainMenu` exists only on .NET Framework: if the app ever moves to a
-newer runtime, where `MenuStrip` has proper UI Automation support, the menu
-goes back to `MenuStrip`; it is one block of code in the main form.
-
-Rejected: keeping `MenuStrip` and substituting a custom accessible object
-that adds the shortcut. It would still be a managed imitation of a menu,
-with its own keyboard and announcement quirks, patched from the outside.
+Controls are created in code rather than in designer files (`.Designer.cs`
+and `.resx` pairs in the C# app). Every accessible name, tab index and
+label association is then visible in one readable file and reviewable in a
+diff, which matters more here than drag-and-drop layout. The windows are
+simple enough that this costs little.
 
 ## Accessible name is the visible text
 
@@ -176,20 +134,22 @@ too sparse to name a cottage); BigDataCloud's free reverse geocoder, which
 is only for a device's own location; and GeoNames' web service, which needs
 an account.
 
-## Updates: self-update, deferring to winget
+## Updates are checked on request only
 
-On request, the app fetches the latest GitHub Release, verifies the
-downloaded exe against the `SHA256SUMS` asset, and replaces itself. A copy installed by winget will not:
-winget owns that folder, so the app should detect the winget install location
-and point the user at `winget upgrade` instead.
+No automatic checking at this time. Help > Check for Updates fetches the
+latest GitHub Release, shows the newest version and its release notes, and
+offers to install: it verifies the downloaded exe against the `SHA256SUMS`
+asset and replaces itself. A copy installed by winget will not: winget
+owns that folder, so the app should detect the winget install location and
+point the user at `winget upgrade` instead.
 
 ## Versioning and releases
 
-MinVer stamps the version from the nearest `v*` tag; nothing is hand-edited.
-Pushing a tag makes CI build the exe, write `SHA256SUMS`, and draft a GitHub
-Release with the matching `CHANGELOG.md` section as notes. Publishing the
-draft triggers the winget submission. Releases are therefore reproducible
-from a tag with no local build step.
+The version comes from the nearest `v*` tag (MinVer in the C# app); nothing
+is hand-edited. Pushing a tag makes CI build the exe, write `SHA256SUMS`,
+and draft a GitHub Release with the matching `CHANGELOG.md` section as
+notes. Publishing the draft triggers the winget submission. Releases are
+therefore reproducible from a tag with no local build step.
 
 ## Official forecast text where it exists, generated text elsewhere
 
@@ -389,74 +349,20 @@ The live alert check is still awaited when the forecast fetch fails: the
 two services are independent, and an alert service that answers gives
 live alerts over cached text.
 
-## Two controls with Windows' own accessibility
-
-Since .NET Framework 4.7.3, WinForms answers the accessibility requests
-for its controls itself, with objects that also speak UI Automation. NVDA
-(the reference screen reader) reads Win32 controls through MSAA, and two of
-those objects fall between the two APIs, found with NVDA's own event log on
-2026-09-14:
-
-- A combo box arrowed while collapsed was silent. WinForms fires the MSAA
-  value change, but NVDA drops MSAA events from any window that advertises
-  a UIA provider unless its class is on NVDA's Win32 list; the WinForms
-  class normalizes to "COMBOBOX", which is not on it ("Edit" is, so text
-  boxes were fine), and the matching UIA selection event is rejected on
-  the other side. `NativeComboBox` does not answer the UIA root request, so
-  the combo is a plain Win32 combo box to every screen reader.
-- A nudge of the mouse over the forecast read the whole text. NVDA reads
-  the text under the pointer through its edit-control support only when it
-  can identify the object under the pointer as the window's client object
-  (`IAccIdentity`), which WinForms' objects do not implement, so it fell
-  back to the control's name plus its entire value. The forecast box hands
-  the MSAA client request to the control itself, whose own object
-  identifies itself; NVDA then reads the paragraph under the pointer. That
-  object names the box from the static control just before it among its
-  siblings, so each such box sits in a panel with its label first (the
-  lint checks the order).
-
-The text to be read, the forecast and an alert's details, is not a
-TextBox but a read-only RichTextBox on msftedit's RICHEDIT50W holding
-plain text (`ReadingBox`). Narrator reads through UI Automation, and on
-this runtime a WinForms TextBox reaches UI Automation only through the MSAA
-proxy, as an edit with a value and no text pattern: Narrator read the whole
-forecast whenever the box took focus and nothing as the arrows moved
-through it (2026-09-25, #23). WinForms' own RichTextBox here is RichEdit20W,
-which is no better; RICHEDIT50W answers UI Automation itself, as a document
-with a text pattern, and NVDA reads it exactly as it read the TextBox.
-msftedit.dll is part of Windows, and RICHEDIT50W is what .NET 10's
-RichTextBox uses by default. A text pattern written for the TextBox was the
-alternative: ranges, units and bounding rectangles that RichEdit already
-implements, and a UI Automation provider on the box that NVDA would then
-prefer to the edit support it reads well. RichEdit counts a line break as
-one character, so the text is built with "\n" and the offsets for the
-section keys and alert lines match the box's own.
-
-The combo box and the forecast box are each one message on one control,
-plus the class for the box. Every combo box and every multiline text in the
-app is one of these (the lint insists); the single-line search box keeps
-WinForms' object, since its label is not a sibling and a short value under
-the mouse is harmless.
-
 ## Settings are a few combo boxes
 
 The intervals are short lists in combo boxes rather than number fields: a
 native combo box is the control screen readers read best, there is nothing
-to mistype, and WinForms' spin box is a composite (an unnamed inner edit
-plus buttons) whose reading would need its own testing. A value outside
+to mistype, and a spin box is a composite (in WinForms, an unnamed inner
+edit plus buttons) whose reading would need its own testing. A value outside
 the list, edited by hand into settings.json, is kept and listed in its
 place, so opening the dialog never silently changes it. The dialog has no
 accelerator: Windows has no conventional one for a settings dialog (Ctrl+comma
 is macOS's), and Alt+S, S is two keys.
 
-## Updates are checked on request only
-
-No automatic checking at this time. Help > Check for Updates shows the newest
-version and its release notes and offers to install.
-
 ## Windows scale by font
 
-Every form uses the system message font and scales by font rather than by
+Every window uses the system message font and scales by font rather than by
 DPI alone. Display scale changes the font's pixel size, and the Windows Text
 size accessibility setting enlarges the system font without changing the
 display scale; scaling by font follows both, so a low-vision user who turns
@@ -473,6 +379,43 @@ screen shows enough of the title bar to take hold of opens centred instead,
 and a window overhanging its screen by more than the invisible resize
 border is moved back onto it.
 
-Per-monitor DPI stays out (see the single-exe section): moving the window to
+The C# app is aware of the main display's scale only: moving its window to
 a display with a different scale gets it bitmap-scaled by Windows, correct
-but soft. Revisit if a user with mixed-scale monitors asks for other solutions.
+but soft (see "The C# app"). The Rust app has no such limit.
+
+## The C# app (0.1)
+
+0.1 is WinForms on .NET Framework 4.8, chosen because 4.8 is part of Windows
+10 (1903+) and 11, so the exe was tens of kilobytes and needed nothing
+installed. A .NET 10 self-contained single file carried the runtime inside
+(about 65 MB and a pause on first launch), and a framework-dependent one
+asked users to download .NET. The same constraint ruled out a
+`Weatherspell.exe.config`: so no binding redirects and no runtime NuGet
+packages, JSON and HTTP from the in-box libraries, and system rather than
+per-monitor DPI awareness. It also ruled out a separate Core library, so
+the tests reference the exe directly, which keeps the logic in plain
+classes and the forms thin. Rejected then: merging a class library into
+the exe with ILRepack.
+
+Its screen reader testing found four problems, each a WinForms layer
+between the screen reader and Windows' own control, and each a check for
+the rewrite:
+
+- **Menus.** WinForms' `MenuStrip` draws its own menus, and on 4.8 its
+  accessibility gave screen readers each item's mnemonic letter but never
+  its shortcut. The menu bar is the native Win32 one (`MainMenu`), whose
+  items read as "Refresh F5" and "Next Section Ctrl+PageDown".
+- **A combo box arrowed while collapsed was silent in NVDA.** WinForms'
+  objects also speak UI Automation, and NVDA drops MSAA events from a
+  window that advertises a UI Automation provider unless it knows the
+  window's class. `NativeComboBox` doesn't answer the UI Automation
+  request, so it is a plain Win32 combo box to every screen reader.
+- **A nudge of the mouse over the forecast read the whole text.** NVDA
+  reads the text under the pointer only when the object there identifies
+  itself (`IAccIdentity`), which WinForms' objects don't. The forecast box
+  hands that request to the control itself.
+- **Narrator couldn't read the forecast by line (#23).** A 4.8 TextBox
+  reaches UI Automation only as an edit with a value and no text pattern.
+  The forecast is a read-only RichEdit (RICHEDIT50W, part of Windows)
+  holding plain text, built with "\n" line breaks so its offsets match the
+  section keys'. Rejected: writing a text pattern for the TextBox.
