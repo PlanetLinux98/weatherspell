@@ -1,0 +1,36 @@
+name: Rust
+
+# The Rust rewrite (#24). Its logic is built and tested on Windows, macOS
+# and Linux from the start, so the later ports find it already working.
+# The wx test window is not built here: it compiles wxWidgets from source.
+# Unlike CI, this runs on every branch, but only for Rust changes.
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "crates/**"
+      - "Cargo.*"
+      - ".cargo/**"
+      - "tests/Weatherspell.Tests/Fixtures/**"
+      - ".github/workflows/rust.yml"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  core:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check formatting
+        run: cargo fmt --all --check
+
+      - name: Lint
+        run: cargo clippy -p weatherspell-core --all-targets -- -D warnings
+
+      - name: Test
+        run: cargo test -p weatherspell-core
