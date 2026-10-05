@@ -110,11 +110,16 @@ fn build(plain_edit: bool) -> Rc<App> {
     panel.set_sizer(outer, true);
 
     // Scale by font, as the C# app does: 103 by 37 characters is its
-    // 720 by 560 design at Segoe UI 9 point.
-    frame.set_size(Size::new(
-        frame.get_char_width() * 103,
-        frame.get_char_height() * 37,
-    ));
+    // 720 by 560 design at Segoe UI 9 point. A font does not grow in
+    // proportion to the display scale, so on a small screen at 150
+    // percent that can be taller than the working area: clamp to it, as
+    // Scaling.Apply does, or the title bar opens off the top.
+    let mut size = Size::new(frame.get_char_width() * 103, frame.get_char_height() * 37);
+    if let Some(display) = Display::from_window(&frame) {
+        let area = display.client_area();
+        size = Size::new(size.width.min(area.width), size.height.min(area.height));
+    }
+    frame.set_size(size);
     frame.centre();
 
     let menu_bar = frame.get_menu_bar().unwrap();
@@ -429,7 +434,11 @@ impl App {
         let had_focus = self.text.borrow().has_focus();
         // A destroyed window leaves its sizer, so the new box takes the
         // old one's place at the end; it is also the panel's last child,
-        // right after its label, as before.
+        // right after its label, as before. wxDragon destroys a child
+        // window only at idle time (safe from inside its own handlers),
+        // so it is hidden first, which takes it out of this layout; the
+        // still-present box otherwise kept half the height.
+        self.text.borrow().hide();
         self.text.borrow().destroy();
         let text = forecast_box(&self.panel, plain);
         self.body.add(&text, 1, SizerFlag::Expand, 0);
