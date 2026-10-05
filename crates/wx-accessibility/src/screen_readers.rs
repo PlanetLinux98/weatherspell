@@ -18,19 +18,29 @@ impl ScreenReaders {
     pub fn running() -> ScreenReaders {
         #[cfg(windows)]
         {
-            let mut found = ScreenReaders::default();
-            for name in process_names() {
-                match name.to_ascii_lowercase().as_str() {
-                    "nvda.exe" => found.nvda = true,
-                    "jfw.exe" => found.jaws = true,
-                    "narrator.exe" => found.narrator = true,
-                    _ => {}
-                }
-            }
-            found
+            ScreenReaders::among(process_names())
         }
         #[cfg(not(windows))]
         ScreenReaders::default()
+    }
+
+    // An installed NVDA runs as nvda_uiAccess.exe (nvda.exe starts it, for
+    // the access it needs), or nvda_noUIAccess.exe; a portable copy as
+    // nvda.exe. Looking for nvda.exe alone missed it, so NVDA lost its
+    // headings (Elliott, 2026-10-05): any "nvda" program counts.
+    fn among(names: impl IntoIterator<Item = String>) -> ScreenReaders {
+        let mut found = ScreenReaders::default();
+        for name in names {
+            let name = name.to_ascii_lowercase();
+            if name.starts_with("nvda") && name.ends_with(".exe") {
+                found.nvda = true;
+            } else if name == "jfw.exe" {
+                found.jaws = true;
+            } else if name == "narrator.exe" {
+                found.narrator = true;
+            }
+        }
+        found
     }
 
     // Whether a line the app's own caret move put under the reader has to
@@ -87,6 +97,26 @@ mod tests {
         assert!(with(false, true, true).need_caret_moves_spoken());
         assert!(with(true, false, false).need_caret_moves_spoken());
         assert!(with(false, false, false).need_caret_moves_spoken());
+    }
+
+    #[test]
+    fn nvda_is_found_under_each_of_its_names() {
+        let names = |list: &[&str]| list.iter().map(|n| n.to_string()).collect::<Vec<_>>();
+        for nvda in [
+            "nvda.exe",
+            "nvda_uiAccess.exe",
+            "nvda_noUIAccess.exe",
+            "NVDA.EXE",
+        ] {
+            let found = ScreenReaders::among(names(&["explorer.exe", nvda, "Narrator.exe"]));
+            assert!(found.nvda && found.narrator && !found.jaws, "{nvda}");
+            assert!(found.need_caret_moves_spoken(), "{nvda}");
+        }
+        let alone = ScreenReaders::among(names(&["explorer.exe", "Narrator.exe"]));
+        assert!(!alone.need_caret_moves_spoken());
+        assert!(
+            ScreenReaders::among(names(&["jfw.exe", "Narrator.exe"])).need_caret_moves_spoken()
+        );
     }
 
     // The listing works at all: it finds this test itself.
