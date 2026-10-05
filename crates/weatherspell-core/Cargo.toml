@@ -11,3 +11,13 @@ jiff = "0.2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 roxmltree = "0.21"
+# The real network client, for the app and the example; the core's own
+# logic and tests never touch the network.
+ureq = { version = "3", optional = true, default-features = false, features = ["rustls", "platform-verifier", "gzip", "win-system-proxy"] }
+
+[features]
+net = ["dep:ureq"]
+
+[[example]]
+name = "forecast"
+required-features = ["net"]

@@ -30,7 +30,7 @@ jobs:
         run: cargo fmt --all --check
 
       - name: Lint
-        run: cargo clippy -p weatherspell-core --all-targets -- -D warnings
+        run: cargo clippy -p weatherspell-core --all-targets --all-features -- -D warnings
 
       - name: Test
-        run: cargo test -p weatherspell-core
+        run: cargo test -p weatherspell-core --all-features

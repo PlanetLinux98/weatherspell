@@ -8,8 +8,11 @@ pub mod alerts;
 pub mod clock;
 pub mod compass;
 pub mod environment_canada;
+pub mod fetch;
 pub mod forecast;
 pub mod location;
+#[cfg(feature = "net")]
+pub mod net;
 pub mod nws;
 pub mod official;
 pub mod open_meteo;
