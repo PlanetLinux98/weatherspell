@@ -22,3 +22,5 @@ CLAUDE.local.md
 
 # Rust build output
 /target/
+# Cargo's extra programs, which the .NET bin/ rule above would hide
+!/crates/*/src/bin/
