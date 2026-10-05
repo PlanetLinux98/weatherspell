@@ -3,6 +3,8 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using Weatherspell;
+using Weatherspell.Cache;
+using Weatherspell.Settings;
 using Weatherspell.Weather;
 using Weatherspell.Weather.Alerts;
 using Weatherspell.Weather.EnvironmentCanada;
@@ -29,6 +31,14 @@ using (var stream = File.OpenRead(Path.Combine(referenceDir, "cases.json")))
     cases = (Case[])new DataContractJsonSerializer(typeof(Case[])).ReadObject(stream);
 }
 
+// Settings and cache files go both ways: 0.1's own, for the port to read,
+// and 0.1's reading of the port's (written by the port's tests with
+// WEATHERSPELL_BLESS set), so moving between the two loses nothing.
+var filesDir = Path.Combine(referenceDir, "files");
+Directory.CreateDirectory(filesDir);
+var scratch = Path.Combine(Path.GetTempPath(), "weatherspell-reference-" + Guid.NewGuid().ToString("N"));
+string[] cacheCases = ["ec-peterborough-evening", "alerts-spokane", "alerts-gander"];
+
 foreach (var c in cases)
 {
     var p = c.Place!;
@@ -42,18 +52,32 @@ foreach (var c in cases)
         forecast = ForecastService.Compose(forecast, Read(o));
     }
 
+    var report = c.Alerts is AlertsCase a ? ReadAlerts(a, now) : null;
+    var text = Text(c, forecast, report);
+    File.WriteAllText(Path.Combine(referenceDir, c.Name + ".txt"), text, new UTF8Encoding(false));
+    Console.WriteLine($"{c.Name}: {text.Length} characters");
+    if (cacheCases.Contains(c.Name)) CacheBothWays(c, location, forecast, report);
+}
+
+SettingsBothWays();
+CacheFileNames();
+Directory.Delete(scratch, recursive: true);
+
+// The case's text, and for a case with alerts what a reader hears about
+// them beyond it: the details dialog, the announcement of new ones, and
+// what a switch says.
+string Text(Case c, Forecast forecast, AlertReport? report)
+{
+    var now = DateTimeOffset.Parse(c.Now!, CultureInfo.InvariantCulture);
     var zone = TimeZoneInfo.CreateCustomTimeZone("case", TimeSpan.FromMinutes(c.PcOffsetMinutes), "case", "case");
     var culture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
     culture.DateTimeFormat.AMDesignator = c.Am ?? "";
     culture.DateTimeFormat.PMDesignator = c.Pm ?? "";
     var options = new WriterOptions(now, zone, c.TimePattern!, culture, c.RefreshProblem);
 
-    var report = c.Alerts is AlertsCase a ? ReadAlerts(a, now) : null;
     var text = SectionLayout.Build(ForecastWriter.Write(forecast, options, report)).Text;
     if (report is not null)
     {
-        // What a reader hears about the alerts beyond the text: the details
-        // dialog, the announcement of new ones, and what a switch says.
         var clock = new Clock(forecast.UtcOffset, zone, c.TimePattern!, culture);
         var nowLocal = now.ToOffset(forecast.UtcOffset).DateTime;
         var gap = new string((char)10, 2);
@@ -61,11 +85,103 @@ foreach (var c in cases)
         {
             text += $"Details: {alert.Event}{gap}" + string.Join("", AlertWriter.Details(alert, clock, nowLocal).Select(d => d + gap));
         }
-        if (report.Alerts.Count > 0) text += $"Announcement: {AlertWriter.Announcement(p.Name!, report.Alerts, clock, nowLocal)}{gap}";
+        if (report.Alerts.Count > 0) text += $"Announcement: {AlertWriter.Announcement(c.Place!.Name!, report.Alerts, clock, nowLocal)}{gap}";
         text += $"In effect: {AlertWriter.InEffect(report) ?? "nothing"}{gap}";
     }
-    File.WriteAllText(Path.Combine(referenceDir, c.Name + ".txt"), text, new UTF8Encoding(false));
-    Console.WriteLine($"{c.Name}: {text.Length} characters");
+    return text;
+}
+
+// A case's forecast and alerts through a cache file each way; the port's
+// file is read back into the case's own text, which must be unchanged.
+void CacheBothWays(Case c, Location location, Forecast forecast, AlertReport? report)
+{
+    var ours = new ForecastCache(Path.Combine(scratch, c.Name!));
+    ours.Save(location, forecast, report);
+    File.Copy(Path.Combine(ours.Directory, ForecastCache.FileName(location)), Path.Combine(filesDir, $"cache-{c.Name}-0.1.json"), overwrite: true);
+
+    var port = Path.Combine(filesDir, $"cache-{c.Name}-port.json");
+    if (!File.Exists(port))
+    {
+        Console.WriteLine($"{c.Name}: no cache file from the port yet");
+        return;
+    }
+    var theirs = new ForecastCache(Path.Combine(scratch, c.Name + "-port"));
+    Directory.CreateDirectory(theirs.Directory);
+    File.Copy(port, Path.Combine(theirs.Directory, ForecastCache.FileName(location)));
+    var cached = theirs.Load(location) ?? throw new InvalidDataException($"0.1 could not read {port}");
+    File.WriteAllText(Path.Combine(filesDir, $"cache-{c.Name}-port-0.1.txt"), Text(c, cached.Forecast, cached.Alerts), new UTF8Encoding(false));
+    Console.WriteLine($"{c.Name}: cache files both ways");
+}
+
+// 0.1's settings.json for the sample, and the port's as 0.1 reads and
+// saves it again.
+void SettingsBothWays()
+{
+    var ours = new SettingsStore(Path.Combine(scratch, "settings", "settings.json"));
+    ours.Save(SampleSettings());
+    File.Copy(ours.Path, Path.Combine(filesDir, "settings-0.1.json"), overwrite: true);
+
+    var port = Path.Combine(filesDir, "settings-port.json");
+    if (!File.Exists(port))
+    {
+        Console.WriteLine("settings: no file from the port yet");
+        return;
+    }
+    var theirs = new SettingsStore(Path.Combine(scratch, "port", "settings.json"));
+    Directory.CreateDirectory(Path.GetDirectoryName(theirs.Path)!);
+    File.Copy(port, theirs.Path);
+    var read = theirs.Load();
+    if (theirs.LoadProblem is not null) throw new InvalidDataException($"0.1 could not read {port}: {theirs.LoadError}");
+    var again = new SettingsStore(Path.Combine(scratch, "again", "settings.json"));
+    again.Save(read);
+    File.Copy(again.Path, Path.Combine(filesDir, "settings-port-0.1.json"), overwrite: true);
+    Console.WriteLine("settings: both ways");
+}
+
+// The same settings as the port's reference test builds: a nickname, seen
+// alerts, a muted location, a name beyond ASCII, a point named by its
+// coordinates, and a window.
+AppSettings SampleSettings()
+{
+    var home = SavedLocation.From(new Location("Peterborough", "Ontario", "Canada", 44.30012, -78.31623, "America/Toronto", "Home"));
+    home.SeenAlertIds.Add("ec:64919237566271632202609120507");
+    home.SeenAlertIds.Add("nws:KALB.FL.W.0012");
+    home.UtcOffsetSeconds = -14400;
+    var paris = SavedLocation.From(new Location("Paris", (char)0xCE + "le-de-France", "France", 48.85341, 2.3488, "Europe/Paris"));
+    paris.NotifyAlerts = false;
+    paris.UtcOffsetSeconds = 7200;
+    var point = SavedLocation.From(new Location("44.54 north, 78.54 west", null, null, 44.54, -78.54, null));
+    var settings = new AppSettings
+    {
+        LastLocation = 1,
+        ForecastRefreshMinutes = 60,
+        AlertCheckMinutes = 5,
+        AlertAnnouncements = "severe",
+        Window = new SavedWindow { Left = -11, Top = 0, Width = 982, Height = 1019, Maximized = true, CharWidth = 9.92, CharHeight = 25 },
+    };
+    settings.Locations.AddRange([home, paris, point]);
+    return settings;
+}
+
+// Cache file names for many points, as .NET Framework's "F4" gives them:
+// coordinates whose fifth decimal is a 5 are the ones its rounding
+// decides, so most points have one.
+void CacheFileNames()
+{
+    var random = new Random(24);
+    string Coordinate(int whole) =>
+        (random.Next(2) == 0 ? "-" : "") + random.Next(0, whole) + "." + random.Next(0, 10000).ToString("D4", CultureInfo.InvariantCulture)
+        + (random.Next(4) == 0 ? random.Next(0, 100).ToString(CultureInfo.InvariantCulture) : "5");
+    var points = new List<(string, string)> { ("-0.00004", "-0.00005"), ("0.00005", "-0.000049999"), ("90", "-180") };
+    for (var i = 0; i < 2000; i++) points.Add((Coordinate(90), Coordinate(180)));
+    var lines = new StringBuilder();
+    foreach (var (lat, lon) in points)
+    {
+        var l = new Location("x", null, null, double.Parse(lat, CultureInfo.InvariantCulture), double.Parse(lon, CultureInfo.InvariantCulture), null);
+        lines.Append(lat).Append(' ').Append(lon).Append(' ').Append(ForecastCache.FileName(l)).Append((char)10);
+    }
+    File.WriteAllText(Path.Combine(filesDir, "cache-names-0.1.txt"), lines.ToString(), new UTF8Encoding(false));
+    Console.WriteLine($"cache names: {points.Count} points");
 }
 
 // The coordinate reader over many forms of input (variants of its tests'

@@ -7,6 +7,7 @@
 
 use jiff::Timestamp;
 use jiff::civil::DateTime;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::clock::{self, Clock};
 use crate::official;
@@ -29,6 +30,26 @@ pub enum AlertSeverity {
     Extreme,
 }
 
+// In a cache file by name, as 0.1 writes it; a name neither app knows is
+// read as Unknown, as 0.1's Enum.TryParse does.
+impl Serialize for AlertSeverity {
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        s.serialize_str(&format!("{self:?}"))
+    }
+}
+
+impl<'de> Deserialize<'de> for AlertSeverity {
+    fn deserialize<D: Deserializer<'de>>(d: D) -> Result<AlertSeverity, D::Error> {
+        Ok(match Option::<String>::deserialize(d)?.as_deref() {
+            Some("Minor") => AlertSeverity::Minor,
+            Some("Moderate") => AlertSeverity::Moderate,
+            Some("Severe") => AlertSeverity::Severe,
+            Some("Extreme") => AlertSeverity::Extreme,
+            _ => AlertSeverity::Unknown,
+        })
+    }
+}
+
 // From the last word of the event name, which both services use
 // consistently ("Flash flood watch", "special weather statement"); an
 // ordering tie-break within one severity.
@@ -49,13 +70,18 @@ pub enum AlertKind {
 // expected to end, and only that: expires is when this message runs out,
 // which for a hurricane watch is when the next update is due, not when the
 // watch ends, so it is never read as "until" (#20).
-#[derive(Clone, Debug, PartialEq, Eq)]
+//
+// The serde names are the cache file's, shared with 0.1 (see forecast.rs).
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct WeatherAlert {
     pub id: String,
     pub event: String,
     pub severity: AlertSeverity,
+    #[serde(with = "crate::iso::stamp")]
     pub issued: Timestamp,
+    #[serde(default, with = "crate::iso::stamp_opt")]
     pub onset: Option<Timestamp>,
+    #[serde(default, with = "crate::iso::stamp_opt")]
     pub ends: Option<Timestamp>,
     pub source: String,
     pub sender: String,
@@ -64,6 +90,7 @@ pub struct WeatherAlert {
     pub description: String,
     pub instruction: Option<String>,
     pub url: Option<String>,
+    #[serde(default, with = "crate::iso::stamp_opt")]
     pub expires: Option<Timestamp>,
 }
 

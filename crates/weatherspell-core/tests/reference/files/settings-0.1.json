@@ -1,0 +1,57 @@
+{
+  "alertAnnouncements": "severe",
+  "alertCheckMinutes": 5,
+  "forecastRefreshMinutes": 60,
+  "lastLocation": 1,
+  "locations": [
+    {
+      "country": "Canada",
+      "latitude": 44.30012,
+      "longitude": -78.31623,
+      "name": "Peterborough",
+      "nickname": "Home",
+      "notifyAlerts": true,
+      "region": "Ontario",
+      "seenAlertIds": [
+        "ec:64919237566271632202609120507",
+        "nws:KALB.FL.W.0012"
+      ],
+      "timeZoneId": "America\/Toronto",
+      "utcOffsetSeconds": -14400
+    },
+    {
+      "country": "France",
+      "latitude": 48.85341,
+      "longitude": 2.3488,
+      "name": "Paris",
+      "nickname": null,
+      "notifyAlerts": false,
+      "region": "Île-de-France",
+      "seenAlertIds": [ ],
+      "timeZoneId": "Europe\/Paris",
+      "utcOffsetSeconds": 7200
+    },
+    {
+      "country": null,
+      "latitude": 44.54,
+      "longitude": -78.54,
+      "name": "44.54 north, 78.54 west",
+      "nickname": null,
+      "notifyAlerts": true,
+      "region": null,
+      "seenAlertIds": [ ],
+      "timeZoneId": null,
+      "utcOffsetSeconds": null
+    }
+  ],
+  "version": 1,
+  "window": {
+    "charHeight": 25,
+    "charWidth": 9.92,
+    "height": 1019,
+    "left": -11,
+    "maximized": true,
+    "top": 0,
+    "width": 982
+  }
+}

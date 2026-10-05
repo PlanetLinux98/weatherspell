@@ -25,3 +25,33 @@ pub fn toronto() -> Location {
     l.time_zone_id = Some("America/Toronto".to_string());
     l
 }
+
+// A folder of its own under the system's temporary folder, removed with
+// everything in it when the test is done.
+pub struct TempDir(pub std::path::PathBuf);
+
+impl TempDir {
+    pub fn new() -> TempDir {
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        static COUNT: AtomicUsize = AtomicUsize::new(0);
+        let n = COUNT.fetch_add(1, Ordering::Relaxed);
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        TempDir(std::env::temp_dir().join(format!(
+            "weatherspell-tests-{}-{nanos}-{n}",
+            std::process::id()
+        )))
+    }
+
+    pub fn join(&self, path: &str) -> std::path::PathBuf {
+        self.0.join(path)
+    }
+}
+
+impl Drop for TempDir {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_dir_all(&self.0);
+    }
+}
