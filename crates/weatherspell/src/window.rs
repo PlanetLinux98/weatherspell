@@ -27,7 +27,7 @@ use weatherspell_core::net::UreqFetch;
 use weatherspell_core::settings::{AppSettings, LoadProblem, SettingsStore};
 use weatherspell_core::units;
 use weatherspell_core::writer::{self, Section, WriterOptions};
-use wx_accessibility::Announcer;
+use wx_accessibility::{Announcer, ScreenReaders};
 use wxdragon::prelude::*;
 
 use crate::system::{self, Region};
@@ -928,12 +928,14 @@ impl MainWindow {
 
     // NVDA reads the new line only after the navigation keys it knows, so
     // the heading is spoken (#17); when the jump brings focus into the
-    // text, NVDA reads the line itself as focus arrives.
+    // text, NVDA reads the line itself as focus arrives. Narrator reads
+    // the line at any caret move, so with Narrator alone the heading was
+    // heard twice (ScreenReaders).
     fn move_caret(&self, heading: &str, at: usize) {
         let speak = self.text.has_focus();
         self.text.set_focus();
         self.set_caret(at);
-        if speak {
+        if speak && ScreenReaders::running().need_caret_moves_spoken() {
             self.announcer.say(heading);
         }
     }
