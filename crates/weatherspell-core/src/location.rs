@@ -86,6 +86,27 @@ impl Location {
         }
     }
 
+    // Result line for typed coordinates: the name is the nearest place's,
+    // the point is the one typed, so both are said.
+    pub fn near_text(&self) -> String {
+        format!(
+            "Near {} ({})",
+            self.full_name(),
+            crate::coordinates::words(self.latitude, self.longitude)
+        )
+    }
+
+    // A point nothing nearby names (open sea) goes by its coordinates.
+    pub fn at_point(latitude: f64, longitude: f64) -> Location {
+        Location::new(
+            &crate::coordinates::words(latitude, longitude),
+            None,
+            None,
+            latitude,
+            longitude,
+        )
+    }
+
     // Search-result line: the population tells namesakes apart. Thousands
     // are grouped with commas: the app is in English, whatever the
     // region's own separator (the C# app used the region's).

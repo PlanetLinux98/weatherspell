@@ -154,6 +154,44 @@ fn reference_dir() -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/reference")
 }
 
+// The coordinate reader against 0.1's over variants of its tests' inputs
+// (coordinates-input.json, made once by a script and kept): the same point
+// to six decimals, the same problem, or the same "none" for text left to
+// the place search.
+#[test]
+fn the_port_reads_coordinates_as_0_1_did() {
+    let inputs: Vec<String> = serde_json::from_str(
+        &std::fs::read_to_string(reference_dir().join("coordinates-input.json")).unwrap(),
+    )
+    .unwrap();
+    let theirs = std::fs::read_to_string(reference_dir().join("coordinates-0.1.txt"))
+        .unwrap()
+        .replace("\r\n", "\n");
+    let mut differences = Vec::new();
+    for ((i, input), expected) in inputs.iter().enumerate().zip(theirs.lines()) {
+        let reading = match weatherspell_core::coordinates::read(input) {
+            None => "none".to_string(),
+            // Adding zero drops a negative zero's sign ("-0, 0"), which .NET
+            // does not write either; the app never shows or sends it.
+            Some(r) => r
+                .problem
+                .unwrap_or_else(|| format!("{:.6} {:.6}", r.latitude + 0.0, r.longitude + 0.0)),
+        };
+        let ours = format!("{i}: {reading}");
+        if ours != expected {
+            differences.push(format!("{input:?}\n  0.1:  {expected}\n  port: {ours}"));
+        }
+    }
+    assert_eq!(theirs.lines().count(), inputs.len());
+    assert!(
+        differences.is_empty(),
+        "{} of {} readings differ:\n{}",
+        differences.len(),
+        inputs.len(),
+        differences.join("\n")
+    );
+}
+
 #[test]
 fn the_port_writes_what_0_1_wrote() {
     let cases: Vec<Case> =

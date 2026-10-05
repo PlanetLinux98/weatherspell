@@ -177,6 +177,18 @@ pub(crate) fn fixed(value: f64, decimals: i32) -> String {
     format!("{:.*}", decimals as usize, (value * scale).round() / scale)
 }
 
+// .NET's "0.###" family: at most that many decimals, trailing zeros
+// dropped, and no minus sign on a value that rounds to zero.
+pub(crate) fn trimmed(value: f64, decimals: i32) -> String {
+    let text = fixed(value, decimals);
+    let text = text.trim_end_matches('0').trim_end_matches('.');
+    if text.is_empty() || text == "-" || text == "-0" {
+        "0".to_string()
+    } else {
+        text.to_string()
+    }
+}
+
 // .NET's "0.#": at most one decimal, none when it would be zero.
 pub(crate) fn one_decimal(value: f64) -> String {
     let text = fixed(value, 1);

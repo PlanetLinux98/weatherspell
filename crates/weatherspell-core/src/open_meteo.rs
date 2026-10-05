@@ -62,13 +62,7 @@ pub fn search_url(query: &str) -> String {
 
 // .NET's "0.####": at most four decimals, trailing zeros dropped.
 pub(crate) fn coordinate(value: f64) -> String {
-    let text = units::fixed(value, 4);
-    let text = text.trim_end_matches('0').trim_end_matches('.');
-    if text.is_empty() || text == "-" {
-        "0".to_string()
-    } else {
-        text.to_string()
-    }
+    units::trimmed(value, 4)
 }
 
 // Uri.EscapeDataString: everything but the unreserved characters.

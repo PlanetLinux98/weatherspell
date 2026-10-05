@@ -344,13 +344,7 @@ pub fn location_url(location: &crate::location::Location) -> String {
 
 // .NET's "0.###".
 fn three_decimals(value: f64) -> String {
-    let text = crate::units::fixed(value, 3);
-    let text = text.trim_end_matches('0').trim_end_matches('.');
-    if text.is_empty() || text == "-" {
-        "0".to_string()
-    } else {
-        text.to_string()
-    }
+    crate::units::trimmed(value, 3)
 }
 
 #[derive(serde::Deserialize)]

@@ -1788,6 +1788,7 @@ name = "weatherspell-core"
 version = "0.0.0"
 dependencies = [
  "jiff",
+ "regex",
  "roxmltree",
  "serde",
  "serde_json",

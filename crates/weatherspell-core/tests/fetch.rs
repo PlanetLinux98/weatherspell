@@ -13,7 +13,7 @@ use common::fixture;
 use jiff::Timestamp;
 use weatherspell_core::environment_canada as ec;
 use weatherspell_core::fetch::{
-    Fetch, FetchError, ForecastError, ForecastService, PAGE_TIMEOUT, check_alerts,
+    Fetch, FetchError, ForecastService, PAGE_TIMEOUT, ServiceError, check_alerts,
 };
 use weatherspell_core::location::Location;
 use weatherspell_core::units::UnitSystem;
@@ -474,7 +474,7 @@ fn open_meteo_failing_fails_the_refresh() {
 
     assert_eq!(
         result.unwrap_err(),
-        ForecastError::Fetch(status(503, "Service Unavailable", &url))
+        ServiceError::Fetch(status(503, "Service Unavailable", &url))
     );
     assert_eq!(
         status(503, "Service Unavailable", &url).to_string(),

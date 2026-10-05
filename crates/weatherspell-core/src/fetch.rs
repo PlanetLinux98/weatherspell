@@ -88,24 +88,24 @@ impl fmt::Display for FetchError {
 
 impl std::error::Error for FetchError {}
 
-// Why a forecast could not be had at all: Open-Meteo did not answer, or
-// answered with something that could not be read.
+// Why a forecast or a search could not be had at all: the service did not
+// answer, or answered with something that could not be read.
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum ForecastError {
+pub enum ServiceError {
     Fetch(FetchError),
     Unreadable(String),
 }
 
-impl fmt::Display for ForecastError {
+impl fmt::Display for ServiceError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            ForecastError::Fetch(e) => e.fmt(f),
-            ForecastError::Unreadable(why) => f.write_str(why),
+            ServiceError::Fetch(e) => e.fmt(f),
+            ServiceError::Unreadable(why) => f.write_str(why),
         }
     }
 }
 
-impl std::error::Error for ForecastError {}
+impl std::error::Error for ServiceError {}
 
 // An official service's failure: a request that failed, or an answer that
 // could not be used.
@@ -162,15 +162,15 @@ impl ForecastService {
         units: UnitSystem,
         days: u32,
         now: Timestamp,
-    ) -> Result<Forecast, ForecastError> {
+    ) -> Result<Forecast, ServiceError> {
         let (base, official) = std::thread::scope(|s| {
             let official = s.spawn(|| self.official(http, location, units, now));
             let base = http
                 .get(&open_meteo::forecast_url(location, units, days), None)
-                .map_err(ForecastError::Fetch)
+                .map_err(ServiceError::Fetch)
                 .and_then(|json| {
                     open_meteo::parse(&json, location, units, now)
-                        .map_err(|e| ForecastError::Unreadable(e.0))
+                        .map_err(|e| ServiceError::Unreadable(e.0))
                 });
             (
                 base,

@@ -1,0 +1,1872 @@
+0: 44.540000 -78.540000
+1: 44.540000 -78.540000
+2: 44.540000 -78.540000
+3: 44.540000 -78.540000
+4: 44.540000 -78.540000
+5: 44.540000 -78.540000
+6: 44.540000 -78.540000
+7: 44.540000 -78.540000
+8: 44.540000 -78.540000
+9: -33.870000 151.210000
+10: 44.000000 -78.000000
+11: 0.000000 0.000000
+12: 44.540000 -78.540000
+13: 44.540000 -78.540000
+14: 44.540000 -78.540000
+15: 44.540000 -78.540000
+16: 44.540000 -78.540000
+17: 44.540000 -78.540000
+18: 44.540000 -78.540000
+19: 44.540000 -78.540000
+20: 44.540000 -78.540000
+21: 44.540000 -78.540000
+22: 44.540000 -78.540000
+23: 44.540000 -78.540000
+24: 44.540000 -78.540000
+25: 44.540000 -78.540000
+26: -33.870000 151.210000
+27: -33.870000 151.210000
+28: 45.500000 -73.570000
+29: 45.500000 -73.570000
+30: 40.400000 -3.700000
+31: 44.540000 -78.540000
+32: 44.540000 -78.540000
+33: 44.540000 -78.540000
+34: 44.540000 -78.540000
+35: 44.540000 -78.540000
+36: 44.540000 -78.540000
+37: 44.540000 -78.540000
+38: 44.540000 -78.540000
+39: 44.540000 -78.540000
+40: 44.540000 -78.540000
+41: 44.540000 -78.540000
+42: 44.540000 -78.540000
+43: -33.870000 151.210000
+44: 44.540000 -78.540000
+45: 44.540000 -78.540000
+46: 44.540000 -78.540000
+47: 44.540000 -78.540000
+48: 44.540000 -78.540000
+49: 44.540000 -78.540000
+50: 44.540000 -78.540000
+51: 44.540000 -78.540000
+52: 44.540000 -78.540000
+53: 45.500000 -73.570000
+54: 44.540000 -78.540000
+55: 44.540000 -78.540000
+56: 44.540000 -78.540000
+57: 44.540000 -78.540000
+58: 44.980000 -93.270000
+59: -78.540000 44.540000
+60: 44.540000 -78.540000
+61: 44.540000 -78.540000
+62: 44.540000 -78.540000
+63: 44.540000 -78.540000
+64: 44.540000 -78.540000
+65: 44.540000 -78.540000
+66: 44.540000 -78.540000
+67: 44.540000 -78.540000
+68: 44.540000 -78.540000
+69: 44.540000 -78.540000
+70: 44.540000 -78.540000
+71: none
+72: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+73: Couldn't use 100.5 as a latitude: it must be from 90 south to 90 north.
+74: Couldn't use 200.5 as a longitude: it must be from 180 west to 180 east.
+75: Couldn't read those coordinates: minutes and seconds must be under 60.
+76: Couldn't read those coordinates: both are latitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+77: Couldn't read those coordinates: both are longitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+78: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+79: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+80: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+81: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+82: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+83: none
+84: none
+85: none
+86: none
+87: none
+88: none
+89: none
+90: none
+91: none
+92: none
+93: none
+94: none
+95: none
+96: none
+97: none
+98: none
+99: none
+100: none
+101: none
+102: none
+103: none
+104: none
+105: none
+106: none
+107: none
+108: none
+109: none
+110: none
+111: none
+112: 44.540000 -78.540000
+113: none
+114: 44.540000 -78.540000
+115: 44.540000 -78.540000
+116: 44.540000 -78.540000
+117: -44.540000 -78.540000
+118: 44.540000 78.540000
+119: none
+120: none
+121: 44.590000 -78.540000
+122: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+123: 4.540000 -78.540000
+124: 44.540000 -78.540000
+125: none
+126: 44.540000 -78.540000
+127: -44.540000 -78.540000
+128: 44.540000 78.540000
+129: none
+130: none
+131: 49.540000 -78.540000
+132: 44.540000 -7.142333
+133: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+134: 44.540000 -78.900000
+135: 44.540000 -78.540000
+136: none
+137: 44.540000 -78.540000
+138: 44.540000 -78.540000
+139: none
+140: -44.540000 -78.540000
+141: 44.540000 78.540000
+142: none
+143: none
+144: 44.400000 -78.540000
+145: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+146: -78.540000 -44.540000
+147: none
+148: 44.540000 -78.540000
+149: none
+150: 44.540000 -78.540000
+151: 44.540000 -78.540000
+152: -44.540000 -78.540000
+153: 44.540000 78.540000
+154: none
+155: none
+156: 4.540000 -78.540000
+157: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+158: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+159: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+160: 44.540000 -78.540000
+161: none
+162: 44.540000 -78.540000
+163: 44.540000 -78.540000
+164: 44.540000 -78.540000
+165: 44.540000 -78.540000
+166: -44.540000 -78.540000
+167: 44.540000 78.540000
+168: none
+169: none
+170: 54.540000 -78.540000
+171: none
+172: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+173: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+174: 44.540000 -78.540000
+175: none
+176: 44.540000 -78.540000
+177: 44.540000 -78.540000
+178: 44.540000 -78.540000
+179: 44.540000 -78.540000
+180: 44.540000 -78.540000
+181: -44.540000 -78.540000
+182: 44.540000 78.540000
+183: none
+184: none
+185: -78.540000 44.540000
+186: 44.540000 -78.540000
+187: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+188: 1.742333 -78.540000
+189: Couldn't use -7854 as a longitude: it must be from 180 west to 180 east.
+190: -44.540000 -78.540000
+191: 44.540000 -78.540000
+192: none
+193: 44.540000 -78.540000
+194: 44.540000 -78.540000
+195: 44.540000 -78.540000
+196: 44.540000 -78.540000
+197: 44.540000 -78.540000
+198: -44.540000 -78.540000
+199: 44.540000 78.540000
+200: none
+201: none
+202: -78.540000 44.540000
+203: 44.540000 -78.540000
+204: 44.540000 -78.540000
+205: 44.540000 -78.545000
+206: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+207: 44.540000 -78.540000
+208: none
+209: 44.540000 -78.540000
+210: 44.540000 -78.540000
+211: none
+212: 44.540000 -78.540000
+213: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+214: 44.540000 78.540000
+215: none
+216: none
+217: 40.540000 -78.540000
+218: 44.540000 -78.590000
+219: 44.590000 -78.540000
+220: 44.940000 -78.540000
+221: 44.540000 -78.540000
+222: none
+223: 44.540000 -78.540000
+224: 44.540000 -78.540000
+225: -44.540000 -78.540000
+226: 44.540000 78.540000
+227: none
+228: none
+229: Couldn't use 4454 as a latitude: it must be from 90 south to 90 north.
+230: Couldn't use 444.54 as a latitude: it must be from 90 south to 90 north.
+231: 44.500000 -78.540000
+232: -33.870000 151.210000
+233: none
+234: -33.870000 151.210000
+235: -33.870000 151.210000
+236: -33.871510 0.210000
+237: -33.870000 151.210000
+238: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+239: 33.870000 151.210000
+240: none
+241: none
+242: -33.800000 151.210000
+243: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+244: Couldn't use -3387 as a latitude: it must be from 90 south to 90 north.
+245: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+246: 44.000000 -78.000000
+247: 44.000000 -78.000000
+248: 44.000000 -78.000000
+249: 44.000000 -78.000000
+250: 44.000000 -78.000000
+251: 44.000000 -78.000000
+252: -44.000000 -78.000000
+253: 44.000000 78.000000
+254: none
+255: none
+256: -78.000000 44.000000
+257: 44.000000 -78.000000
+258: 44.000000 -0.800000
+259: 44.000000 -18.000000
+260: none
+261: 0.000000 0.000000
+262: 0.000000 0.000000
+263: 0.000000 0.000000
+264: 0.000000 0.000000
+265: 0.000000 0.000000
+266: 0.000000 0.000000
+267: 0.000000 0.000000
+268: none
+269: none
+270: 0.000000 0.000000
+271: 0.000000 0.000000
+272: none
+273: none
+274: none
+275: 44.540000 -78.540000
+276: none
+277: 44.540000 -78.540000
+278: 44.540000 -78.540000
+279: 44.540000 -78.540000
+280: 44.540000 -78.540000
+281: 44.540000 -78.540000
+282: -44.540000 -78.540000
+283: none
+284: none
+285: -78.540000 44.540000
+286: 44.540000 -78.540000
+287: 44.500000 -78.540000
+288: 44.540000 -78.500000
+289: 44.540000 -78.580000
+290: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+291: 44.540000 -78.540000
+292: none
+293: 44.540000 -78.540000
+294: 44.540000 -78.540000
+295: 44.540000 -78.540000
+296: 44.540000 -78.540000
+297: 44.540000 -78.540000
+298: -44.540000 -78.540000
+299: none
+300: none
+301: -78.540000 44.540000
+302: 44.540000 -78.540000
+303: -78.540000 -44.540000
+304: 44.540000 -78.540000
+305: 44.840000 -78.540000
+306: 44.540000 -78.400000
+307: 44.540000 -78.540000
+308: 44.540000 -78.540000
+309: none
+310: 44.540000 -78.540000
+311: 44.540000 -78.540000
+312: 44.540000 -78.540000
+313: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+314: none
+315: none
+316: 44.540000 -78.540000
+317: 44.500000 -78.540000
+318: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+319: none
+320: 44.540000 -78.540000
+321: 44.540000 -78.540000
+322: none
+323: 44.540000 -78.540000
+324: 44.540000 -78.540000
+325: 44.540000 -78.540000
+326: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+327: none
+328: none
+329: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+330: 44.540000 -78.454000
+331: 44.540000 -8.540000
+332: 44.540000 -7.540000
+333: 44.540000 -78.540000
+334: 44.540000 -78.540000
+335: none
+336: 44.540000 -78.540000
+337: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+338: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+339: none
+340: none
+341: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+342: 4.009000 -78.540000
+343: 44.540000 -70.540000
+344: 44.540000 -7.540000
+345: 44.540000 -78.540000
+346: 44.540000 -78.540000
+347: none
+348: 44.540000 -78.540000
+349: 44.540000 -78.540000
+350: 44.540000 -78.540000
+351: 44.540000 -78.540000
+352: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+353: none
+354: none
+355: 44.540000 -78.500000
+356: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+357: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+358: 44.540000 -78.400000
+359: 44.540000 -78.540000
+360: 44.540000 -78.540000
+361: none
+362: 44.540000 -78.540000
+363: 44.540000 -78.540000
+364: 44.540000 -78.540000
+365: 44.540000 -78.540000
+366: 44.540000 -78.540000
+367: 44.540000 -78.540000
+368: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+369: none
+370: none
+371: 44.540000 -78.540000
+372: 44.540000 -78.570000
+373: Couldn't use -718.54 as a longitude: it must be from 180 west to 180 east.
+374: 44.540000 -78.900000
+375: 44.540000 -78.540000
+376: 44.540000 -78.540000
+377: none
+378: 44.540000 -78.540000
+379: 44.540000 -78.540000
+380: 44.540000 -78.540000
+381: 44.540000 -78.540000
+382: 44.540000 -78.540000
+383: 44.540000 -78.540000
+384: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+385: none
+386: none
+387: 44.540000 -78.540000
+388: 44.540000 -78.540000
+389: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+390: 4.540000 -78.540000
+391: none
+392: 44.540000 -78.540000
+393: 44.540000 -78.540000
+394: 44.540000 -78.540000
+395: 44.540000 -78.540000
+396: none
+397: 44.540000 -78.540000
+398: 44.540000 -78.540000
+399: 44.540000 -78.540000
+400: 44.540000 -78.540000
+401: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+402: none
+403: none
+404: Couldn't use 4454 as a latitude: it must be from 90 south to 90 north.
+405: none
+406: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+407: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+408: 44.540000 -78.540000
+409: 44.540000 -78.540000
+410: none
+411: 44.540000 -78.540000
+412: 44.540000 -78.540000
+413: 44.540000 -78.540000
+414: 44.540000 -78.540000
+415: 44.540000 -78.540000
+416: 44.540000 -78.540000
+417: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+418: none
+419: none
+420: 44.540000 -78.540000
+421: 44.540000 -78.540000
+422: 44.540000 -76.540000
+423: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+424: 44.540000 -78.540000
+425: 44.540000 -78.545000
+426: 44.540000 -78.540000
+427: 44.540000 -78.540000
+428: none
+429: 44.540000 -78.540000
+430: 44.540000 -78.540000
+431: 44.540000 -78.540000
+432: 44.540000 -78.540000
+433: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+434: none
+435: none
+436: 44.540000 -78.540000
+437: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+438: 44.840000 -78.540000
+439: 44.400000 -78.540000
+440: 44.540000 -78.540000
+441: 44.540000 -78.540000
+442: none
+443: 44.540000 -78.540000
+444: 44.540000 -78.540000
+445: 44.540000 -78.540000
+446: 44.540000 -78.540000
+447: 44.540000 -78.540000
+448: none
+449: none
+450: 44.540000 -98.540000
+451: 44.540000 -8.540000
+452: 44.066667 -78.540000
+453: 44.540000 -78.540000
+454: 44.540000 -78.540000
+455: none
+456: 44.540000 -78.540000
+457: 44.540000 -78.540000
+458: 44.540000 -78.540000
+459: 44.540000 -78.540000
+460: 44.540000 -78.540000
+461: 44.540000 -78.540000
+462: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+463: none
+464: none
+465: 44.540000 -78.540000
+466: Couldn't use -778.54 as a longitude: it must be from 180 west to 180 east.
+467: 44.540000 78.540000
+468: 44.500000 -78.540000
+469: 44.400000 -78.540000
+470: 44.540000 -78.540000
+471: 44.540000 -78.540000
+472: none
+473: 44.540000 -78.540000
+474: 44.540000 -78.540000
+475: 44.540000 -78.540000
+476: 44.540000 -78.540000
+477: 44.540000 -78.540000
+478: 44.540000 -78.540000
+479: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+480: 44.540000 -78.540000
+481: none
+482: none
+483: 44.540000 -78.540000
+484: 44.540000 -78.540000
+485: 44.540000 -78.544000
+486: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+487: 44.640000 -78.540000
+488: Couldn't use -78354 as a longitude: it must be from 180 west to 180 east.
+489: -33.870000 151.210000
+490: -33.870000 151.210000
+491: none
+492: -33.870000 151.210000
+493: -33.870000 151.210000
+494: -33.870000 151.210000
+495: -33.870000 151.210000
+496: -33.870000 151.210000
+497: none
+498: none
+499: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+500: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+501: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+502: Couldn't use -33387 as a latitude: it must be from 90 south to 90 north.
+503: -33.870000 151.210000
+504: -33.870000 151.210000
+505: none
+506: -33.870000 151.210000
+507: -33.870000 151.210000
+508: -33.870000 151.210000
+509: -33.870000 151.210000
+510: -33.870000 151.210000
+511: -33.870000 151.210000
+512: -33.870000 151.210000
+513: none
+514: none
+515: -33.870000 151.210000
+516: -33.870000 151.210000
+517: none
+518: -33.870000 151.210000
+519: none
+520: none
+521: 45.500000 -73.570000
+522: 45.500000 -73.570000
+523: none
+524: 45.500000 -73.570000
+525: 45.500000 -73.570000
+526: 45.500000 -73.570000
+527: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+528: none
+529: none
+530: 45.500000 -73.570000
+531: 45.500000 -73.570000
+532: none
+533: 45.500000 -73.570000
+534: 45.500000 -73.570000
+535: 45.500000 -73.570000
+536: none
+537: 45.500000 -73.570000
+538: 45.500000 -73.570000
+539: 45.500000 -73.570000
+540: 45.500000 -73.570000
+541: 45.500000 -73.570000
+542: 45.500000 -73.570000
+543: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+544: none
+545: none
+546: 45.500000 -73.570000
+547: 45.500000 -73.570000
+548: none
+549: 45.400000 -73.570000
+550: none
+551: 46.500000 -73.570000
+552: 40.400000 -3.700000
+553: 40.400000 -3.700000
+554: none
+555: 40.400000 -3.700000
+556: 40.400000 -3.700000
+557: 40.400000 -3.700000
+558: 40.400000 -3.700000
+559: 40.400000 -3.700000
+560: 40.400000 -3.700000
+561: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+562: none
+563: none
+564: 40.400000 -3.700000
+565: 40.400000 -3.700000
+566: none
+567: none
+568: 40.400000 -3.070000
+569: none
+570: 44.540000 -78.540000
+571: 44.540000 -78.540000
+572: none
+573: 44.540000 -78.540000
+574: 44.540000 -78.540000
+575: 44.540000 -78.540000
+576: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+577: none
+578: none
+579: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+580: Couldn't read those coordinates: minutes and seconds must be under 60.
+581: 44.540000 -78.373333
+582: Couldn't read those coordinates: both are longitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+583: 44.540000 -78.540000
+584: 44.540000 -78.540000
+585: none
+586: 44.540000 -78.540000
+587: 44.540000 -78.540000
+588: 44.540000 -78.540000
+589: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+590: none
+591: none
+592: 44.540000 -78.540000
+593: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+594: 44.540000 -7.540000
+595: 44.540000 -78.545556
+596: 44.540000 -78.540000
+597: 44.540000 -78.540000
+598: none
+599: 44.540000 -78.540000
+600: 44.540000 -78.540000
+601: 44.540000 -78.540000
+602: 44.540000 -78.540000
+603: 44.540000 -78.540000
+604: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+605: none
+606: none
+607: 44.540000 -78.540000
+608: 44.540000 -78.540000
+609: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+610: 44.040000 -78.540000
+611: 44.540000 -78.533889
+612: Couldn't use 448.54 as a latitude: it must be from 90 south to 90 north.
+613: 44.540000 -78.540000
+614: 44.540000 -78.540000
+615: none
+616: 44.540000 -78.540000
+617: 44.540000 -78.540000
+618: 44.540000 -78.540000
+619: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+620: none
+621: none
+622: 44.056667 -78.540000
+623: Couldn't read those coordinates: minutes and seconds must be under 60.
+624: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+625: 44.540000 -78.056667
+626: 44.540000 -78.540000
+627: 44.540000 -78.540000
+628: none
+629: 44.540000 -78.540000
+630: 44.540000 -78.540000
+631: 44.540000 -78.540000
+632: 44.540000 -78.540000
+633: 44.540000 -78.540000
+634: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+635: none
+636: none
+637: 44.540000 -78.540000
+638: 44.540000 -78.540000
+639: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+640: 64.540000 -78.540000
+641: 44.540000 -78.540000
+642: Couldn't read those coordinates: minutes and seconds must be under 60.
+643: 44.540000 -78.540000
+644: 44.540000 -78.540000
+645: none
+646: 44.540000 -78.540000
+647: 44.540000 -78.540000
+648: Couldn't use 443224 as a latitude: it must be from 90 south to 90 north.
+649: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+650: none
+651: none
+652: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+653: 44.540000 -78.540000
+654: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+655: 44.534444 -78.540000
+656: 44.540000 -78.540000
+657: 44.540000 -78.540000
+658: 44.540000 -78.540000
+659: 44.540000 -78.540000
+660: 44.540000 -78.540000
+661: Couldn't use 443224 as a latitude: it must be from 90 south to 90 north.
+662: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+663: none
+664: none
+665: 44.540000 -78.537222
+666: 44.540000 -8.540000
+667: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+668: 44.540000 78.540000
+669: 44.540000 -78.540000
+670: 44.540000 -78.540000
+671: none
+672: 44.540000 -78.540000
+673: 44.540000 -78.540000
+674: 44.540000 -78.540000
+675: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+676: none
+677: none
+678: Couldn't read those coordinates: minutes and seconds must be under 60.
+679: Couldn't read those coordinates: minutes and seconds must be under 60.
+680: 44.540000 -78.040000
+681: 44.056667 -78.540000
+682: 44.540000 -78.540000
+683: 44.540000 -78.540000
+684: 44.540000 -78.540000
+685: none
+686: 44.540000 -78.540000
+687: 44.540000 -78.540000
+688: 44.540000 -78.540000
+689: 44.540000 -78.540000
+690: none
+691: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+692: none
+693: none
+694: 44.540000 -78.540000
+695: 44.540000 -78.540000
+696: Couldn't read those coordinates: minutes and seconds must be under 60.
+697: 44.540000 -78.040000
+698: Couldn't use -718.54 as a longitude: it must be from 180 west to 180 east.
+699: none
+700: 44.540000 -78.540000
+701: 44.540000 -78.540000
+702: none
+703: 44.540000 -78.540000
+704: 44.540000 -78.540000
+705: 44.540000 -78.540000
+706: 44.540000 -78.540000
+707: none
+708: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+709: none
+710: none
+711: 44.540000 -78.540000
+712: 44.540000 -78.540000
+713: none
+714: none
+715: none
+716: none
+717: 44.540000 -78.540000
+718: 44.540000 -78.540000
+719: 44.540000 -78.540000
+720: 44.540000 -78.540000
+721: 44.540000 -78.540000
+722: 44.540000 -78.540000
+723: none
+724: -44.540000 -78.540000
+725: 44.540000 78.540000
+726: none
+727: none
+728: -78.540000 44.540000
+729: 44.540000 -78.540000
+730: 54.540000 -78.540000
+731: -78.540000 4.540000
+732: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+733: 44.540000 -78.540000
+734: none
+735: 44.540000 -78.540000
+736: 44.540000 -78.540000
+737: 44.540000 -78.540000
+738: -44.540000 -78.540000
+739: 44.540000 78.540000
+740: none
+741: none
+742: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+743: Couldn't read those coordinates: minutes and seconds must be under 60.
+744: 78.540000 -44.540000
+745: 44.534444 -78.540000
+746: -33.870000 151.210000
+747: -33.870000 151.210000
+748: none
+749: -33.870000 151.210000
+750: -33.870000 151.210000
+751: -33.870000 151.210000
+752: -33.870000 151.210000
+753: none
+754: none
+755: -33.870000 151.201667
+756: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+757: -3.870000 151.210000
+758: -33.867222 151.210000
+759: 44.540000 -78.540000
+760: 44.540000 -78.540000
+761: none
+762: 44.540000 -78.540000
+763: 44.540000 -78.540000
+764: 44.540000 -78.540000
+765: 44.540000 -78.540000
+766: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+767: none
+768: none
+769: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+770: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+771: Couldn't use 444.54 as a latitude: it must be from 90 south to 90 north.
+772: 44.540667 -78.540000
+773: 44.540000 -78.540000
+774: 44.540000 -78.540000
+775: none
+776: 44.540000 -78.540000
+777: 44.540000 -78.540000
+778: Couldn't use 4432.4 as a latitude: it must be from 90 south to 90 north.
+779: 44.540000 -78.540000
+780: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+781: none
+782: none
+783: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+784: 44.540000 -7.540000
+785: Couldn't read those coordinates: minutes and seconds must be under 60.
+786: none
+787: 44.540000 -78.540000
+788: 44.540000 -78.540000
+789: none
+790: 44.540000 -78.540000
+791: 44.540000 -78.540000
+792: Couldn't use 4432.4 as a latitude: it must be from 90 south to 90 north.
+793: 44.540000 -78.540000
+794: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+795: none
+796: none
+797: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+798: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+799: 44.540000 -78.533333
+800: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+801: 44.540000 -78.540000
+802: none
+803: 44.540000 -78.540000
+804: 44.540000 -78.540000
+805: 44.540000 -78.540000
+806: 44.540000 -78.540000
+807: Couldn't use 4432.4 as a latitude: it must be from 90 south to 90 north.
+808: 44.540000 -78.540000
+809: -44.540000 -78.540000
+810: 44.540000 78.540000
+811: none
+812: none
+813: -78.540000 44.540000
+814: 44.540000 -78.540000
+815: 44.540000 -73.540000
+816: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+817: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+818: 44.540000 -78.040000
+819: 44.540000 -78.540000
+820: none
+821: 44.540000 -78.540000
+822: 44.540000 -78.540000
+823: 44.540000 -78.540000
+824: 44.540000 -78.540000
+825: -44.540000 -78.540000
+826: 44.540000 78.540000
+827: none
+828: none
+829: 44.540000 -8.540000
+830: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+831: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+832: 44.540000 -78.540000
+833: none
+834: 44.540000 -78.540000
+835: 44.540000 -78.540000
+836: none
+837: -44.540000 -78.540000
+838: 44.540000 78.540000
+839: none
+840: none
+841: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+842: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+843: 44.540000 -78.500000
+844: 44.540000 -78.540000
+845: none
+846: 44.540000 -78.540000
+847: 44.540000 -78.540000
+848: -44.540000 -78.540000
+849: 44.540000 78.540000
+850: none
+851: none
+852: none
+853: Couldn't use -798.54 as a longitude: it must be from 180 west to 180 east.
+854: 44.400000 -78.540000
+855: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+856: 44.540000 -78.540000
+857: none
+858: 44.540000 -78.540000
+859: 44.540000 -78.540000
+860: 44.540000 -78.540000
+861: -44.540000 -78.540000
+862: 44.540000 78.540000
+863: none
+864: none
+865: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+866: -78.540000 44.540000
+867: none
+868: 44.540000 -71.540000
+869: 44.540000 -78.540000
+870: none
+871: 44.540000 -78.540000
+872: -44.540000 -78.540000
+873: none
+874: none
+875: none
+876: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+877: 44.540000 -8.540000
+878: 44.400000 -78.540000
+879: 45.500000 -73.570000
+880: 45.500000 -73.570000
+881: none
+882: 45.500000 -73.570000
+883: 45.500000 -73.570000
+884: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+885: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+886: none
+887: none
+888: 45.500000 -73.570000
+889: 4.500000 -73.570000
+890: 5.500000 -73.570000
+891: 45.500000 -73.575000
+892: 44.540000 -78.540000
+893: 44.540000 -78.540000
+894: none
+895: 44.540000 -78.540000
+896: 44.540000 -78.540000
+897: 44.540000 -78.540000
+898: 44.540000 -78.540000
+899: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+900: 44.540000 78.540000
+901: none
+902: none
+903: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+904: none
+905: none
+906: 44.500000 -78.540000
+907: 44.540000 -78.540000
+908: 44.540000 -78.540000
+909: 44.540000 -78.540000
+910: none
+911: 44.540000 -78.540000
+912: 44.540000 -78.540000
+913: 44.540000 -78.540000
+914: 44.540000 -78.540000
+915: 44.540000 -78.540000
+916: 44.540000 -78.540000
+917: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+918: 44.540000 78.540000
+919: none
+920: none
+921: 44.540000 -78.540000
+922: 44.540000 -78.540000
+923: none
+924: 4.540000 -78.540000
+925: none
+926: 44.540000 -78.540000
+927: 44.540000 -78.540000
+928: none
+929: 44.540000 -78.540000
+930: 44.540000 -78.540000
+931: 44.540000 -78.540000
+932: 44.540000 -78.540000
+933: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+934: 44.540000 78.540000
+935: none
+936: none
+937: 44.540000 -7.540000
+938: 44.140000 -78.540000
+939: none
+940: 44.540000 -78.540000
+941: 44.540000 -78.540000
+942: none
+943: 44.540000 -78.540000
+944: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+945: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+946: 44.540000 78.540000
+947: none
+948: none
+949: none
+950: -44.540000 -78.540000
+951: 44.500000 -78.540000
+952: 44.980000 -93.270000
+953: none
+954: 44.980000 -93.270000
+955: 44.980000 -93.270000
+956: 44.980000 -93.270000
+957: 44.980000 -93.270000
+958: 44.980000 -93.270000
+959: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+960: 44.980000 93.270000
+961: none
+962: none
+963: 44.980000 -93.270000
+964: 44.980000 -93.270000
+965: none
+966: 44.980000 -93.270000
+967: Couldn't use -93.27 as a latitude: it must be from 90 south to 90 north.
+968: Couldn't use -93.27 as a latitude: it must be from 90 south to 90 north.
+969: -78.540000 44.540000
+970: none
+971: -78.540000 44.540000
+972: -78.540000 44.540000
+973: -78.540000 44.540000
+974: -78.540000 44.540000
+975: -78.540000 44.540000
+976: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+977: 78.540000 44.540000
+978: none
+979: none
+980: -78.540000 44.540000
+981: -78.400000 44.540000
+982: -78.544000 44.540000
+983: 44.540000 -78.540000
+984: 44.540000 -78.540000
+985: 44.540000 -78.540000
+986: 44.540000 -78.540000
+987: 44.540000 -78.540000
+988: 44.000000 54.000000
+989: 44.540000 -78.540000
+990: 44.540000 78.540000
+991: 44.540000 -78.540000
+992: 44.540000 -78.540000
+993: 44.540000 -78.540000
+994: 44.540000 -7.540000
+995: 44.540000 -78.540000
+996: 44.540000 -78.540000
+997: 44.540000 -78.540000
+998: 44.540000 -78.540000
+999: 44.540000 -78.540000
+1000: 44.540000 -78.540000
+1001: 44.000000 6.000000
+1002: 44.540000 -78.540000
+1003: 44.540000 78.540000
+1004: 44.540000 -78.540000
+1005: 44.540000 -78.540000
+1006: 44.540000 -78.540000
+1007: 44.540000 -78.540000
+1008: 44.540000 -78.540000
+1009: 44.540000 -78.540000
+1010: 44.540000 -78.540000
+1011: 44.540000 -78.540000
+1012: 44.540000 -78.540000
+1013: 44.540000 -78.540000
+1014: 44.000000 54.000000
+1015: 44.540000 -78.540000
+1016: 44.540000 78.540000
+1017: 44.540000 -78.540000
+1018: 44.540000 -78.540000
+1019: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1020: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1021: 44.540000 -78.540000
+1022: none
+1023: 44.540000 -78.540000
+1024: 44.540000 -78.540000
+1025: 44.540000 -78.540000
+1026: 44.540000 -78.540000
+1027: 44.540000 -78.540000
+1028: 44.540000 -78.540000
+1029: 44.540000 -78.540000
+1030: 44.000000 54.000000
+1031: 44.540000 -78.540000
+1032: 44.540000 78.540000
+1033: 44.540000 -78.540000
+1034: 44.540000 -78.540000
+1035: 44.540000 -78.000000
+1036: 44.540000 -78.540000
+1037: 44.540000 -78.540000
+1038: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1039: 44.540000 -78.540000
+1040: 44.540000 -78.540000
+1041: 44.540000 -78.540000
+1042: none
+1043: none
+1044: 44.540000 -78.540000
+1045: 44.540000 78.540000
+1046: none
+1047: 44.540000 -78.540000
+1048: none
+1049: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1050: 44.540000 -78.540000
+1051: none
+1052: none
+1053: 44.540000 -7.540000
+1054: 44.540000 -78.540000
+1055: 44.540000 -78.540000
+1056: 44.540000 -78.540000
+1057: 44.540000 -78.540000
+1058: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1059: 44.540000 -78.540000
+1060: 44.540000 78.540000
+1061: 44.540000 -78.540000
+1062: 44.540000 -78.540000
+1063: 44.600000 -78.600000
+1064: none
+1065: 44.540000 78.540000
+1066: 44.540000 -78.540000
+1067: 44.540000 -78.540000
+1068: 44.540000 -78.540000
+1069: 44.540000 -78.540000
+1070: 44.540000 -78.540000
+1071: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1072: 44.540000 -78.540000
+1073: 44.540000 78.540000
+1074: 44.540000 -78.540000
+1075: 44.540000 -78.540000
+1076: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1077: 44.540000 -78.540000
+1078: 44.540000 -78.540000
+1079: 44.540000 -78.540000
+1080: 44.540000 -78.540000
+1081: 44.540000 -78.540000
+1082: 44.540000 -78.540000
+1083: none
+1084: 44.000000 54.000000
+1085: none
+1086: 44.540000 78.540000
+1087: none
+1088: 44.540000 -78.540000
+1089: none
+1090: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1091: 4.540000 -78.540000
+1092: none
+1093: none
+1094: 44.400000 -78.540000
+1095: 44.540000 -78.540000
+1096: 44.540000 -78.540000
+1097: 44.540000 -78.540000
+1098: none
+1099: 44.000000 54.000000
+1100: none
+1101: 44.540000 78.540000
+1102: none
+1103: 44.540000 -78.540000
+1104: 4.540000 -78.540000
+1105: 44.540000 -7.000000
+1106: 54.540000 -78.540000
+1107: 44.540000 -78.534000
+1108: 44.540000 -78.540000
+1109: 44.540000 -78.540000
+1110: 44.540000 -78.540000
+1111: 44.540000 -78.540000
+1112: 44.540000 -78.540000
+1113: 44.000000 54.000000
+1114: 44.540000 -78.540000
+1115: 44.540000 78.540000
+1116: 44.540000 -78.540000
+1117: 44.540000 -78.540000
+1118: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1119: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1120: 44.540000 -78.540000
+1121: 44.540000 -78.540000
+1122: 44.540000 -78.540000
+1123: 44.540000 -78.540000
+1124: 44.540000 -78.540000
+1125: 44.540000 -78.540000
+1126: 44.540000 -78.540000
+1127: 44.540000 -78.540000
+1128: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1129: 44.540000 -78.540000
+1130: 44.540000 78.540000
+1131: 44.540000 -78.540000
+1132: 44.540000 -78.540000
+1133: 44.540000 -78.540000
+1134: 44.540000 -78.540000
+1135: 44.540000 -78.540000
+1136: 44.540000 -78.540000
+1137: none
+1138: none
+1139: none
+1140: none
+1141: none
+1142: none
+1143: none
+1144: none
+1145: none
+1146: none
+1147: none
+1148: none
+1149: none
+1150: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1151: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1152: none
+1153: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1154: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1155: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1156: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1157: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1158: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1159: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1160: none
+1161: none
+1162: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1163: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1164: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1165: 5.500000 -78.540000
+1166: none
+1167: Couldn't use 9525 as a latitude: it must be from 90 south to 90 north.
+1168: Couldn't use 100.5 as a latitude: it must be from 90 south to 90 north.
+1169: none
+1170: Couldn't use 100.5 as a latitude: it must be from 90 south to 90 north.
+1171: Couldn't use 100.5 as a latitude: it must be from 90 south to 90 north.
+1172: Couldn't use 100.5 as a latitude: it must be from 90 south to 90 north.
+1173: Couldn't use 100.5 as a latitude: it must be from 90 south to 90 north.
+1174: Couldn't use 100.5 as a latitude: it must be from 90 south to 90 north.
+1175: Couldn't use -100.5 as a latitude: it must be from 90 south to 90 north.
+1176: none
+1177: none
+1178: Couldn't use 200.5 as a latitude: it must be from 90 south to 90 north.
+1179: Couldn't use 100.5 as a latitude: it must be from 90 south to 90 north.
+1180: Couldn't use 200.5 as a longitude: it must be from 180 west to 180 east.
+1181: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1182: Couldn't use -100.5 as a latitude: it must be from 90 south to 90 north.
+1183: 20.500000 100.500000
+1184: Couldn't use 200.5 as a longitude: it must be from 180 west to 180 east.
+1185: none
+1186: Couldn't use 200.5 as a longitude: it must be from 180 west to 180 east.
+1187: Couldn't use 200.5 as a longitude: it must be from 180 west to 180 east.
+1188: Couldn't use 200.5 as a longitude: it must be from 180 west to 180 east.
+1189: Couldn't use 200.5 as a longitude: it must be from 180 west to 180 east.
+1190: Couldn't use 200.5 as a longitude: it must be from 180 west to 180 east.
+1191: Couldn't use 200.5 as a longitude: it must be from 180 west to 180 east.
+1192: none
+1193: none
+1194: Couldn't use 200.5 as a latitude: it must be from 90 south to 90 north.
+1195: Couldn't use 200.5 as a longitude: it must be from 180 west to 180 east.
+1196: Couldn't use 200.5 as a longitude: it must be from 180 west to 180 east.
+1197: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1198: Couldn't use 200.5 as a longitude: it must be from 180 west to 180 east.
+1199: Couldn't read those coordinates: minutes and seconds must be under 60.
+1200: Couldn't read those coordinates: minutes and seconds must be under 60.
+1201: none
+1202: Couldn't read those coordinates: minutes and seconds must be under 60.
+1203: Couldn't read those coordinates: minutes and seconds must be under 60.
+1204: Couldn't use 4465 as a latitude: it must be from 90 south to 90 north.
+1205: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1206: none
+1207: none
+1208: Couldn't read those coordinates: minutes and seconds must be under 60.
+1209: Couldn't read those coordinates: minutes and seconds must be under 60.
+1210: none
+1211: none
+1212: Couldn't read those coordinates: both are latitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1213: Couldn't read those coordinates: both are latitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1214: none
+1215: Couldn't read those coordinates: both are latitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1216: Couldn't read those coordinates: both are latitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1217: Couldn't read those coordinates: both are latitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1218: Couldn't read those coordinates: both are latitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1219: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1220: none
+1221: none
+1222: 44.540000 78.540000
+1223: Couldn't read those coordinates: both are latitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1224: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1225: none
+1226: Couldn't read those coordinates: both are longitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1227: Couldn't read those coordinates: both are longitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1228: none
+1229: Couldn't read those coordinates: both are longitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1230: Couldn't read those coordinates: both are longitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1231: Couldn't read those coordinates: both are longitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1232: Couldn't read those coordinates: both are longitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1233: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1234: none
+1235: none
+1236: Couldn't read those coordinates: both are longitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1237: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1238: Couldn't read those coordinates: both are longitudes. Type a latitude and then a longitude, such as 44.54, -78.54.
+1239: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1240: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1241: none
+1242: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1243: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1244: none
+1245: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1246: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1247: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1248: none
+1249: none
+1250: none
+1251: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1252: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1253: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1254: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1255: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1256: none
+1257: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1258: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1259: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1260: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1261: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1262: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1263: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1264: 44.540000 -78.540000
+1265: none
+1266: none
+1267: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1268: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1269: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1270: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1271: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1272: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1273: none
+1274: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1275: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1276: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1277: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1278: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1279: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1280: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1281: none
+1282: none
+1283: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1284: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1285: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1286: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1287: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1288: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1289: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1290: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1291: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1292: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1293: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1294: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1295: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1296: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1297: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1298: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1299: That link has no coordinates in it. Copy the coordinates themselves, or search for the place by name.
+1300: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1301: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1302: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1303: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1304: Couldn't use 95 as a latitude: it must be from 90 south to 90 north.
+1305: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1306: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1307: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1308: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1309: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1310: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1311: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1312: Couldn't use 95.5 as a latitude: it must be from 90 south to 90 north.
+1313: none
+1314: none
+1315: none
+1316: none
+1317: none
+1318: none
+1319: none
+1320: none
+1321: none
+1322: none
+1323: none
+1324: none
+1325: none
+1326: none
+1327: none
+1328: none
+1329: none
+1330: none
+1331: none
+1332: none
+1333: none
+1334: none
+1335: none
+1336: none
+1337: none
+1338: none
+1339: none
+1340: none
+1341: none
+1342: none
+1343: none
+1344: none
+1345: none
+1346: none
+1347: none
+1348: none
+1349: none
+1350: none
+1351: none
+1352: none
+1353: none
+1354: none
+1355: none
+1356: none
+1357: none
+1358: none
+1359: none
+1360: none
+1361: none
+1362: none
+1363: none
+1364: none
+1365: none
+1366: none
+1367: none
+1368: none
+1369: none
+1370: none
+1371: none
+1372: none
+1373: none
+1374: none
+1375: none
+1376: none
+1377: none
+1378: none
+1379: none
+1380: none
+1381: none
+1382: none
+1383: none
+1384: none
+1385: none
+1386: none
+1387: none
+1388: none
+1389: none
+1390: none
+1391: none
+1392: none
+1393: none
+1394: none
+1395: none
+1396: none
+1397: none
+1398: none
+1399: none
+1400: none
+1401: none
+1402: none
+1403: none
+1404: none
+1405: none
+1406: none
+1407: none
+1408: none
+1409: none
+1410: none
+1411: none
+1412: none
+1413: none
+1414: none
+1415: none
+1416: none
+1417: none
+1418: none
+1419: none
+1420: none
+1421: none
+1422: none
+1423: none
+1424: none
+1425: none
+1426: none
+1427: none
+1428: none
+1429: none
+1430: none
+1431: none
+1432: none
+1433: none
+1434: none
+1435: none
+1436: none
+1437: none
+1438: none
+1439: none
+1440: none
+1441: none
+1442: none
+1443: none
+1444: none
+1445: none
+1446: none
+1447: none
+1448: none
+1449: none
+1450: none
+1451: none
+1452: none
+1453: none
+1454: none
+1455: none
+1456: none
+1457: none
+1458: none
+1459: none
+1460: none
+1461: none
+1462: none
+1463: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1464: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1465: none
+1466: none
+1467: none
+1468: none
+1469: none
+1470: none
+1471: none
+1472: none
+1473: none
+1474: none
+1475: none
+1476: none
+1477: none
+1478: none
+1479: none
+1480: none
+1481: none
+1482: none
+1483: none
+1484: none
+1485: none
+1486: none
+1487: none
+1488: none
+1489: none
+1490: none
+1491: none
+1492: none
+1493: none
+1494: none
+1495: none
+1496: none
+1497: none
+1498: none
+1499: none
+1500: none
+1501: none
+1502: none
+1503: none
+1504: none
+1505: none
+1506: none
+1507: none
+1508: none
+1509: none
+1510: none
+1511: none
+1512: none
+1513: none
+1514: none
+1515: none
+1516: none
+1517: none
+1518: none
+1519: none
+1520: none
+1521: none
+1522: none
+1523: none
+1524: none
+1525: none
+1526: none
+1527: none
+1528: none
+1529: none
+1530: none
+1531: none
+1532: none
+1533: none
+1534: none
+1535: none
+1536: none
+1537: none
+1538: none
+1539: none
+1540: none
+1541: none
+1542: none
+1543: none
+1544: none
+1545: none
+1546: none
+1547: none
+1548: none
+1549: none
+1550: none
+1551: 1.100000 0.000000
+1552: Couldn't use -110 as a latitude: it must be from 90 south to 90 north.
+1553: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1554: none
+1555: none
+1556: none
+1557: none
+1558: none
+1559: none
+1560: none
+1561: none
+1562: none
+1563: none
+1564: none
+1565: none
+1566: none
+1567: none
+1568: none
+1569: none
+1570: none
+1571: none
+1572: none
+1573: none
+1574: none
+1575: none
+1576: none
+1577: none
+1578: none
+1579: none
+1580: 44.000000 54.000000
+1581: none
+1582: none
+1583: none
+1584: none
+1585: none
+1586: none
+1587: none
+1588: none
+1589: none
+1590: none
+1591: none
+1592: none
+1593: none
+1594: none
+1595: none
+1596: none
+1597: none
+1598: none
+1599: 54.000000 44.000000
+1600: none
+1601: none
+1602: none
+1603: none
+1604: none
+1605: none
+1606: none
+1607: none
+1608: none
+1609: none
+1610: none
+1611: none
+1612: none
+1613: none
+1614: none
+1615: none
+1616: none
+1617: none
+1618: none
+1619: none
+1620: none
+1621: none
+1622: none
+1623: none
+1624: none
+1625: none
+1626: none
+1627: none
+1628: none
+1629: none
+1630: none
+1631: none
+1632: none
+1633: none
+1634: none
+1635: none
+1636: none
+1637: none
+1638: none
+1639: none
+1640: none
+1641: none
+1642: none
+1643: none
+1644: none
+1645: none
+1646: none
+1647: none
+1648: none
+1649: none
+1650: none
+1651: none
+1652: none
+1653: none
+1654: none
+1655: none
+1656: none
+1657: none
+1658: none
+1659: none
+1660: none
+1661: none
+1662: none
+1663: none
+1664: none
+1665: none
+1666: none
+1667: none
+1668: none
+1669: none
+1670: none
+1671: none
+1672: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1673: none
+1674: Couldn't use -145.29 as a latitude: it must be from 90 south to 90 north.
+1675: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1676: none
+1677: none
+1678: Couldn't use -199 as a latitude: it must be from 90 south to 90 north.
+1679: none
+1680: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1681: none
+1682: none
+1683: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1684: none
+1685: none
+1686: none
+1687: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1688: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1689: Couldn't use -98 as a latitude: it must be from 90 south to 90 north.
+1690: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1691: Couldn't use -188.01 as a latitude: it must be from 90 south to 90 north.
+1692: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1693: none
+1694: 31.000000 -168.000000
+1695: 1.194100 33.800000
+1696: none
+1697: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1698: -53.100000 -79.620000
+1699: none
+1700: Couldn't use -194 as a longitude: it must be from 180 west to 180 east.
+1701: 80.601000 -108.750000
+1702: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1703: Couldn't use -183.63 as a latitude: it must be from 90 south to 90 north.
+1704: -64.272900 136.664600
+1705: -33.250500 -104.300000
+1706: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1707: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1708: none
+1709: -37.300000 -109.310000
+1710: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1711: 16.168400 103.130000
+1712: none
+1713: 7.603000 126.160000
+1714: none
+1715: none
+1716: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1717: 41.520000 -112.800000
+1718: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1719: -29.000000 171.934000
+1720: 9.310000 -118.000000
+1721: none
+1722: -74.930000 -29.582000
+1723: 8.184300 -124.131300
+1724: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1725: none
+1726: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1727: none
+1728: Couldn't use -183.67 as a latitude: it must be from 90 south to 90 north.
+1729: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1730: none
+1731: none
+1732: none
+1733: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1734: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1735: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1736: none
+1737: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1738: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1739: none
+1740: none
+1741: none
+1742: none
+1743: 36.024000 139.460000
+1744: none
+1745: none
+1746: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1747: Couldn't use 141 as a latitude: it must be from 90 south to 90 north.
+1748: Couldn't use 163 as a latitude: it must be from 90 south to 90 north.
+1749: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1750: none
+1751: none
+1752: 6.120000 -148.440000
+1753: 26.202000 153.400000
+1754: Couldn't use 189.3165 as a latitude: it must be from 90 south to 90 north.
+1755: -8.480000 -171.500000
+1756: -80.600000 139.000000
+1757: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1758: none
+1759: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1760: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1761: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1762: 14.600000 53.000000
+1763: 21.021700 105.100000
+1764: none
+1765: Couldn't use -117.312 as a latitude: it must be from 90 south to 90 north.
+1766: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1767: none
+1768: none
+1769: -66.200000 91.002000
+1770: -12.000000 -19.690000
+1771: 31.271500 -117.000000
+1772: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1773: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1774: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1775: none
+1776: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1777: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1778: 36.322000 -104.000000
+1779: none
+1780: -66.800000 171.000000
+1781: none
+1782: none
+1783: Couldn't use -196.914 as a latitude: it must be from 90 south to 90 north.
+1784: -28.306000 -170.183000
+1785: none
+1786: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1787: Couldn't use -136.913 as a latitude: it must be from 90 south to 90 north.
+1788: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1789: 55.930000 -69.700000
+1790: Couldn't use 91.8 as a latitude: it must be from 90 south to 90 north.
+1791: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1792: Couldn't use 199.74 as a latitude: it must be from 90 south to 90 north.
+1793: -60.200000 -10.400000
+1794: Couldn't use -145.5 as a latitude: it must be from 90 south to 90 north.
+1795: Couldn't use 184.9049 as a latitude: it must be from 90 south to 90 north.
+1796: Couldn't use -124.198 as a latitude: it must be from 90 south to 90 north.
+1797: none
+1798: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1799: none
+1800: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1801: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1802: none
+1803: 44.700200 23.377000
+1804: none
+1805: 31.969300 -167.978000
+1806: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1807: none
+1808: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1809: 9.000000 -122.000000
+1810: 76.000000 -47.600000
+1811: Couldn't use 163.37 as a latitude: it must be from 90 south to 90 north.
+1812: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1813: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1814: Couldn't use -114 as a latitude: it must be from 90 south to 90 north.
+1815: none
+1816: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1817: -30.416600 147.900000
+1818: none
+1819: Couldn't use 148 as a latitude: it must be from 90 south to 90 north.
+1820: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1821: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1822: none
+1823: none
+1824: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1825: none
+1826: none
+1827: -29.670000 173.795000
+1828: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1829: -39.000000 -37.600000
+1830: -40.140000 46.060000
+1831: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1832: none
+1833: none
+1834: 29.700000 -167.800000
+1835: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1836: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1837: none
+1838: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1839: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1840: none
+1841: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1842: none
+1843: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1844: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1845: 59.402800 -88.000000
+1846: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1847: Couldn't use 115 as a latitude: it must be from 90 south to 90 north.
+1848: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1849: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1850: none
+1851: Couldn't use 109.717 as a latitude: it must be from 90 south to 90 north.
+1852: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1853: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1854: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1855: -85.686500 -134.804000
+1856: Couldn't use 183.69 as a latitude: it must be from 90 south to 90 north.
+1857: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1858: none
+1859: none
+1860: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1861: none
+1862: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1863: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1864: Couldn't use 166.27 as a latitude: it must be from 90 south to 90 north.
+1865: none
+1866: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1867: 81.655000 -150.000000
+1868: Couldn't read those coordinates. Type a latitude and then a longitude, such as 44.54, -78.54.
+1869: none
+1870: none
+1871: none

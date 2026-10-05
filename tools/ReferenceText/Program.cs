@@ -68,6 +68,33 @@ foreach (var c in cases)
     Console.WriteLine($"{c.Name}: {text.Length} characters");
 }
 
+// The coordinate reader over many forms of input (variants of its tests'
+// own), one line each: the point, the problem it reports, or "none" when
+// the text is left to the place search.
+string[] inputs;
+using (var stream = File.OpenRead(Path.Combine(referenceDir, "coordinates-input.json")))
+{
+    inputs = (string[])new DataContractJsonSerializer(typeof(string[])).ReadObject(stream);
+}
+var readings = new StringBuilder();
+for (var i = 0; i < inputs.Length; i++)
+{
+    string reading;
+    try
+    {
+        var r = Coordinates.Read(inputs[i]);
+        reading = r is null ? "none"
+            : r.Problem ?? r.Latitude.ToString("F6", CultureInfo.InvariantCulture) + " " + r.Longitude.ToString("F6", CultureInfo.InvariantCulture);
+    }
+    catch (Exception ex)
+    {
+        reading = "exception " + ex.GetType().Name;
+    }
+    readings.Append(i).Append(": ").Append(reading).Append((char)10);
+}
+File.WriteAllText(Path.Combine(referenceDir, "coordinates-0.1.txt"), readings.ToString(), new UTF8Encoding(false));
+Console.WriteLine($"coordinates: {inputs.Length} inputs");
+
 // A national weather service's text and observation, from captured
 // responses, as ForecastService would have laid them over the base.
 OfficialForecast Read(Official o)

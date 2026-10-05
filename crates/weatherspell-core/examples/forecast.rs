@@ -3,15 +3,18 @@
 //
 //     cargo run -p weatherspell-core --features net --example forecast -- "Peterborough, Canada" [--imperial]
 //
-// The first place the geocoder finds whose full name contains the words
-// after the comma is used; this PC's time zone, and the 12-hour clock.
+// A place name, postal code or coordinates, as Add Location takes them;
+// for a name, the first place found whose full name contains the words
+// after the comma. This PC's time zone, and the 12-hour clock.
 
 use jiff::Timestamp;
 use jiff::tz::TimeZone;
 use weatherspell_core::clock::TimeFormat;
-use weatherspell_core::fetch::{Fetch, ForecastService, check_alerts};
+use weatherspell_core::coordinates::{self, CoordinateReading};
+use weatherspell_core::fetch::{ForecastService, check_alerts};
+use weatherspell_core::location::Location;
 use weatherspell_core::net::UreqFetch;
-use weatherspell_core::open_meteo;
+use weatherspell_core::search::LocationSearch;
 use weatherspell_core::units::{self, UnitSystem};
 use weatherspell_core::writer::{self, WriterOptions};
 
@@ -34,17 +37,33 @@ fn main() {
     };
 
     let http = UreqFetch::new("Weatherspell/0.0.0-example");
-    let (name, filter) = query.split_once(',').unwrap_or((&query, ""));
-    let found = http
-        .get(&open_meteo::search_url(name), None)
-        .expect("the geocoder answers");
-    let places = open_meteo::parse_search(&found).expect("the geocoder's answer reads");
-    let Some(place) = places
-        .into_iter()
-        .find(|p| p.full_name().contains(filter.trim()))
-    else {
-        eprintln!("Nothing found for {query}.");
-        std::process::exit(1);
+    let search = LocationSearch::new();
+    // As Add Location does: coordinates are named, anything else searched
+    // (the postal code table and the geocoder).
+    let place = match coordinates::read(&query) {
+        Some(CoordinateReading {
+            problem: Some(problem),
+            ..
+        }) => {
+            eprintln!("{problem}");
+            std::process::exit(1);
+        }
+        Some(point) => search
+            .name_point(&http, point.latitude, point.longitude)
+            .expect("Nominatim answers")
+            .unwrap_or_else(|| Location::at_point(point.latitude, point.longitude)),
+        None => {
+            let (name, filter) = query.split_once(',').unwrap_or((&query, ""));
+            let places = search.search(&http, name).expect("the search answers");
+            let Some(place) = places
+                .into_iter()
+                .find(|p| p.full_name().contains(filter.trim()))
+            else {
+                eprintln!("Nothing found for {query}.");
+                std::process::exit(1);
+            };
+            place
+        }
     };
     let units = units::for_location(&place, region);
     eprintln!("{} ({:?})", place.full_name(), units);
