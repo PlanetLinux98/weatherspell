@@ -34,6 +34,31 @@ wxDragon is young. Where it falls short, it gets patched or worked
 around; the fallback is the same Rust code with each system's own UI
 written directly.
 
+Before anything was ported, a test window checked wxWidgets against the
+four problems the C# app's testing found (see "The C# app"), with NVDA
+and Narrator, and none of them came back. The menu bar is Windows' own,
+with each item's shortcut. The Location box is a Windows combo box, which
+NVDA reads while it is arrowed closed. The forecast is a Windows edit
+control, which NVDA reads by line and, under the mouse, a line at a time,
+and which Narrator reads by line. wxWidgets puts no accessibility layer
+of its own over these controls, and that layer is where 0.1's problems
+came from. Its dialogs are Windows dialogs too, so About is read on
+opening without the role the C# app had to give it.
+
+The forecast is the plain edit control rather than the rich edit control
+0.1 moved to for Narrator (#23): with WinForms out of the way, Narrator
+reads either one by line, and the plain one avoids a rich edit quirk with
+Ctrl+A after Shift+F10.
+
+Two things to avoid, found the same way. wxDragon's accessibility setters
+(name, role and the like) replace a window's accessible object, and the
+replacement loses the names of the controls inside it, so they are kept
+for a control that would otherwise read wrongly, and never used on a
+window with controls in it. And announcements go through UI Automation
+from the main window without the window presenting itself to UI
+Automation: when it did, NVDA switched to reading it through UI
+Automation instead of its usual way, which read worse in testing.
+
 ## One exe
 
 The whole program is a single `Weatherspell.exe` that runs the moment it is
