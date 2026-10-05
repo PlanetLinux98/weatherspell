@@ -19,3 +19,6 @@ SHA256SUMS
 CLAUDE.md
 CLAUDE.local.md
 .claude/settings.local.json
+
+# Rust build output
+/target/

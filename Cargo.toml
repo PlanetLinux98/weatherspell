@@ -1,0 +1,12 @@
+# The Rust rewrite (#24), beside the C# app until the switch.
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+[workspace.package]
+edition = "2024"
+license = "MIT"
+publish = false
+
+[profile.release]
+strip = true

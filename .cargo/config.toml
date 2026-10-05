@@ -1,0 +1,4 @@
+# The static C runtime, so the exe needs no Visual C++ runtime DLLs;
+# wxdragon-sys reads this flag and builds wxWidgets with the same runtime.
+[target.'cfg(all(windows, target_env = "msvc"))']
+rustflags = ["-C", "target-feature=+crt-static"]
