@@ -1784,6 +1784,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "weatherspell"
+version = "0.0.0"
+dependencies = [
+ "embed-resource",
+ "jiff",
+ "weatherspell-core",
+ "windows",
+ "wx-accessibility",
+ "wxdragon",
+]
+
+[[package]]
 name = "weatherspell-core"
 version = "0.0.0"
 dependencies = [
@@ -2064,6 +2076,15 @@ name = "writeable"
 version = "0.6.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3ad82d2a33cdc9674dc7465672f271e096168fcdbe0f799d9e6db8c5892679dc"
+
+[[package]]
+name = "wx-accessibility"
+version = "0.0.0"
+dependencies = [
+ "windows",
+ "windows-core",
+ "wxdragon",
+]
 
 [[package]]
 name = "wxdragon"

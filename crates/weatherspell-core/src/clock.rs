@@ -41,6 +41,18 @@ impl TimeFormat {
         s
     }
 
+    // This PC's clock with the day when it is not today ("10:43 pm
+    // yesterday", "10:43 pm on September 15"): a cached forecast days old
+    // was spoken as "from 10:43 pm" (#17).
+    pub fn format_on_day(&self, t: DateTime, today: Date) -> String {
+        let time = self.format(t);
+        if t.date() == today {
+            time
+        } else {
+            format!("{time} {}", day_word(t.date(), today))
+        }
+    }
+
     fn format_raw(&self, t: DateTime) -> String {
         let hour = t.hour() as i32;
         let twelve = if hour % 12 == 0 { 12 } else { hour % 12 };

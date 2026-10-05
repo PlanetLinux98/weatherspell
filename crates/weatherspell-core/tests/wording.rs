@@ -137,3 +137,22 @@ fn ages_and_durations_read_naturally() {
     assert_eq!(clock::duration(3660.0), "1 hour and 1 minute");
     assert_eq!(clock::duration(2700.0), "45 minutes");
 }
+
+// The PC's own clock in the status bar and in what a failed refresh says,
+// with the day when it is not today (#17).
+#[test]
+fn pc_times_name_the_day_when_it_is_not_today() {
+    let format = clock::TimeFormat::new("h:mm tt", "AM", "PM");
+    let today = jiff::civil::date(2026, 9, 17);
+    let at = |d: jiff::civil::Date| d.at(22, 43, 0, 0);
+
+    assert_eq!(format.format_on_day(at(today), today), "10:43 pm");
+    assert_eq!(
+        format.format_on_day(at(jiff::civil::date(2026, 9, 16)), today),
+        "10:43 pm yesterday"
+    );
+    assert_eq!(
+        format.format_on_day(at(jiff::civil::date(2026, 9, 9)), today),
+        "10:43 pm on September 9"
+    );
+}

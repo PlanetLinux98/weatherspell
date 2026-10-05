@@ -209,3 +209,29 @@ fn offsets_count_utf16_units() {
     assert_eq!(layout.headings[1].1, before.chars().count() + 1);
     assert_eq!(layout.length, units(&layout.text));
 }
+
+// Windows' EDIT control keeps each break as "\r\n" and counts it as two;
+// the window converts with these.
+#[test]
+fn offsets_convert_to_and_from_positions_that_count_breaks_as_two() {
+    let layout = SectionLayout::build(&sections(false, true));
+    let humidity = index_of(&layout, "Humidity");
+    let crlf = layout.text.replace('\n', "\r\n");
+
+    let position = layout.crlf_position(humidity);
+    assert_eq!(&crlf[position..position + 8], "Humidity");
+    assert_eq!(layout.offset_from_crlf(position), humidity);
+    for offset in 0..=layout.length {
+        assert_eq!(
+            layout.offset_from_crlf(layout.crlf_position(offset)),
+            offset
+        );
+    }
+    // Inside a break ("\r|\n"): the break itself.
+    let first_break = layout.text.find('\n').unwrap();
+    assert_eq!(
+        layout.offset_from_crlf(layout.crlf_position(first_break) + 1),
+        first_break
+    );
+    assert_eq!(layout.offset_from_crlf(usize::MAX), layout.length);
+}

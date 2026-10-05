@@ -77,6 +77,32 @@ impl SectionLayout {
         self.length += units(s);
     }
 
+    // An offset as a text control that keeps each line break as "\r\n"
+    // counts it (Windows' EDIT control), and back; a position inside a
+    // break is taken as the break.
+    pub fn crlf_position(&self, offset: usize) -> usize {
+        offset
+            + self
+                .text
+                .encode_utf16()
+                .take(offset)
+                .filter(|u| *u == u16::from(b'\n'))
+                .count()
+    }
+
+    pub fn offset_from_crlf(&self, position: usize) -> usize {
+        let mut counted = 0;
+        let mut offset = 0;
+        for unit in self.text.encode_utf16() {
+            counted += if unit == u16::from(b'\n') { 2 } else { 1 };
+            if counted > position {
+                break;
+            }
+            offset += 1;
+        }
+        offset
+    }
+
     pub fn alert_at(&self, offset: usize) -> Option<&WeatherAlert> {
         self.alert_ranges
             .iter()
