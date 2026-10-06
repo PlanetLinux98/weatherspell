@@ -3,10 +3,13 @@
 # out of its window (0.1's Show-Scaled did the same for the C# app). The
 # app runs offline with two made-up locations in a scratch folder, so the
 # real settings are never touched; no copy of it may be running already.
+# -PointSize 0 keeps the system's font; -Appearance dark or light forces
+# that mode whatever Windows is set to.
 #
-#     powershell -NoProfile -ExecutionPolicy Bypass -File tools\Capture-Windows.ps1 [-PointSize 18] [-Path target\release\weatherspell.exe] [-Out folder]
+#     powershell -NoProfile -ExecutionPolicy Bypass -File tools\Capture-Windows.ps1 [-PointSize 18] [-Appearance dark] [-Path target\release\weatherspell.exe] [-Out folder]
 param(
     [int]$PointSize = 18,
+    [ValidateSet("", "dark", "light")][string]$Appearance = "",
     [string]$Path = "target\release\weatherspell.exe",
     [string]$Out = (Join-Path $env:TEMP "weatherspell-capture")
 )
@@ -89,10 +92,12 @@ function Close-Window([IntPtr]$window) {
 $env:WEATHERSPELL_DATA = $data
 $env:WEATHERSPELL_OFFLINE = "1"
 $env:WEATHERSPELL_FONT_POINTS = "$PointSize"
+$env:WEATHERSPELL_APPEARANCE = $Appearance
 $process = Start-Process $app -PassThru
 $env:WEATHERSPELL_DATA = $null
 $env:WEATHERSPELL_OFFLINE = $null
 $env:WEATHERSPELL_FONT_POINTS = $null
+$env:WEATHERSPELL_APPEARANCE = $null
 try {
     $frame = Find-Window "Weatherspell Preview"
     Start-Sleep -Seconds 2

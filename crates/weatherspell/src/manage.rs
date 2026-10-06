@@ -381,6 +381,7 @@ fn make_edit(
         .with_label("Notify me about &alerts for this location")
         .build();
     notify.set_value(notify_alerts);
+    wx_accessibility::report_toggles(&notify);
     let ok = Button::builder(&dialog)
         .with_id(ID_OK)
         .with_label("OK")

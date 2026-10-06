@@ -4,8 +4,10 @@
 // for the mechanical rules; the test tools are binaries (src/bin).
 
 mod announce;
+mod check_box;
 pub mod lint;
 mod screen_readers;
 
 pub use announce::Announcer;
+pub use check_box::report_toggles;
 pub use screen_readers::ScreenReaders;

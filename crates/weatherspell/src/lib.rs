@@ -54,11 +54,14 @@ pub fn on_ui_thread(work: impl FnOnce() + Send + 'static) {
     wxdragon::wake_up_idle();
 }
 
+pub use system::follow_appearance;
+
 pub fn run() {
     if system::another_copy_brought_forward() {
         return;
     }
     let _ = wxdragon::main(|_| {
+        follow_appearance();
         let window = window::build();
         WINDOW.with(|w| *w.borrow_mut() = Some(window.clone()));
         window.show();

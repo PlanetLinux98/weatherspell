@@ -60,6 +60,8 @@ fn main() {
     let r = results.clone();
     let saved = settings.locations.clone();
     let _ = wxdragon::main(move |_| {
+        // As the app does, so WEATHERSPELL_APPEARANCE=dark lints dark mode.
+        weatherspell::follow_appearance();
         let main = window::build();
         let frame = main.frame();
         let http = Arc::new(UreqFetch::new("Weatherspell-lint"));

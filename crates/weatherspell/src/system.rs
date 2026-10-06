@@ -92,6 +92,49 @@ pub fn another_copy_brought_forward() -> bool {
     false
 }
 
+// Light or dark as the system is set, through wx 3.3's own dark mode on
+// Windows (the Mac and GTK follow the system by themselves). wx is made to
+// switch the open windows when the system's mode changes. Not while a high
+// contrast theme is on: wx does not look for one and would paint its fixed
+// dark colours over the theme's, so the system colours are left alone (a
+// theme turned on while a dark copy runs shows once it is restarted). Must
+// run before the first window. WEATHERSPELL_APPEARANCE, for developers,
+// forces "dark" or "light" to see either without changing Windows.
+pub fn follow_appearance() {
+    use wxdragon::appearance::Appearance;
+    let appearance = match std::env::var("WEATHERSPELL_APPEARANCE").ok().as_deref() {
+        Some("dark") => Appearance::Dark,
+        Some("light") => Appearance::Light,
+        _ if high_contrast() => Appearance::Light,
+        _ => Appearance::System,
+    };
+    let _ = wxdragon::app::set_appearance(appearance);
+}
+
+fn high_contrast() -> bool {
+    #[cfg(windows)]
+    unsafe {
+        use windows::Win32::UI::Accessibility::{HCF_HIGHCONTRASTON, HIGHCONTRASTW};
+        use windows::Win32::UI::WindowsAndMessaging::{
+            SPI_GETHIGHCONTRAST, SYSTEM_PARAMETERS_INFO_UPDATE_FLAGS, SystemParametersInfoW,
+        };
+        let mut contrast = HIGHCONTRASTW {
+            cbSize: size_of::<HIGHCONTRASTW>() as u32,
+            ..Default::default()
+        };
+        SystemParametersInfoW(
+            SPI_GETHIGHCONTRAST,
+            contrast.cbSize,
+            Some(&mut contrast as *mut _ as *mut std::ffi::c_void),
+            SYSTEM_PARAMETERS_INFO_UPDATE_FLAGS(0),
+        )
+        .is_ok()
+            && contrast.dwFlags.contains(HCF_HIGHCONTRASTON)
+    }
+    #[cfg(not(windows))]
+    false
+}
+
 // The exe's own icon (resource 1, build.rs) on a window, at the sizes the
 // title bar and Alt+Tab take at the window's scale, rather than one size
 // scaled. Windows only for now; the Mac gives a window no icon of its own.
