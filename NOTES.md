@@ -59,6 +59,25 @@ from the main window without the window presenting itself to UI
 Automation: when it did, NVDA switched to reading it through UI
 Automation instead of its usual way, which read worse in testing.
 
+Until the Rust app replaces 0.1, it keeps a folder of its own,
+`%APPDATA%\Weatherspell Preview`, which its first run fills with a copy
+of 0.1's settings and cache. A preview can then never change what 0.1
+relies on, and the two can run side by side. The files themselves are
+the same: each app reads what the other writes, which the port's tests
+check in both directions, so at the switch the Rust app simply moves
+into 0.1's folder.
+
+A location's own settings, its nickname and whether its new alerts are
+spoken, are in one Edit Location dialog that names the place. In 0.1 the
+alert switch sat under the Manage Locations list and acted on whichever
+location was selected, which nothing said.
+
+After a section key (Ctrl+PageDown, Ctrl+PageUp, Ctrl+Shift+A), the app
+speaks the heading it moved to, since NVDA and JAWS say nothing after a
+key they do not know. Narrator reads the new line itself, so with
+Narrator as the only screen reader running the app leaves the heading to
+it; 0.1 had Narrator say it twice.
+
 ## One exe
 
 The whole program is a single `Weatherspell.exe` that runs the moment it is
