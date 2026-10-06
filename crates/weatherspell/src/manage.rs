@@ -1,12 +1,16 @@
 // Manage Locations (ManageLocationsDialog.cs in 0.1): the saved locations
 // in their order (Ctrl+1 to Ctrl+9 follow it), with Move Up, Move Down,
-// Add, Rename and Remove, and whether each location's new alerts are
-// spoken. Edits go to a LocationEditor and reach the settings only on OK.
-// The buttons act on the selected location and are never disabled: a
-// button greyed out under focus throws focus somewhere else. Their Alt
-// keys press them and leave focus in the list, so a location can be
-// arrowed to and moved with Alt+U and Alt+D; Delete and F2 in the list
-// remove and rename, as in Explorer. Also Rename, the nickname dialog.
+// Add, Edit and Remove. Edits go to a LocationEditor and reach the
+// settings only on OK. The buttons act on the selected location and are
+// never disabled: a button greyed out under focus throws focus somewhere
+// else. Their Alt keys press them and leave focus in the list, so a
+// location can be arrowed to and moved with Alt+U and Alt+D; Delete and F2
+// in the list remove and edit, as in Explorer.
+//
+// What belongs to one location, its nickname and whether its new alerts
+// are spoken, is set in Edit Location (below), which names the place. 0.1
+// had the notify switch under the list, acting on whichever location was
+// selected, which nothing said (Elliott, 2026-10-05).
 
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
@@ -25,7 +29,6 @@ use crate::{add_location, dialogs, window::APP_NAME};
 struct Manage {
     dialog: Dialog,
     list: ListBox,
-    notify: CheckBox,
     add: Button,
     announcer: Announcer,
     editor: RefCell<LocationEditor>,
@@ -62,14 +65,8 @@ pub fn show(
     let list = ListBox::builder(&dialog)
         .with_style(ListBoxStyle::HorizontalScrollbar)
         .build();
-    // Straight after the list in tab order: it belongs to the location
-    // selected there.
-    let notify = CheckBox::builder(&dialog)
-        .with_label("&Notify me about alerts")
-        .build();
     left.add(&label, 0, SizerFlag::Bottom, 4);
     left.add(&list, 1, SizerFlag::Expand, 0);
-    left.add(&notify, 0, SizerFlag::Top, 6);
 
     // One button per row, each as wide as the widest.
     let side = BoxSizer::builder(Orientation::Vertical).build();
@@ -81,7 +78,7 @@ pub fn show(
     let move_up = button("Move &Up");
     let move_down = button("Move &Down");
     let add = button("&Add...");
-    let rename = button("Rena&me...");
+    let edit = button("&Edit...");
     let remove = button("&Remove");
 
     columns.add_sizer(&left, 1, SizerFlag::Expand | SizerFlag::Right, 8);
@@ -112,7 +109,6 @@ pub fn show(
         editor: RefCell::new(LocationEditor::new(saved)),
         dialog,
         list,
-        notify,
         add,
         http: http.clone(),
         locations: locations.clone(),
@@ -131,10 +127,7 @@ pub fn show(
         let index = selected.unwrap_or(0).min(count as usize - 1);
         m.list.set_selection(index as u32, true);
     }
-    m.show_selection();
 
-    let s = m.clone();
-    m.list.on_selection_changed(move |_| s.show_selection());
     let s = m.clone();
     m.list.on_key_down(move |event| {
         if let WindowEventData::Keyboard(key) = &event
@@ -145,7 +138,7 @@ pub fn show(
             match key.get_key_code() {
                 // The main block's Delete and the number pad's, as 0.1 took both.
                 Some(WXK_DELETE | WXK_NUMPAD_DELETE) => return s.remove(),
-                Some(WXK_F2) => return s.rename(),
+                Some(WXK_F2) => return s.edit(),
                 _ => {}
             }
         }
@@ -157,15 +150,13 @@ pub fn show(
         event.skip(true);
     });
     let s = m.clone();
-    m.notify.on_toggled(move |_| s.notify_changed());
-    let s = m.clone();
     move_up.on_click(move |_| s.from_list(|s| s.move_selected(-1)));
     let s = m.clone();
     move_down.on_click(move |_| s.from_list(|s| s.move_selected(1)));
     let s = m.clone();
     m.add.on_click(move |_| s.add_location());
     let s = m.clone();
-    rename.on_click(move |_| s.rename());
+    edit.on_click(move |_| s.edit());
     let s = m.clone();
     remove.on_click(move |_| s.from_list(|s| s.remove()));
 
@@ -197,28 +188,6 @@ impl Manage {
             self.list.set_focus();
         }
         act(self);
-    }
-
-    fn show_selection(&self) {
-        let notify = self.selected().and_then(|i| {
-            self.editor
-                .borrow()
-                .entries()
-                .get(i)
-                .map(|e| e.notify_alerts)
-        });
-        self.notify.set_value(notify.unwrap_or(false));
-        self.notify.enable(notify.is_some());
-    }
-
-    fn notify_changed(&self) {
-        let Some(index) = self.selected() else {
-            return;
-        };
-        self.editor
-            .borrow_mut()
-            .set_notify(index, self.notify.get_value());
-        self.show_entry(index, index);
     }
 
     // With focus in the list, the list reports the location as it is
@@ -257,7 +226,6 @@ impl Manage {
             self.list.append(&text);
         }
         self.list.set_selection(index as u32, true);
-        self.show_selection();
         // Into the list, where the new location is read out with its place
         // in the order and can be moved straight away.
         self.list.set_focus();
@@ -267,22 +235,31 @@ impl Manage {
         }
     }
 
-    fn rename(&self) {
+    fn edit(&self) {
         let Some(index) = self.selected() else {
             self.announcer.say("No location selected.");
             return;
         };
-        let (full_name, nickname) = {
+        let (full_name, nickname, notify) = {
             let editor = self.editor.borrow();
             let entry = &editor.entries()[index];
-            (entry.place.full_name(), entry.nickname.clone())
+            (
+                entry.place.full_name(),
+                entry.nickname.clone(),
+                entry.notify_alerts,
+            )
         };
-        let Some(nickname) = rename(&self.dialog, &full_name, nickname.as_deref()) else {
+        let Some(edited) = edit(&self.dialog, &full_name, nickname.as_deref(), notify) else {
             return;
         };
-        self.editor.borrow_mut().rename(index, &nickname);
+        {
+            let mut editor = self.editor.borrow_mut();
+            editor.rename(index, &edited.nickname);
+            editor.set_notify(index, edited.notify_alerts);
+        }
         self.show_entry(index, index);
-        // Back in the list, which reads the location under its new name.
+        // Back in the list, which reads the location as it now is: its new
+        // name, and "no alert notifications" when they are off.
         self.list.set_focus();
     }
 
@@ -299,7 +276,6 @@ impl Manage {
             self.list
                 .set_selection(index.min(count as usize - 1) as u32, true);
         }
-        self.show_selection();
         self.announcer.say(&if count > 0 {
             format!("Removed {name}.")
         } else {
@@ -324,13 +300,26 @@ impl Manage {
     }
 }
 
-// A nickname for a saved location ("Home"), which the Location box and the
-// announcements then use; Manage Locations keeps the full name beside it.
-// The field's label names the place, so the name a screen reader gives the
-// field says which location is being renamed. The new nickname on OK,
-// empty for the full name.
-pub fn rename(parent: &dyn WxWidget, full_name: &str, nickname: Option<&str>) -> Option<String> {
-    let dialog = Dialog::builder(parent, "Rename Location").build();
+// What Edit Location gives back on OK.
+pub struct Edited {
+    // Empty for the full name.
+    pub nickname: String,
+    pub notify_alerts: bool,
+}
+
+// One location's own settings: a nickname ("Home"), which the Location box
+// and the announcements then use while Manage Locations keeps the full
+// name beside it, and whether its new alerts are spoken. The field's label
+// names the place, so the name a screen reader gives the field says which
+// location is being edited; the hint after it is the dialog's own text,
+// which NVDA reads as the dialog opens.
+pub fn edit(
+    parent: &dyn WxWidget,
+    full_name: &str,
+    nickname: Option<&str>,
+    notify_alerts: bool,
+) -> Option<Edited> {
+    let dialog = Dialog::builder(parent, "Edit Location").build();
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
     let label = StaticText::builder(&dialog)
         .with_label(&format!("&Nickname for {}", full_name.replace('&', "&&")))
@@ -341,11 +330,13 @@ pub fn rename(parent: &dyn WxWidget, full_name: &str, nickname: Option<&str>) ->
     let field = TextCtrl::builder(&dialog)
         .with_value(nickname.unwrap_or(""))
         .build();
-    // After the field, where a reader comes to it; NVDA also reads it as
-    // the dialog opens, being the dialog's own text.
     let hint = StaticText::builder(&dialog)
         .with_label("Leave it empty to use the full name.")
         .build();
+    let notify = CheckBox::builder(&dialog)
+        .with_label("Notify me about &alerts for this location")
+        .build();
+    notify.set_value(notify_alerts);
     let ok = Button::builder(&dialog)
         .with_id(ID_OK)
         .with_label("OK")
@@ -364,10 +355,11 @@ pub fn rename(parent: &dyn WxWidget, full_name: &str, nickname: Option<&str>) ->
     );
     sizer.add(&field, 0, SizerFlag::Expand | SizerFlag::All, 10);
     sizer.add(&hint, 0, SizerFlag::Left | SizerFlag::Right, 13);
+    sizer.add(&notify, 0, SizerFlag::All, 10);
     sizer.add_sizer(
         &dialogs::button_row(&[&ok, &cancel]),
         0,
-        SizerFlag::Expand | SizerFlag::All,
+        SizerFlag::Expand | SizerFlag::Left | SizerFlag::Right | SizerFlag::Bottom,
         10,
     );
     dialog.set_sizer(sizer, true);
@@ -376,7 +368,10 @@ pub fn rename(parent: &dyn WxWidget, full_name: &str, nickname: Option<&str>) ->
     field.set_focus();
     field.select_all();
     let result = dialog.show_modal();
-    let value = field.get_value();
+    let edited = Edited {
+        nickname: field.get_value(),
+        notify_alerts: notify.get_value(),
+    };
     dialog.destroy();
-    (result == ID_OK).then_some(value)
+    (result == ID_OK).then_some(edited)
 }
