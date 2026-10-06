@@ -5,9 +5,16 @@ name: Release
 # matching CHANGELOG section as its notes. A tag with a pre-release suffix
 # (v0.1.0-alpha.1) drafts a pre-release. Publishing the draft is a manual
 # step; publishing a full release is what triggers the winget workflow.
+#
+# A v0.1.x tag builds the C# app, which gets fixes only; every later
+# version is the Rust app (#24). Either way the asset is Weatherspell.exe,
+# the name winget and the updater know. Run by hand on a branch, it builds
+# and checks the Rust exe and keeps it as a workflow artifact, drafting
+# nothing.
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -15,32 +22,112 @@ permissions:
 jobs:
   release:
     runs-on: windows-latest
+    env:
+      CSHARP: ${{ startsWith(github.ref_name, 'v0.1.') }}
     steps:
       - uses: actions/checkout@v7
         with:
+          # Both apps take their version from the latest tag.
           fetch-depth: 0
 
+      # The C# app (0.1.x).
+
       - uses: actions/setup-dotnet@v6
+        if: env.CSHARP == 'true'
         with:
           dotnet-version: 10.0.x
 
-      - name: Build
+      - name: Build the C# app
+        if: env.CSHARP == 'true'
         run: dotnet build Weatherspell.slnx -c Release
 
-      - name: Test
+      - name: Test the C# app
+        if: env.CSHARP == 'true'
         run: dotnet test Weatherspell.slnx -c Release --no-build
 
-      - name: Stage the exe and checksum manifest
+      - name: Stage the C# exe
+        if: env.CSHARP == 'true'
         shell: pwsh
         run: |
           New-Item -ItemType Directory artifacts | Out-Null
           Copy-Item src/Weatherspell/bin/Release/net48/Weatherspell.exe artifacts/
+
+      # The Rust app (0.2.0 on). wxWidgets' build folders come from the Rust
+      # workflow's cache on main, when there is one; this never saves one.
+
+      - uses: actions/cache/restore@v6
+        if: env.CSHARP != 'true'
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            target/release/wxWidgets
+            target/release/wxwidgets_cmake_build
+            target/release/wxdragon_sys_cmake_build
+          key: wx-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: wx-${{ runner.os }}-
+
+      - name: Put CMake and Ninja on the path
+        if: env.CSHARP != 'true'
+        shell: pwsh
+        run: |
+          $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath
+          "$vs\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin" | Out-File -Append $env:GITHUB_PATH
+          "$vs\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja" | Out-File -Append $env:GITHUB_PATH
+
+      # Two steps, since a step's exit code is its last command's.
+      - name: Test the Rust logic
+        if: env.CSHARP != 'true'
+        run: cargo test --release -p weatherspell-core --all-features
+
+      - name: Test the Rust app
+        if: env.CSHARP != 'true'
+        run: cargo test --release -p weatherspell -p wx-accessibility
+
+      - name: Build the Rust app
+        if: env.CSHARP != 'true'
+        run: cargo build --release -p weatherspell
+
+      - name: One exe, Windows' own DLLs only
+        if: env.CSHARP != 'true'
+        shell: pwsh
+        run: ./tools/Check-SingleExe.ps1
+
+      - name: Stage the Rust exe
+        if: env.CSHARP != 'true'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory artifacts | Out-Null
+          # Cargo names it after the crate; the asset keeps 0.1's name.
+          Copy-Item target/release/weatherspell.exe artifacts/Weatherspell.exe
+          # A tagged build must say the tag's version (build/version.rs).
+          $version = (Get-Item artifacts/Weatherspell.exe).VersionInfo.ProductVersion
+          "The exe says $version."
+          if ("${{ github.ref_type }}" -eq 'tag' -and $version -ne "${{ github.ref_name }}".TrimStart('v')) {
+            throw "The exe says $version, not the tag's version."
+          }
+
+      # Both apps.
+
+      - name: Write the checksum manifest
+        shell: pwsh
+        run: |
           $hash = (Get-FileHash artifacts/Weatherspell.exe -Algorithm SHA256).Hash.ToLower()
           # sha256sum format, LF-terminated, so standard tools can verify it.
           [IO.File]::WriteAllText("$PWD/artifacts/SHA256SUMS", "$hash  Weatherspell.exe`n")
           Get-Content artifacts/SHA256SUMS
 
+      - name: Keep the exe of a run by hand
+        if: github.ref_type != 'tag'
+        uses: actions/upload-artifact@v7
+        with:
+          name: Weatherspell
+          path: |
+            artifacts/Weatherspell.exe
+            artifacts/SHA256SUMS
+
       - name: Extract release notes from CHANGELOG.md
+        if: github.ref_type == 'tag'
         shell: pwsh
         run: |
           $version = "${{ github.ref_name }}".TrimStart('v')
@@ -81,6 +168,7 @@ jobs:
           Get-Content artifacts/notes.md
 
       - name: Draft the GitHub Release
+        if: github.ref_type == 'tag'
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
