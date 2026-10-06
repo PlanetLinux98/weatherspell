@@ -119,7 +119,12 @@ function Write-Svg($design, [string]$path) {
     $sb = New-Object System.Text.StringBuilder
     $gr = N $design.Grid
     [void]$sb.AppendLine("<svg xmlns=`"http://www.w3.org/2000/svg`" viewBox=`"0 0 $gr $gr`" width=`"$gr`" height=`"$gr`">")
-    [void]$sb.AppendLine("  <defs><linearGradient id=`"sky`" x1=`"0`" y1=`"0`" x2=`"0`" y2=`"1`"><stop offset=`"0`" stop-color=`"$skyTop`"/><stop offset=`"1`" stop-color=`"$skyBottom`"/></linearGradient></defs>")
+    # The plate's gradient in user space, over the same span as the .ico's
+    # brush (Draw-Design). NanoSVG, which draws the SVG in the Rust app's
+    # About, reads bare numbers in the default bounding-box units as pixels,
+    # so "0 to 1" came out as the bottom colour alone.
+    $plate = $design.Shapes | Where-Object { $_.Kind -eq 'plate' } | Select-Object -First 1
+    [void]$sb.AppendLine("  <defs><linearGradient id=`"sky`" gradientUnits=`"userSpaceOnUse`" x1=`"0`" y1=`"$(N ($plate.Y - 1))`" x2=`"0`" y2=`"$(N ($plate.Y + $plate.H + 1))`"><stop offset=`"0`" stop-color=`"$skyTop`"/><stop offset=`"1`" stop-color=`"$skyBottom`"/></linearGradient></defs>")
     foreach ($s in $design.Shapes) {
         $line = switch ($s.Kind) {
             'plate' { "<rect x=`"$(N $s.X)`" y=`"$(N $s.Y)`" width=`"$(N $s.W)`" height=`"$(N $s.H)`" rx=`"$(N $s.R)`" fill=`"url(#sky)`"/>" }
