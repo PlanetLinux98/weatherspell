@@ -5,7 +5,7 @@
 // through .NET's managed client, whose proxies for Win32 controls are not
 // the ones Narrator gets.
 //
-//     uia-dump [process name, default test-window]
+//     uia-dump [process name, default weatherspell]
 
 #[cfg(windows)]
 fn main() -> windows::core::Result<()> {
@@ -134,7 +134,7 @@ fn main() -> windows::core::Result<()> {
 
     let process = std::env::args()
         .nth(1)
-        .unwrap_or_else(|| "test-window".to_string());
+        .unwrap_or_else(|| "weatherspell".to_string());
     let pids: Vec<u32> = std::process::Command::new("tasklist")
         .args([
             "/FO",

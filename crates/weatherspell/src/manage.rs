@@ -50,9 +50,34 @@ pub fn show(
     http: &Arc<UreqFetch>,
     locations: &Arc<LocationSearch>,
 ) -> Option<LocationEditor> {
+    let m = make(parent, saved, selected, http, locations);
+    let result = m.dialog.show_modal();
+    m.dialog.destroy();
+    (result == ID_OK)
+        .then(|| std::mem::replace(&mut *m.editor.borrow_mut(), LocationEditor::new(&[])))
+}
+
+// Made and ready to show, focus in place (for the lint's test).
+pub fn build(
+    parent: &dyn WxWidget,
+    saved: &[SavedLocation],
+    http: &Arc<UreqFetch>,
+    locations: &Arc<LocationSearch>,
+) -> Dialog {
+    make(parent, saved, Some(0), http, locations).dialog
+}
+
+fn make(
+    parent: &dyn WxWidget,
+    saved: &[SavedLocation],
+    selected: Option<usize>,
+    http: &Arc<UreqFetch>,
+    locations: &Arc<LocationSearch>,
+) -> Rc<Manage> {
     let dialog = Dialog::builder(parent, "Manage Locations")
         .with_style(DialogStyle::DefaultDialogStyle | DialogStyle::ResizeBorder)
         .build();
+    dialogs::developer_font(&dialog);
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
     let columns = BoxSizer::builder(Orientation::Horizontal).build();
 
@@ -165,10 +190,7 @@ pub fn show(
     } else {
         m.add.set_focus();
     }
-    let result = m.dialog.show_modal();
-    m.dialog.destroy();
-    (result == ID_OK)
-        .then(|| std::mem::replace(&mut *m.editor.borrow_mut(), LocationEditor::new(&[])))
+    m
 }
 
 impl Manage {
@@ -319,7 +341,29 @@ pub fn edit(
     nickname: Option<&str>,
     notify_alerts: bool,
 ) -> Option<Edited> {
+    let (dialog, field, notify) = make_edit(parent, full_name, nickname, notify_alerts);
+    let result = dialog.show_modal();
+    let edited = Edited {
+        nickname: field.get_value(),
+        notify_alerts: notify.get_value(),
+    };
+    dialog.destroy();
+    (result == ID_OK).then_some(edited)
+}
+
+// Made and ready to show, focus in place (for the lint's test).
+pub fn build_edit(parent: &dyn WxWidget, full_name: &str) -> Dialog {
+    make_edit(parent, full_name, None, true).0
+}
+
+fn make_edit(
+    parent: &dyn WxWidget,
+    full_name: &str,
+    nickname: Option<&str>,
+    notify_alerts: bool,
+) -> (Dialog, TextCtrl, CheckBox) {
     let dialog = Dialog::builder(parent, "Edit Location").build();
+    dialogs::developer_font(&dialog);
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
     let label = StaticText::builder(&dialog)
         .with_label(&format!("&Nickname for {}", full_name.replace('&', "&&")))
@@ -367,11 +411,5 @@ pub fn edit(
 
     field.set_focus();
     field.select_all();
-    let result = dialog.show_modal();
-    let edited = Edited {
-        nickname: field.get_value(),
-        notify_alerts: notify.get_value(),
-    };
-    dialog.destroy();
-    (result == ID_OK).then_some(edited)
+    (dialog, field, notify)
 }

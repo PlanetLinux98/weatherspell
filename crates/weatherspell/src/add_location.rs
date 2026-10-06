@@ -47,14 +47,39 @@ enum Answer {
     Point(f64, f64, Result<Option<Location>, ServiceError>),
 }
 
+// The place chosen, or None.
 pub fn show(
     parent: &dyn WxWidget,
     http: &Arc<UreqFetch>,
     locations: &Arc<LocationSearch>,
 ) -> Option<Location> {
+    let d = make(parent, http, locations);
+    OPEN.with(|o| *o.borrow_mut() = Some(d.clone()));
+    d.dialog.show_modal();
+    OPEN.with(|o| *o.borrow_mut() = None);
+    d.generation.set(d.generation.get() + 1);
+    d.dialog.destroy();
+    d.chosen.borrow_mut().take()
+}
+
+// Made and ready to show, focus in place (for the lint's test).
+pub fn build(
+    parent: &dyn WxWidget,
+    http: &Arc<UreqFetch>,
+    locations: &Arc<LocationSearch>,
+) -> Dialog {
+    make(parent, http, locations).dialog
+}
+
+fn make(
+    parent: &dyn WxWidget,
+    http: &Arc<UreqFetch>,
+    locations: &Arc<LocationSearch>,
+) -> Rc<AddLocation> {
     let dialog = Dialog::builder(parent, "Add Location")
         .with_style(DialogStyle::DefaultDialogStyle | DialogStyle::ResizeBorder)
         .build();
+    dialogs::developer_font(&dialog);
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
 
     // Each label just before its input among the dialog's children, which
@@ -164,13 +189,8 @@ pub fn show(
         event.skip(true);
     });
 
-    OPEN.with(|o| *o.borrow_mut() = Some(d.clone()));
     d.query.set_focus();
-    d.dialog.show_modal();
-    OPEN.with(|o| *o.borrow_mut() = None);
-    d.generation.set(d.generation.get() + 1);
-    d.dialog.destroy();
-    d.chosen.borrow_mut().take()
+    d
 }
 
 impl AddLocation {

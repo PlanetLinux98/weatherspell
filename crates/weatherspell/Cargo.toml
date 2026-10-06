@@ -32,6 +32,12 @@ embed-resource = "3"
 # USER_GUIDE.md into the page F1 opens; nothing of it ships.
 pulldown-cmark = { version = "0.13", default-features = false, features = ["html"] }
 
-# The build scripts' own tests (main.rs includes them).
+# Every window built and checked by the accessibility lint, on the main
+# thread, as wxWidgets wants.
+[[test]]
+name = "accessibility"
+harness = false
+
+# The build scripts' own tests (lib.rs includes them).
 [dev-dependencies]
 pulldown-cmark = { version = "0.13", default-features = false, features = ["html"] }

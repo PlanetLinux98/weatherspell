@@ -33,7 +33,7 @@ use wx_accessibility::{Announcer, ScreenReaders};
 use wxdragon::prelude::*;
 
 use crate::system::{self, Region};
-use crate::{about, add_location, details, edit, guide, manage, on_ui, settings_dialog};
+use crate::{about, add_location, details, dialogs, edit, guide, manage, on_ui, settings_dialog};
 
 pub const APP_NAME: &str = "Weatherspell";
 // The preview says what it is in its title bar, so it is never taken for
@@ -120,6 +120,7 @@ pub fn build() -> Rc<MainWindow> {
     let (settings, load_problem) = store.load();
 
     let frame = Frame::builder().with_title(TITLE).build();
+    dialogs::developer_font(&frame);
     frame.set_menu_bar(menu_bar(&settings));
     system::set_window_icon(&frame);
     frame.create_status_bar(1, 0, -1, "statusBar");
@@ -391,6 +392,11 @@ fn reason(e: &ServiceError) -> String {
 impl MainWindow {
     pub fn closed(&self) -> bool {
         self.closed.get()
+    }
+
+    // For the lint's test, and the dialogs' parent.
+    pub fn frame(&self) -> Frame {
+        self.frame
     }
 
     fn track_bounds(&self) {

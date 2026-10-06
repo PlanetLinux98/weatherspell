@@ -36,7 +36,15 @@ fn paragraphs() -> Vec<String> {
 }
 
 pub fn show(parent: &dyn WxWidget) {
+    let dialog = build(parent);
+    dialog.show_modal();
+    dialog.destroy();
+}
+
+// Made and ready to show, focus in place (also for the lint's test).
+pub fn build(parent: &dyn WxWidget) -> Dialog {
     let dialog = Dialog::builder(parent, "About Weatherspell").build();
+    dialogs::developer_font(&dialog);
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
     let top = BoxSizer::builder(Orientation::Horizontal).build();
 
@@ -90,8 +98,7 @@ pub fn show(parent: &dyn WxWidget) {
 
     // Focus on OK, as in a message box; Tab reaches the other buttons.
     ok.set_focus();
-    dialog.show_modal();
-    dialog.destroy();
+    dialog
 }
 
 // Pages open in the program the user has chosen for them. A failure says

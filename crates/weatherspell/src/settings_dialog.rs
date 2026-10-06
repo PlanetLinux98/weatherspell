@@ -20,7 +20,19 @@ pub struct Chosen {
 
 // apply is called for OK and for each Apply.
 pub fn show(parent: &dyn WxWidget, settings: &AppSettings, apply: impl Fn(Chosen) + 'static) {
+    let dialog = build(parent, settings, apply);
+    dialog.show_modal();
+    dialog.destroy();
+}
+
+// Made and ready to show, focus in place (also for the lint's test).
+pub fn build(
+    parent: &dyn WxWidget,
+    settings: &AppSettings,
+    apply: impl Fn(Chosen) + 'static,
+) -> Dialog {
     let dialog = Dialog::builder(parent, "Settings").build();
+    dialogs::developer_font(&dialog);
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
 
     let forecast_choices = choices::minutes(
@@ -29,11 +41,12 @@ pub fn show(parent: &dyn WxWidget, settings: &AppSettings, apply: impl Fn(Chosen
     );
     let alert_choices = choices::minutes(&choices::ALERT_MINUTES, settings.alert_check_minutes);
 
-    // Group boxes as siblings of their controls, as Windows' own dialogs
-    // have them, which is where NVDA looks for a control's group name.
+    // Each group box holds its controls, as wxWidgets asks and as 0.1's
+    // WinForms group boxes did, so a screen reader names the group as focus
+    // enters it.
     let forecast = group(&dialog, "Forecast");
     let forecast_minutes = row(
-        &dialog,
+        &forecast.2,
         &forecast.1,
         "&Refresh the forecast every",
         forecast_choices.iter().map(|m| choices::minutes_label(*m)),
@@ -50,7 +63,7 @@ pub fn show(parent: &dyn WxWidget, settings: &AppSettings, apply: impl Fn(Chosen
 
     let alerts = group(&dialog, "Alerts and announcements");
     let alert_minutes = row(
-        &dialog,
+        &alerts.2,
         &alerts.1,
         "&Check for alerts every",
         alert_choices.iter().map(|m| choices::minutes_label(*m)),
@@ -59,7 +72,7 @@ pub fn show(parent: &dyn WxWidget, settings: &AppSettings, apply: impl Fn(Chosen
             .position(|m| *m == settings.alert_check_minutes),
     );
     let announcements = row(
-        &dialog,
+        &alerts.2,
         &alerts.1,
         "Announce &new alerts",
         choices::ANNOUNCEMENTS
@@ -110,13 +123,12 @@ pub fn show(parent: &dyn WxWidget, settings: &AppSettings, apply: impl Fn(Chosen
     });
 
     forecast_minutes.set_focus();
-    dialog.show_modal();
-    dialog.destroy();
+    dialog
 }
 
 // A labelled group box and the two-column grid inside it: labels as wide
 // as the widest, the choices taking the rest.
-fn group(dialog: &Dialog, title: &str) -> (StaticBoxSizer, FlexGridSizer) {
+fn group(dialog: &Dialog, title: &str) -> (StaticBoxSizer, FlexGridSizer, StaticBox) {
     let boxed = StaticBoxSizerBuilder::new_with_label(Orientation::Vertical, dialog, title).build();
     let grid = FlexGridSizer::builder(0, 2)
         .with_vgap(6)
@@ -124,19 +136,20 @@ fn group(dialog: &Dialog, title: &str) -> (StaticBoxSizer, FlexGridSizer) {
         .build();
     grid.add_growable_col(1, 1);
     boxed.add_sizer(&grid, 1, SizerFlag::Expand | SizerFlag::All, 6);
-    (boxed, grid)
+    let static_box = boxed.get_static_box().expect("the sizer made its box");
+    (boxed, grid, static_box)
 }
 
 // The label just before its choice, which is what names the choice.
 fn row(
-    dialog: &Dialog,
+    parent: &StaticBox,
     grid: &FlexGridSizer,
     label: &str,
     items: impl Iterator<Item = String>,
     selected: Option<usize>,
 ) -> Choice {
-    let text = StaticText::builder(dialog).with_label(label).build();
-    let choice = Choice::builder(dialog).build();
+    let text = StaticText::builder(parent).with_label(label).build();
+    let choice = Choice::builder(parent).build();
     for item in items {
         choice.append(&item);
     }

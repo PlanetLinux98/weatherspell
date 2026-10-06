@@ -4,16 +4,24 @@
 
 use wxdragon::prelude::*;
 
-use crate::edit;
+use crate::{dialogs, edit};
 
 const ID_OFFICIAL: Id = ID_HIGHEST + 1;
 
 pub fn show(parent: &Frame, title: &str, paragraphs: &[String], url: Option<&str>) {
+    let dialog = build(parent, title, paragraphs, url);
+    dialog.show_modal();
+    dialog.destroy();
+}
+
+// Made and ready to show, focus in place (also for the lint's test).
+pub fn build(parent: &Frame, title: &str, paragraphs: &[String], url: Option<&str>) -> Dialog {
     let dialog = Dialog::builder(parent, title)
         .with_style(
             DialogStyle::DefaultDialogStyle | DialogStyle::ResizeBorder | DialogStyle::MaximizeBox,
         )
         .build();
+    dialogs::developer_font(&dialog);
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
 
     // The label just before the text among the dialog's children names it.
@@ -103,6 +111,5 @@ pub fn show(parent: &Frame, title: &str, paragraphs: &[String], url: Option<&str
     // Focus in the text, caret at the top, nothing selected.
     text.set_focus();
     text.set_selection(0, 0);
-    dialog.show_modal();
-    dialog.destroy();
+    dialog
 }

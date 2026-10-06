@@ -5,6 +5,21 @@
 
 use wxdragon::prelude::*;
 
+// Developer-only, as 0.1's was: every window in this many points, as a
+// large Windows Text size gives it, so layouts can be checked at large
+// sizes (tools/Capture-Windows.ps1). Called on a window before its
+// controls are made, which take its font.
+pub fn developer_font(window: &dyn WxWidget) {
+    let points = std::env::var("WEATHERSPELL_FONT_POINTS")
+        .ok()
+        .and_then(|p| p.trim().parse::<i32>().ok())
+        .filter(|p| *p > 0);
+    if let (Some(points), Some(mut font)) = (points, window.get_font()) {
+        font.set_point_size(points);
+        window.set_font(&font);
+    }
+}
+
 // A sizable dialog: wanted and minimum sizes in characters.
 pub fn size(dialog: &Dialog, wanted: (i32, i32), minimum: (i32, i32)) {
     let (w, h) = (dialog.get_char_width(), dialog.get_char_height());
