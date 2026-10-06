@@ -24,6 +24,7 @@ use weatherspell_core::forecast::Forecast;
 use weatherspell_core::layout::{RewritePlan, SectionLayout, SelectionHold};
 use weatherspell_core::location::Location;
 use weatherspell_core::net::UreqFetch;
+use weatherspell_core::placement::{self, CharSize, Rect};
 use weatherspell_core::search::LocationSearch;
 use weatherspell_core::settings::{AppSettings, LoadProblem, SavedLocation, SettingsStore};
 use weatherspell_core::units;
@@ -37,7 +38,7 @@ use crate::{about, add_location, details, edit, guide, manage, on_ui, settings_d
 pub const APP_NAME: &str = "Weatherspell";
 // The preview says what it is in its title bar, so it is never taken for
 // 0.1 (NVDA reads the title as the window comes up).
-const TITLE: &str = "Weatherspell Preview";
+pub const TITLE: &str = "Weatherspell Preview";
 const FORECAST_DAYS: u32 = 7;
 
 const ID_REFRESH: Id = ID_HIGHEST + 1;
@@ -89,6 +90,11 @@ pub struct MainWindow {
     first_poll: Cell<bool>,
     shown_at: Cell<Instant>,
     closed: Cell<bool>,
+    // The window's bounds when last neither maximized nor minimized, and
+    // whether it was maximized when last not minimized: minimized from
+    // maximized, the state alone no longer says which it returns to.
+    normal: Cell<Rect>,
+    maximized: Cell<bool>,
 
     forecast_timer: Timer<Frame>,
     alert_timer: Timer<Frame>,
@@ -163,8 +169,24 @@ pub fn build() -> Rc<MainWindow> {
         size = Size::new(size.width.min(area.width), size.height.min(area.height));
     }
     frame.set_min_size(Size::new(w * 68, h * 24));
-    frame.set_size(size);
-    frame.centre();
+    // Where it was when it last closed, if a screen still shows enough of
+    // it; otherwise centred, as on a first run.
+    let restored = settings.window.and_then(|saved| {
+        placement::restore(
+            &saved,
+            char_size(&frame),
+            &working_areas(),
+            caption_height(&frame),
+        )
+    });
+    match restored {
+        Some(r) => frame.set_size_with_pos(r.left, r.top, r.width, r.height),
+        None => {
+            frame.set_size(size);
+            frame.centre();
+        }
+    }
+    let maximized = settings.window.is_some_and(|w| w.maximized);
 
     let window = Rc::new(MainWindow {
         announcer: Announcer::new(&frame, APP_NAME),
@@ -193,6 +215,8 @@ pub fn build() -> Rc<MainWindow> {
         first_poll: Cell::new(false),
         shown_at: Cell::new(Instant::now()),
         closed: Cell::new(false),
+        normal: Cell::new(Rect::default()),
+        maximized: Cell::new(false),
     });
     window.populate_locations();
 
@@ -217,8 +241,24 @@ pub fn build() -> Rc<MainWindow> {
         event.skip(true);
     });
     edit::hook(&window.text, Some(double_clicked));
+    window.normal.set(bounds(&window.frame));
+    if maximized {
+        window.frame.maximize(true);
+    }
+    window.maximized.set(maximized);
+    let w = window.clone();
+    window.frame.on_size(move |event| {
+        w.track_bounds();
+        event.skip(true);
+    });
+    let w = window.clone();
+    window.frame.on_move_event(move |event| {
+        w.track_bounds();
+        event.skip(true);
+    });
     let w = window.clone();
     window.frame.on_close(move |event| {
+        w.remember_window();
         w.closed.set(true);
         w.generation.set(w.generation.get() + 1);
         w.forecast_timer.stop();
@@ -297,6 +337,36 @@ fn locations_menu(settings: &AppSettings) -> Menu {
     menu.build()
 }
 
+// The font's average character as WinForms measured it for 0.1 (the
+// alphabet's width over 52, in whole pixels, and the line height), so a
+// window saved by either app opens the same size in the other.
+fn char_size(window: &Frame) -> CharSize {
+    let alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    CharSize {
+        width: (f64::from(window.get_text_extent(alphabet).width) / 52.0).round(),
+        height: f64::from(window.get_char_height()),
+    }
+}
+
+// What each screen leaves for windows, the taskbar taken off.
+fn working_areas() -> Vec<Rect> {
+    Display::all()
+        .map(|d| {
+            let a = d.client_area();
+            Rect::new(a.x, a.y, a.width, a.height)
+        })
+        .collect()
+}
+
+fn caption_height(window: &Frame) -> i32 {
+    SystemSettings::get_metric(SystemMetric::CaptionY, Some(window))
+}
+
+fn bounds(window: &Frame) -> Rect {
+    let (at, size) = (window.get_position(), window.get_size());
+    Rect::new(at.x, at.y, size.width, size.height)
+}
+
 // From the text box's subclass, as the control finishes selecting the
 // word under the pointer.
 fn double_clicked(position: usize) {
@@ -321,6 +391,36 @@ fn reason(e: &ServiceError) -> String {
 impl MainWindow {
     pub fn closed(&self) -> bool {
         self.closed.get()
+    }
+
+    fn track_bounds(&self) {
+        if self.frame.is_iconized() {
+            return;
+        }
+        let maximized = self.frame.is_maximized();
+        self.maximized.set(maximized);
+        if !maximized {
+            self.normal.set(bounds(&self.frame));
+        }
+    }
+
+    // Written only when it changed, so an ordinary close does not rewrite
+    // settings.json, and never after settings that could not be read: the
+    // user may be mending that file by hand while the app is open.
+    fn remember_window(&self) {
+        if self.load_problem.is_some() {
+            return;
+        }
+        let window = placement::save(
+            self.normal.get(),
+            self.maximized.get(),
+            char_size(&self.frame),
+        );
+        if self.settings.borrow().window == Some(window) {
+            return;
+        }
+        self.settings.borrow_mut().window = Some(window);
+        self.save_settings();
     }
 
     pub fn show(&self) {

@@ -56,6 +56,9 @@ pub fn on_ui_thread(work: impl FnOnce() + Send + 'static) {
 }
 
 fn main() {
+    if system::another_copy_brought_forward() {
+        return;
+    }
     let _ = wxdragon::main(|_| {
         let window = window::build();
         WINDOW.with(|w| *w.borrow_mut() = Some(window.clone()));

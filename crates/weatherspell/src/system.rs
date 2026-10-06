@@ -59,6 +59,39 @@ fn seed(from: &Path, to: &Path) {
     let _ = fs::copy(&settings, to.join(settings::FILE_NAME));
 }
 
+// One copy per Windows session: two would each announce every alert and
+// save settings.json over each other's changes (#22). A second launch
+// brings the first one's window forward instead, and ends. The preview's
+// name is its own, so it runs beside 0.1 (whose is Local\Weatherspell).
+pub fn another_copy_brought_forward() -> bool {
+    #[cfg(windows)]
+    unsafe {
+        use windows::Win32::Foundation::{ERROR_ALREADY_EXISTS, GetLastError};
+        use windows::Win32::System::Threading::CreateMutexW;
+        use windows::Win32::UI::WindowsAndMessaging::{
+            FindWindowW, IsIconic, SW_RESTORE, SetForegroundWindow, ShowWindow,
+        };
+        use windows::core::{HSTRING, w};
+        // Held until this copy ends, when Windows closes it.
+        if CreateMutexW(None, true, w!("Local\\Weatherspell Preview")).is_err()
+            || GetLastError() != ERROR_ALREADY_EXISTS
+        {
+            return false;
+        }
+        // wx's class for a frame, and the title the window always has.
+        let title = HSTRING::from(crate::window::TITLE);
+        if let Ok(window) = FindWindowW(w!("wxWindowNR"), &title) {
+            if IsIconic(window).as_bool() {
+                let _ = ShowWindow(window, SW_RESTORE);
+            }
+            let _ = SetForegroundWindow(window);
+        }
+        true
+    }
+    #[cfg(not(windows))]
+    false
+}
+
 // The exe's own icon (resource 1, build.rs) on a window, at the sizes the
 // title bar and Alt+Tab take at the window's scale, rather than one size
 // scaled. Windows only for now; the Mac gives a window no icon of its own.
