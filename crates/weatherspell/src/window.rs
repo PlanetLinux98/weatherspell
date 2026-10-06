@@ -32,7 +32,7 @@ use wx_accessibility::{Announcer, ScreenReaders};
 use wxdragon::prelude::*;
 
 use crate::system::{self, Region};
-use crate::{about, add_location, details, edit, manage, on_ui, settings_dialog};
+use crate::{about, add_location, details, edit, guide, manage, on_ui, settings_dialog};
 
 pub const APP_NAME: &str = "Weatherspell";
 // The preview says what it is in its title bar, so it is never taken for
@@ -49,6 +49,7 @@ const ID_ALERTS: Id = ID_HIGHEST + 4;
 const ID_PREFERENCES: Id = 5022;
 const ID_MANAGE: Id = ID_HIGHEST + 5;
 const ID_ADD: Id = ID_HIGHEST + 6;
+const ID_GUIDE: Id = ID_HIGHEST + 7;
 // Ctrl+1 to Ctrl+9: the first nine saved locations.
 const ID_LOCATION: Id = ID_HIGHEST + 10;
 const MENU_LOCATIONS: usize = 9;
@@ -114,6 +115,7 @@ pub fn build() -> Rc<MainWindow> {
 
     let frame = Frame::builder().with_title(TITLE).build();
     frame.set_menu_bar(menu_bar(&settings));
+    system::set_window_icon(&frame);
     frame.create_status_bar(1, 0, -1, "statusBar");
     frame.set_status_text("Ready", 0);
 
@@ -176,10 +178,7 @@ pub fn build() -> Rc<MainWindow> {
         store,
         load_problem,
         settings: RefCell::new(settings),
-        http: Arc::new(UreqFetch::new(&format!(
-            "Weatherspell/{}",
-            env!("CARGO_PKG_VERSION")
-        ))),
+        http: Arc::new(UreqFetch::new(&format!("Weatherspell/{}", crate::VERSION))),
         service: Arc::new(ForecastService::new()),
         search: Arc::new(LocationSearch::new()),
         region: system::region(),
@@ -261,6 +260,8 @@ fn menu_bar(settings: &AppSettings) -> MenuBar {
         .append_item(ID_PREFERENCES, "&Settings...", "")
         .build();
     let help = Menu::builder()
+        .append_item(ID_GUIDE, "&User Guide\tF1", "")
+        .append_separator()
         .append_item(ID_ABOUT, "&About Weatherspell", "")
         .build();
     MenuBar::builder()
@@ -389,6 +390,7 @@ impl MainWindow {
             ID_MANAGE => self.manage_locations(),
             ID_ADD => self.add_location(),
             ID_PREFERENCES => self.show_settings(),
+            ID_GUIDE => guide::open(&self.frame, None),
             ID_ABOUT => about::show(&self.frame),
             _ if (ID_LOCATION..ID_LOCATION + MENU_LOCATIONS as Id).contains(&id) => {
                 self.show_location((id - ID_LOCATION) as usize);

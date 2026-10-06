@@ -1,28 +1,29 @@
-// About (AboutDialog.cs and AboutText.cs in 0.1): text and buttons, like a
-// message box, so a screen reader reads the text as the dialog opens. A wx
-// dialog is a real Windows dialog, so NVDA reads its static text on
-// opening without the role 0.1 had to set. Short on purpose: each source
-// asks for a credit, which this gives; the full wording, links and
-// licences are in the guide's Credits and licences section.
+// About (AboutDialog.cs and AboutText.cs in 0.1): the icon and text, and
+// buttons, like a message box, so a screen reader reads the text as the
+// dialog opens. A wx dialog is a real Windows dialog, so NVDA reads its
+// static text on opening without the role 0.1 had to set. Short on
+// purpose: each source asks for a credit, which this gives; the full
+// wording, links and licences are in the guide's Credits and licences
+// section.
 
 use weatherspell_core::{environment_canada, nws, open_meteo};
 use wxdragon::prelude::*;
 
-use crate::dialogs;
+use crate::{dialogs, guide};
 
 const ID_CREDITS: Id = ID_HIGHEST + 1;
 const ID_WEBSITE: Id = ID_HIGHEST + 2;
 
 pub const WEBSITE: &str = "https://github.com/PlanetLinux98/weatherspell";
-// Until the guide is built into the app (#24), its section on GitHub.
-const CREDITS: &str =
-    "https://github.com/PlanetLinux98/weatherspell/blob/main/USER_GUIDE.md#credits-and-licences";
+const LOGO: &[u8] = include_bytes!("../../../Assets/Weatherspell.svg");
 
 fn paragraphs() -> Vec<String> {
     vec![
-        // The version comes with the release build (#24); until then, the
-        // preview says what it is.
-        "Weatherspell Preview\nA text-based weather app for Windows.".to_string(),
+        // "Preview" until the switch from 0.1.
+        format!(
+            "Weatherspell Preview {}\nA text-based weather app for Windows.",
+            crate::VERSION
+        ),
         "Copyright 2026 PlanetLinux98. Released under the MIT licence.".to_string(),
         format!(
             "Weather data from {} (CC BY 4.0), {} and the {}.",
@@ -37,16 +38,29 @@ fn paragraphs() -> Vec<String> {
 pub fn show(parent: &dyn WxWidget) {
     let dialog = Dialog::builder(parent, "About Weatherspell").build();
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
+    let top = BoxSizer::builder(Orientation::Horizontal).build();
+
+    // Beside the text, as a message box has its icon: 48 pixels at 100
+    // percent, drawn at the display's scale. Only a picture, which screen
+    // readers pass over.
+    if let Some(logo) = BitmapBundle::from_svg_data(LOGO, Size::new(48, 48)) {
+        let picture = StaticBitmap::new_with_bitmap_bundle(&dialog, ID_ANY as Id, &logo);
+        top.add(&picture, 0, SizerFlag::Left | SizerFlag::Top, 12);
+    }
+    let text = BoxSizer::builder(Orientation::Vertical).build();
     for paragraph in paragraphs() {
-        let text = StaticText::builder(&dialog).with_label(&paragraph).build();
-        dialogs::wrap(&text, 66);
-        sizer.add(
-            &text,
+        let line = StaticText::builder(&dialog).with_label(&paragraph).build();
+        dialogs::wrap(&line, 60);
+        text.add(
+            &line,
             0,
             SizerFlag::Left | SizerFlag::Right | SizerFlag::Top,
             12,
         );
     }
+    top.add_sizer(&text, 1, SizerFlag::Expand, 0);
+    sizer.add_sizer(&top, 0, SizerFlag::Expand, 0);
+
     let credits = Button::builder(&dialog)
         .with_id(ID_CREDITS)
         .with_label("&Credits and Licences")
@@ -71,7 +85,7 @@ pub fn show(parent: &dyn WxWidget) {
     dialog.set_sizer(sizer, true);
     dialogs::fit(&dialog, 71);
 
-    credits.on_click(move |_| open(&dialog, CREDITS));
+    credits.on_click(move |_| guide::open(&dialog, Some(guide::CREDITS)));
     website.on_click(move |_| open(&dialog, WEBSITE));
 
     // Focus on OK, as in a message box; Tab reaches the other buttons.

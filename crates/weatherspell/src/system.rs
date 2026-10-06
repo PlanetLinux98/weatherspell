@@ -59,6 +59,49 @@ fn seed(from: &Path, to: &Path) {
     let _ = fs::copy(&settings, to.join(settings::FILE_NAME));
 }
 
+// The exe's own icon (resource 1, build.rs) on a window, at the sizes the
+// title bar and Alt+Tab take at the window's scale, rather than one size
+// scaled. Windows only for now; the Mac gives a window no icon of its own.
+pub fn set_window_icon(window: &impl wxdragon::prelude::WxWidget) {
+    #[cfg(windows)]
+    unsafe {
+        use windows::Win32::Foundation::{HINSTANCE, HWND, LPARAM, WPARAM};
+        use windows::Win32::System::LibraryLoader::GetModuleHandleW;
+        use windows::Win32::UI::HiDpi::{GetDpiForWindow, GetSystemMetricsForDpi};
+        use windows::Win32::UI::WindowsAndMessaging::{
+            ICON_BIG, ICON_SMALL, IMAGE_ICON, LR_DEFAULTCOLOR, LoadImageW, SM_CXICON, SM_CXSMICON,
+            SendMessageW, WM_SETICON,
+        };
+        use windows::core::PCWSTR;
+        let hwnd = HWND(window.get_handle());
+        let Ok(module) = GetModuleHandleW(None) else {
+            return;
+        };
+        let dpi = GetDpiForWindow(hwnd);
+        for (which, metric) in [(ICON_SMALL, SM_CXSMICON), (ICON_BIG, SM_CXICON)] {
+            let size = GetSystemMetricsForDpi(metric, dpi);
+            // Resource 1, as MAKEINTRESOURCE names it.
+            if let Ok(icon) = LoadImageW(
+                Some(HINSTANCE(module.0)),
+                PCWSTR(std::ptr::without_provenance(1)),
+                IMAGE_ICON,
+                size,
+                size,
+                LR_DEFAULTCOLOR,
+            ) {
+                SendMessageW(
+                    hwnd,
+                    WM_SETICON,
+                    Some(WPARAM(which as usize)),
+                    Some(LPARAM(icon.0 as isize)),
+                );
+            }
+        }
+    }
+    #[cfg(not(windows))]
+    let _ = window;
+}
+
 // The region's own ways, as 0.1 read them from .NET's current culture.
 pub struct Region {
     pub units: UnitSystem,

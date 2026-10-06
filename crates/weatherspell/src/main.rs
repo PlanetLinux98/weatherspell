@@ -9,10 +9,22 @@ mod add_location;
 mod details;
 mod dialogs;
 mod edit;
+mod guide;
 mod manage;
 mod settings_dialog;
 mod system;
 mod window;
+
+// The build scripts' own code, so their tests run with the app's.
+#[cfg(test)]
+#[path = "../build/guide.rs"]
+mod guide_page;
+#[cfg(test)]
+#[path = "../build/version.rs"]
+mod version;
+
+// The version from the git tag (build/version.rs).
+pub const VERSION: &str = env!("WEATHERSPELL_VERSION");
 
 use std::cell::RefCell;
 use std::rc::Rc;
