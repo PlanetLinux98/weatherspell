@@ -21,9 +21,8 @@ location to reading alerts.
 ## Getting started
 
 Weatherspell is made for Windows 10 (version 1903 or later) and Windows 11,
-which already include everything it needs. It hasn't been tested on older
-versions of Windows at this time, but may work on them with the .NET
-Framework 4.8 installed.
+which already include everything it needs. Older versions of Windows
+aren't supported at this time.
 
 Weatherspell is a single executable, `Weatherspell.exe`, with nothing to
 install: download
@@ -176,9 +175,9 @@ Weatherspell opens on the location you viewed last.
 
 ### Using Manage Locations
 
-To put your locations in order, rename or remove them, or choose which ones
-notify you about alerts, choose Manage Locations from the Locations menu, or
-press Ctrl+L.
+To change the order of your locations, give them nicknames, remove them or
+choose which ones notify you about alerts, choose Manage Locations from the
+Locations menu, or press Ctrl+L.
 
 The Saved locations list shows each location's full name, with its
 nickname first if it has one, such as "Home (Peterborough, Ontario,
@@ -187,13 +186,14 @@ Canada)". Select a location, then use:
 - **Move Up** and **Move Down** to change its place in the order, which is
   also the order of the Location box and of Ctrl+1 to Ctrl+9.
 - **Add...** to add another location.
-- **Rename...** to give it a nickname, such as "Home" or "Cottage". Leave
-  the nickname empty to use the full name again.
+- **Edit...** to give it a nickname, such as "Home" or "Cottage", and to
+  choose whether its new alerts are announced. Edit Location names the
+  place you're editing. Leave the nickname field empty to use the full
+  location name again. "Notify me about alerts for this location" is on
+  for every location by default; if you toggle it off, "no alert
+  notifications" follows the location's name in the list. Its Alerts
+  section in the forecast text still shows every alert either way.
 - **Remove** to remove it from your locations.
-- **Notify me about alerts** to choose whether its new alerts are
-  announced. It's on for every location by default; when it's off, "no
-  alert notifications" follows the location's name in the list. Its Alerts
-  section still shows every alert either way.
 
 Choose OK to keep your changes, or Cancel to undo all of them. Since Cancel
 undoes everything, nothing asks you to confirm along the way.
@@ -230,10 +230,10 @@ or switch locations, the announcement that the forecast is ready also names
 any alerts already in effect.
 
 Weatherspell checks for alerts every 10 minutes by default, for every
-location with "Notify me about alerts" turned on, not only the one you're
-viewing. In [Settings](#changing-settings), you can change how often it
-checks, and choose whether to announce all new alerts, only severe and
-extreme ones, or none.
+location with "Notify me about alerts for this location" turned on, not
+only the one you're viewing. In [Settings](#changing-settings), you can
+change how often it checks, and choose whether to announce all new alerts,
+only severe and extreme ones, or none.
 
 Alerts are announced while Weatherspell is open, and some screen readers
 may only announce them while Weatherspell is the active window.
@@ -259,6 +259,11 @@ saving them.
 
 Weatherspell follows your Windows text size and display scale settings, so
 its text and windows grow with them.
+
+Weatherspell also follows the light or dark mode chosen in Windows' colour
+settings, and changes with it. With a contrast theme turned on, it uses the
+theme's colours. If you turn one on while Weatherspell is open in dark
+mode, please restart Weatherspell to see them.
 
 The main window opens where you last left it, at the same size, and
 maximized if it was.
@@ -298,9 +303,8 @@ Every command is also in the menus, with its shortcut shown beside it.
 | Move Up | Alt+U |
 | Move Down | Alt+D |
 | Add | Alt+A |
-| Rename | Alt+M or F2 |
+| Edit | Alt+E or F2 |
 | Remove | Alt+R or Delete |
-| Notify me about alerts | Alt+N |
 
 These keys work from the Saved locations list, and you stay in the list.
 

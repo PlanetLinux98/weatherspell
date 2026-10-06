@@ -59,18 +59,26 @@ from the main window without the window presenting itself to UI
 Automation: when it did, NVDA switched to reading it through UI
 Automation instead of its usual way, which read worse in testing.
 
-Until the Rust app replaces 0.1, it keeps a folder of its own,
-`%APPDATA%\Weatherspell Preview`, which its first run fills with a copy
-of 0.1's settings and cache. A preview can then never change what 0.1
-relies on, and the two can run side by side. The files themselves are
-the same: each app reads what the other writes, which the port's tests
-check in both directions, so at the switch the Rust app simply moves
-into 0.1's folder.
+The Rust app keeps its settings and cache in 0.1's folder,
+`%APPDATA%\Weatherspell`, in the same files: each app reads what the
+other writes, which the port's tests check in both directions, so moving
+between them keeps saved locations, nicknames and seen alerts. Since they
+share those files, only one copy of either app runs at a time. The
+previews before that had a folder of their own, filled with a copy of
+0.1's, so they could run beside it.
 
 A location's own settings, its nickname and whether its new alerts are
 spoken, are in one Edit Location dialog that names the place. In 0.1 the
 alert switch sat under the Manage Locations list and acted on whichever
 location was selected, which nothing said.
+
+The Rust app follows the light or dark mode chosen in Windows, where 0.1
+is always light. It uses wxWidgets' own dark mode, which also switches
+the open windows when the mode changes. It stays light while a high
+contrast theme is on, since wxWidgets doesn't check for one and would
+draw its own dark colours over the theme's. In dark mode wxWidgets draws
+check boxes itself; they still report their name and state to screen
+readers, but not a change of state, so the app reports that itself.
 
 After a section key (Ctrl+PageDown, Ctrl+PageUp, Ctrl+Shift+A), the app
 speaks the heading it moved to, since NVDA and JAWS say nothing after a

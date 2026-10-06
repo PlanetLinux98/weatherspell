@@ -10,6 +10,22 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 
 ## [Unreleased]
 
+### Added
+- Follows the light or dark mode chosen in Windows (#24).
+
+### Changed
+- Weatherspell is rebuilt in Rust with wxWidgets, to streamline
+  development and as the base for Mac and Linux versions later. It's still
+  one executable, and it keeps using your saved locations and settings
+  from prior versions (#24).
+- Manage Locations: Rename becomes Edit (Alt+E or F2), and the choice of
+  whether a location's alerts are announced moves into the Edit Location
+  dialog, which names the place (#24).
+
+### Fixed
+- With Narrator, the heading was said twice after Ctrl+PageDown,
+  Ctrl+PageUp or Ctrl+Shift+A (#23).
+
 ## [0.1.0] - 2026-10-04
 
 The first release. Simply download `Weatherspell.exe` and run it. For
