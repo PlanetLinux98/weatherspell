@@ -48,6 +48,7 @@ const ID_PREFERENCES: Id = 5022;
 const ID_MANAGE: Id = ID_HIGHEST + 5;
 const ID_ADD: Id = ID_HIGHEST + 6;
 const ID_GUIDE: Id = ID_HIGHEST + 7;
+const ID_RESET_WINDOW: Id = ID_HIGHEST + 8;
 // Ctrl+1 to Ctrl+9: the first nine saved locations.
 const ID_LOCATION: Id = ID_HIGHEST + 10;
 const MENU_LOCATIONS: usize = 9;
@@ -157,16 +158,10 @@ pub fn build() -> Rc<MainWindow> {
     outer.add(&text, 1, SizerFlag::Expand, 0);
     panel.set_sizer(outer, true);
 
-    // Scaled by font, as 0.1 is: 0.1's 720 by 560 (at least 480 by 360)
-    // at Segoe UI 9 point, in characters, within the working area, or on a
-    // small screen at a large scale the title bar opens off the top.
-    let (w, h) = (frame.get_char_width(), frame.get_char_height());
-    let mut size = Size::new(w * 103, h * 37);
-    if let Some(display) = Display::from_window(&frame) {
-        let area = display.client_area();
-        size = Size::new(size.width.min(area.width), size.height.min(area.height));
-    }
-    frame.set_min_size(Size::new(w * 68, h * 24));
+    frame.set_min_size(Size::new(
+        frame.get_char_width() * 68,
+        frame.get_char_height() * 24,
+    ));
     // Where it was when it last closed, if a screen still shows enough of
     // it; otherwise centred, as on a first run.
     let restored = settings.window.and_then(|saved| {
@@ -179,10 +174,7 @@ pub fn build() -> Rc<MainWindow> {
     });
     match restored {
         Some(r) => frame.set_size_with_pos(r.left, r.top, r.width, r.height),
-        None => {
-            frame.set_size(size);
-            frame.centre();
-        }
+        None => place_by_default(&frame),
     }
     let maximized = settings.window.is_some_and(|w| w.maximized);
 
@@ -279,6 +271,20 @@ pub fn build() -> Rc<MainWindow> {
     window
 }
 
+// Scaled by font, as 0.1 is: 0.1's 720 by 560 (at least 480 by 360) at
+// Segoe UI 9 point, in characters, within the working area, or on a small
+// screen at a large scale the title bar opens off the top; centred.
+fn place_by_default(frame: &Frame) {
+    let (w, h) = (frame.get_char_width(), frame.get_char_height());
+    let mut size = Size::new(w * 103, h * 37);
+    if let Some(display) = Display::from_window(frame) {
+        let area = display.client_area();
+        size = Size::new(size.width.min(area.width), size.height.min(area.height));
+    }
+    frame.set_size(size);
+    frame.centre();
+}
+
 fn menu_bar(settings: &AppSettings) -> MenuBar {
     let file = Menu::builder()
         .append_item(ID_REFRESH, "&Refresh\tF5", "")
@@ -290,6 +296,8 @@ fn menu_bar(settings: &AppSettings) -> MenuBar {
         .append_item(ID_PREVIOUS_SECTION, "&Previous Section\tCtrl+PageUp", "")
         .append_separator()
         .append_item(ID_ALERTS, "&Alerts\tCtrl+Shift+A", "")
+        .append_separator()
+        .append_item(ID_RESET_WINDOW, "&Reset Window Size and Position", "")
         .build();
     // No shortcut: Windows has no convention for a settings dialog
     // (Ctrl+comma is the Mac's, which wx gives it there through
@@ -426,6 +434,18 @@ impl MainWindow {
         self.save_settings();
     }
 
+    // As a first run places it, for a window that has been lost or made
+    // awkward; remembered from then on as any other move is. Said, since
+    // a screen reader user has nothing else to tell them it happened.
+    fn reset_window(&self) {
+        if self.frame.is_maximized() {
+            self.frame.maximize(false);
+        }
+        place_by_default(&self.frame);
+        self.announcer
+            .say("The window is back to its default size and position.");
+    }
+
     pub fn show(&self) {
         self.frame.show(true);
         self.shown_at.set(Instant::now());
@@ -494,6 +514,7 @@ impl MainWindow {
             ID_ADD => self.add_location(),
             ID_PREFERENCES => self.show_settings(),
             ID_GUIDE => guide::open(&self.frame, None),
+            ID_RESET_WINDOW => self.reset_window(),
             ID_ABOUT => about::show(&self.frame),
             _ if (ID_LOCATION..ID_LOCATION + MENU_LOCATIONS as Id).contains(&id) => {
                 self.show_location((id - ID_LOCATION) as usize);

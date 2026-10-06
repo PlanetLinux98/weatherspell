@@ -265,7 +265,8 @@ theme's colours. If you turn one on while Weatherspell is open in dark
 mode, please restart Weatherspell to see them.
 
 The main window opens where you last left it, at the same size, and
-maximized if it was.
+maximized if it was. To put it back where and how it first opened, choose
+Reset Window Size and Position from the View menu.
 
 ## Keyboard shortcuts
 

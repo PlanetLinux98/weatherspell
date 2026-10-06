@@ -10,6 +10,10 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 
 ## [Unreleased]
 
+### Added
+- View > Reset Window Size and Position puts the main window back where
+  and how it first opened.
+
 ### Fixed
 - In dark mode, Narrator didn't say whether a check box was checked when
   it was toggled.
