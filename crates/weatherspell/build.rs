@@ -1,5 +1,6 @@
-// What the app takes in at build time: the user guide, made into one page
-// from USER_GUIDE.md (build/guide.rs); the version, from the git tag
+// What the app takes in at build time: the user guide and the third-party
+// notices, made into pages from USER_GUIDE.md and THIRD-PARTY-NOTICES.md
+// (build/guide.rs); the version, from the git tag
 // (build/version.rs); and on Windows the resources: the manifest (common
 // controls 6, which wxWidgets insists on, and per-monitor DPI awareness),
 // the icon, and the version Explorer shows in the file's properties.
@@ -18,12 +19,18 @@ fn main() {
     let root = crate_dir.join("../..");
     let out = PathBuf::from(std::env::var("OUT_DIR").unwrap());
 
-    let guide_md = root.join("USER_GUIDE.md");
     let template = root.join("tools/GuideBuilder/template.html");
-    watch(&guide_md);
     watch(&template);
-    let page = guide::page(&read(&guide_md), &read(&template));
-    fs::write(out.join("user-guide.html"), page).unwrap();
+    let titles = [
+        "Weatherspell User Guide",
+        "Weatherspell Third-Party Notices",
+    ];
+    for ((md, html), title) in guide::PAGES.iter().zip(titles) {
+        let md = root.join(md);
+        watch(&md);
+        let page = guide::page(&read(&md), &read(&template), title);
+        fs::write(out.join(html), page).unwrap();
+    }
 
     let version = version::from_describe(describe(&root).as_deref());
     println!("cargo::rustc-env=WEATHERSPELL_VERSION={}", version.text);

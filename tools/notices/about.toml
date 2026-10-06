@@ -1,0 +1,20 @@
+# cargo-about's settings for THIRD-PARTY-NOTICES.md (tools/Update-Notices.ps1).
+# Where a crate offers a choice, the first licence here that it offers is
+# the one credited. Only what goes into the Windows exe is listed: no
+# build or test dependencies, and not the workspace's own crates.
+accepted = [
+    "MIT",
+    "Apache-2.0",
+    "ISC",
+    "BSD-3-Clause",
+    "Zlib",
+    "Unicode-3.0",
+    "CDLA-Permissive-2.0",
+    "0BSD",
+    "Unlicense",
+]
+targets = ["x86_64-pc-windows-msvc"]
+ignore-build-dependencies = true
+ignore-dev-dependencies = true
+private = { ignore = true }
+workarounds = ["ring", "rustls"]

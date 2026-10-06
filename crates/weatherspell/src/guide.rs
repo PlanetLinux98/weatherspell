@@ -11,8 +11,18 @@ use wxdragon::prelude::*;
 
 pub const CREDITS: &str = "credits-and-licences";
 
-const PAGE: &str = include_str!(concat!(env!("OUT_DIR"), "/user-guide.html"));
 const FILE_NAME: &str = "user-guide.html";
+// The guide and the third-party notices it links to, side by side.
+const PAGES: [(&str, &str); 2] = [
+    (
+        FILE_NAME,
+        include_str!(concat!(env!("OUT_DIR"), "/user-guide.html")),
+    ),
+    (
+        "third-party-notices.html",
+        include_str!(concat!(env!("OUT_DIR"), "/third-party-notices.html")),
+    ),
+];
 
 fn folder() -> PathBuf {
     std::env::temp_dir().join("Weatherspell")
@@ -22,8 +32,10 @@ fn folder() -> PathBuf {
 // reached through a small page that forwards to it.
 fn prepare(folder: &Path, section: Option<&str>) -> io::Result<PathBuf> {
     fs::create_dir_all(folder)?;
+    for (name, page) in PAGES {
+        fs::write(folder.join(name), page)?;
+    }
     let guide = folder.join(FILE_NAME);
-    fs::write(&guide, PAGE)?;
     let Some(section) = section else {
         return Ok(guide);
     };
@@ -68,8 +80,11 @@ mod tests {
             std::env::temp_dir().join(format!("weatherspell-guide-test-{}", std::process::id()));
         let guide = prepare(&folder, None).unwrap();
         assert_eq!(guide, folder.join(FILE_NAME));
-        assert_eq!(fs::read_to_string(&guide).unwrap(), PAGE);
-        assert!(PAGE.contains(&format!("id=\"{CREDITS}\"")));
+        for (name, page) in PAGES {
+            assert_eq!(fs::read_to_string(folder.join(name)).unwrap(), page);
+        }
+        assert!(PAGES[0].1.contains(&format!("id=\"{CREDITS}\"")));
+        assert!(PAGES[0].1.contains("href=\"third-party-notices.html\""));
 
         let forward = prepare(&folder, Some(CREDITS)).unwrap();
         assert_eq!(forward, folder.join("user-guide-credits-and-licences.html"));

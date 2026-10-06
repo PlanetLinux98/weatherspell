@@ -17,7 +17,7 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 - Weatherspell is rebuilt in Rust with wxWidgets, to streamline
   development and as the base for Mac and Linux versions later. It's still
   one executable, and it keeps using your saved locations and settings
-  from prior versions (#24).
+  from prior versions. Requires 64-bit Windows at this time (#24).
 - Manage Locations: Rename becomes Edit (Alt+E or F2), and the choice of
   whether a location's alerts are announced moves into the Edit Location
   dialog, which names the place (#24).

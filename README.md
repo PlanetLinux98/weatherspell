@@ -23,8 +23,8 @@ weather in a simple and straightforward manner.
 
 Weatherspell is a single `Weatherspell.exe`. Download it from the
 [latest release](https://github.com/PlanetLinux98/weatherspell/releases/latest),
-put it wherever you like, and run it. It uses the .NET Framework 4.8 that is
-natively part of Windows 10 (version 1903 and later) and Windows 11.
+put it wherever you like, and run it. It needs nothing else on
+Windows 10 (version 1709 and later) and Windows 11.
 
 You can also install it with winget:
 
@@ -72,20 +72,40 @@ sources are added.
   [ODbL](https://opendatacommons.org/licenses/odbl/), looked up through
   [Nominatim](https://nominatim.org/) once per search.
 
+The software Weatherspell is built with, such as wxWidgets, is credited
+in the [third-party notices](THIRD-PARTY-NOTICES.md).
+
 ## Building from source
 
-Requires the [.NET SDK](https://dotnet.microsoft.com/download) (10.0 or later)
-on Windows. No Visual Studio or C++ toolchain is needed.
+Weatherspell is written in Rust, with its windows made by
+[wxWidgets](https://www.wxwidgets.org/) through the
+[wxDragon](https://github.com/AllenDang/wxDragon) bindings. To build it
+on Windows, you need:
 
-```bash
-dotnet build Weatherspell.slnx -c Release
+- [Rust](https://rustup.rs/) (stable).
+- Visual Studio 2022 or its Build Tools, with the "Desktop development
+  with C++" workload, which brings the C++ compiler, the Windows SDK,
+  CMake and Ninja.
+
+From a Developer PowerShell for Visual Studio, which puts CMake and Ninja
+on the path:
+
+```
+cargo build --release -p weatherspell
 ```
 
-The exe lands in `src\Weatherspell\bin\Release\net48\`. Run the tests with:
+The first build downloads and compiles wxWidgets, which takes several
+minutes. The exe lands in `target\release\weatherspell.exe`. Run the
+tests with:
 
-```bash
-dotnet test Weatherspell.slnx
 ```
+cargo test -p weatherspell-core --all-features
+cargo test --release -p weatherspell -p wx-accessibility
+```
+
+The C# app that was Weatherspell 0.1 is still in `src\`, for fixes to
+0.1 only. It builds with the [.NET SDK](https://dotnet.microsoft.com/download)
+and `dotnet build Weatherspell.slnx`.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how changes are made and reviewed,
 and [NOTES.md](NOTES.md) for the design decisions behind the project.

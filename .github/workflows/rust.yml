@@ -15,6 +15,7 @@ on:
       - "tests/Weatherspell.Tests/Fixtures/**"
       - "src/Weatherspell/Weather/PostalCodes.tsv"
       - "USER_GUIDE.md"
+      - "THIRD-PARTY-NOTICES.md"
       - "tools/GuideBuilder/template.html"
       - "tools/Check-SingleExe.ps1"
       - "Assets/**"
