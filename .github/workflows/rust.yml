@@ -1,9 +1,10 @@
 name: Rust
 
 # The Rust rewrite (#24). Its logic is built and tested on Windows, macOS
-# and Linux from the start, so the later ports find it already working.
-# The wx test window is not built here: it compiles wxWidgets from source.
-# Unlike CI, this runs on every branch, but only for Rust changes.
+# and Linux from the start, so the later ports find it already working;
+# the app itself is built on Windows and checked to be one exe. The wx
+# test window is not built here. Unlike CI, this runs on every branch, but
+# only for changes to what the Rust build reads.
 on:
   push:
     branches: ["**"]
@@ -12,6 +13,11 @@ on:
       - "Cargo.*"
       - ".cargo/**"
       - "tests/Weatherspell.Tests/Fixtures/**"
+      - "src/Weatherspell/Weather/PostalCodes.tsv"
+      - "USER_GUIDE.md"
+      - "tools/GuideBuilder/template.html"
+      - "tools/Check-SingleExe.ps1"
+      - "Assets/**"
       - ".github/workflows/rust.yml"
   pull_request:
   workflow_dispatch:
@@ -34,3 +40,46 @@ jobs:
 
       - name: Test
         run: cargo test -p weatherspell-core --all-features
+
+  app:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # The version comes from the latest tag (build/version.rs).
+          fetch-depth: 0
+
+      # wxWidgets is compiled from source, several minutes from cold; its
+      # build folders are kept between runs. Everything runs in the release
+      # profile so it is compiled once.
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            target/release/wxWidgets
+            target/release/wxwidgets_cmake_build
+            target/release/wxdragon_sys_cmake_build
+          key: wx-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: wx-${{ runner.os }}-
+
+      # wxdragon-sys builds with CMake and Ninja; Visual Studio has both.
+      - name: Put CMake and Ninja on the path
+        shell: pwsh
+        run: |
+          $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath
+          "$vs\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin" | Out-File -Append $env:GITHUB_PATH
+          "$vs\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja" | Out-File -Append $env:GITHUB_PATH
+
+      - name: Lint
+        run: cargo clippy --release -p weatherspell -p wx-accessibility --all-targets -- -D warnings
+
+      - name: Test
+        run: cargo test --release -p weatherspell -p wx-accessibility
+
+      - name: Build
+        run: cargo build --release -p weatherspell
+
+      - name: One exe, Windows' own DLLs only
+        shell: pwsh
+        run: ./tools/Check-SingleExe.ps1
