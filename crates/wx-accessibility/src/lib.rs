@@ -5,6 +5,8 @@
 
 mod announce;
 mod check_box;
+#[cfg(windows)]
+mod hosted;
 pub mod lint;
 mod screen_readers;
 

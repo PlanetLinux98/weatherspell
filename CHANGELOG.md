@@ -10,6 +10,10 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 
 ## [Unreleased]
 
+### Fixed
+- In dark mode, Narrator didn't say whether a check box was checked when
+  it was toggled.
+
 ## [0.2.0-alpha.1] - 2026-10-06
 
 ### Added
