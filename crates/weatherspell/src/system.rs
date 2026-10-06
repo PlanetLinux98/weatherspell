@@ -2,85 +2,49 @@
 // system and time format, and this PC's time zone. Windows for now; the
 // Mac and Linux get theirs in their own steps.
 
-use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use jiff::tz::TimeZone;
-use weatherspell_core::cache;
 use weatherspell_core::clock::TimeFormat;
-use weatherspell_core::settings;
 use weatherspell_core::units::UnitSystem;
 
-// Until the switch from 0.1 the port keeps a folder of its own beside
-// 0.1's, so a preview can never change the files 0.1 relies on and the two
-// can run side by side. Its first run copies 0.1's settings and cache in,
-// so the saved locations are there from the start (Elliott, 2026-10-05).
-// At the switch it moves into 0.1's folder.
-const FOLDER: &str = "Weatherspell Preview";
-const FOLDER_0_1: &str = "Weatherspell";
+// 0.1's folder and files: each app reads what the other writes (the core's
+// reference tests check both ways), so moving between them keeps saved
+// locations, nicknames and seen alerts. The previews before the switch had
+// a folder of their own, "Weatherspell Preview", which is no longer read.
+const FOLDER: &str = "Weatherspell";
 
 pub fn data_folder() -> PathBuf {
-    // Developer-only, like WEATHERSPELL_OFFLINE: another folder, nothing
-    // copied in, so a first run can be rehearsed without touching the
-    // real settings.
+    // Developer-only, like WEATHERSPELL_OFFLINE: another folder, so a first
+    // run can be rehearsed without touching the real settings.
     if let Some(folder) = std::env::var_os("WEATHERSPELL_DATA").filter(|v| !v.is_empty()) {
         return PathBuf::from(folder);
     }
-    let base = app_data();
-    let ours = base.join(FOLDER);
-    if !ours.join(settings::FILE_NAME).exists() {
-        seed(&base.join(FOLDER_0_1), &ours);
-    }
-    ours
-}
-
-// The cache first and settings.json last, since settings.json is what
-// says the copy was made. Best effort: what is not copied is fetched.
-fn seed(from: &Path, to: &Path) {
-    let settings = from.join(settings::FILE_NAME);
-    if !settings.exists() {
-        return;
-    }
-    let cache_to = to.join(cache::FOLDER_NAME);
-    if fs::create_dir_all(&cache_to).is_err() {
-        return;
-    }
-    if let Ok(entries) = fs::read_dir(from.join(cache::FOLDER_NAME)) {
-        for entry in entries.flatten() {
-            let path = entry.path();
-            if path
-                .extension()
-                .is_some_and(|e| e.eq_ignore_ascii_case("json"))
-            {
-                let _ = fs::copy(&path, cache_to.join(entry.file_name()));
-            }
-        }
-    }
-    let _ = fs::copy(&settings, to.join(settings::FILE_NAME));
+    app_data().join(FOLDER)
 }
 
 // One copy per Windows session: two would each announce every alert and
 // save settings.json over each other's changes (#22). A second launch
-// brings the first one's window forward instead, and ends. The preview's
-// name is its own, so it runs beside 0.1 (whose is Local\Weatherspell).
+// brings the first one's window forward instead, and ends. 0.1 uses the
+// same name, since the two share settings.json, and both look for the
+// other by exe name, as 0.1 does (Program.cs), so either brings the other
+// forward.
 pub fn another_copy_brought_forward() -> bool {
     #[cfg(windows)]
     unsafe {
         use windows::Win32::Foundation::{ERROR_ALREADY_EXISTS, GetLastError};
         use windows::Win32::System::Threading::CreateMutexW;
         use windows::Win32::UI::WindowsAndMessaging::{
-            FindWindowW, IsIconic, SW_RESTORE, SetForegroundWindow, ShowWindow,
+            IsIconic, SW_RESTORE, SetForegroundWindow, ShowWindow,
         };
-        use windows::core::{HSTRING, w};
+        use windows::core::w;
         // Held until this copy ends, when Windows closes it.
-        if CreateMutexW(None, true, w!("Local\\Weatherspell Preview")).is_err()
+        if CreateMutexW(None, true, w!("Local\\Weatherspell")).is_err()
             || GetLastError() != ERROR_ALREADY_EXISTS
         {
             return false;
         }
-        // wx's class for a frame, and the title the window always has.
-        let title = HSTRING::from(crate::window::TITLE);
-        if let Ok(window) = FindWindowW(w!("wxWindowNR"), &title) {
+        if let Some(window) = other_copy_window() {
             if IsIconic(window).as_bool() {
                 let _ = ShowWindow(window, SW_RESTORE);
             }
@@ -90,6 +54,74 @@ pub fn another_copy_brought_forward() -> bool {
     }
     #[cfg(not(windows))]
     false
+}
+
+// The other copy's main window, as .NET's MainWindowHandle finds it: the
+// first visible top-level window with no owner (a dialog has one) of a
+// process whose exe has this one's name.
+#[cfg(windows)]
+fn other_copy_window() -> Option<windows::Win32::Foundation::HWND> {
+    use windows::Win32::Foundation::{CloseHandle, HWND, LPARAM};
+    use windows::Win32::System::Threading::{
+        GetCurrentProcessId, OpenProcess, PROCESS_NAME_WIN32, PROCESS_QUERY_LIMITED_INFORMATION,
+        QueryFullProcessImageNameW,
+    };
+    use windows::Win32::UI::WindowsAndMessaging::{
+        EnumWindows, GW_OWNER, GetWindow, GetWindowThreadProcessId, IsWindowVisible,
+    };
+    use windows::core::{BOOL, PWSTR};
+
+    fn exe_name(pid: u32) -> Option<String> {
+        unsafe {
+            let process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid).ok()?;
+            let mut buffer = [0u16; 1024];
+            let mut length = buffer.len() as u32;
+            let named = QueryFullProcessImageNameW(
+                process,
+                PROCESS_NAME_WIN32,
+                PWSTR(buffer.as_mut_ptr()),
+                &mut length,
+            );
+            let _ = CloseHandle(process);
+            named.ok()?;
+            let path = PathBuf::from(String::from_utf16_lossy(&buffer[..length as usize]));
+            Some(path.file_name()?.to_string_lossy().to_lowercase())
+        }
+    }
+
+    struct Search {
+        own_pid: u32,
+        own_exe: String,
+        found: Option<HWND>,
+    }
+
+    unsafe extern "system" fn visit(window: HWND, data: LPARAM) -> BOOL {
+        unsafe {
+            let search = &mut *(data.0 as *mut Search);
+            let mut pid = 0;
+            GetWindowThreadProcessId(window, Some(&mut pid));
+            if pid != search.own_pid
+                && IsWindowVisible(window).as_bool()
+                && GetWindow(window, GW_OWNER).is_err()
+                && exe_name(pid).as_deref() == Some(search.own_exe.as_str())
+            {
+                search.found = Some(window);
+                return false.into();
+            }
+            true.into()
+        }
+    }
+
+    unsafe {
+        let own_pid = GetCurrentProcessId();
+        let mut search = Search {
+            own_pid,
+            own_exe: exe_name(own_pid)?,
+            found: None,
+        };
+        let _ = EnumWindows(Some(visit), LPARAM(&mut search as *mut Search as isize));
+        search.found
+    }
 }
 
 // Light or dark as the system is set, through wx 3.3's own dark mode on

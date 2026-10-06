@@ -19,9 +19,8 @@ const LOGO: &[u8] = include_bytes!("../../../Assets/Weatherspell.svg");
 
 fn paragraphs() -> Vec<String> {
     vec![
-        // "Preview" until the switch from 0.1.
         format!(
-            "Weatherspell Preview {}\nA text-based weather app for Windows.",
+            "Weatherspell {}\nA text-based weather app for Windows.",
             crate::VERSION
         ),
         "Copyright 2026 PlanetLinux98. Released under the MIT licence.".to_string(),

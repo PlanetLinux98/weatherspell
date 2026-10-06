@@ -36,9 +36,6 @@ use crate::system::{self, Region};
 use crate::{about, add_location, details, dialogs, edit, guide, manage, on_ui, settings_dialog};
 
 pub const APP_NAME: &str = "Weatherspell";
-// The preview says what it is in its title bar, so it is never taken for
-// 0.1 (NVDA reads the title as the window comes up).
-pub const TITLE: &str = "Weatherspell Preview";
 const FORECAST_DAYS: u32 = 7;
 
 const ID_REFRESH: Id = ID_HIGHEST + 1;
@@ -119,7 +116,7 @@ pub fn build() -> Rc<MainWindow> {
     let store = SettingsStore::in_folder(&folder);
     let (settings, load_problem) = store.load();
 
-    let frame = Frame::builder().with_title(TITLE).build();
+    let frame = Frame::builder().with_title(APP_NAME).build();
     dialogs::developer_font(&frame);
     frame.set_menu_bar(menu_bar(&settings));
     system::set_window_icon(&frame);

@@ -99,7 +99,7 @@ $env:WEATHERSPELL_OFFLINE = $null
 $env:WEATHERSPELL_FONT_POINTS = $null
 $env:WEATHERSPELL_APPEARANCE = $null
 try {
-    $frame = Find-Window "Weatherspell Preview"
+    $frame = Find-Window "Weatherspell"
     Start-Sleep -Seconds 2
     Save-Picture $frame "main"
     # The menu commands' ids (src/window.rs), and the dialog each opens.
