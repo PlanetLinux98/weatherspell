@@ -210,6 +210,20 @@ pub fn set_window_icon(window: &impl wxdragon::prelude::WxWidget) {
     let _ = window;
 }
 
+// Before any window is made. The Mac would otherwise offer window tabs
+// (View > Show Tab Bar) in an app with one window.
+pub fn before_windows() {
+    #[cfg(target_os = "macos")]
+    unsafe {
+        use wx_accessibility::mac;
+        mac::id_with_number(
+            mac::class(c"NSWindow"),
+            c"setAllowsAutomaticWindowTabbing:",
+            0,
+        );
+    }
+}
+
 // The region's own ways, as 0.1 read them from .NET's current culture.
 pub struct Region {
     pub units: UnitSystem,

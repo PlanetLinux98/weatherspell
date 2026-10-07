@@ -133,6 +133,7 @@ fn make(
         10,
     );
     dialog.set_sizer(sizer, true);
+    wx_accessibility::name_inputs(&dialog);
     // 0.1's 520 by 420, at least 420 by 360.
     dialogs::size(&dialog, (74, 28), (60, 24));
 
@@ -338,7 +339,7 @@ impl AddLocation {
         let place = self.found.borrow().get(index as usize).cloned();
         if let Some(place) = place {
             *self.chosen.borrow_mut() = Some(place);
-            self.dialog.end_modal(ID_OK);
+            dialogs::end(&self.dialog, ID_OK);
         }
     }
 }

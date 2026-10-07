@@ -101,15 +101,40 @@ function menuShortcut(element, role) {
     const key = attribute(element, "AXMenuItemCmdChar");
     const glyph = attribute(element, "AXMenuItemCmdGlyph");
     if (!key && !glyph) return "";
-    // Bits: 1 Shift, 2 Option, 4 Control, 8 no Command.
+    // Bits: 1 Shift, 2 Option, 4 Control, 8 no Command, 16 Fn (Globe).
     const mods = attribute(element, "AXMenuItemCmdModifiers") || 0;
     const names = [];
+    if (mods & 16) names.push("Fn");
     if (mods & 4) names.push("Ctrl");
     if (mods & 2) names.push("Option");
     if (mods & 1) names.push("Shift");
     if (!(mods & 8)) names.unshift("Cmd");
-    names.push(key || `glyph ${glyph}`);
+    names.push(key ? keyName(key) : `glyph ${glyph}`);
     return names.join("+");
+}
+
+// AppKit gives keys with no character of their own (F5, Page Down) as
+// private-use characters, which print as nothing.
+function keyName(key) {
+    const code = key.charCodeAt(0);
+    if (code >= 0xf704 && code <= 0xf726) return `F${code - 0xf704 + 1}`;
+    const named = {
+        0xf700: "Up",
+        0xf701: "Down",
+        0xf702: "Left",
+        0xf703: "Right",
+        0xf728: "Forward Delete",
+        0xf729: "Home",
+        0xf72b: "End",
+        0xf72c: "Page Up",
+        0xf72d: "Page Down",
+        0x1b: "Escape",
+        0x0d: "Return",
+        0x09: "Tab",
+        0x08: "Delete",
+        0x20: "Space",
+    };
+    return named[code] || key.toUpperCase();
 }
 
 function attribute(element, name) {

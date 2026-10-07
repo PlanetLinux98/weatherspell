@@ -104,6 +104,7 @@ pub fn build(
         10,
     );
     dialog.set_sizer(sizer, true);
+    wx_accessibility::name_inputs(&dialog);
     // Fixed: nothing here gains from more room. 0.1's 480 wide.
     dialogs::fit(&dialog, 68);
 
@@ -119,7 +120,7 @@ pub fn build(
     let (a, c) = (apply.clone(), chosen.clone());
     ok.on_click(move |_| {
         a(c());
-        dialog.end_modal(ID_OK);
+        dialogs::end(&dialog, ID_OK);
     });
 
     forecast_minutes.set_focus();

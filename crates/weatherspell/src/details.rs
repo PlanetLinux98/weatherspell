@@ -62,6 +62,7 @@ pub fn build(parent: &Frame, title: &str, paragraphs: &[String], url: Option<&st
         8,
     );
     dialog.set_sizer(sizer, true);
+    wx_accessibility::name_inputs(&dialog);
 
     // 0.1's 600 by 460 at Segoe UI 9 point, in characters, within the
     // screen; at least 400 by 300.
@@ -84,7 +85,7 @@ pub fn build(parent: &Frame, title: &str, paragraphs: &[String], url: Option<&st
             && !key.shift_down()
             && !key.alt_down()
         {
-            d.end_modal(ID_CANCEL);
+            dialogs::end(&d, ID_CANCEL);
             return;
         }
         event.skip(true);

@@ -60,6 +60,16 @@ pub fn button_row(buttons: &[&Button]) -> BoxSizer {
     row
 }
 
+// Ends a modal dialog, once. On the Mac, Return presses the default
+// button and also reaches a control's own Enter handler, so a dialog was
+// asked to end twice, which wxWidgets stops on with an assertion. Ending
+// hides it at once, so a hidden dialog is already ending.
+pub fn end(dialog: &Dialog, code: i32) {
+    if dialog.is_shown() {
+        dialog.end_modal(code);
+    }
+}
+
 // A label's text wrapped to the dialog's content width, so a long place
 // name wraps rather than widening the dialog.
 pub fn wrap(text: &StaticText, chars: i32) {

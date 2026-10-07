@@ -157,6 +157,7 @@ pub fn build() -> Rc<MainWindow> {
     text.set_background_color(SystemSettings::get_colour(SystemColour::Window));
     outer.add(&text, 1, SizerFlag::Expand, 0);
     panel.set_sizer(outer, true);
+    wx_accessibility::name_inputs(&panel);
 
     frame.set_min_size(Size::new(
         frame.get_char_width() * 68,
@@ -211,7 +212,17 @@ pub fn build() -> Rc<MainWindow> {
     window.populate_locations();
 
     let w = window.clone();
-    window.frame.on_menu(move |event| w.command(event.get_id()));
+    window.frame.on_menu(move |event| {
+        let id = event.get_id();
+        // On the Mac, wx goes back to the menu item once this returns, and
+        // a command that rebuilds the menus (adding a location) has freed
+        // it by then: a crash. There a command runs once the menu is done.
+        if cfg!(target_os = "macos") {
+            crate::on_ui(move |w| w.command(id));
+        } else {
+            w.command(id);
+        }
+    });
     let w = window.clone();
     window
         .choice
@@ -285,38 +296,76 @@ fn place_by_default(frame: &Frame) {
     frame.centre();
 }
 
+// The keys each system expects, the Mac's own conventions where it has
+// them (Elliott, 2026-10-07). wx reads Ctrl as Command on the Mac. Mac
+// laptops have no Page Down, and Command and Option with the arrows
+// already move through text there, so the sections are Cmd+] and Cmd+[.
+#[cfg(target_os = "macos")]
+mod keys {
+    pub const REFRESH: &str = "	Ctrl+R";
+    pub const NEXT_SECTION: &str = "	Ctrl+]";
+    pub const PREVIOUS_SECTION: &str = "	Ctrl+[";
+    pub const GUIDE: &str = "	Ctrl+?";
+    pub const SETTINGS: &str = "	Ctrl+,";
+}
+// Settings has no shortcut: Windows has no convention for a settings
+// dialog, and Alt+S, S is two keys.
+#[cfg(not(target_os = "macos"))]
+mod keys {
+    pub const REFRESH: &str = "	F5";
+    pub const NEXT_SECTION: &str = "	Ctrl+PageDown";
+    pub const PREVIOUS_SECTION: &str = "	Ctrl+PageUp";
+    pub const GUIDE: &str = "	F1";
+    pub const SETTINGS: &str = "";
+}
+
 fn menu_bar(settings: &AppSettings) -> MenuBar {
-    let file = Menu::builder()
-        .append_item(ID_REFRESH, "&Refresh\tF5", "")
+    let settings_item = format!("&Settings...{}", keys::SETTINGS);
+    let mut file =
+        Menu::builder().append_item(ID_REFRESH, &format!("&Refresh{}", keys::REFRESH), "");
+    // The Mac shows Settings, About and Quit in the app's own menu, which
+    // wx fills from these items (taking the label, shortcut included) and
+    // hides them where they are. Settings goes in File there rather than
+    // in a Settings menu that would be left empty.
+    if cfg!(target_os = "macos") {
+        file = file.append_item(ID_PREFERENCES, &settings_item, "");
+    }
+    let file = file
         .append_separator()
-        .append_item(ID_EXIT, "E&xit\tAlt+F4", "")
+        .append_item(ID_EXIT, "E&xit	Alt+F4", "")
         .build();
     let view = Menu::builder()
-        .append_item(ID_NEXT_SECTION, "&Next Section\tCtrl+PageDown", "")
-        .append_item(ID_PREVIOUS_SECTION, "&Previous Section\tCtrl+PageUp", "")
+        .append_item(
+            ID_NEXT_SECTION,
+            &format!("&Next Section{}", keys::NEXT_SECTION),
+            "",
+        )
+        .append_item(
+            ID_PREVIOUS_SECTION,
+            &format!("&Previous Section{}", keys::PREVIOUS_SECTION),
+            "",
+        )
         .append_separator()
-        .append_item(ID_ALERTS, "&Alerts\tCtrl+Shift+A", "")
+        .append_item(ID_ALERTS, "&Alerts	Ctrl+Shift+A", "")
         .append_separator()
         .append_item(ID_RESET_WINDOW, "&Reset Window Size and Position", "")
         .build();
-    // No shortcut: Windows has no convention for a settings dialog
-    // (Ctrl+comma is the Mac's, which wx gives it there through
-    // ID_PREFERENCES), and Alt+S, S is two keys.
-    let settings_menu = Menu::builder()
-        .append_item(ID_PREFERENCES, "&Settings...", "")
-        .build();
     let help = Menu::builder()
-        .append_item(ID_GUIDE, "&User Guide\tF1", "")
+        .append_item(ID_GUIDE, &format!("&User Guide{}", keys::GUIDE), "")
         .append_separator()
         .append_item(ID_ABOUT, "&About Weatherspell", "")
         .build();
-    MenuBar::builder()
+    let mut bar = MenuBar::builder()
         .append(file, "&File")
         .append(locations_menu(settings), LOCATIONS_TITLE)
-        .append(view, "&View")
-        .append(settings_menu, "&Settings")
-        .append(help, "&Help")
-        .build()
+        .append(view, "&View");
+    if !cfg!(target_os = "macos") {
+        let settings_menu = Menu::builder()
+            .append_item(ID_PREFERENCES, &settings_item, "")
+            .build();
+        bar = bar.append(settings_menu, "&Settings");
+    }
+    bar.append(help, "&Help").build()
 }
 
 const LOCATIONS_TITLE: &str = "&Locations";

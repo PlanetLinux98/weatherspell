@@ -94,6 +94,9 @@ jobs:
     runs-on: macos-latest
     env:
       MACOSX_DEPLOYMENT_TARGET: "15.0"
+      # Symbols kept in these test builds, so a crash report on the Mac
+      # names the functions it went through.
+      CARGO_PROFILE_RELEASE_STRIP: "false"
     steps:
       - uses: actions/checkout@v7
         with:

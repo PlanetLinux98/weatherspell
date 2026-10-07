@@ -3,16 +3,19 @@
 // notification, as the C# app raised with RaiseAutomationNotification.
 // wxWidgets has no UI Automation at all, so the notification rides on a
 // provider hosted on the window (hosted.rs); Narrator hears it although
-// the window never advertises the provider.
+// the window never advertises the provider. On the Mac it is AppKit's
+// announcement request, which VoiceOver speaks.
 //
-// Other systems: not yet (NSAccessibility on the Mac, AT-SPI on Linux);
-// there an announcement does nothing.
+// Linux: not yet (AT-SPI); there an announcement does nothing.
 
 use wxdragon::prelude::WxWidget;
 
 pub struct Announcer {
     #[cfg(windows)]
     provider: windows_impl::Provider,
+    // The window's view, whose window posts the announcement.
+    #[cfg(target_os = "macos")]
+    view: crate::mac::Id,
 }
 
 impl Announcer {
@@ -26,7 +29,14 @@ impl Announcer {
                 provider: windows_impl::Provider::new(window.get_handle(), app_name),
             }
         }
-        #[cfg(not(windows))]
+        #[cfg(target_os = "macos")]
+        {
+            let _ = app_name;
+            Announcer {
+                view: window.get_handle(),
+            }
+        }
+        #[cfg(not(any(windows, target_os = "macos")))]
         {
             let _ = (window, app_name);
             Announcer {}
@@ -37,7 +47,9 @@ impl Announcer {
     pub fn say(&self, text: &str) {
         #[cfg(windows)]
         self.provider.raise(false, text);
-        #[cfg(not(windows))]
+        #[cfg(target_os = "macos")]
+        mac_impl::post(self.view, text);
+        #[cfg(not(any(windows, target_os = "macos")))]
         let _ = text;
     }
 
@@ -45,7 +57,9 @@ impl Announcer {
     pub fn alert(&self, text: &str) {
         #[cfg(windows)]
         self.provider.raise(true, text);
-        #[cfg(not(windows))]
+        #[cfg(target_os = "macos")]
+        mac_impl::post(self.view, text);
+        #[cfg(not(any(windows, target_os = "macos")))]
         let _ = text;
     }
 }
@@ -91,6 +105,49 @@ mod windows_impl {
             if let Err(e) = result {
                 eprintln!("UiaRaiseNotificationEvent: {e}");
             }
+        }
+    }
+}
+
+#[cfg(target_os = "macos")]
+mod mac_impl {
+    use crate::mac::{self, Id};
+
+    // NSAccessibilityPriorityHigh: said at once, cutting off whatever is
+    // being said, as on Windows a newer status replaces an older one and
+    // an alert is never left behind. It also cuts off what VoiceOver says
+    // of a caret the app moved itself (a section key), so the heading is
+    // what is heard. Lower priorities wait their turn.
+    const PRIORITY_HIGH: isize = 90;
+
+    pub fn post(view: Id, text: &str) {
+        unsafe {
+            let app = mac::id(mac::class(c"NSApplication"), c"sharedApplication");
+            let window = if mac::is(view, c"NSView") {
+                mac::id(view, c"window")
+            } else if mac::is(view, c"NSWindow") {
+                view
+            } else {
+                std::ptr::null_mut()
+            };
+            let element = if window.is_null() { app } else { window };
+            let priority = mac::id_with_number(
+                mac::class(c"NSNumber"),
+                c"numberWithInteger:",
+                PRIORITY_HIGH,
+            );
+            let info = mac::dictionary(
+                &[mac::string(text), priority],
+                &[
+                    mac::NSAccessibilityAnnouncementKey,
+                    mac::NSAccessibilityPriorityKey,
+                ],
+            );
+            mac::NSAccessibilityPostNotificationWithUserInfo(
+                element,
+                mac::NSAccessibilityAnnouncementRequestedNotification,
+                info,
+            );
         }
     }
 }

@@ -61,6 +61,7 @@ pub fn run() {
         return;
     }
     let _ = wxdragon::main(|_| {
+        system::before_windows();
         follow_appearance();
         let window = window::build();
         WINDOW.with(|w| *w.borrow_mut() = Some(window.clone()));
