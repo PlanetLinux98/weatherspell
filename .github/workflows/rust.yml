@@ -114,15 +114,18 @@ jobs:
       - name: Ninja
         run: command -v ninja || HOMEBREW_NO_AUTO_UPDATE=1 brew install ninja
 
+      # The two side by side in one folder, so the download holds them
+      # without the repo's folders around them.
       - name: Build the app and disk image
-        run: sh tools/mac/make-app.sh
+        run: |
+          sh tools/mac/make-app.sh
+          mkdir -p target/mac-download
+          cp target/release/Weatherspell.dmg tools/mac/dump-a11y.js target/mac-download/
 
       - uses: actions/upload-artifact@v7
         with:
           name: weatherspell-mac
-          path: |
-            target/release/Weatherspell.dmg
-            tools/mac/dump-a11y.js
+          path: target/mac-download/
           retention-days: 14
 
       - name: Lint
