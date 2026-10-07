@@ -29,6 +29,34 @@ impl TimeFormat {
         }
     }
 
+    // From a Unicode (ICU) pattern, as the Mac gives its short time
+    // ("h:mm a", "HH:mm"): its designator letter becomes "tt", its rarer
+    // hour letters the nearest of these, and the narrow no-break space
+    // macOS puts before "PM" a plain one, as Windows writes it.
+    pub fn from_unicode(pattern: &str, am: &str, pm: &str) -> TimeFormat {
+        let plain = |s: &str| s.replace(['\u{202f}', '\u{a0}'], " ");
+        let mut out = String::new();
+        let mut quoted = false;
+        let mut last = None;
+        for c in plain(pattern).chars() {
+            match c {
+                '\'' => {
+                    quoted = !quoted;
+                    out.push(c);
+                }
+                _ if quoted => out.push(c),
+                // "a", "b" and "B" are day periods; a run of them is one.
+                'a' | 'b' | 'B' if matches!(last, Some('a' | 'b' | 'B')) => {}
+                'a' | 'b' | 'B' => out.push_str("tt"),
+                'K' => out.push('h'),
+                'k' => out.push('H'),
+                _ => out.push(c),
+            }
+            last = Some(c);
+        }
+        TimeFormat::new(&out, &plain(am), &plain(pm))
+    }
+
     // "2:45 pm": the designator lowercased so it reads as a word, not
     // initials.
     pub fn format(&self, t: DateTime) -> String {
@@ -313,6 +341,26 @@ mod tests {
         assert_eq!(
             TimeFormat::new("hh:mm t", "AM", "PM").format(date(2026, 9, 11).at(0, 30, 0, 0)),
             "12:30 A"
+        );
+    }
+
+    #[test]
+    fn mac_patterns_become_windows_letters() {
+        let t = date(2026, 9, 11).at(14, 5, 0, 0);
+        let mac = TimeFormat::from_unicode("h:mm\u{202f}a", "AM", "PM");
+        assert_eq!(mac.pattern, "h:mm tt");
+        assert_eq!(mac.format(t), "2:05 pm");
+        assert_eq!(
+            TimeFormat::from_unicode("HH:mm", "AM", "PM").format(t),
+            "14:05"
+        );
+        assert_eq!(
+            TimeFormat::from_unicode("H 'h' mm", "", "").format(t),
+            "14 h 05"
+        );
+        assert_eq!(
+            TimeFormat::from_unicode("h:mm aaa", "a.m.", "p.m.").format(t),
+            "2:05 p.m."
         );
     }
 }

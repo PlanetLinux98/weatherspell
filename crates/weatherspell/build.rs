@@ -146,6 +146,8 @@ fn info_plist(version: &version::Version) -> String {
   <string>Weatherspell</string>
   <key>CFBundleExecutable</key>
   <string>Weatherspell</string>
+  <key>CFBundleIconFile</key>
+  <string>Weatherspell</string>
   <key>CFBundleIdentifier</key>
   <string>io.github.planetlinux98.weatherspell</string>
   <key>CFBundleInfoDictionaryVersion</key>

@@ -1,5 +1,6 @@
 <#
-Draws the app icon and writes Weatherspell.ico plus SVG copies of the design.
+Draws the app icon and writes Weatherspell.ico, the Mac's Weatherspell.icns,
+and SVG copies of the design.
 
 The design (a cloud and sun above lines of text, falling like rain) lives
 here as simple shapes, three times over: the full design on a 256 grid for
@@ -226,8 +227,66 @@ foreach ($p in $payloads) {
 foreach ($p in $payloads) { $w.Write([byte[]]$p[1]) }
 $w.Flush(); $stream.Close()
 
+# The Mac's icon: PNG frames from 16 to 1024 px in an .icns container.
+# Mac icons sit on Apple's grid, the plate 824 of 1024 px with the rest left
+# clear (the Dock and Finder expect that margin), so each frame draws the
+# design smaller and centres it; the plate's corners already come close to
+# the Mac's shape. Small frames take the drawings made for small sizes.
+$macFrames = @(
+    @{ Type = 'icp4'; Size = 16 }, @{ Type = 'icp5'; Size = 32 }, @{ Type = 'ic11'; Size = 32 },
+    @{ Type = 'ic12'; Size = 64 }, @{ Type = 'ic07'; Size = 128 }, @{ Type = 'ic13'; Size = 256 },
+    @{ Type = 'ic08'; Size = 256 }, @{ Type = 'ic14'; Size = 512 }, @{ Type = 'ic09'; Size = 512 },
+    @{ Type = 'ic10'; Size = 1024 }
+)
+# The full design's plate is 240 of its 256 grid; 824 of 1024 for the plate
+# makes the whole design this share of the frame.
+$macShare = (824.0 / 1024.0) * (256.0 / 240.0)
+
+function Draw-MacFrame([int]$size) {
+    $inner = [int][math]::Round($size * $macShare)
+    $design = if ($inner -le 16) { $small16 } elseif ($inner -le 24) { $small24 } else { $full }
+    $art = Draw-Design $design $inner
+    $bmp = New-Object System.Drawing.Bitmap $size, $size
+    $g = [System.Drawing.Graphics]::FromImage($bmp)
+    $g.Clear([System.Drawing.Color]::Transparent)
+    $at = [int][math]::Floor(($size - $inner) / 2)
+    $g.DrawImageUnscaled($art, $at, $at)
+    $g.Dispose(); $art.Dispose()
+    $bmp
+}
+
+function Write-BigEndian([System.IO.BinaryWriter]$writer, [uint32]$value) {
+    $bytes = [BitConverter]::GetBytes($value)
+    [array]::Reverse($bytes)
+    $writer.Write($bytes)
+}
+
+$macEntries = foreach ($f in $macFrames) {
+    $bmp = Draw-MacFrame $f.Size
+    if ($PreviewDir) { $bmp.Save((Join-Path $PreviewDir "mac-$($f.Type)-$($f.Size).png"), [System.Drawing.Imaging.ImageFormat]::Png) }
+    $ms = New-Object System.IO.MemoryStream
+    $bmp.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png)
+    $bmp.Dispose()
+    ,@($f.Type, $ms.ToArray())
+}
+# icns: "icns" and the file's length, then per frame its four-letter type,
+# its length with this 8-byte header, and the PNG. Lengths are big-endian.
+$icns = Join-Path $PSScriptRoot 'Weatherspell.icns'
+$total = 8
+foreach ($e in $macEntries) { $total += 8 + $e[1].Length }
+$stream = [System.IO.File]::Create($icns)
+$w = New-Object System.IO.BinaryWriter $stream
+$w.Write([System.Text.Encoding]::ASCII.GetBytes('icns'))
+Write-BigEndian $w $total
+foreach ($e in $macEntries) {
+    $w.Write([System.Text.Encoding]::ASCII.GetBytes($e[0]))
+    Write-BigEndian $w (8 + $e[1].Length)
+    $w.Write([byte[]]$e[1])
+}
+$w.Flush(); $stream.Close()
+
 Write-Svg $full (Join-Path $PSScriptRoot 'Weatherspell.svg')
 Write-Svg $small24 (Join-Path $PSScriptRoot 'Weatherspell-24.svg')
 Write-Svg $small16 (Join-Path $PSScriptRoot 'Weatherspell-16.svg')
 
-"Wrote $out ($((Get-Item $out).Length) bytes, sizes: $(($frames | ForEach-Object { $_.Size }) -join ', ')) and the three SVGs"
+"Wrote $out ($((Get-Item $out).Length) bytes, sizes: $(($frames | ForEach-Object { $_.Size }) -join ', ')), $icns ($((Get-Item $icns).Length) bytes) and the three SVGs"

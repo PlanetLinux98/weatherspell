@@ -106,6 +106,22 @@ pub unsafe fn string(text: &str) -> Id {
     }
 }
 
+// An NSString's text, or nothing for nil.
+pub unsafe fn text(string: Id) -> String {
+    if string.is_null() {
+        return String::new();
+    }
+    let f = send!(unsafe extern "C" fn(Id, Sel) -> *const c_char);
+    let chars = unsafe { f(string, sel(c"UTF8String")) };
+    if chars.is_null() {
+        String::new()
+    } else {
+        unsafe { CStr::from_ptr(chars) }
+            .to_string_lossy()
+            .into_owned()
+    }
+}
+
 // [object isKindOfClass:NSClassName]
 pub unsafe fn is(object: Id, class_name: &CStr) -> bool {
     let class = class(class_name);

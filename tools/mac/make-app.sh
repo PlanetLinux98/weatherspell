@@ -27,6 +27,8 @@ rm -rf "$app"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp "$release/weatherspell" "$app/Contents/MacOS/Weatherspell"
 cp "$out_dir/Info.plist" "$app/Contents/Info.plist"
+# Drawn with the .ico by Assets/make-icon.ps1.
+cp Assets/Weatherspell.icns "$app/Contents/Resources/Weatherspell.icns"
 codesign --force --sign - "$app"
 
 stage=$release/dmg

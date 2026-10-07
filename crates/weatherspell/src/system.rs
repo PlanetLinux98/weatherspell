@@ -1,6 +1,6 @@
 // What the app asks the system: where its files live, the region's unit
-// system and time format, and this PC's time zone. Windows for now; the
-// Mac and Linux get theirs in their own steps.
+// system and time format, and this computer's time zone. Windows and the
+// Mac; Linux gets its own in its step.
 
 use std::path::PathBuf;
 
@@ -21,6 +21,19 @@ pub fn data_folder() -> PathBuf {
         return PathBuf::from(folder);
     }
     app_data().join(FOLDER)
+}
+
+// The forecasts kept for when a fetch fails. Windows keeps them in the
+// app's folder, as 0.1 does; the Mac in its Caches folder, which is for
+// whatever can be fetched again.
+pub fn cache_folder() -> PathBuf {
+    #[cfg(target_os = "macos")]
+    if std::env::var_os("WEATHERSPELL_DATA").is_none_or(|v| v.is_empty())
+        && let Some(home) = std::env::var_os("HOME")
+    {
+        return PathBuf::from(home).join("Library/Caches").join(FOLDER);
+    }
+    data_folder().join(weatherspell_core::cache::FOLDER_NAME)
 }
 
 // One copy per Windows session: two would each announce every alert and
@@ -252,7 +265,37 @@ pub fn region() -> Region {
             zone,
         }
     }
-    #[cfg(not(windows))]
+    #[cfg(target_os = "macos")]
+    unsafe {
+        use wx_accessibility::mac;
+        let locale = mac::id(mac::class(c"NSLocale"), c"currentLocale");
+        // "Metric", "U.S." or "U.K."; only the US system is imperial, as
+        // on Windows, where Britain's region is metric.
+        let system = mac::text(mac::id(locale, c"measurementSystem"));
+        // A formatter's short time follows the user's own settings (the
+        // 24-hour switch included), where the locale alone would not.
+        let formatter = mac::id(mac::class(c"NSDateFormatter"), c"new");
+        mac::id_with_number(formatter, c"setDateStyle:", 0);
+        mac::id_with_number(formatter, c"setTimeStyle:", 1);
+        let pattern = mac::text(mac::id(formatter, c"dateFormat"));
+        let am = mac::text(mac::id(formatter, c"AMSymbol"));
+        let pm = mac::text(mac::id(formatter, c"PMSymbol"));
+        mac::id(formatter, c"release");
+        Region {
+            units: if system == "U.S." {
+                UnitSystem::Imperial
+            } else {
+                UnitSystem::Metric
+            },
+            time_format: if pattern.is_empty() {
+                TimeFormat::new("h:mm tt", "AM", "PM")
+            } else {
+                TimeFormat::from_unicode(&pattern, &am, &pm)
+            },
+            zone,
+        }
+    }
+    #[cfg(not(any(windows, target_os = "macos")))]
     {
         Region {
             units: UnitSystem::Metric,
@@ -294,7 +337,15 @@ fn app_data() -> PathBuf {
     }
 }
 
-#[cfg(not(windows))]
+// Application Support, where a Mac app keeps its settings.
+#[cfg(target_os = "macos")]
+fn app_data() -> PathBuf {
+    std::env::var_os("HOME")
+        .map(|home| PathBuf::from(home).join("Library/Application Support"))
+        .unwrap_or_else(std::env::temp_dir)
+}
+
+#[cfg(not(any(windows, target_os = "macos")))]
 fn app_data() -> PathBuf {
     std::env::var_os("HOME")
         .map(|home| PathBuf::from(home).join(".config"))

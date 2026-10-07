@@ -187,7 +187,7 @@ pub fn build() -> Rc<MainWindow> {
         frame,
         choice,
         text,
-        cache: weatherspell_core::cache::ForecastCache::in_folder(&folder),
+        cache: weatherspell_core::cache::ForecastCache::new(system::cache_folder()),
         store,
         load_problem,
         settings: RefCell::new(settings),
