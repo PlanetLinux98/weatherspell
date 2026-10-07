@@ -214,7 +214,9 @@ pub fn build() -> Rc<MainWindow> {
         Some(r) => frame.set_size_with_pos(r.left, r.top, r.width, r.height),
         None => place_by_default(&frame),
     }
-    let maximized = settings.window.is_some_and(|w| w.maximized);
+    // On the Mac only the bounds count (track_bounds); earlier Mac builds
+    // could save a zoomed window as maximized.
+    let maximized = !cfg!(target_os = "macos") && settings.window.is_some_and(|w| w.maximized);
 
     let window = Rc::new(MainWindow {
         announcer: Announcer::new(&frame, APP_NAME),
@@ -544,11 +546,17 @@ impl MainWindow {
         self.frame
     }
 
+    // The Mac has no maximized state: wx reports a window zoomed by its
+    // green button, or merely sized to fill the screen, as maximized,
+    // which kept its bounds from being remembered; there the window's own
+    // frame is what is kept. Full screen (the green button's usual action)
+    // is left out on both, so a window quit in full screen comes back as
+    // it was before (Elliott, 2026-10-07).
     fn track_bounds(&self) {
-        if self.frame.is_iconized() {
+        if self.frame.is_iconized() || self.frame.is_full_screen() {
             return;
         }
-        let maximized = self.frame.is_maximized();
+        let maximized = !cfg!(target_os = "macos") && self.frame.is_maximized();
         self.maximized.set(maximized);
         if !maximized {
             self.normal.set(bounds(&self.frame));

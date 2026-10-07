@@ -131,8 +131,9 @@ END
 }
 
 // macOS 15 is the oldest the Mac app supports (CI builds with
-// MACOSX_DEPLOYMENT_TARGET to match). The bundle id is a placeholder until
-// the Mac app is released.
+// MACOSX_DEPLOYMENT_TARGET to match). The bundle id is settled (Elliott,
+// 2026-10-07): macOS takes a changed id for another app, so it stays even
+// if Weatherspell gets a website of its own.
 fn info_plist(version: &version::Version) -> String {
     let (major, minor, patch) = version.numbers;
     format!(
