@@ -3,17 +3,32 @@
 // at 96 DPI), always within the screen it opens on, and a row of buttons
 // at the bottom right.
 
+use std::cell::Cell;
+
 use wxdragon::prelude::*;
 
-// Developer-only, as 0.1's was: every window in this many points, as a
-// large Windows Text size gives it, so layouts can be checked at large
-// sizes (tools/Capture-Windows.ps1). Called on a window before its
-// controls are made, which take its font.
-pub fn developer_font(window: &dyn WxWidget) {
-    let points = std::env::var("WEATHERSPELL_FONT_POINTS")
-        .ok()
-        .and_then(|p| p.trim().parse::<i32>().ok())
-        .filter(|p| *p > 0);
+thread_local! {
+    // Points set by the Mac's View > Bigger and Smaller, for the windows
+    // opened after.
+    static CHOSEN_POINTS: Cell<Option<i32>> = const { Cell::new(None) };
+}
+
+pub fn choose_points(points: i32) {
+    CHOSEN_POINTS.set(Some(points));
+}
+
+// Every window's font, called on a window before its controls are made,
+// which take its font: the size chosen on the Mac or, developer-only as
+// 0.1's was, every window in WEATHERSPELL_FONT_POINTS points, as a large
+// Windows Text size gives it, so layouts can be checked at large sizes
+// (tools/Capture-Windows.ps1).
+pub fn app_font(window: &dyn WxWidget) {
+    let points = CHOSEN_POINTS.get().or_else(|| {
+        std::env::var("WEATHERSPELL_FONT_POINTS")
+            .ok()
+            .and_then(|p| p.trim().parse::<i32>().ok())
+            .filter(|p| *p > 0)
+    });
     if let (Some(points), Some(mut font)) = (points, window.get_font()) {
         font.set_point_size(points);
         window.set_font(&font);

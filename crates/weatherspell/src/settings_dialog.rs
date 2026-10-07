@@ -32,7 +32,7 @@ pub fn build(
     apply: impl Fn(Chosen) + 'static,
 ) -> Dialog {
     let dialog = Dialog::builder(parent, "Settings").build();
-    dialogs::developer_font(&dialog);
+    dialogs::app_font(&dialog);
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
 
     let forecast_choices = choices::minutes(

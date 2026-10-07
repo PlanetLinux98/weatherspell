@@ -28,6 +28,7 @@ pub mod placement;
 pub mod postal_codes;
 pub mod search;
 pub mod settings;
+pub mod text_size;
 pub mod units;
 pub mod weather_codes;
 pub mod writer;

@@ -79,7 +79,7 @@ fn make(
     let dialog = Dialog::builder(parent, "Add Location")
         .with_style(DialogStyle::DefaultDialogStyle | DialogStyle::ResizeBorder)
         .build();
-    dialogs::developer_font(&dialog);
+    dialogs::app_font(&dialog);
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
 
     // Each label just before its input among the dialog's children, which

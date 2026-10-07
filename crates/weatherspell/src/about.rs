@@ -43,7 +43,7 @@ pub fn show(parent: &dyn WxWidget) {
 // Made and ready to show, focus in place (also for the lint's test).
 pub fn build(parent: &dyn WxWidget) -> Dialog {
     let dialog = Dialog::builder(parent, "About Weatherspell").build();
-    dialogs::developer_font(&dialog);
+    dialogs::app_font(&dialog);
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
     let top = BoxSizer::builder(Orientation::Horizontal).build();
 

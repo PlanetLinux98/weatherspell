@@ -77,7 +77,7 @@ fn make(
     let dialog = Dialog::builder(parent, "Manage Locations")
         .with_style(DialogStyle::DefaultDialogStyle | DialogStyle::ResizeBorder)
         .build();
-    dialogs::developer_font(&dialog);
+    dialogs::app_font(&dialog);
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
     let columns = BoxSizer::builder(Orientation::Horizontal).build();
 
@@ -367,7 +367,7 @@ fn make_edit(
     notify_alerts: bool,
 ) -> (Dialog, TextCtrl, CheckBox) {
     let dialog = Dialog::builder(parent, "Edit Location").build();
-    dialogs::developer_font(&dialog);
+    dialogs::app_font(&dialog);
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
     let label = StaticText::builder(&dialog)
         .with_label(&format!("&Nickname for {}", full_name.replace('&', "&&")))

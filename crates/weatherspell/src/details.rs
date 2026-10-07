@@ -21,7 +21,7 @@ pub fn build(parent: &Frame, title: &str, paragraphs: &[String], url: Option<&st
             DialogStyle::DefaultDialogStyle | DialogStyle::ResizeBorder | DialogStyle::MaximizeBox,
         )
         .build();
-    dialogs::developer_font(&dialog);
+    dialogs::app_font(&dialog);
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
 
     // The label just before the text among the dialog's children names it.

@@ -28,6 +28,7 @@ use weatherspell_core::net::UreqFetch;
 use weatherspell_core::placement::{self, CharSize, Rect};
 use weatherspell_core::search::LocationSearch;
 use weatherspell_core::settings::{AppSettings, LoadProblem, SavedLocation, SettingsStore};
+use weatherspell_core::text_size::TextSize;
 use weatherspell_core::units;
 use weatherspell_core::writer::{self, Section, WriterOptions};
 use wx_accessibility::{Announcer, ScreenReaders};
@@ -50,6 +51,9 @@ const ID_MANAGE: Id = ID_HIGHEST + 5;
 const ID_ADD: Id = ID_HIGHEST + 6;
 const ID_GUIDE: Id = ID_HIGHEST + 7;
 const ID_RESET_WINDOW: Id = ID_HIGHEST + 8;
+const ID_BIGGER: Id = ID_HIGHEST + 20;
+const ID_SMALLER: Id = ID_HIGHEST + 21;
+const ID_ACTUAL_SIZE: Id = ID_HIGHEST + 22;
 // Ctrl+1 to Ctrl+9: the first nine saved locations.
 const ID_LOCATION: Id = ID_HIGHEST + 10;
 const MENU_LOCATIONS: usize = 9;
@@ -60,6 +64,12 @@ pub struct MainWindow {
     text: TextCtrl,
     // The Mac's stand-in for the status bar; None elsewhere.
     status_line: Option<StaticText>,
+    panel: Panel,
+    resizable: Vec<Box<dyn WxWidget>>,
+    // The Mac's View > Bigger and Smaller, from the font the window opened
+    // with.
+    actual_points: i32,
+    text_size: Cell<TextSize>,
     announcer: Announcer,
 
     store: SettingsStore,
@@ -121,7 +131,7 @@ pub fn build() -> Rc<MainWindow> {
     let (settings, load_problem) = store.load();
 
     let frame = Frame::builder().with_title(APP_NAME).build();
-    dialogs::developer_font(&frame);
+    dialogs::app_font(&frame);
     frame.set_menu_bar(menu_bar(&settings));
     system::set_window_icon(&frame);
     if !cfg!(target_os = "macos") {
@@ -175,11 +185,21 @@ pub fn build() -> Rc<MainWindow> {
     });
     panel.set_sizer(outer, true);
     wx_accessibility::name_inputs(&panel);
+    // What the Mac's text size changes: the controls don't take a new font
+    // from their window once made.
+    let mut resizable: Vec<Box<dyn WxWidget>> = vec![
+        Box::new(panel),
+        Box::new(location_label),
+        Box::new(choice),
+        Box::new(forecast_label),
+        Box::new(text),
+    ];
+    if let Some(line) = status_line {
+        resizable.push(Box::new(line));
+    }
+    let actual_points = frame.get_font().map_or(13, |f| f.get_point_size());
 
-    frame.set_min_size(Size::new(
-        frame.get_char_width() * 68,
-        frame.get_char_height() * 24,
-    ));
+    frame.set_min_size(minimum_size(&frame));
     // Where it was when it last closed, if a screen still shows enough of
     // it; otherwise centred, as on a first run.
     let restored = settings.window.and_then(|saved| {
@@ -205,6 +225,10 @@ pub fn build() -> Rc<MainWindow> {
         choice,
         text,
         status_line,
+        panel,
+        resizable,
+        actual_points,
+        text_size: Cell::new(TextSize::ACTUAL),
         cache: weatherspell_core::cache::ForecastCache::new(system::cache_folder()),
         store,
         load_problem,
@@ -260,6 +284,24 @@ pub fn build() -> Rc<MainWindow> {
         event.skip(true);
     });
     edit::hook(&window.text, Some(double_clicked));
+    // Cmd+Plus is Cmd+Shift+= on most keyboards, which the menu takes;
+    // Apple's apps take Cmd+= as well, and a menu item carries one key.
+    if cfg!(target_os = "macos") {
+        let w = window.clone();
+        window
+            .frame
+            .bind_internal(EventType::CHAR_HOOK, move |event| {
+                if event.get_key_code() == Some('=' as i32)
+                    && event.cmd_down()
+                    && !event.shift_down()
+                    && !event.alt_down()
+                {
+                    w.command(ID_BIGGER);
+                } else {
+                    event.skip(true);
+                }
+            });
+    }
     window.normal.set(bounds(&window.frame));
     if maximized {
         window.frame.maximize(true);
@@ -298,6 +340,19 @@ pub fn build() -> Rc<MainWindow> {
     let w = window.clone();
     window.clock_timer.on_tick(move |_| w.rewrite_if_changed());
     window
+}
+
+// In characters of the window's font, within its screen.
+fn minimum_size(frame: &Frame) -> Size {
+    let (w, h) = (frame.get_char_width(), frame.get_char_height());
+    let size = Size::new(w * 68, h * 24);
+    match Display::from_window(frame) {
+        Some(display) => {
+            let area = display.client_area();
+            Size::new(size.width.min(area.width), size.height.min(area.height))
+        }
+        None => size,
+    }
 }
 
 // Scaled by font, as 0.1 is: 0.1's 720 by 560 (at least 480 by 360) at
@@ -352,7 +407,7 @@ fn menu_bar(settings: &AppSettings) -> MenuBar {
         .append_separator()
         .append_item(ID_EXIT, "E&xit	Alt+F4", "")
         .build();
-    let view = Menu::builder()
+    let mut view = Menu::builder()
         .append_item(
             ID_NEXT_SECTION,
             &format!("&Next Section{}", keys::NEXT_SECTION),
@@ -365,7 +420,16 @@ fn menu_bar(settings: &AppSettings) -> MenuBar {
         )
         .append_separator()
         .append_item(ID_ALERTS, "&Alerts	Ctrl+Shift+A", "")
-        .append_separator()
+        .append_separator();
+    // Windows has its own Text size setting, which wx follows.
+    if cfg!(target_os = "macos") {
+        view = view
+            .append_item(ID_BIGGER, "&Bigger\tCtrl++", "")
+            .append_item(ID_SMALLER, "&Smaller\tCtrl+-", "")
+            .append_item(ID_ACTUAL_SIZE, "Ac&tual Size\tCtrl+0", "")
+            .append_separator();
+    }
+    let view = view
         .append_item(ID_RESET_WINDOW, "&Reset Window Size and Position", "")
         .build();
     let help = Menu::builder()
@@ -513,6 +577,58 @@ impl MainWindow {
             .say("The window is back to its default size and position.");
     }
 
+    // Every control and the windows opened after take the new size; the
+    // window grows if its minimum outgrows it. Said aloud as Reset Window
+    // is, since nothing else speaks; past either end it says so.
+    fn change_text_size(&self, size: TextSize) {
+        let unchanged = size == self.text_size.get();
+        if !unchanged {
+            self.text_size.set(size);
+            let points = size.points(self.actual_points);
+            dialogs::choose_points(points);
+            if let Some(mut font) = self.frame.get_font() {
+                font.set_point_size(points);
+                self.frame.set_font(&font);
+                for control in &self.resizable {
+                    control.set_font(&font);
+                }
+            }
+            let minimum = minimum_size(&self.frame);
+            self.frame.set_min_size(minimum);
+            let now = self.frame.get_size();
+            if !self.frame.is_maximized()
+                && (now.width < minimum.width || now.height < minimum.height)
+            {
+                self.frame.set_size(Size::new(
+                    now.width.max(minimum.width),
+                    now.height.max(minimum.height),
+                ));
+                let b = bounds(&self.frame);
+                let fits = working_areas().iter().any(|a| {
+                    b.left >= a.left
+                        && b.top >= a.top
+                        && b.left + b.width <= a.left + a.width
+                        && b.top + b.height <= a.top + a.height
+                });
+                if !fits {
+                    self.frame.centre();
+                }
+            }
+            self.panel.layout();
+        }
+        let end = if !unchanged {
+            ""
+        } else if size.bigger() == size {
+            ", the largest"
+        } else if size.smaller() == size {
+            ", the smallest"
+        } else {
+            ""
+        };
+        self.announcer
+            .say(&format!("Text size {} percent{end}.", size.percent()));
+    }
+
     pub fn show(&self) {
         self.frame.show(true);
         self.shown_at.set(Instant::now());
@@ -582,6 +698,9 @@ impl MainWindow {
             ID_PREFERENCES => self.show_settings(),
             ID_GUIDE => guide::open(&self.frame, None),
             ID_RESET_WINDOW => self.reset_window(),
+            ID_BIGGER => self.change_text_size(self.text_size.get().bigger()),
+            ID_SMALLER => self.change_text_size(self.text_size.get().smaller()),
+            ID_ACTUAL_SIZE => self.change_text_size(TextSize::ACTUAL),
             ID_ABOUT => about::show(&self.frame),
             _ if (ID_LOCATION..ID_LOCATION + MENU_LOCATIONS as Id).contains(&id) => {
                 self.show_location((id - ID_LOCATION) as usize);
