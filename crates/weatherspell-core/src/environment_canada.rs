@@ -407,9 +407,16 @@ pub fn parse_alerts(
             continue;
         }
         let issued = alert_time(&Some(published.to_string()))?.expect("checked present above");
+        // "Yellow wind warning": the colour first, as EC's own "Yellow
+        // Warning - Wind" puts it, but in a form that reads well in the
+        // alert line and in "... in effect". Not in 0.1 (2026-10-06).
+        let event = match a.risk_colour_en.as_deref().map(str::trim) {
+            Some(colour) if !colour.is_empty() => format!("{colour} {name}"),
+            _ => name.to_string(),
+        };
         list.push(WeatherAlert {
             id,
-            event: official::sentence_case(name),
+            event: official::sentence_case(&event),
             severity: alert_severity(a.risk_colour_en.as_deref(), a.alert_type.as_deref()),
             issued,
             onset: alert_time(&a.validity_datetime)?,

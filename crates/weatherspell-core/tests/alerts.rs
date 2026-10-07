@@ -135,7 +135,8 @@ fn an_alert_at_a_point_carries_its_text_level_and_times() {
     assert_eq!(alerts.len(), 1);
     let a = &alerts[0];
     assert_eq!(a.id, "ec:64919237566271632202609120507");
-    assert_eq!(a.event, "Frost advisory");
+    // The colour leads the name, as EC's "Yellow Advisory - Frost" does.
+    assert_eq!(a.event, "Yellow frost advisory");
     assert_eq!(a.kind(), AlertKind::Advisory);
     // Yellow outranks what an advisory would be on its own.
     assert_eq!(a.severity, AlertSeverity::Moderate);
@@ -156,10 +157,22 @@ fn an_alert_at_a_point_carries_its_text_level_and_times() {
 }
 
 #[test]
+fn an_alert_without_a_colour_keeps_its_plain_name() {
+    let json = fixture("ec-alerts-gander.json").replace("\"yellow\"", "\"\"");
+    let alerts = ec::parse_alerts(&json, ec_now(), None).unwrap();
+    assert_eq!(alerts[0].event, "Frost advisory");
+    assert_eq!(alerts[0].level, None);
+}
+
+#[test]
 fn continued_warnings_are_kept_and_told_apart() {
     let alerts = ec::parse_alerts(&fixture("ec-alerts-warnings.json"), ec_now(), None).unwrap();
     assert_eq!(alerts.len(), 2);
-    assert!(alerts.iter().all(|a| a.event == "Storm surge warning"));
+    assert!(
+        alerts
+            .iter()
+            .all(|a| a.event == "Yellow storm surge warning")
+    );
     // A yellow warning is still a warning: Severe, not Moderate.
     assert!(alerts.iter().all(|a| a.severity == AlertSeverity::Severe));
     assert_ne!(alerts[0].id, alerts[1].id);
@@ -697,7 +710,7 @@ fn details_of_an_environment_canada_alert_carry_its_level_and_drop_the_rule() {
 
     assert_eq!(
         d[0],
-        "Frost advisory from Environment Canada, in effect until 6:30 am tomorrow."
+        "Yellow frost advisory from Environment Canada, in effect until 6:30 am tomorrow."
     );
     assert_eq!(d[1], "Area: Gander and vicinity.");
     assert_eq!(d[2], "Issued 10:35 pm today.");

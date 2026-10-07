@@ -2,9 +2,9 @@ Alerts
 
 Alerts couldn't be checked this time (503 Service Unavailable from api.weather.gc.ca); showing the alerts from 2 hours ago. Press F5 to try again.
 
-Storm surge warning until 5:00 pm tomorrow, from Environment Canada. Press Enter for details.
+Yellow storm surge warning until 5:00 pm tomorrow, from Environment Canada. Press Enter for details.
 
-Storm surge warning until 2:00 pm Tuesday, from Environment Canada. Press Enter for details.
+Yellow storm surge warning until 2:00 pm Tuesday, from Environment Canada. Press Enter for details.
 
 
 Right now
@@ -67,9 +67,9 @@ Forecast and current conditions: Open-Meteo (open-meteo.com), licensed CC BY 4.0
 
 Alerts: Environment and Climate Change Canada (weather.gc.ca).
 
-Details: Storm surge warning
+Details: Yellow storm surge warning
 
-Storm surge warning from Environment Canada, in effect from 7:00 pm today until 5:00 pm tomorrow.
+Yellow storm surge warning from Environment Canada, in effect from 7:00 pm today until 5:00 pm tomorrow.
 
 Area: Coastline from Mackenzie Bay to McKinley Bay incl. Tuktoyaktuk.
 
@@ -89,9 +89,9 @@ This warning is issued when high water levels pose a threat to coastal regions d
 
 Please continue to monitor alerts and forecasts issued by Environment Canada. To report severe weather, send an email to NTstorm@ec.gc.ca, call 1-800-239-0484 or post reports on social media using #NTStorm.
 
-Details: Storm surge warning
+Details: Yellow storm surge warning
 
-Storm surge warning from Environment Canada, in effect until 2:00 pm Tuesday.
+Yellow storm surge warning from Environment Canada, in effect until 2:00 pm Tuesday.
 
 Area: Coastline of Yukon incl. Herschel Island.
 
@@ -109,7 +109,7 @@ This warning is issued when high water levels pose a threat to coastal regions d
 
 Please continue to monitor alerts and forecasts issued by Environment Canada. To report severe weather, send an email to YTstorm@ec.gc.ca or post reports on social media using #YTStorm.
 
-Announcement: Gander: storm surge warning until 5:00 pm tomorrow and storm surge warning until 2:00 pm Tuesday.
+Announcement: Gander: yellow storm surge warning until 5:00 pm tomorrow and yellow storm surge warning until 2:00 pm Tuesday.
 
 In effect: nothing
 

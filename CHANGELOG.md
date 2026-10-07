@@ -14,6 +14,10 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 - View > Reset Window Size and Position puts the main window back where
   and how it first opened.
 
+### Changed
+- Environment Canada's alerts are named with their colour level first, as
+  in "Yellow wind warning".
+
 ### Fixed
 - In dark mode, Narrator didn't say whether a check box was checked when
   it was toggled.

@@ -207,8 +207,10 @@ section says "Alerts are not available for this region."
 The Alerts section, at the top of the forecast text, has a line for each
 alert in effect, most severe first. Each line gives the alert, when it ends
 and who issued it, such as "Flood warning until 8:00 am Tuesday, from the
-National Weather Service. Press Enter for details." With no alerts in
-effect, it says "No alerts in effect."
+National Weather Service. Press Enter for details." Alerts from Environment
+and Climate Change Canada begin with their colour level, yellow, orange or
+red, as in "Orange rainfall warning." With no alerts in effect, it says "No
+alerts in effect."
 
 To go straight to the alerts, choose Alerts from the View menu, or press
 Ctrl+Shift+A.

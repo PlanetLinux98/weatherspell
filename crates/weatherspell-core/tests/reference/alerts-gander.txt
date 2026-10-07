@@ -1,6 +1,6 @@
 Alerts
 
-Frost advisory until 5:00 am today (6:30 am today your time), from Environment Canada. Press Enter for details.
+Yellow frost advisory until 5:00 am today (6:30 am today your time), from Environment Canada. Press Enter for details.
 
 
 Right now
@@ -63,9 +63,9 @@ Forecast and current conditions: Open-Meteo (open-meteo.com), licensed CC BY 4.0
 
 Alerts: Environment and Climate Change Canada (weather.gc.ca).
 
-Details: Frost advisory
+Details: Yellow frost advisory
 
-Frost advisory from Environment Canada, in effect until 5:00 am today (6:30 am today your time).
+Yellow frost advisory from Environment Canada, in effect until 5:00 am today (6:30 am today your time).
 
 Area: Gander and vicinity.
 
@@ -87,7 +87,7 @@ Damage to plants, trees, and crops is possible.
 
 Please continue to monitor alerts and forecasts issued by Environment Canada. To report severe weather, send an email to NLstorm@ec.gc.ca or post reports on social media using #NLwx.
 
-Announcement: Gander: frost advisory until 5:00 am today (6:30 am today your time).
+Announcement: Gander: yellow frost advisory until 5:00 am today (6:30 am today your time).
 
-In effect: frost advisory in effect
+In effect: yellow frost advisory in effect
 
