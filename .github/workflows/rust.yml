@@ -2,10 +2,10 @@ name: Rust
 
 # The Rust rewrite (#24). Its logic is built and tested on Windows, macOS
 # and Linux from the start, so the later ports find it already working;
-# the app itself is built on Windows, checked to be one exe, and on the
-# Mac, as a disk image to download and test. The wx test window is not
-# built here. Unlike CI, this runs on every branch, but only for changes
-# to what the Rust build reads.
+# the app itself is built on Windows, checked to be one exe, on the Mac,
+# as a disk image to download and test, and on Linux. The wx test window
+# is not built here. Unlike CI, this runs on every branch, but only for
+# changes to what the Rust build reads.
 on:
   push:
     branches: ["**"]
@@ -136,3 +136,44 @@ jobs:
 
       - name: Test
         run: cargo test --release -p weatherspell -p wx-accessibility
+
+  # The app on Linux (GTK 3), built and tested so the port starts from code
+  # that compiles; nothing is uploaded yet.
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            target/release/wxWidgets
+            target/release/wxwidgets_cmake_build
+            target/release/wxdragon_sys_cmake_build
+          key: wx-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: wx-${{ runner.os }}-
+
+      # What wxdragon-sys's build.rs links on Linux, plus Ninja, libclang
+      # for its bindings and a virtual screen for the tests.
+      - name: GTK and the libraries wxWidgets links
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ninja-build libclang-dev \
+            libgtk-3-dev libxkbcommon-dev libwayland-dev libx11-dev libxtst-dev \
+            libsm-dev libice-dev libpng-dev libjpeg-dev libexpat1-dev libtiff-dev \
+            libgl-dev libegl-dev xvfb
+
+      - name: Lint
+        run: cargo clippy --release -p weatherspell -p wx-accessibility --all-targets -- -D warnings
+
+      # The lint test builds every window, which GTK cannot do without a
+      # display.
+      - name: Test
+        run: xvfb-run -a cargo test --release -p weatherspell -p wx-accessibility
+
+      - name: Build
+        run: cargo build --release -p weatherspell
