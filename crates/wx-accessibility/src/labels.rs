@@ -1,10 +1,12 @@
 // An input's name is the label just before it (the lint's first rule).
 // Windows' screen readers find that label themselves, from the window
 // order; VoiceOver does not, and reads an unnamed "edit text" or "pop up
-// button". On the Mac each input is therefore told which label titles it
-// (its AXTitleUIElement), so VoiceOver reads the label's own text, kept
-// in step with it. Call on a window once its controls are made. Elsewhere
-// this does nothing.
+// button". On the Mac each input is therefore given the label's own text
+// as its accessibility label, so the name is still the visible text.
+// Linking the label instead (AXTitleUIElement) was tried first: VoiceOver
+// ignored it when Tab landed on a pop-up and read only its value (Elliott,
+// 2026-10-07). Call on a window once its controls are made; a label
+// changed later is not followed. Elsewhere this does nothing.
 
 use wxdragon::prelude::WxWidget;
 
@@ -44,7 +46,10 @@ mod mac_impl {
             if is_label(previous)
                 && let Some(input) = input(child)
             {
-                unsafe { mac::id_with(input, c"setAccessibilityTitleUIElement:", previous) };
+                unsafe {
+                    let text = mac::id(previous, c"stringValue");
+                    mac::id_with(input, c"setAccessibilityLabel:", text);
+                }
             }
             walk(child);
             previous = child;
@@ -52,8 +57,13 @@ mod mac_impl {
     }
 
     // wxStaticText is a text field that cannot be edited.
+    // A combo box is a text field too, and may be read-only.
     fn is_label(view: Id) -> bool {
-        unsafe { mac::is(view, c"NSTextField") && !mac::yes(view, c"isEditable") }
+        unsafe {
+            mac::is(view, c"NSTextField")
+                && !mac::is(view, c"NSComboBox")
+                && !mac::yes(view, c"isEditable")
+        }
     }
 
     // What a screen reader lands on for an input: an edit box, a pop-up or
@@ -61,7 +71,9 @@ mod mac_impl {
     // scroll view.
     fn input(view: Id) -> Option<Id> {
         unsafe {
-            if mac::is(view, c"NSTextField") {
+            if mac::is(view, c"NSComboBox") {
+                Some(view)
+            } else if mac::is(view, c"NSTextField") {
                 mac::yes(view, c"isEditable").then_some(view)
             } else if mac::is(view, c"NSPopUpButton") || mac::is(view, c"NSTableView") {
                 Some(view)
