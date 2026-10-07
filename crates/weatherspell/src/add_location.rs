@@ -166,9 +166,14 @@ fn make(
         .on_selection_changed(move |_| a.add.enable(a.results.get_selection().is_some()));
     let a = d.clone();
     d.results.on_item_double_clicked(move |_| a.choose());
+    // On the Mac, Return in the list goes to the default button (Add) by
+    // itself. Handling it here as well ended the dialog while the key went
+    // on, to the default button of the dialog beneath (Manage Locations'
+    // OK), which ended a dialog that was not the one running: a crash.
     let a = d.clone();
     d.results.on_key_down(move |event| {
-        if let WindowEventData::Keyboard(key) = &event
+        if !cfg!(target_os = "macos")
+            && let WindowEventData::Keyboard(key) = &event
             && matches!(key.get_key_code(), Some(WXK_RETURN | WXK_NUMPAD_ENTER))
             && !key.control_down()
             && !key.shift_down()
@@ -308,6 +313,7 @@ impl AddLocation {
         self.show_status(&count);
         self.results.set_selection(0, true);
         self.add.enable(true);
+        self.add.set_default();
         self.results.set_focus();
         std::thread::spawn(move || {
             std::thread::sleep(Duration::from_millis(400));

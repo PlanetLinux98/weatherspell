@@ -164,6 +164,9 @@ fn make(
             match key.get_key_code() {
                 // The main block's Delete and the number pad's, as 0.1 took both.
                 Some(WXK_DELETE | WXK_NUMPAD_DELETE) => return s.remove(),
+                // The key a Mac labels Delete is Backspace (Fn+Delete is
+                // the one above), and it deletes in a Mac list.
+                Some(WXK_BACK) if cfg!(target_os = "macos") => return s.remove(),
                 Some(WXK_F2) => return s.edit(),
                 _ => {}
             }
