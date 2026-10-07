@@ -1,9 +1,10 @@
 // The main window (MainForm.cs in 0.1): the Location box, the forecast as
-// text for reading, the native menu bar and the status bar. A launch or a
-// switch says what it is fetching and speaks "forecast ready"; F5 and the
-// timers rewrite the text under the reader without moving them; every
-// saved location's alerts are checked and new ones announced; a failed
-// fetch leaves the text there was, or the cached text, dated.
+// text for reading, the native menu bar and the status bar (a text line
+// on the Mac). A launch or a switch says what it is fetching and speaks
+// "forecast ready"; F5 and the timers rewrite the text under the reader
+// without moving them; every saved location's alerts are checked and new
+// ones announced; a failed fetch leaves the text there was, or the cached
+// text, dated.
 //
 // The controls are built in code: every control's name, tab order and
 // label is visible in one place and reviewable in a diff (NOTES.md).
@@ -57,6 +58,8 @@ pub struct MainWindow {
     frame: Frame,
     choice: Choice,
     text: TextCtrl,
+    // The Mac's stand-in for the status bar; None elsewhere.
+    status_line: Option<StaticText>,
     announcer: Announcer,
 
     store: SettingsStore,
@@ -121,8 +124,10 @@ pub fn build() -> Rc<MainWindow> {
     dialogs::developer_font(&frame);
     frame.set_menu_bar(menu_bar(&settings));
     system::set_window_icon(&frame);
-    frame.create_status_bar(1, 0, -1, "statusBar");
-    frame.set_status_text("Ready", 0);
+    if !cfg!(target_os = "macos") {
+        frame.create_status_bar(1, 0, -1, "statusBar");
+        frame.set_status_text("Ready", 0);
+    }
 
     let panel = Panel::builder(&frame).build();
     let outer = BoxSizer::builder(Orientation::Vertical).build();
@@ -156,6 +161,18 @@ pub fn build() -> Rc<MainWindow> {
     // Read-only text is grey by default; it is for reading.
     text.set_background_color(SystemSettings::get_colour(SystemColour::Window));
     outer.add(&text, 1, SizerFlag::Expand, 0);
+    // The Mac's wx status bar draws its text itself, so VoiceOver finds
+    // nothing there. A text line in its place reads; one line, cut short
+    // on screen with "..." (wxST_NO_AUTORESIZE | wxST_ELLIPSIZE_END, which
+    // wxDragon does not name), while VoiceOver still gets all of it.
+    let status_line = cfg!(target_os = "macos").then(|| {
+        let line = StaticText::builder(&panel)
+            .with_label("Ready")
+            .with_style(StaticTextStyle::from_bits_retain(0x0001 | 0x0010))
+            .build();
+        outer.add(&line, 0, SizerFlag::Expand | SizerFlag::All, 8);
+        line
+    });
     panel.set_sizer(outer, true);
     wx_accessibility::name_inputs(&panel);
 
@@ -187,6 +204,7 @@ pub fn build() -> Rc<MainWindow> {
         frame,
         choice,
         text,
+        status_line,
         cache: weatherspell_core::cache::ForecastCache::new(system::cache_folder()),
         store,
         load_problem,
@@ -668,7 +686,11 @@ impl MainWindow {
     }
 
     fn status(&self, text: &str) {
-        self.frame.set_status_text(text, 0);
+        match &self.status_line {
+            // A label drops a lone "&" as a mnemonic: "Smith & Sons".
+            Some(line) => line.set_label(&text.replace('&', "&&")),
+            None => self.frame.set_status_text(text, 0),
+        }
     }
 
     fn populate_locations(&self) {
