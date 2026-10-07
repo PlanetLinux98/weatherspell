@@ -570,11 +570,15 @@ impl MainWindow {
         if self.load_problem.is_some() {
             return;
         }
-        let window = placement::save(
-            self.normal.get(),
-            self.maximized.get(),
-            char_size(&self.frame),
-        );
+        // As at the actual text size: the Mac's chosen size is not
+        // remembered, so the window would otherwise come back shrunk by the
+        // same share. Elsewhere the share is always 1.
+        let mut chars = char_size(&self.frame);
+        let share = f64::from(self.actual_points)
+            / f64::from(self.text_size.get().points(self.actual_points));
+        chars.width *= share;
+        chars.height *= share;
+        let window = placement::save(self.normal.get(), self.maximized.get(), chars);
         if self.settings.borrow().window == Some(window) {
             return;
         }
