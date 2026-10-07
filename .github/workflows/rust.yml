@@ -2,9 +2,10 @@ name: Rust
 
 # The Rust rewrite (#24). Its logic is built and tested on Windows, macOS
 # and Linux from the start, so the later ports find it already working;
-# the app itself is built on Windows and checked to be one exe. The wx
-# test window is not built here. Unlike CI, this runs on every branch, but
-# only for changes to what the Rust build reads.
+# the app itself is built on Windows, checked to be one exe, and on the
+# Mac, as a disk image to download and test. The wx test window is not
+# built here. Unlike CI, this runs on every branch, but only for changes
+# to what the Rust build reads.
 on:
   push:
     branches: ["**"]
@@ -18,6 +19,7 @@ on:
       - "THIRD-PARTY-NOTICES.md"
       - "tools/GuideBuilder/template.html"
       - "tools/Check-SingleExe.ps1"
+      - "tools/mac/**"
       - "Assets/**"
       - ".github/workflows/rust.yml"
   pull_request:
@@ -84,3 +86,47 @@ jobs:
       - name: One exe, Windows' own DLLs only
         shell: pwsh
         run: ./tools/Check-SingleExe.ps1
+
+  # The Mac app, for testing: Apple Silicon only, signed ad hoc. The disk
+  # image is uploaded before the tests, so a test that trips on the Mac
+  # still leaves something to try.
+  mac:
+    runs-on: macos-latest
+    env:
+      MACOSX_DEPLOYMENT_TARGET: "15.0"
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            target/release/wxWidgets
+            target/release/wxwidgets_cmake_build
+            target/release/wxdragon_sys_cmake_build
+          key: wx-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: wx-${{ runner.os }}-
+
+      # wxdragon-sys falls back to make without Ninja, more slowly.
+      - name: Ninja
+        run: command -v ninja || HOMEBREW_NO_AUTO_UPDATE=1 brew install ninja
+
+      - name: Build the app and disk image
+        run: sh tools/mac/make-app.sh
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: weatherspell-mac
+          path: |
+            target/release/Weatherspell.dmg
+            tools/mac/dump-a11y.js
+          retention-days: 14
+
+      - name: Lint
+        run: cargo clippy --release -p weatherspell -p wx-accessibility --all-targets -- -D warnings
+
+      - name: Test
+        run: cargo test --release -p weatherspell -p wx-accessibility

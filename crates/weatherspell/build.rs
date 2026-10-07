@@ -1,9 +1,11 @@
 // What the app takes in at build time: the user guide and the third-party
 // notices, made into pages from USER_GUIDE.md and THIRD-PARTY-NOTICES.md
 // (build/guide.rs); the version, from the git tag
-// (build/version.rs); and on Windows the resources: the manifest (common
+// (build/version.rs); on Windows the resources: the manifest (common
 // controls 6, which wxWidgets insists on, and per-monitor DPI awareness),
-// the icon, and the version Explorer shows in the file's properties.
+// the icon, and the version Explorer shows in the file's properties; and
+// on the Mac the app bundle's Info.plist, which tools/mac/make-app.sh puts
+// beside the program.
 
 #[path = "build/guide.rs"]
 mod guide;
@@ -45,6 +47,9 @@ fn main() {
         embed_resource::compile(&rc, embed_resource::NONE)
             .manifest_required()
             .unwrap();
+    }
+    if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("macos") {
+        fs::write(out.join("Info.plist"), info_plist(&version)).unwrap();
     }
 }
 
@@ -122,5 +127,47 @@ END
 "#,
         icon = quoted(icon),
         manifest = quoted(manifest),
+    )
+}
+
+// macOS 15 is the oldest the Mac app supports (CI builds with
+// MACOSX_DEPLOYMENT_TARGET to match). The bundle id is a placeholder until
+// the Mac app is released.
+fn info_plist(version: &version::Version) -> String {
+    let (major, minor, patch) = version.numbers;
+    format!(
+        r#"<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleDevelopmentRegion</key>
+  <string>en</string>
+  <key>CFBundleDisplayName</key>
+  <string>Weatherspell</string>
+  <key>CFBundleExecutable</key>
+  <string>Weatherspell</string>
+  <key>CFBundleIdentifier</key>
+  <string>io.github.planetlinux98.weatherspell</string>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
+  <key>CFBundleName</key>
+  <string>Weatherspell</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleShortVersionString</key>
+  <string>{major}.{minor}.{patch}</string>
+  <key>CFBundleVersion</key>
+  <string>{major}.{minor}.{patch}</string>
+  <key>LSApplicationCategoryType</key>
+  <string>public.app-category.weather</string>
+  <key>LSMinimumSystemVersion</key>
+  <string>15.0</string>
+  <key>NSHighResolutionCapable</key>
+  <true/>
+  <key>NSHumanReadableCopyright</key>
+  <string>Copyright (c) 2026 PlanetLinux98</string>
+</dict>
+</plist>
+"#
     )
 }

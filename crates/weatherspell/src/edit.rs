@@ -7,7 +7,9 @@
 use wxdragon::prelude::*;
 
 // The view a rewrite keeps: the first line shown, and whether the caret
-// was in sight (it is brought back into sight only if it was).
+// was in sight (it is brought back into sight only if it was). Read on
+// Windows only so far.
+#[cfg_attr(not(windows), allow(dead_code))]
 pub struct View {
     top: i32,
     caret_shown: bool,

@@ -121,14 +121,20 @@ fn main() {
         "Made wrong: the first text box has no label before it, so a screen reader has no name for it.",
         "Made wrong: Alt+G is given by \"Go\" and \"Get\".",
     ];
-    if caught != &expected {
+    // The lint reads Windows' controls only so far; elsewhere this still
+    // proves every window builds.
+    if cfg!(windows) && caught != &expected {
         eprintln!("The lint did not catch what was made wrong: {caught:?}");
         failed = true;
     }
     if failed {
         std::process::exit(1);
     }
-    println!(
-        "{windows} windows checked, none with a problem; the lint caught what was made wrong."
-    );
+    if cfg!(windows) {
+        println!(
+            "{windows} windows checked, none with a problem; the lint caught what was made wrong."
+        );
+    } else {
+        println!("{windows} windows built; the lint checks Windows only so far.");
+    }
 }

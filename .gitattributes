@@ -1,8 +1,9 @@
-# Normalize line endings in the repo; check out as CRLF on Windows (the only
-# platform this builds on) so diffs stay quiet across editors.
+# Normalize line endings in the repo; check out as CRLF on Windows so diffs
+# stay quiet across editors, except the Mac's shell scripts, which sh reads.
 * text=auto
 *.cmd text eol=crlf
 *.ps1 text eol=crlf
+*.sh text eol=lf
 *.sln text eol=crlf
 *.png binary
 *.ico binary

@@ -28,6 +28,7 @@ impl ScreenReaders {
     // the access it needs), or nvda_noUIAccess.exe; a portable copy as
     // nvda.exe. Looking for nvda.exe alone missed it, so NVDA lost its
     // headings (Elliott, 2026-10-05): any "nvda" program counts.
+    #[cfg_attr(not(windows), allow(dead_code))]
     fn among(names: impl IntoIterator<Item = String>) -> ScreenReaders {
         let mut found = ScreenReaders::default();
         for name in names {
