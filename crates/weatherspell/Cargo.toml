@@ -39,6 +39,10 @@ pulldown-cmark = { version = "0.13", default-features = false, features = ["html
 name = "accessibility"
 harness = false
 
+[[test]]
+name = "placement"
+harness = false
+
 # The build scripts' own tests (lib.rs includes them).
 [dev-dependencies]
 pulldown-cmark = { version = "0.13", default-features = false, features = ["html"] }
