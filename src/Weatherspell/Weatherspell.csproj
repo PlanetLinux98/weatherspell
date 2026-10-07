@@ -91,10 +91,8 @@
   </Target>
 
   <ItemGroup>
-    <!-- Tests reference this exe directly; internals stay internal. So
-         does the tool that writes 0.1's text for the Rust port's tests. -->
+    <!-- Tests reference this exe directly; internals stay internal. -->
     <InternalsVisibleTo Include="Weatherspell.Tests" />
-    <InternalsVisibleTo Include="ReferenceText" />
   </ItemGroup>
 
 </Project>

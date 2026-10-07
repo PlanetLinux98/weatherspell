@@ -1,12 +1,13 @@
-// The port against 0.1, case by case: tests/reference/cases.json lists
-// captured responses and the situations to write them in (time of day,
-// this PC's zone and time format, units, a failed refresh), and the .txt
-// beside it is what the C# app wrote for each, made by tools/ReferenceText.
-// A difference here is either a bug in the port or a change Elliott has
-// agreed to, in which case the reference text is edited to match and the
-// change is recorded. Under files/ are settings and cache files each way:
-// what 0.1 wrote, for the port to read, and what the port writes, with
-// 0.1's reading of it, so moving between the two loses nothing.
+// Whole texts, case by case: tests/reference/cases.json lists captured
+// responses and the situations to write them in (time of day, this PC's
+// zone and time format, units, a failed refresh), and the .txt beside it
+// is the text the app writes for each. They began as the C# app's own
+// text, which the Rust port matched exactly; since then they are snapshots
+// of the app's. After a deliberate change, run the tests with
+// WEATHERSPELL_BLESS=1 to rewrite them, and read the diff before
+// committing. Under files/ are settings and cache files 0.1 wrote, which
+// the app must go on reading for anyone coming from 0.1, and the app's
+// own, kept as snapshots so a change of format is never unnoticed.
 
 mod common;
 
@@ -144,15 +145,15 @@ fn reference_dir() -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/reference")
 }
 
-// A file tools/ReferenceText wrote. Git may have checked it out with
-// Windows line breaks.
+// A file under tests/reference. Git may have checked it out with Windows
+// line breaks.
 fn reference(name: &str) -> String {
     std::fs::read_to_string(reference_dir().join(name))
         .unwrap_or_else(|e| panic!("{name}: {e}"))
         .replace("\r\n", "\n")
 }
 
-// The first line where the port's text and 0.1's differ, if any.
+// The first line where the app's text and the snapshot differ, if any.
 fn difference(name: &str, ours: &str, theirs: &str) -> Option<String> {
     if ours == theirs {
         return None;
@@ -165,7 +166,7 @@ fn difference(name: &str, ours: &str, theirs: &str) -> Option<String> {
         .find(|(_, (a, b))| a != b)
         .unwrap();
     Some(format!(
-        "{name}, line {}:\n  0.1:  {b}\n  port: {a}",
+        "{name}, line {}:\n  snapshot: {b}\n  now:      {a}",
         line + 1
     ))
 }
@@ -174,46 +175,56 @@ fn blessing() -> bool {
     std::env::var_os("WEATHERSPELL_BLESS").is_some()
 }
 
-// A file the port writes, checked in under files/ for tools/ReferenceText
-// to read with 0.1: compared, or written afresh when WEATHERSPELL_BLESS is
-// set (after a deliberate change; then run the tool and the tests again).
+// A snapshot under tests/reference: compared, or written afresh when
+// WEATHERSPELL_BLESS is set.
 fn golden(name: &str, ours: &str) {
     if blessing() {
-        std::fs::write(reference_dir().join("files").join(name), ours).unwrap();
+        std::fs::write(reference_dir().join(name), ours).unwrap();
     } else {
         assert!(
-            ours == reference(&format!("files/{name}")),
-            "files/{name} is not what the port writes now; if that is on purpose, run the tests with WEATHERSPELL_BLESS=1, then tools/ReferenceText"
+            difference(name, ours, &reference(name)).is_none(),
+            "{}\nif that is on purpose, run the tests with WEATHERSPELL_BLESS=1 and read the diff",
+            difference(name, ours, &reference(name)).unwrap()
         );
     }
 }
 
-// The coordinate reader against 0.1's over variants of its tests' inputs
-// (coordinates-input.json, made once by a script and kept): the same point
-// to six decimals, the same problem, or the same "none" for text left to
-// the place search.
+// The coordinate reader over variants of its tests' inputs
+// (coordinates-input.json, made once by a script and kept): the point to
+// six decimals, the problem, or "none" for text left to the place search.
+// The expected readings began as 0.1's own.
 #[test]
-fn the_port_reads_coordinates_as_0_1_did() {
+fn coordinates_read_as_their_snapshot() {
     let inputs: Vec<String> = serde_json::from_str(
         &std::fs::read_to_string(reference_dir().join("coordinates-input.json")).unwrap(),
     )
     .unwrap();
-    let theirs = std::fs::read_to_string(reference_dir().join("coordinates-0.1.txt"))
-        .unwrap()
-        .replace("\r\n", "\n");
+    let readings: Vec<String> = inputs
+        .iter()
+        .enumerate()
+        .map(|(i, input)| {
+            let reading = match weatherspell_core::coordinates::read(input) {
+                None => "none".to_string(),
+                // Adding zero drops a negative zero's sign ("-0, 0"), which
+                // .NET did not write either; the app never shows or sends it.
+                Some(r) => r
+                    .problem
+                    .unwrap_or_else(|| format!("{:.6} {:.6}", r.latitude + 0.0, r.longitude + 0.0)),
+            };
+            format!("{i}: {reading}")
+        })
+        .collect();
+    if blessing() {
+        golden("coordinates-expected.txt", &(readings.join("\n") + "\n"));
+        return;
+    }
+    let theirs = reference("coordinates-expected.txt");
     let mut differences = Vec::new();
-    for ((i, input), expected) in inputs.iter().enumerate().zip(theirs.lines()) {
-        let reading = match weatherspell_core::coordinates::read(input) {
-            None => "none".to_string(),
-            // Adding zero drops a negative zero's sign ("-0, 0"), which .NET
-            // does not write either; the app never shows or sends it.
-            Some(r) => r
-                .problem
-                .unwrap_or_else(|| format!("{:.6} {:.6}", r.latitude + 0.0, r.longitude + 0.0)),
-        };
-        let ours = format!("{i}: {reading}");
+    for ((input, ours), expected) in inputs.iter().zip(&readings).zip(theirs.lines()) {
         if ours != expected {
-            differences.push(format!("{input:?}\n  0.1:  {expected}\n  port: {ours}"));
+            differences.push(format!(
+                "{input:?}\n  snapshot: {expected}\n  now:      {ours}"
+            ));
         }
     }
     assert_eq!(theirs.lines().count(), inputs.len());
@@ -303,19 +314,24 @@ fn text(c: &Case, forecast: &Forecast, report: Option<&AlertReport>) -> String {
 }
 
 #[test]
-fn the_port_writes_what_0_1_wrote() {
+fn each_case_writes_its_snapshot() {
     let cases = cases();
     let differences: Vec<String> = cases
         .iter()
         .filter_map(|c| {
             let (forecast, report) = forecast(c);
             let ours = text(c, &forecast, report.as_ref());
-            difference(&c.name, &ours, &reference(&format!("{}.txt", c.name)))
+            let name = format!("{}.txt", c.name);
+            if blessing() {
+                golden(&name, &ours);
+                return None;
+            }
+            difference(&c.name, &ours, &reference(&name))
         })
         .collect();
     assert!(
         differences.is_empty(),
-        "{} of {} cases differ:\n{}",
+        "{} of {} cases differ:\n{}\nif that is on purpose, run the tests with WEATHERSPELL_BLESS=1 and read the diff",
         differences.len(),
         cases.len(),
         differences.join("\n")
@@ -323,7 +339,7 @@ fn the_port_writes_what_0_1_wrote() {
 }
 
 // Environment Canada's alerts as 0.1 named them, without the colour the
-// port puts first ("Yellow frost advisory" was "Frost advisory").
+// app puts first ("Yellow frost advisory" was "Frost advisory").
 fn names_as_0_1_wrote_them(report: &AlertReport) -> AlertReport {
     let mut report = report.clone();
     for alert in &mut report.alerts {
@@ -335,19 +351,19 @@ fn names_as_0_1_wrote_them(report: &AlertReport) -> AlertReport {
     report
 }
 
-// Cases whose forecast and alerts also go through a cache file each way
-// (CacheBothWays in tools/ReferenceText): 0.1's file read by the port, and
-// the port's file read by 0.1, must both give the case's own text.
+// Cases whose forecast and alerts were cached by 0.1: the app must read
+// the same records back. The app's own file for each is a snapshot; a
+// change to it may be one that 0.1 cannot read, which would cost a tester
+// going back to 0.1 only that location's cached forecast.
 const CACHE_CASES: [&str; 3] = ["ec-peterborough-evening", "alerts-spokane", "alerts-gander"];
 
 #[test]
-fn each_app_reads_the_others_cache_files() {
+fn the_app_reads_0_1s_cache_files_and_keeps_its_own_format() {
     let cases = cases();
     for name in CACHE_CASES {
         let c = cases.iter().find(|c| c.name == name).unwrap();
         let place = location(c);
         let (forecast, report) = forecast(c);
-        let expected = reference(&format!("{name}.txt"));
         let dir = TempDir::new();
 
         let theirs = ForecastCache::new(dir.join("0.1"));
@@ -359,7 +375,7 @@ fn each_app_reads_the_others_cache_files() {
         .unwrap();
         let cached = theirs
             .load(&place)
-            .unwrap_or_else(|| panic!("{name}: the port could not read 0.1's file"));
+            .unwrap_or_else(|| panic!("{name}: the app could not read 0.1's file"));
         assert_eq!(cached.forecast, forecast, "{name}");
         // 0.1's file holds its own alert names until the next check; the
         // records read are otherwise the case's own, so its text follows.
@@ -369,23 +385,18 @@ fn each_app_reads_the_others_cache_files() {
             "{name}"
         );
 
-        let ours = ForecastCache::new(dir.join("port"));
+        let ours = ForecastCache::new(dir.join("app"));
         ours.save(&place, &forecast, report.as_ref()).unwrap();
         let file = ours.folder().join(ForecastCache::file_name(&place));
         golden(
-            &format!("cache-{name}-port.json"),
+            &format!("files/cache-{name}-app.json"),
             &std::fs::read_to_string(file).unwrap(),
         );
-        if !blessing() {
-            let read_by_0_1 = reference(&format!("files/cache-{name}-port-0.1.txt"));
-            assert_eq!(difference(name, &read_by_0_1, &expected), None);
-        }
     }
 }
 
-// The settings tools/ReferenceText saves with 0.1 (SampleSettings there):
-// a nickname, seen alerts, a muted location, a name beyond ASCII, a point
-// named by its coordinates, and a window.
+// The settings in 0.1's files: a nickname, seen alerts, a muted location,
+// a name beyond ASCII, a point named by its coordinates, and a window.
 fn sample_settings() -> AppSettings {
     let mut home = Location::new(
         "Peterborough",
@@ -439,8 +450,11 @@ fn sample_settings() -> AppSettings {
     }
 }
 
+// settings-0.1.json is what 0.1 saved; settings-resaved-by-0.1.json is the
+// port's file as 0.1 read it and saved it again (both kept from when the C#
+// app could still be run against the port). The app's own is a snapshot.
 #[test]
-fn each_app_reads_the_others_settings() {
+fn the_app_reads_0_1s_settings_and_keeps_its_own_format() {
     let dir = TempDir::new();
     std::fs::create_dir_all(&dir.0).unwrap();
     // Read from a copy: a store keeps a file it cannot read beside it.
@@ -452,20 +466,22 @@ fn each_app_reads_the_others_settings() {
 
     assert_eq!(read("settings-0.1.json"), (sample_settings(), None));
 
-    let ours = SettingsStore::in_folder(&dir.join("port"));
+    assert_eq!(
+        read("settings-resaved-by-0.1.json"),
+        (sample_settings(), None)
+    );
+
+    let ours = SettingsStore::in_folder(&dir.join("app"));
     ours.save(&mut sample_settings()).unwrap();
     golden(
-        "settings-port.json",
+        "files/settings-app.json",
         &std::fs::read_to_string(ours.path()).unwrap(),
     );
-    if !blessing() {
-        // As 0.1 read it and saved it again.
-        assert_eq!(read("settings-port-0.1.json"), (sample_settings(), None));
-    }
 }
 
-// The file a location's cache is kept in, for points whose rounding to
-// four decimals is a close call (CacheFileNames in tools/ReferenceText).
+// The file a location's cache is kept in, as 0.1 named it, for points whose
+// rounding to four decimals is a close call: a name that differs would
+// lose that location's cached forecast to anyone coming from 0.1.
 #[test]
 fn cache_files_are_named_as_0_1_names_them() {
     let theirs = reference("files/cache-names-0.1.txt");
@@ -481,7 +497,7 @@ fn cache_files_are_named_as_0_1_names_them() {
         );
         let ours = ForecastCache::file_name(&point);
         if ours != parts[2] {
-            differences.push(format!("{line}: port {ours}"));
+            differences.push(format!("{line}: app {ours}"));
         }
     }
     assert!(theirs.lines().count() > 2000);
