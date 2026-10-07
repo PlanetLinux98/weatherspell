@@ -258,6 +258,15 @@ pub fn build() -> Rc<MainWindow> {
     let w = window.clone();
     window.frame.on_menu(move |event| {
         let id = event.get_id();
+        // wxDragon leaves an event skipped unless told otherwise, and on the
+        // Mac wx then does an unhandled item's own default: for Quit, ending
+        // the app at once, with no close event, so the window's place went
+        // unsaved (Elliott, 2026-10-07). Others (Hide, the Window menu) keep
+        // theirs.
+        if !handles(id) {
+            return;
+        }
+        event.skip(false);
         // On the Mac, wx goes back to the menu item once this returns, and
         // a command that rebuilds the menus (adding a location) has freed
         // it by then: a crash. There a command runs once the menu is done.
@@ -392,6 +401,27 @@ mod keys {
     pub const PREVIOUS_SECTION: &str = "	Ctrl+PageUp";
     pub const GUIDE: &str = "	F1";
     pub const SETTINGS: &str = "";
+}
+
+// The menu commands MainWindow::command carries out; keep the two alike.
+fn handles(id: Id) -> bool {
+    matches!(
+        id,
+        ID_REFRESH
+            | ID_EXIT
+            | ID_NEXT_SECTION
+            | ID_PREVIOUS_SECTION
+            | ID_ALERTS
+            | ID_MANAGE
+            | ID_ADD
+            | ID_PREFERENCES
+            | ID_GUIDE
+            | ID_RESET_WINDOW
+            | ID_BIGGER
+            | ID_SMALLER
+            | ID_ACTUAL_SIZE
+            | ID_ABOUT
+    ) || (ID_LOCATION..ID_LOCATION + MENU_LOCATIONS as Id).contains(&id)
 }
 
 fn menu_bar(settings: &AppSettings) -> MenuBar {
