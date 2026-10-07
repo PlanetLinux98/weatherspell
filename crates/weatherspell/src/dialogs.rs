@@ -8,13 +8,19 @@ use std::cell::Cell;
 use wxdragon::prelude::*;
 
 thread_local! {
-    // Points set by the Mac's View > Bigger and Smaller, for the windows
-    // opened after.
+    // Points set by the Mac's View > Bigger Text and Smaller Text, for the
+    // windows opened after, and the share of the Mac's own size they are.
     static CHOSEN_POINTS: Cell<Option<i32>> = const { Cell::new(None) };
+    static CHOSEN_PERCENT: Cell<i32> = const { Cell::new(100) };
 }
 
-pub fn choose_points(points: i32) {
+pub fn choose_size(points: i32, percent: i32) {
     CHOSEN_POINTS.set(Some(points));
+    CHOSEN_PERCENT.set(percent);
+}
+
+pub fn chosen_percent() -> i32 {
+    CHOSEN_PERCENT.get()
 }
 
 // Every window's font, called on a window before its controls are made,
@@ -37,6 +43,7 @@ pub fn app_font(window: &dyn WxWidget) {
 
 // A sizable dialog: wanted and minimum sizes in characters.
 pub fn size(dialog: &Dialog, wanted: (i32, i32), minimum: (i32, i32)) {
+    crate::system::fit_buttons(dialog);
     let (w, h) = (dialog.get_char_width(), dialog.get_char_height());
     dialog.set_min_size(within(dialog, Size::new(w * minimum.0, h * minimum.1)));
     dialog.set_size(within(dialog, Size::new(w * wanted.0, h * wanted.1)));
@@ -46,6 +53,7 @@ pub fn size(dialog: &Dialog, wanted: (i32, i32), minimum: (i32, i32)) {
 // A fixed dialog closed up on its content, at least `width` characters
 // wide.
 pub fn fit(dialog: &Dialog, width: i32) {
+    crate::system::fit_buttons(dialog);
     dialog.fit();
     let best = dialog.get_size();
     let size = Size::new(best.width.max(dialog.get_char_width() * width), best.height);

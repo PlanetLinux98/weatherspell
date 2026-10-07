@@ -237,6 +237,77 @@ pub fn before_windows() {
     }
 }
 
+// A Mac push button keeps its standard height whatever its font, so at a
+// bigger text size its text spilled over the bezel (Elliott, 2026-10-07).
+// There each one becomes a flexible push button (NSBezelStyleFlexiblePush,
+// 2), which grows with its text, as Apple's own tall buttons do. Called
+// on a window before it is laid out; at the Mac's own size, and elsewhere,
+// nothing changes.
+pub fn fit_buttons(window: &dyn wxdragon::prelude::WxWidget) {
+    #[cfg(target_os = "macos")]
+    unsafe {
+        use wx_accessibility::mac::{self, Id};
+        fn walk(view: Id, standard: f64) {
+            unsafe {
+                let children = mac::id(view, c"subviews");
+                for i in 0..mac::count(children) {
+                    let child = mac::id_with_number(children, c"objectAtIndex:", i as isize);
+                    // A check box is a button too, with its box as the
+                    // image; a pop-up is one that already grows.
+                    if mac::is(child, c"NSButton")
+                        && !mac::is(child, c"NSPopUpButton")
+                        && mac::integer(child, c"bezelStyle") == 1
+                        && mac::integer(child, c"imagePosition") == 0
+                        && mac::float(mac::id(child, c"font"), c"pointSize") > standard + 0.5
+                    {
+                        mac::id_with_number(child, c"setBezelStyle:", 2);
+                    }
+                    walk(child, standard);
+                }
+            }
+        }
+        let mut view: Id = window.get_handle();
+        if mac::is(view, c"NSWindow") {
+            view = mac::id(view, c"contentView");
+        }
+        walk(view, mac::float(mac::class(c"NSFont"), c"systemFontSize"));
+    }
+    #[cfg(not(target_os = "macos"))]
+    let _ = window;
+}
+
+// A Mac group box's title keeps its own small font whatever the dialog's
+// (wx leaves it so). At a chosen text size it is scaled by the same share;
+// wx leaves room above the box's controls for the small title only, so the
+// answer is the room to add below them, in pixels. Elsewhere the title
+// follows the dialog's font already: 0.
+pub fn scale_box_title(group: &wxdragon::prelude::StaticBox, percent: i32) -> i32 {
+    #[cfg(target_os = "macos")]
+    if percent != 100 {
+        use wx_accessibility::mac;
+        use wxdragon::prelude::WxWidget;
+        unsafe {
+            let group = group.get_handle();
+            let font = mac::id(group, c"titleFont");
+            let small = mac::float(mac::class(c"NSFont"), c"smallSystemFontSize");
+            let scaled =
+                mac::id_with_float(font, c"fontWithSize:", small * f64::from(percent) / 100.0);
+            if !font.is_null() && !scaled.is_null() {
+                let line = |f| {
+                    mac::float(f, c"ascender") - mac::float(f, c"descender")
+                        + mac::float(f, c"leading")
+                };
+                let extra = line(scaled) - line(font);
+                mac::id_with(group, c"setTitleFont:", scaled);
+                return extra.ceil().max(0.0) as i32;
+            }
+        }
+    }
+    #[cfg(not(target_os = "macos"))]
+    let _ = (group, percent);
+    0
+}
+
 // The region's own ways, as 0.1 read them from .NET's current culture.
 pub struct Region {
     pub units: UnitSystem,

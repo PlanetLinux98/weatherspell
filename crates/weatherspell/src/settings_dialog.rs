@@ -138,6 +138,10 @@ fn group(dialog: &Dialog, title: &str) -> (StaticBoxSizer, FlexGridSizer, Static
     grid.add_growable_col(1, 1);
     boxed.add_sizer(&grid, 1, SizerFlag::Expand | SizerFlag::All, 6);
     let static_box = boxed.get_static_box().expect("the sizer made its box");
+    let room = crate::system::scale_box_title(&static_box, dialogs::chosen_percent());
+    if room > 0 {
+        boxed.add_spacer(room);
+    }
     (boxed, grid, static_box)
 }
 

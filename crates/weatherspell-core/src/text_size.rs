@@ -1,9 +1,10 @@
-// The Mac's View > Bigger, Smaller and Actual Size. Windows has a Text
-// size setting that wx's controls follow; the Mac has none they follow,
-// so the app offers its own steps, as Safari and TextEdit do. Each step is
-// a share of the system's size: two below it, up to three times it (much
-// more and the main window's 68 characters outgrow a laptop's screen).
-// Not remembered: every launch starts at Actual Size (Elliott, 2026-10-07).
+// The Mac's View > Bigger Text, Smaller Text and Actual Text Size. Windows
+// has a Text size setting that wx's controls follow; the Mac has none they
+// follow, so the app offers its own steps, as Safari and TextEdit do. Each
+// step is a share of the system's size: two below it, up to three times it
+// (much more and the main window's 68 characters outgrow a laptop's
+// screen).
+// Not remembered: every launch starts at actual size (Elliott, 2026-10-07).
 
 const PERCENTS: [i32; 10] = [75, 90, 100, 110, 125, 150, 175, 200, 250, 300];
 

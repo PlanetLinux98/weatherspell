@@ -66,7 +66,7 @@ pub struct MainWindow {
     status_line: Option<StaticText>,
     panel: Panel,
     resizable: Vec<Box<dyn WxWidget>>,
-    // The Mac's View > Bigger and Smaller, from the font the window opened
+    // The Mac's View > Bigger Text and Smaller Text, from the font it opened
     // with.
     actual_points: i32,
     text_size: Cell<TextSize>,
@@ -424,9 +424,9 @@ fn menu_bar(settings: &AppSettings) -> MenuBar {
     // Windows has its own Text size setting, which wx follows.
     if cfg!(target_os = "macos") {
         view = view
-            .append_item(ID_BIGGER, "&Bigger\tCtrl++", "")
-            .append_item(ID_SMALLER, "&Smaller\tCtrl+-", "")
-            .append_item(ID_ACTUAL_SIZE, "Ac&tual Size\tCtrl+0", "")
+            .append_item(ID_BIGGER, "&Bigger Text\tCtrl++", "")
+            .append_item(ID_SMALLER, "&Smaller Text\tCtrl+-", "")
+            .append_item(ID_ACTUAL_SIZE, "Ac&tual Text Size\tCtrl+0", "")
             .append_separator();
     }
     let view = view
@@ -495,8 +495,17 @@ fn working_areas() -> Vec<Rect> {
         .collect()
 }
 
+// wx on the Mac has no caption metric (-1), which left no screen showing
+// the saved title bar, so the window always opened centred (Elliott,
+// 2026-10-07). There it is what the frame has above its client area: the
+// menu bar is the screen's and there is no status bar.
 fn caption_height(window: &Frame) -> i32 {
-    SystemSettings::get_metric(SystemMetric::CaptionY, Some(window))
+    if cfg!(target_os = "macos") {
+        let caption = window.get_size().height - window.get_client_size().height;
+        if caption > 0 { caption } else { 28 }
+    } else {
+        SystemSettings::get_metric(SystemMetric::CaptionY, Some(window))
+    }
 }
 
 fn bounds(window: &Frame) -> Rect {
@@ -585,7 +594,7 @@ impl MainWindow {
         if !unchanged {
             self.text_size.set(size);
             let points = size.points(self.actual_points);
-            dialogs::choose_points(points);
+            dialogs::choose_size(points, size.percent());
             if let Some(mut font) = self.frame.get_font() {
                 font.set_point_size(points);
                 self.frame.set_font(&font);

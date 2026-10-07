@@ -91,6 +91,36 @@ pub unsafe fn id_with_number(receiver: Id, selector: &CStr, argument: isize) -> 
     unsafe { f(receiver, selector, argument) }
 }
 
+// [receiver selector:number], for a CGFloat.
+pub unsafe fn id_with_float(receiver: Id, selector: &CStr, argument: f64) -> Id {
+    let selector = sel(selector);
+    if !unsafe { answers(receiver, selector) } {
+        return std::ptr::null_mut();
+    }
+    let f = send!(unsafe extern "C" fn(Id, Sel, f64) -> Id);
+    unsafe { f(receiver, selector, argument) }
+}
+
+// A CGFloat answer, or 0.
+pub unsafe fn float(receiver: Id, selector: &CStr) -> f64 {
+    let selector = sel(selector);
+    if !unsafe { answers(receiver, selector) } {
+        return 0.0;
+    }
+    let f = send!(unsafe extern "C" fn(Id, Sel) -> f64);
+    unsafe { f(receiver, selector) }
+}
+
+// An NSInteger or NSUInteger answer (an enumeration's value), or -1.
+pub unsafe fn integer(receiver: Id, selector: &CStr) -> isize {
+    let selector = sel(selector);
+    if !unsafe { answers(receiver, selector) } {
+        return -1;
+    }
+    let f = send!(unsafe extern "C" fn(Id, Sel) -> isize);
+    unsafe { f(receiver, selector) }
+}
+
 // A BOOL answer: [receiver selector] or [receiver selector:object].
 pub unsafe fn yes(receiver: Id, selector: &CStr) -> bool {
     let selector = sel(selector);
