@@ -143,6 +143,9 @@ mod mac_impl {
                     mac::NSAccessibilityPriorityKey,
                 ],
             );
+            if info.is_null() {
+                return;
+            }
             mac::NSAccessibilityPostNotificationWithUserInfo(
                 element,
                 mac::NSAccessibilityAnnouncementRequestedNotification,

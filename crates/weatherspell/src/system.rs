@@ -270,8 +270,13 @@ pub fn region() -> Region {
         use wx_accessibility::mac;
         let locale = mac::id(mac::class(c"NSLocale"), c"currentLocale");
         // "Metric", "U.S." or "U.K."; only the US system is imperial, as
-        // on Windows, where Britain's region is metric.
-        let system = mac::text(mac::id(locale, c"measurementSystem"));
+        // on Windows, where Britain's region is metric. Asked by key: the
+        // measurementSystem property is not answered on macOS 15 and later.
+        let system = mac::text(mac::id_with(
+            locale,
+            c"objectForKey:",
+            mac::NSLocaleMeasurementSystem,
+        ));
         // A formatter's short time follows the user's own settings (the
         // 24-hour switch included), where the locale alone would not.
         let formatter = mac::id(mac::class(c"NSDateFormatter"), c"new");
