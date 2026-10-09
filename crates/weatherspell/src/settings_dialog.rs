@@ -105,6 +105,7 @@ pub fn build(
     );
     dialog.set_sizer(sizer, true);
     wx_accessibility::name_inputs(&dialog);
+    wx_accessibility::dialog(&dialog);
     // Fixed: nothing here gains from more room. 0.1's 480 wide.
     dialogs::fit(&dialog, 68);
 

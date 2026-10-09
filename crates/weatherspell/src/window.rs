@@ -62,7 +62,8 @@ pub struct MainWindow {
     frame: Frame,
     choice: Choice,
     text: TextCtrl,
-    // The Mac's stand-in for the status bar; None elsewhere.
+    // The stand-in for the status bar on the Mac and Linux; None on
+    // Windows.
     status_line: Option<StaticText>,
     panel: Panel,
     resizable: Vec<Box<dyn WxWidget>>,
@@ -134,7 +135,7 @@ pub fn build() -> Rc<MainWindow> {
     dialogs::app_font(&frame);
     frame.set_menu_bar(menu_bar(&settings));
     system::set_window_icon(&frame);
-    if !cfg!(target_os = "macos") {
+    if cfg!(windows) {
         frame.create_status_bar(1, 0, -1, "statusBar");
         frame.set_status_text("Ready", 0);
     }
@@ -171,16 +172,38 @@ pub fn build() -> Rc<MainWindow> {
     // Read-only text is grey by default; it is for reading.
     text.set_background_color(SystemSettings::get_colour(SystemColour::Window));
     outer.add(&text, 1, SizerFlag::Expand, 0);
-    // The Mac's wx status bar draws its text itself, so VoiceOver finds
-    // nothing there. A text line in its place reads; one line, cut short
-    // on screen with "..." (wxST_NO_AUTORESIZE | wxST_ELLIPSIZE_END, which
-    // wxDragon does not name), while VoiceOver still gets all of it.
-    let status_line = cfg!(target_os = "macos").then(|| {
-        let line = StaticText::builder(&panel)
+    // wx's status bar draws its text itself on the Mac and GTK, so
+    // VoiceOver and Orca find nothing there. A text line in its place
+    // reads; one line, cut short on screen with "..." (wxST_NO_AUTORESIZE
+    // | wxST_ELLIPSIZE_END, which wxDragon does not name), while the
+    // reader still gets all of it.
+    let status_line = (!cfg!(windows)).then(|| {
+        let style = StaticTextStyle::from_bits_retain(0x0001 | 0x0010);
+        if cfg!(target_os = "macos") {
+            let line = StaticText::builder(&panel)
+                .with_label("Ready")
+                .with_style(style)
+                .build();
+            outer.add(&line, 0, SizerFlag::Expand | SizerFlag::All, 8);
+            return line;
+        }
+        // GTK: the line sits in a status bar, as GTK's own status bar holds
+        // its label, so Orca's status bar command finds it and reads it
+        // once (the line itself as the status bar was read twice, as its
+        // name and then as its text).
+        let bar = Panel::builder(&panel).build();
+        let sizer = BoxSizer::builder(Orientation::Vertical).build();
+        let line = StaticText::builder(&bar)
             .with_label("Ready")
-            .with_style(StaticTextStyle::from_bits_retain(0x0001 | 0x0010))
+            .with_style(style)
             .build();
-        outer.add(&line, 0, SizerFlag::Expand | SizerFlag::All, 8);
+        sizer.add(&line, 0, SizerFlag::Expand, 0);
+        bar.set_sizer(sizer, true);
+        // wx lets a panel with nothing focusable in it take the focus itself,
+        // which put the bar in the Tab order.
+        bar.set_can_focus(false);
+        outer.add(&bar, 0, SizerFlag::Expand | SizerFlag::All, 8);
+        wx_accessibility::status_bar(&bar);
         line
     });
     panel.set_sizer(outer, true);

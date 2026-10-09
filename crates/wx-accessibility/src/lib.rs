@@ -11,9 +11,11 @@ mod labels;
 pub mod lint;
 #[cfg(target_os = "macos")]
 pub mod mac;
+mod roles;
 mod screen_readers;
 
 pub use announce::Announcer;
 pub use check_box::report_toggles;
 pub use labels::{describe, name_inputs};
+pub use roles::{dialog, status_bar};
 pub use screen_readers::ScreenReaders;

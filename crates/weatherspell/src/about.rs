@@ -1,7 +1,8 @@
 // About (AboutDialog.cs and AboutText.cs in 0.1): the icon and text, and
 // buttons, like a message box, so a screen reader reads the text as the
 // dialog opens. A wx dialog is a real Windows dialog, so NVDA reads its
-// static text on opening without the role 0.1 had to set. Short on
+// static text on opening without the role 0.1 had to set; on GTK it needs
+// the dialog role for Orca to do the same (wx_accessibility::dialog). Short on
 // purpose: each source asks for a credit, which this gives; the full
 // wording, links and licences are in the guide's Credits and licences
 // section.
@@ -19,10 +20,7 @@ const LOGO: &[u8] = include_bytes!("../../../Assets/Weatherspell.svg");
 
 fn paragraphs() -> Vec<String> {
     vec![
-        format!(
-            "Weatherspell {}\nA text-based weather app for Windows.",
-            crate::VERSION
-        ),
+        format!("Weatherspell {}\nA text-based weather app.", crate::VERSION),
         "Copyright 2026 PlanetLinux98. Released under the MIT licence.".to_string(),
         format!(
             "Weather data from {} (CC BY 4.0), {} and the {}.",
@@ -90,6 +88,8 @@ pub fn build(parent: &dyn WxWidget) -> Dialog {
         12,
     );
     dialog.set_sizer(sizer, true);
+    wx_accessibility::name_inputs(&dialog);
+    wx_accessibility::dialog(&dialog);
     dialogs::fit(&dialog, 71);
 
     credits.on_click(move |_| guide::open(&dialog, Some(guide::CREDITS)));

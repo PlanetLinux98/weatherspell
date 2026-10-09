@@ -127,6 +127,7 @@ fn make(
     );
     dialog.set_sizer(sizer, true);
     wx_accessibility::name_inputs(&dialog);
+    wx_accessibility::dialog(&dialog);
     // 0.1's 560 by 380, at least 440 by 300.
     dialogs::size(&dialog, (80, 25), (63, 20));
 
@@ -378,9 +379,10 @@ fn make_edit(
     let field = TextCtrl::builder(&dialog)
         .with_value(nickname.unwrap_or(""))
         .build();
-    let help = "Leave it empty to use the full name.";
-    let hint = StaticText::builder(&dialog).with_label(help).build();
-    wx_accessibility::describe(&field, help);
+    let hint = StaticText::builder(&dialog)
+        .with_label("Leave it empty to use the full name.")
+        .build();
+    wx_accessibility::describe(&field, &hint);
     let notify = CheckBox::builder(&dialog)
         .with_label("Notify me about &alerts for this location")
         .build();
@@ -413,6 +415,7 @@ fn make_edit(
     );
     dialog.set_sizer(sizer, true);
     wx_accessibility::name_inputs(&dialog);
+    wx_accessibility::dialog(&dialog);
     dialogs::fit(&dialog, 64);
 
     field.set_focus();

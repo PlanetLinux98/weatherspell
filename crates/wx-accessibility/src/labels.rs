@@ -28,7 +28,7 @@
 // Alt keys are the app's own on every system (Elliott, 2026-10-08);
 // Enter and Escape still answer OK and Cancel.
 
-use wxdragon::prelude::WxWidget;
+use wxdragon::prelude::{StaticText, WxWidget};
 
 pub fn name_inputs(window: &impl WxWidget) {
     #[cfg(target_os = "macos")]
@@ -41,14 +41,17 @@ pub fn name_inputs(window: &impl WxWidget) {
 
 // A line of help beside an input ("Leave it empty to use the full
 // name.") becomes the input's description, which a screen reader says
-// after its name and role; it is not part of the name. GTK only so far:
+// after its name and role; it is not part of the name. On GTK the line
+// and the input are also linked (described by, description for): Orca
+// reads a dialog's lines that belong to no control as it opens, which
+// said the hint once there and again with the input. GTK only so far:
 // what NVDA and VoiceOver read of such a line is to be checked first
 // (Elliott, 2026-10-08).
-pub fn describe(input: &impl WxWidget, help: &str) {
+pub fn describe(input: &impl WxWidget, hint: &StaticText) {
     #[cfg(not(any(windows, target_os = "macos")))]
-    gtk_impl::describe(input.get_handle(), help);
+    gtk_impl::describe(input.get_handle(), hint.get_handle(), &hint.get_label());
     #[cfg(any(windows, target_os = "macos"))]
-    let _ = (input, help);
+    let _ = (input, hint);
 }
 
 #[cfg(target_os = "macos")]
@@ -169,6 +172,11 @@ mod gtk_impl {
     #[link(name = "atk-1.0")]
     unsafe extern "C" {
         fn atk_object_set_description(accessible: *mut c_void, description: *const c_char);
+        fn atk_object_add_relationship(
+            accessible: *mut c_void,
+            relationship: c_int,
+            target: *mut c_void,
+        ) -> c_int;
     }
     #[link(name = "gobject-2.0")]
     unsafe extern "C" {
@@ -287,18 +295,26 @@ mod gtk_impl {
         }
     }
 
-    pub fn describe(input: *mut c_void, help: &str) {
+    // AtkRelationType.
+    const ATK_RELATION_DESCRIBED_BY: c_int = 14;
+    const ATK_RELATION_DESCRIPTION_FOR: c_int = 15;
+
+    pub fn describe(input: *mut c_void, hint: *mut c_void, help: &str) {
         let Ok(help) = CString::new(help) else {
             return;
         };
-        if input.is_null() {
+        if input.is_null() || hint.is_null() {
             return;
         }
         unsafe {
             let accessible = gtk_widget_get_accessible(input);
-            if !accessible.is_null() {
-                atk_object_set_description(accessible, help.as_ptr());
+            let line = gtk_widget_get_accessible(hint);
+            if accessible.is_null() || line.is_null() {
+                return;
             }
+            atk_object_set_description(accessible, help.as_ptr());
+            atk_object_add_relationship(accessible, ATK_RELATION_DESCRIBED_BY, line);
+            atk_object_add_relationship(line, ATK_RELATION_DESCRIPTION_FOR, accessible);
         }
     }
 }

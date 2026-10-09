@@ -134,6 +134,7 @@ fn make(
     );
     dialog.set_sizer(sizer, true);
     wx_accessibility::name_inputs(&dialog);
+    wx_accessibility::dialog(&dialog);
     // 0.1's 520 by 420, at least 420 by 360.
     dialogs::size(&dialog, (74, 28), (60, 24));
 

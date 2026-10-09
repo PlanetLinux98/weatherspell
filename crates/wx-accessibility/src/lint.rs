@@ -11,7 +11,11 @@
 // - no two Alt keys are the same within one window, the menu bar's
 //   included, since a clash takes the user to the wrong control.
 //
-// Other systems: nothing yet; it reports no problems there.
+// On GTK it reads GTK's widgets in the order wx made them, the same rules
+// in the same words, except that an input's name is the label linked to
+// it (what ATK gives Orca), which wxGTK links only when the window is
+// first idle: the lint lets that happen before it looks. The Mac: nothing
+// yet; it reports no problems there.
 
 use wxdragon::prelude::WxWidget;
 
@@ -21,7 +25,11 @@ pub fn check(window: &impl WxWidget) -> Vec<String> {
     {
         windows_impl::check(window.get_handle())
     }
-    #[cfg(not(windows))]
+    #[cfg(not(any(windows, target_os = "macos")))]
+    {
+        gtk_impl::check(window.get_handle())
+    }
+    #[cfg(target_os = "macos")]
     {
         let _ = window;
         Vec::new()
@@ -200,6 +208,316 @@ mod windows_impl {
             "Static" => "text",
             "Button" => "button",
             _ => "control",
+        }
+    }
+}
+
+#[cfg(not(any(windows, target_os = "macos")))]
+mod gtk_impl {
+    use std::collections::HashMap;
+    use std::ffi::{CStr, c_char, c_int, c_uint, c_void};
+
+    type GType = usize;
+    type Widget = *mut c_void;
+
+    #[repr(C)]
+    struct GList {
+        data: *mut c_void,
+        next: *mut GList,
+        prev: *mut GList,
+    }
+
+    const GDK_KEY_VOID_SYMBOL: c_uint = 0xffffff;
+
+    // wxGTK links all of these already.
+    #[link(name = "gtk-3")]
+    unsafe extern "C" {
+        fn gtk_container_get_type() -> GType;
+        fn gtk_scrolled_window_get_type() -> GType;
+        fn gtk_label_get_type() -> GType;
+        fn gtk_button_get_type() -> GType;
+        fn gtk_entry_get_type() -> GType;
+        fn gtk_text_view_get_type() -> GType;
+        fn gtk_combo_box_get_type() -> GType;
+        fn gtk_tree_view_get_type() -> GType;
+        fn gtk_menu_bar_get_type() -> GType;
+        fn gtk_container_get_children(container: Widget) -> *mut GList;
+        fn gtk_bin_get_child(bin: Widget) -> Widget;
+        fn gtk_widget_get_visible(widget: Widget) -> c_int;
+        fn gtk_widget_get_accessible(widget: Widget) -> *mut c_void;
+        fn gtk_window_get_title(window: Widget) -> *const c_char;
+        fn gtk_label_get_text(label: Widget) -> *const c_char;
+        fn gtk_label_get_mnemonic_keyval(label: Widget) -> c_uint;
+        fn gtk_label_get_mnemonic_widget(label: Widget) -> Widget;
+    }
+    #[link(name = "gdk-3")]
+    unsafe extern "C" {
+        fn gdk_keyval_to_lower(keyval: c_uint) -> c_uint;
+        fn gdk_keyval_to_unicode(keyval: c_uint) -> u32;
+    }
+    #[link(name = "atk-1.0")]
+    unsafe extern "C" {
+        fn atk_object_get_name(accessible: *mut c_void) -> *const c_char;
+    }
+    #[link(name = "gobject-2.0")]
+    unsafe extern "C" {
+        fn g_type_check_instance_is_a(instance: Widget, gtype: GType) -> c_int;
+    }
+    #[link(name = "glib-2.0")]
+    unsafe extern "C" {
+        fn g_list_free(list: *mut GList);
+        fn g_main_context_iteration(context: *mut c_void, may_block: c_int) -> c_int;
+    }
+
+    unsafe fn is(widget: Widget, gtype: GType) -> bool {
+        unsafe { g_type_check_instance_is_a(widget, gtype) != 0 }
+    }
+
+    unsafe fn text(s: *const c_char) -> String {
+        if s.is_null() {
+            String::new()
+        } else {
+            unsafe { CStr::from_ptr(s) }.to_string_lossy().into_owned()
+        }
+    }
+
+    unsafe fn children(widget: Widget) -> Vec<Widget> {
+        let mut out = Vec::new();
+        unsafe {
+            if !is(widget, gtk_container_get_type()) {
+                return out;
+            }
+            let list = gtk_container_get_children(widget);
+            let mut item = list;
+            while !item.is_null() {
+                out.push((*item).data);
+                item = (*item).next;
+            }
+            g_list_free(list);
+        }
+        out
+    }
+
+    // What a control is to the lint, and what it is called in a problem.
+    #[derive(Clone, Copy, PartialEq)]
+    enum Kind {
+        Input(&'static str),
+        Label,
+        Button,
+        Other,
+    }
+
+    unsafe fn kind(widget: Widget) -> Kind {
+        unsafe {
+            if is(widget, gtk_entry_get_type()) || is(widget, gtk_text_view_get_type()) {
+                Kind::Input("text box")
+            } else if is(widget, gtk_combo_box_get_type()) {
+                Kind::Input("combo box")
+            } else if is(widget, gtk_tree_view_get_type()) {
+                Kind::Input("list")
+            } else if is(widget, gtk_label_get_type()) {
+                Kind::Label
+            } else if is(widget, gtk_button_get_type()) {
+                Kind::Button
+            } else {
+                Kind::Other
+            }
+        }
+    }
+
+    fn describe(kind: Kind) -> &'static str {
+        match kind {
+            Kind::Input(name) => name,
+            Kind::Label => "text",
+            Kind::Button => "button",
+            Kind::Other => "control",
+        }
+    }
+
+    // wx puts a list or a multi-line text box in a scrolled window; the
+    // control inside is the one a reader is told about.
+    unsafe fn control(widget: Widget) -> Widget {
+        unsafe {
+            if is(widget, gtk_scrolled_window_get_type()) {
+                let inner = gtk_bin_get_child(widget);
+                if !inner.is_null() && matches!(kind(inner), Kind::Input(_)) {
+                    return inner;
+                }
+            }
+        }
+        widget
+    }
+
+    // The first label inside a button or menu title: its text and Alt key.
+    unsafe fn inner_label(widget: Widget) -> Option<Widget> {
+        unsafe {
+            if is(widget, gtk_label_get_type()) {
+                return Some(widget);
+            }
+            children(widget).into_iter().find_map(|c| inner_label(c))
+        }
+    }
+
+    unsafe fn key(label: Widget) -> Option<char> {
+        unsafe {
+            let keyval = gtk_label_get_mnemonic_keyval(label);
+            if keyval == GDK_KEY_VOID_SYMBOL {
+                return None;
+            }
+            char::from_u32(gdk_keyval_to_unicode(gdk_keyval_to_lower(keyval)))
+                .filter(|c| *c != '\0')
+        }
+    }
+
+    struct Lint {
+        title: String,
+        // Each input and the text of the label linked to it.
+        named: HashMap<usize, String>,
+        keys: HashMap<char, Vec<String>>,
+        problems: Vec<String>,
+    }
+
+    pub fn check(top: *mut c_void) -> Vec<String> {
+        if top.is_null() {
+            return Vec::new();
+        }
+        // wxGTK links labels to controls when the window is first idle,
+        // and only then do inputs have their names. Idle uses up wx's
+        // wake-up, which a window closed later needs to be deleted (and
+        // the app to end), so it is asked for again.
+        for _ in 0..1000 {
+            if unsafe { g_main_context_iteration(std::ptr::null_mut(), 0) } == 0 {
+                break;
+            }
+        }
+        wxdragon::wake_up_idle();
+        let mut lint = Lint {
+            title: unsafe { text(gtk_window_get_title(top)) },
+            named: HashMap::new(),
+            keys: HashMap::new(),
+            problems: Vec::new(),
+        };
+        unsafe {
+            links(top, &mut lint.named);
+            walk(top, &mut lint);
+        }
+        let Lint {
+            title,
+            keys,
+            mut problems,
+            ..
+        } = lint;
+        let mut clashes: Vec<_> = keys.into_iter().filter(|(_, by)| by.len() > 1).collect();
+        clashes.sort();
+        for (key, by) in clashes {
+            problems.push(format!(
+                "{title}: Alt+{} is given by {}.",
+                key.to_ascii_uppercase(),
+                by.join(" and ")
+            ));
+        }
+        problems
+    }
+
+    unsafe fn links(widget: Widget, named: &mut HashMap<usize, String>) {
+        unsafe {
+            if is(widget, gtk_label_get_type()) {
+                let target = gtk_label_get_mnemonic_widget(widget);
+                let shown = text(gtk_label_get_text(widget));
+                if !target.is_null() && !shown.trim().is_empty() {
+                    named.insert(target as usize, shown);
+                }
+                return;
+            }
+            for child in children(widget) {
+                links(child, named);
+            }
+        }
+    }
+
+    unsafe fn walk(container: Widget, lint: &mut Lint) {
+        unsafe {
+            let mut previous: Option<Widget> = None;
+            for child in children(container) {
+                // A control wx made and hid is not seen by anyone.
+                if gtk_widget_get_visible(child) == 0 {
+                    continue;
+                }
+                let widget = control(child);
+                let what = kind(widget);
+                match what {
+                    Kind::Input(_) => {
+                        if !lint.named.contains_key(&(widget as usize)) {
+                            let title = &lint.title;
+                            lint.problems.push(match previous {
+                                Some(p) => {
+                                    let p = control(p);
+                                    let shown = match kind(p) {
+                                        Kind::Label => text(gtk_label_get_text(p)),
+                                        _ => inner_label(p)
+                                            .map(|l| text(gtk_label_get_text(l)))
+                                            .unwrap_or_default(),
+                                    };
+                                    format!(
+                                        "{title}: the {} after {} \"{shown}\" has no label just before it, so a screen reader has no name for it.",
+                                        describe(what),
+                                        describe(kind(p)),
+                                    )
+                                }
+                                None => format!(
+                                    "{title}: the first {} has no label before it, so a screen reader has no name for it.",
+                                    describe(what)
+                                ),
+                            });
+                        }
+                    }
+                    Kind::Label => {
+                        if let Some(key) = key(widget) {
+                            let shown = text(gtk_label_get_text(widget));
+                            lint.keys
+                                .entry(key)
+                                .or_default()
+                                .push(format!("\"{shown}\""));
+                        }
+                    }
+                    Kind::Button => {
+                        let name = text(atk_object_get_name(gtk_widget_get_accessible(widget)));
+                        if name.trim().is_empty() {
+                            let title = &lint.title;
+                            lint.problems.push(format!(
+                                "{title}: a button or check box has no text, so a screen reader has no name for it."
+                            ));
+                        }
+                        if let Some(label) = inner_label(widget)
+                            && let Some(key) = key(label)
+                        {
+                            let shown = text(gtk_label_get_text(label));
+                            lint.keys
+                                .entry(key)
+                                .or_default()
+                                .push(format!("\"{shown}\""));
+                        }
+                    }
+                    Kind::Other => {
+                        if is(widget, gtk_menu_bar_get_type()) {
+                            for title in children(widget) {
+                                if let Some(label) = inner_label(title)
+                                    && let Some(key) = key(label)
+                                {
+                                    let shown = text(gtk_label_get_text(label));
+                                    lint.keys
+                                        .entry(key)
+                                        .or_default()
+                                        .push(format!("the {shown} menu"));
+                                }
+                            }
+                        } else {
+                            walk(widget, lint);
+                        }
+                    }
+                }
+                previous = Some(child);
+            }
         }
     }
 }

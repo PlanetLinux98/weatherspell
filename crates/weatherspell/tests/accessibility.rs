@@ -121,20 +121,21 @@ fn main() {
         "Made wrong: the first text box has no label before it, so a screen reader has no name for it.",
         "Made wrong: Alt+G is given by \"Go\" and \"Get\".",
     ];
-    // The lint reads Windows' controls only so far; elsewhere this still
-    // proves every window builds.
-    if cfg!(windows) && caught != &expected {
+    // The lint reads Windows' and GTK's controls so far; on the Mac this
+    // still proves every window builds.
+    let linted = !cfg!(target_os = "macos");
+    if linted && caught != &expected {
         eprintln!("The lint did not catch what was made wrong: {caught:?}");
         failed = true;
     }
     if failed {
         std::process::exit(1);
     }
-    if cfg!(windows) {
+    if linted {
         println!(
             "{windows} windows checked, none with a problem; the lint caught what was made wrong."
         );
     } else {
-        println!("{windows} windows built; the lint checks Windows only so far.");
+        println!("{windows} windows built; the lint checks Windows and GTK only so far.");
     }
 }

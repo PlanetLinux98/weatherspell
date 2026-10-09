@@ -63,6 +63,7 @@ pub fn build(parent: &Frame, title: &str, paragraphs: &[String], url: Option<&st
     );
     dialog.set_sizer(sizer, true);
     wx_accessibility::name_inputs(&dialog);
+    wx_accessibility::dialog(&dialog);
     crate::system::fit_buttons(&dialog);
 
     // 0.1's 600 by 460 at Segoe UI 9 point, in characters, within the
