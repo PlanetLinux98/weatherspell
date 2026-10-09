@@ -235,6 +235,45 @@ pub fn before_windows() {
             0,
         );
     }
+    #[cfg(not(any(windows, target_os = "macos")))]
+    free_section_keys();
+}
+
+// wxGTK lets the focused control have a key before the menus' shortcuts,
+// and GTK's text view (the forecast) binds Ctrl+PageDown and Ctrl+PageUp
+// (a horizontal page) and Ctrl+Shift+A (select nothing) itself, so the
+// section keys did nothing there (Elliott, 2026-10-08). Taken from every
+// text view the app makes; the Shift forms, which select, stay.
+#[cfg(not(any(windows, target_os = "macos")))]
+fn free_section_keys() {
+    use std::ffi::c_void;
+    #[link(name = "gtk-3")]
+    unsafe extern "C" {
+        fn gtk_text_view_get_type() -> usize;
+        fn gtk_binding_set_by_class(class: *mut c_void) -> *mut c_void;
+        fn gtk_binding_entry_remove(set: *mut c_void, keyval: u32, modifiers: u32);
+    }
+    #[link(name = "gobject-2.0")]
+    unsafe extern "C" {
+        fn g_type_class_ref(gtype: usize) -> *mut c_void;
+    }
+    const SHIFT: u32 = 1 << 0;
+    const CONTROL: u32 = 1 << 2;
+    const KEYS: [(u32, u32); 5] = [
+        (0xff55, CONTROL),        // Page_Up
+        (0xff56, CONTROL),        // Page_Down
+        (0xff9a, CONTROL),        // KP_Page_Up
+        (0xff9b, CONTROL),        // KP_Page_Down
+        (0x061, CONTROL | SHIFT), // a
+    ];
+    unsafe {
+        // The class is kept for the life of the app, as GTK keeps it.
+        let class = g_type_class_ref(gtk_text_view_get_type());
+        let set = gtk_binding_set_by_class(class);
+        for (key, modifiers) in KEYS {
+            gtk_binding_entry_remove(set, key, modifiers);
+        }
+    }
 }
 
 // A Mac push button keeps its standard height whatever its font, so at a
