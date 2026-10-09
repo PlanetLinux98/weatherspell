@@ -16,7 +16,17 @@
 // to the scrolled window around it, so Orca's "table" had no name. Each
 // label is watched (wx links them later, once the tab order is built,
 // and again when it changes): a link to an input is kept, moved onto the
-// list inside a scrolled window, and any other link is dropped.
+// list inside a scrolled window, and any other link is dropped. A
+// button's or combo box's own insides are left alone: a button's text is
+// a label linked to the button itself, which is its Alt key.
+//
+// GTK also: wx makes an OK or Cancel button GTK's stock one, whose
+// "_OK" and "_Cancel" add Alt keys the app's buttons have nowhere else,
+// and Cancel's Alt+C took the Alt key of Settings' "Check for alerts
+// every" (two controls with one Alt key take turns at the focus, and
+// neither acts). Each becomes a plain button with the same text, so the
+// Alt keys are the app's own on every system (Elliott, 2026-10-08);
+// Enter and Escape still answer OK and Cancel.
 
 use wxdragon::prelude::WxWidget;
 
@@ -27,6 +37,18 @@ pub fn name_inputs(window: &impl WxWidget) {
     gtk_impl::name_inputs(window.get_handle());
     #[cfg(windows)]
     let _ = window;
+}
+
+// A line of help beside an input ("Leave it empty to use the full
+// name.") becomes the input's description, which a screen reader says
+// after its name and role; it is not part of the name. GTK only so far:
+// what NVDA and VoiceOver read of such a line is to be checked first
+// (Elliott, 2026-10-08).
+pub fn describe(input: &impl WxWidget, help: &str) {
+    #[cfg(not(any(windows, target_os = "macos")))]
+    gtk_impl::describe(input.get_handle(), help);
+    #[cfg(any(windows, target_os = "macos"))]
+    let _ = (input, help);
 }
 
 #[cfg(target_os = "macos")]
@@ -101,9 +123,18 @@ mod mac_impl {
 
 #[cfg(not(any(windows, target_os = "macos")))]
 mod gtk_impl {
-    use std::ffi::{c_int, c_ulong, c_void};
+    use std::ffi::{CStr, CString, c_char, c_int, c_uint, c_ulong, c_void};
 
     type GType = usize;
+
+    #[repr(C)]
+    struct StockItem {
+        stock_id: *mut c_char,
+        label: *mut c_char,
+        modifier: c_uint,
+        keyval: c_uint,
+        translation_domain: *mut c_char,
+    }
 
     #[repr(C)]
     struct GList {
@@ -126,13 +157,25 @@ mod gtk_impl {
         fn gtk_bin_get_child(bin: *mut c_void) -> *mut c_void;
         fn gtk_label_get_mnemonic_widget(label: *mut c_void) -> *mut c_void;
         fn gtk_label_set_mnemonic_widget(label: *mut c_void, widget: *mut c_void);
+        fn gtk_button_get_type() -> GType;
+        fn gtk_button_get_use_stock(button: *mut c_void) -> c_int;
+        fn gtk_button_set_use_stock(button: *mut c_void, use_stock: c_int);
+        fn gtk_button_set_use_underline(button: *mut c_void, use_underline: c_int);
+        fn gtk_button_get_label(button: *mut c_void) -> *const c_char;
+        fn gtk_button_set_label(button: *mut c_void, label: *const c_char);
+        fn gtk_stock_lookup(stock_id: *const c_char, item: *mut StockItem) -> c_int;
+        fn gtk_widget_get_accessible(widget: *mut c_void) -> *mut c_void;
+    }
+    #[link(name = "atk-1.0")]
+    unsafe extern "C" {
+        fn atk_object_set_description(accessible: *mut c_void, description: *const c_char);
     }
     #[link(name = "gobject-2.0")]
     unsafe extern "C" {
         fn g_type_check_instance_is_a(instance: *mut c_void, gtype: GType) -> c_int;
         fn g_signal_connect_data(
             instance: *mut c_void,
-            signal: *const std::ffi::c_char,
+            signal: *const c_char,
             handler: *const c_void,
             data: *mut c_void,
             destroy: *const c_void,
@@ -179,7 +222,11 @@ mod gtk_impl {
                 fix(widget);
                 return;
             }
-            if !is(widget, gtk_container_get_type()) {
+            if is(widget, gtk_button_get_type()) {
+                unstock(widget);
+                return;
+            }
+            if is(widget, gtk_combo_box_get_type()) || !is(widget, gtk_container_get_type()) {
                 return;
             }
             let children = gtk_container_get_children(widget);
@@ -212,6 +259,45 @@ mod gtk_impl {
                 gtk_label_set_mnemonic_widget(label, inner);
             } else {
                 gtk_label_set_mnemonic_widget(label, std::ptr::null_mut());
+            }
+        }
+    }
+
+    // The stock label's text without its underline ("_Cancel" is
+    // "Cancel"), which is the text the app gave the button.
+    unsafe fn unstock(button: *mut c_void) {
+        unsafe {
+            if gtk_button_get_use_stock(button) == 0 {
+                return;
+            }
+            let mut item: StockItem = std::mem::zeroed();
+            let id = gtk_button_get_label(button);
+            if id.is_null() || gtk_stock_lookup(id, &mut item) == 0 || item.label.is_null() {
+                return;
+            }
+            let text = CStr::from_ptr(item.label)
+                .to_string_lossy()
+                .replace('_', "");
+            let Ok(text) = CString::new(text) else {
+                return;
+            };
+            gtk_button_set_use_stock(button, 0);
+            gtk_button_set_use_underline(button, 0);
+            gtk_button_set_label(button, text.as_ptr());
+        }
+    }
+
+    pub fn describe(input: *mut c_void, help: &str) {
+        let Ok(help) = CString::new(help) else {
+            return;
+        };
+        if input.is_null() {
+            return;
+        }
+        unsafe {
+            let accessible = gtk_widget_get_accessible(input);
+            if !accessible.is_null() {
+                atk_object_set_description(accessible, help.as_ptr());
             }
         }
     }

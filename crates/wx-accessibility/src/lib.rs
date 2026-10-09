@@ -15,5 +15,5 @@ mod screen_readers;
 
 pub use announce::Announcer;
 pub use check_box::report_toggles;
-pub use labels::name_inputs;
+pub use labels::{describe, name_inputs};
 pub use screen_readers::ScreenReaders;

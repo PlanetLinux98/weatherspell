@@ -378,9 +378,9 @@ fn make_edit(
     let field = TextCtrl::builder(&dialog)
         .with_value(nickname.unwrap_or(""))
         .build();
-    let hint = StaticText::builder(&dialog)
-        .with_label("Leave it empty to use the full name.")
-        .build();
+    let help = "Leave it empty to use the full name.";
+    let hint = StaticText::builder(&dialog).with_label(help).build();
+    wx_accessibility::describe(&field, help);
     let notify = CheckBox::builder(&dialog)
         .with_label("Notify me about &alerts for this location")
         .build();
