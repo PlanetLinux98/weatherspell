@@ -4,9 +4,11 @@
 // wxWidgets has no UI Automation at all, so the notification rides on a
 // provider hosted on the window (hosted.rs); Narrator hears it although
 // the window never advertises the provider. On the Mac it is AppKit's
-// announcement request, which VoiceOver speaks.
-//
-// Linux: not yet (AT-SPI); there an announcement does nothing.
+// announcement request, which VoiceOver speaks. On Linux it is ATK's
+// "notification" signal (ATK 2.50) on the window's accessible, which the
+// AT-SPI bridge sends on as an announcement and Orca speaks; GTK 3 has no
+// call of its own for it. An ATK older than 2.50 has no such signal and
+// GLib warns on the console instead.
 
 use wxdragon::prelude::WxWidget;
 
@@ -16,6 +18,9 @@ pub struct Announcer {
     // The window's view, whose window posts the announcement.
     #[cfg(target_os = "macos")]
     view: crate::mac::Id,
+    // The window's GtkWidget, whose accessible makes the announcement.
+    #[cfg(not(any(windows, target_os = "macos")))]
+    widget: *mut std::ffi::c_void,
 }
 
 impl Announcer {
@@ -38,8 +43,10 @@ impl Announcer {
         }
         #[cfg(not(any(windows, target_os = "macos")))]
         {
-            let _ = (window, app_name);
-            Announcer {}
+            let _ = app_name;
+            Announcer {
+                widget: window.get_handle(),
+            }
         }
     }
 
@@ -50,7 +57,7 @@ impl Announcer {
         #[cfg(target_os = "macos")]
         mac_impl::post(self.view, text);
         #[cfg(not(any(windows, target_os = "macos")))]
-        let _ = text;
+        gtk_impl::notify(self.widget, false, text);
     }
 
     // An alert must not be dropped behind whatever else is being spoken.
@@ -60,7 +67,7 @@ impl Announcer {
         #[cfg(target_os = "macos")]
         mac_impl::post(self.view, text);
         #[cfg(not(any(windows, target_os = "macos")))]
-        let _ = text;
+        gtk_impl::notify(self.widget, true, text);
     }
 }
 
@@ -151,6 +158,46 @@ mod mac_impl {
                 mac::NSAccessibilityAnnouncementRequestedNotification,
                 info,
             );
+        }
+    }
+}
+
+#[cfg(not(any(windows, target_os = "macos")))]
+mod gtk_impl {
+    use std::ffi::{CString, c_char, c_int, c_void};
+
+    // AtkLive. Orca puts an assertive announcement ahead of other events
+    // and a polite one after focus changes.
+    const ATK_LIVE_POLITE: c_int = 1;
+    const ATK_LIVE_ASSERTIVE: c_int = 2;
+
+    // wxGTK links both libraries already.
+    #[link(name = "gtk-3")]
+    unsafe extern "C" {
+        fn gtk_widget_get_accessible(widget: *mut c_void) -> *mut c_void;
+    }
+    #[link(name = "gobject-2.0")]
+    unsafe extern "C" {
+        fn g_signal_emit_by_name(instance: *mut c_void, signal: *const c_char, ...);
+    }
+
+    pub fn notify(widget: *mut c_void, important: bool, text: &str) {
+        let Ok(text) = CString::new(text) else {
+            return;
+        };
+        if widget.is_null() {
+            return;
+        }
+        let live = if important {
+            ATK_LIVE_ASSERTIVE
+        } else {
+            ATK_LIVE_POLITE
+        };
+        unsafe {
+            let accessible = gtk_widget_get_accessible(widget);
+            if !accessible.is_null() {
+                g_signal_emit_by_name(accessible, c"notification".as_ptr(), text.as_ptr(), live);
+            }
         }
     }
 }
