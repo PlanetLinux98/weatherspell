@@ -28,6 +28,10 @@ windows = { version = "0.62", features = [
     "Win32_UI_WindowsAndMessaging",
 ] }
 
+# The locale's units and time format; already in the tree through others.
+[target.'cfg(not(any(windows, target_os = "macos")))'.dependencies]
+libc = "0.2"
+
 [build-dependencies]
 embed-resource = "3"
 # USER_GUIDE.md into the page F1 opens; nothing of it ships.

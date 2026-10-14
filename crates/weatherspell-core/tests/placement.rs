@@ -3,7 +3,7 @@
 // the caption as Windows gives it, and Segoe UI 9 pt's average character
 // as WinForms measured it there (7 by 15 at 96 DPI; not in proportion).
 
-use weatherspell_core::placement::{CharSize, Rect, restore, save};
+use weatherspell_core::placement::{CharSize, Rect, restore, restore_size, save};
 use weatherspell_core::settings::SavedWindow;
 
 const MAIN: Rect = Rect {
@@ -126,4 +126,23 @@ fn save_records_the_bounds_state_and_character_size() {
             ..at(200, 100)
         }
     );
+}
+
+// Wayland: the size alone, wherever the place was.
+#[test]
+fn where_the_desktop_places_it_only_the_size_comes_back() {
+    assert_eq!(
+        restore_size(&at(2300, 50), CHAR_150, &[MAIN]),
+        Some(Rect::new(2300, 50, 1080, 840))
+    );
+    assert_eq!(
+        restore_size(&at(26, 23), CHAR_100, &[MAIN]),
+        Some(Rect::new(26, 23, 756, 504))
+    );
+    // No bigger than the largest screen, the desktop picking which.
+    assert_eq!(
+        restore_size(&saved(0, 0, 3000, 1300), CHAR_150, &[RIGHT, MAIN]),
+        Some(Rect::new(0, 0, 1920, 1008))
+    );
+    assert_eq!(restore_size(&saved(0, 0, 0, 840), CHAR_150, &[MAIN]), None);
 }

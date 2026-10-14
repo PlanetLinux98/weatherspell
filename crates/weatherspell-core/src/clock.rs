@@ -57,6 +57,42 @@ impl TimeFormat {
         TimeFormat::new(&out, &plain(am), &plain(pm))
     }
 
+    // From glibc's LC_TIME, as Linux gives it: t_fmt is the locale's own
+    // time ("%r", "%T", "%H:%M:%S"), t_fmt_ampm its 12-hour form. Both
+    // carry seconds, which a short time drops, and a 12-hour hour of "%I"
+    // loses its zero, as Windows and the Mac write it ("2:05 pm", not
+    // "02:05 pm"). twelve_hour is the desktop's own 12 or 24-hour choice
+    // (GNOME's Time Format) where it has one; elsewhere the locale's
+    // stands, since that is where KDE and the rest keep it.
+    pub fn from_posix(
+        t_fmt: &str,
+        t_fmt_ampm: &str,
+        am: &str,
+        pm: &str,
+        twelve_hour: Option<bool>,
+    ) -> TimeFormat {
+        const TWELVE: &str = "%I:%M:%S %p";
+        let ampm = if posix_hours(t_fmt_ampm) == Some(true) {
+            t_fmt_ampm
+        } else {
+            TWELVE
+        };
+        let own = posix_expand(t_fmt, ampm);
+        let own_twelve = posix_hours(&own);
+        let source = match twelve_hour {
+            Some(true) if own_twelve != Some(true) => posix_expand(ampm, ampm),
+            Some(false) if own_twelve != Some(false) => "%H:%M:%S".to_string(),
+            _ if own_twelve.is_none() => posix_expand(ampm, ampm),
+            _ => own,
+        };
+        let (am, pm) = if am.is_empty() && pm.is_empty() {
+            ("AM", "PM")
+        } else {
+            (am, pm)
+        };
+        TimeFormat::new(&posix_pattern(&source), am, pm)
+    }
+
     // "2:45 pm": the designator lowercased so it reads as a word, not
     // initials.
     pub fn format(&self, t: DateTime) -> String {
@@ -122,6 +158,86 @@ impl TimeFormat {
         }
         out
     }
+}
+
+// A strftime pattern as literal characters and conversions, flags and the
+// E and O modifiers dropped ("%-I" and "%OH" are "%I" and "%H").
+#[derive(Clone, Copy, PartialEq)]
+enum Posix {
+    Literal(char),
+    Conversion(char),
+}
+
+fn posix_parts(format: &str) -> Vec<Posix> {
+    let mut parts = Vec::new();
+    let mut chars = format.chars();
+    while let Some(c) = chars.next() {
+        if c != '%' {
+            parts.push(Posix::Literal(c));
+            continue;
+        }
+        match chars.find(|c| !matches!(c, '-' | '_' | '0' | '^' | '#' | 'E' | 'O')) {
+            Some('%') => parts.push(Posix::Literal('%')),
+            Some(conversion) => parts.push(Posix::Conversion(conversion)),
+            None => {}
+        }
+    }
+    parts
+}
+
+// "%r", "%T" and "%R" written out, so the hours and seconds can be seen.
+fn posix_expand(format: &str, ampm: &str) -> String {
+    let mut out = String::new();
+    for part in posix_parts(format) {
+        match part {
+            Posix::Conversion('r') => out.push_str(ampm),
+            Posix::Conversion('T') => out.push_str("%H:%M:%S"),
+            Posix::Conversion('R') => out.push_str("%H:%M"),
+            Posix::Conversion(c) => out.extend(['%', c]),
+            Posix::Literal('%') => out.push_str("%%"),
+            Posix::Literal(c) => out.push(c),
+        }
+    }
+    out
+}
+
+// Some(true) for a 12-hour pattern, Some(false) for 24, None for neither.
+fn posix_hours(format: &str) -> Option<bool> {
+    posix_parts(format).iter().find_map(|part| match part {
+        Posix::Conversion('I' | 'l') => Some(true),
+        Posix::Conversion('H' | 'k') => Some(false),
+        _ => None,
+    })
+}
+
+// To the letters TimeFormat uses, seconds and zones left out, other
+// letters escaped so they stay as written ("%H h %M" is "14 h 05").
+fn posix_pattern(format: &str) -> String {
+    let mut parts = posix_parts(format);
+    // The seconds go with the ":" or "." before them.
+    while let Some(i) = parts.iter().position(|p| *p == Posix::Conversion('S')) {
+        let start = match i.checked_sub(1).map(|j| parts[j]) {
+            Some(Posix::Literal(':' | '.')) => i - 1,
+            _ => i,
+        };
+        parts.drain(start..=i);
+    }
+    let mut out = String::new();
+    for part in parts {
+        match part {
+            Posix::Conversion('H') => out.push_str("HH"),
+            Posix::Conversion('k') => out.push('H'),
+            Posix::Conversion('I' | 'l') => out.push('h'),
+            Posix::Conversion('M') => out.push_str("mm"),
+            Posix::Conversion('p' | 'P') => out.push_str("tt"),
+            Posix::Conversion(_) => {}
+            Posix::Literal(c) if c.is_alphabetic() || matches!(c, '\'' | '"' | '\\') => {
+                out.extend(['\\', c])
+            }
+            Posix::Literal(c) => out.push(c),
+        }
+    }
+    out.trim().to_string()
 }
 
 fn pad(value: i32, run: usize) -> String {
@@ -361,6 +477,41 @@ mod tests {
         assert_eq!(
             TimeFormat::from_unicode("h:mm aaa", "a.m.", "p.m.").format(t),
             "2:05 p.m."
+        );
+    }
+
+    // glibc's own values (locale -k LC_TIME), Ubuntu 26.04.
+    #[test]
+    fn linux_locales_become_windows_letters() {
+        let t = date(2026, 9, 11).at(14, 5, 0, 0);
+        let morning = date(2026, 9, 11).at(9, 5, 0, 0);
+        let us = |clock| TimeFormat::from_posix("%r", "%I:%M:%S %p", "AM", "PM", clock);
+        let gb = |clock| TimeFormat::from_posix("%T", "%l:%M:%S %P %Z", "am", "pm", clock);
+        assert_eq!(us(None).pattern, "h:mm tt");
+        assert_eq!(us(None).format(t), "2:05 pm");
+        assert_eq!(us(None).format(morning), "9:05 am");
+        assert_eq!(us(Some(true)), us(None));
+        assert_eq!(us(Some(false)).format(t), "14:05");
+        assert_eq!(us(Some(false)).format(morning), "09:05");
+        assert_eq!(gb(None).pattern, "HH:mm");
+        assert_eq!(gb(Some(false)), gb(None));
+        assert_eq!(gb(Some(true)).pattern, "h:mm tt");
+        assert_eq!(gb(Some(true)).format(t), "2:05 pm");
+        // A 24-hour locale with no designators, asked for 12 hours.
+        let de = TimeFormat::from_posix("%H:%M:%S", "", "", "", Some(true));
+        assert_eq!(de.format(t), "2:05 pm");
+        assert_eq!(
+            TimeFormat::from_posix("%k h %M", "", "", "", None).format(morning),
+            "9 h 05"
+        );
+        assert_eq!(
+            TimeFormat::from_posix("%OH.%OM.%OS", "", "", "", None).format(t),
+            "14.05"
+        );
+        // A locale with no time of its own (the C locale has "%H:%M:%S").
+        assert_eq!(
+            TimeFormat::from_posix("", "", "", "", None).format(t),
+            "2:05 pm"
         );
     }
 }

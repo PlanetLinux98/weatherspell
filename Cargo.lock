@@ -1803,6 +1803,7 @@ version = "0.0.0"
 dependencies = [
  "embed-resource",
  "jiff",
+ "libc",
  "pulldown-cmark",
  "weatherspell-core",
  "windows",

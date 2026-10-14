@@ -121,6 +121,28 @@ pub fn restore(
     Some(Rect::new(left, top, fitted_width, fitted_height))
 }
 
+// Where the desktop places the window and tells the app nothing true of
+// where it is (Wayland), only the size comes back: following the
+// character size as restore's does, and no bigger than the largest working
+// area, since the desktop picks the screen. The saved place is kept as it
+// was, for a session where it counts again (X11).
+pub fn restore_size(
+    saved: &SavedWindow,
+    char_size: CharSize,
+    working_areas: &[Rect],
+) -> Option<Rect> {
+    if saved.width <= 0 || saved.height <= 0 {
+        return None;
+    }
+    let mut width = follow(saved.width, saved.char_width, char_size.width);
+    let mut height = follow(saved.height, saved.char_height, char_size.height);
+    if let Some(largest) = working_areas.iter().max_by_key(|a| a.width * a.height) {
+        width = width.min(largest.width);
+        height = height.min(largest.height);
+    }
+    Some(Rect::new(saved.left, saved.top, width, height))
+}
+
 // A file from before the character size was kept, or edited by hand, has
 // none: the size is taken as it is.
 fn follow(length: i32, saved_char: f64, current_char: f64) -> i32 {

@@ -1,6 +1,5 @@
 // What the app asks the system: where its files live, the region's unit
-// system and time format, and this computer's time zone. Windows and the
-// Mac; Linux gets its own in its step.
+// system and time format, and this computer's time zone.
 
 use std::path::PathBuf;
 
@@ -12,7 +11,13 @@ use weatherspell_core::units::UnitSystem;
 // reference tests check both ways), so moving between them keeps saved
 // locations, nicknames and seen alerts. The previews before the switch had
 // a folder of their own, "Weatherspell Preview", which is no longer read.
+#[cfg(any(windows, target_os = "macos"))]
 const FOLDER: &str = "Weatherspell";
+// Lower case on Linux, as the program's own name and most of the desktop's
+// folders are (Elliott, 2026-10-12). No Linux copy has shipped, so nothing
+// reads the capitalized one of the port's own testing.
+#[cfg(not(any(windows, target_os = "macos")))]
+const FOLDER: &str = "weatherspell";
 
 pub fn data_folder() -> PathBuf {
     // Developer-only, like WEATHERSPELL_OFFLINE: another folder, so a first
@@ -24,16 +29,121 @@ pub fn data_folder() -> PathBuf {
 }
 
 // The forecasts kept for when a fetch fails. Windows keeps them in the
-// app's folder, as 0.1 does; the Mac in its Caches folder, which is for
-// whatever can be fetched again.
+// app's folder, as 0.1 does; the Mac in its Caches folder and Linux in
+// XDG's cache folder, which are for whatever can be fetched again.
 pub fn cache_folder() -> PathBuf {
+    #[cfg(not(windows))]
+    let own = std::env::var_os("WEATHERSPELL_DATA").is_some_and(|v| !v.is_empty());
     #[cfg(target_os = "macos")]
-    if std::env::var_os("WEATHERSPELL_DATA").is_none_or(|v| v.is_empty())
-        && let Some(home) = std::env::var_os("HOME")
-    {
+    if !own && let Some(home) = std::env::var_os("HOME") {
         return PathBuf::from(home).join("Library/Caches").join(FOLDER);
     }
+    #[cfg(not(any(windows, target_os = "macos")))]
+    if !own {
+        return xdg("XDG_CACHE_HOME", ".cache").join(FOLDER);
+    }
     data_folder().join(weatherspell_core::cache::FOLDER_NAME)
+}
+
+// Whether the app can place its windows and learn where they are: not on
+// Wayland, which leaves the place to the desktop (an app sets only its
+// size and whether it is maximized). Asked of GDK rather than the session,
+// since GDK_BACKEND=x11 runs the app through XWayland, where X11's rules
+// hold. Asked once GTK is up, as the main window is built.
+pub fn places_windows() -> bool {
+    #[cfg(not(any(windows, target_os = "macos")))]
+    {
+        use std::ffi::{CStr, c_char, c_void};
+        #[link(name = "gdk-3")]
+        unsafe extern "C" {
+            fn gdk_display_get_default() -> *mut c_void;
+        }
+        #[link(name = "gobject-2.0")]
+        unsafe extern "C" {
+            fn g_type_name_from_instance(instance: *mut c_void) -> *const c_char;
+        }
+        unsafe {
+            let display = gdk_display_get_default();
+            display.is_null()
+                || CStr::from_ptr(g_type_name_from_instance(display)).to_bytes()
+                    != b"GdkWaylandDisplay"
+        }
+    }
+    #[cfg(any(windows, target_os = "macos"))]
+    true
+}
+
+// GNOME's Large Text (GTK's text scaling) or interface font changed while
+// the app is open: GTK draws every control's text at the new size at once,
+// but wx kept each control's size, so labels were cut off (2026-10-13).
+// `changed` runs once GTK has taken the change in. Windows and the Mac
+// need nothing here: the Mac's own text size is the app's View menu.
+pub fn on_text_scale_change(changed: fn()) {
+    #[cfg(not(any(windows, target_os = "macos")))]
+    {
+        use std::ffi::{c_char, c_ulong, c_void};
+        #[link(name = "gtk-3")]
+        unsafe extern "C" {
+            fn gtk_settings_get_default() -> *mut c_void;
+        }
+        #[link(name = "gobject-2.0")]
+        unsafe extern "C" {
+            fn g_signal_connect_data(
+                instance: *mut c_void,
+                signal: *const c_char,
+                handler: *const c_void,
+                data: *mut c_void,
+                destroy: *const c_void,
+                flags: u32,
+            ) -> c_ulong;
+        }
+        unsafe extern "C" fn notify(
+            _settings: *mut c_void,
+            _property: *mut c_void,
+            data: *mut c_void,
+        ) {
+            let changed: fn() = unsafe { std::mem::transmute(data) };
+            // After GTK's own handlers, so the new size is what wx measures.
+            crate::on_ui_thread(changed);
+        }
+        unsafe {
+            let settings = gtk_settings_get_default();
+            if settings.is_null() {
+                return;
+            }
+            for signal in [c"notify::gtk-xft-dpi", c"notify::gtk-font-name"] {
+                g_signal_connect_data(
+                    settings,
+                    signal.as_ptr(),
+                    notify as *const c_void,
+                    changed as *mut c_void,
+                    std::ptr::null(),
+                    0,
+                );
+            }
+        }
+    }
+    #[cfg(any(windows, target_os = "macos"))]
+    let _ = changed;
+}
+
+// Has a control measure itself again, its text drawn at a new size. wx
+// works out a control's best size once and keeps it, forgetting it only
+// when wx itself changes the font; wxDragon does not bind wx's
+// InvalidateBestSize, so it is called by its C++ name (a plain member
+// function: the window first, as GCC's ABI passes it). wxDragon's
+// pointer is the wxWindow, whose wxWindowBase is at the same address.
+pub fn forget_best_size(window: &dyn wxdragon::prelude::WxWidget) {
+    #[cfg(not(any(windows, target_os = "macos")))]
+    {
+        unsafe extern "C" {
+            #[link_name = "_ZN12wxWindowBase18InvalidateBestSizeEv"]
+            fn invalidate_best_size(window: *mut std::ffi::c_void);
+        }
+        unsafe { invalidate_best_size(window.handle_ptr().cast()) }
+    }
+    #[cfg(any(windows, target_os = "macos"))]
+    let _ = window;
 }
 
 // One copy per Windows session: two would each announce every alert and
@@ -412,11 +522,145 @@ pub fn region() -> Region {
     }
     #[cfg(not(any(windows, target_os = "macos")))]
     {
+        let (units, time_format) = posix_locale();
         Region {
-            units: UnitSystem::Metric,
-            time_format: TimeFormat::new("h:mm tt", "AM", "PM"),
+            units,
+            time_format,
             zone,
         }
+    }
+}
+
+// The session's locale (LC_ALL, then LC_MEASUREMENT or LC_TIME, then
+// LANG), which GNOME's Formats and KDE's Region and Language settings set.
+// Read through a locale of its own: setlocale would change the whole
+// app's.
+#[cfg(not(any(windows, target_os = "macos")))]
+fn posix_locale() -> (UnitSystem, TimeFormat) {
+    use std::ffi::CStr;
+    // glibc's _NL_MEASUREMENT_MEASUREMENT, which the libc crate does not
+    // name: one byte, 1 for metric, 2 for the US system.
+    const MEASUREMENT: libc::nl_item = libc::LC_MEASUREMENT << 16;
+    let mask = libc::LC_TIME_MASK | libc::LC_MEASUREMENT_MASK;
+    unsafe {
+        let mut locale = libc::newlocale(mask, c"".as_ptr(), std::ptr::null_mut());
+        // A locale that is named but not installed: C's, as setlocale
+        // would fall back to.
+        if locale.is_null() {
+            locale = libc::newlocale(mask, c"C".as_ptr(), std::ptr::null_mut());
+        }
+        let item = |item| {
+            let text = libc::nl_langinfo_l(item, locale);
+            if text.is_null() {
+                String::new()
+            } else {
+                CStr::from_ptr(text).to_string_lossy().into_owned()
+            }
+        };
+        let units = if item(MEASUREMENT).as_bytes().first() == Some(&2) {
+            UnitSystem::Imperial
+        } else {
+            UnitSystem::Metric
+        };
+        let time_format = TimeFormat::from_posix(
+            &item(libc::T_FMT),
+            &item(libc::T_FMT_AMPM),
+            &item(libc::AM_STR),
+            &item(libc::PM_STR),
+            desktop_twelve_hour(),
+        );
+        if !locale.is_null() {
+            libc::freelocale(locale);
+        }
+        (units, time_format)
+    }
+}
+
+// The desktop's own 12 or 24-hour switch, where it keeps one apart from the
+// locale: GNOME's Time Format (Settings, Date & Time), which its top bar
+// and its own apps follow, and Cinnamon's. Elsewhere None, and the locale
+// decides: KDE, Xfce and the rest keep the choice there. Each read only if
+// its schema is installed (GSettings ends the app over a missing one).
+#[cfg(not(any(windows, target_os = "macos")))]
+fn desktop_twelve_hour() -> Option<bool> {
+    use std::ffi::{CStr, c_char, c_void};
+    #[link(name = "gio-2.0")]
+    unsafe extern "C" {
+        fn g_settings_schema_source_get_default() -> *mut c_void;
+        fn g_settings_schema_source_lookup(
+            source: *mut c_void,
+            id: *const c_char,
+            recursive: i32,
+        ) -> *mut c_void;
+        fn g_settings_schema_has_key(schema: *mut c_void, key: *const c_char) -> i32;
+        fn g_settings_schema_unref(schema: *mut c_void);
+        fn g_settings_new_full(
+            schema: *mut c_void,
+            backend: *mut c_void,
+            path: *const c_char,
+        ) -> *mut c_void;
+        fn g_settings_get_string(settings: *mut c_void, key: *const c_char) -> *mut c_char;
+        fn g_settings_get_boolean(settings: *mut c_void, key: *const c_char) -> i32;
+    }
+    #[link(name = "glib-2.0")]
+    unsafe extern "C" {
+        fn g_free(memory: *mut c_void);
+    }
+    #[link(name = "gobject-2.0")]
+    unsafe extern "C" {
+        fn g_object_unref(object: *mut c_void);
+    }
+    enum Key {
+        Text(&'static CStr, &'static str),
+        Switch(&'static CStr, bool),
+    }
+    let desktops = std::env::var("XDG_CURRENT_DESKTOP").unwrap_or_default();
+    let desktops: Vec<&str> = desktops.split(':').collect();
+    let (schema_id, key) = if desktops.contains(&"GNOME") {
+        // "12h" or "24h".
+        (
+            c"org.gnome.desktop.interface",
+            Key::Text(c"clock-format", "12h"),
+        )
+    } else if desktops.contains(&"X-Cinnamon") {
+        // On for 24 hours.
+        (
+            c"org.cinnamon.desktop.interface",
+            Key::Switch(c"clock-use-24h", false),
+        )
+    } else {
+        return None;
+    };
+    let name = match key {
+        Key::Text(name, _) | Key::Switch(name, _) => name,
+    };
+    unsafe {
+        let source = g_settings_schema_source_get_default();
+        if source.is_null() {
+            return None;
+        }
+        let schema = g_settings_schema_source_lookup(source, schema_id.as_ptr(), 1);
+        if schema.is_null() {
+            return None;
+        }
+        let mut twelve = None;
+        if g_settings_schema_has_key(schema, name.as_ptr()) != 0 {
+            let settings = g_settings_new_full(schema, std::ptr::null_mut(), std::ptr::null());
+            twelve = Some(match key {
+                Key::Text(_, twelve) => {
+                    let text = g_settings_get_string(settings, name.as_ptr());
+                    let value = CStr::from_ptr(text).to_bytes() == twelve.as_bytes();
+                    g_free(text.cast());
+                    value
+                }
+                Key::Switch(_, twelve) => {
+                    (g_settings_get_boolean(settings, name.as_ptr()) != 0) == twelve
+                }
+            });
+            g_object_unref(settings);
+        }
+        g_settings_schema_unref(schema);
+        twelve
     }
 }
 
@@ -460,9 +704,19 @@ fn app_data() -> PathBuf {
         .unwrap_or_else(std::env::temp_dir)
 }
 
+// XDG's config folder, where Linux apps keep their settings.
 #[cfg(not(any(windows, target_os = "macos")))]
 fn app_data() -> PathBuf {
-    std::env::var_os("HOME")
-        .map(|home| PathBuf::from(home).join(".config"))
+    xdg("XDG_CONFIG_HOME", ".config")
+}
+
+// An XDG base folder: the variable when it names an absolute path (the
+// spec says to ignore a relative one), else its default under HOME.
+#[cfg(not(any(windows, target_os = "macos")))]
+fn xdg(variable: &str, default: &str) -> PathBuf {
+    std::env::var_os(variable)
+        .map(PathBuf::from)
+        .filter(|path| path.is_absolute())
+        .or_else(|| std::env::var_os("HOME").map(|home| PathBuf::from(home).join(default)))
         .unwrap_or_else(std::env::temp_dir)
 }

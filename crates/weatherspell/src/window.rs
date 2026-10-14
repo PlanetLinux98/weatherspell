@@ -224,17 +224,24 @@ pub fn build() -> Rc<MainWindow> {
 
     frame.set_min_size(minimum_size(&frame));
     // Where it was when it last closed, if a screen still shows enough of
-    // it; otherwise centred, as on a first run.
+    // it; otherwise centred, as on a first run. On Wayland its size alone,
+    // the desktop placing it.
+    let places = system::places_windows();
     let restored = settings.window.and_then(|saved| {
-        placement::restore(
-            &saved,
-            char_size(&frame),
-            &working_areas(),
-            caption_height(&frame),
-        )
+        if places {
+            placement::restore(
+                &saved,
+                char_size(&frame),
+                &working_areas(),
+                caption_height(&frame),
+            )
+        } else {
+            placement::restore_size(&saved, char_size(&frame), &working_areas())
+        }
     });
     match restored {
-        Some(r) => frame.set_size_with_pos(r.left, r.top, r.width, r.height),
+        Some(r) if places => frame.set_size_with_pos(r.left, r.top, r.width, r.height),
+        Some(r) => frame.set_size(Size::new(r.width, r.height)),
         None => place_by_default(&frame),
     }
     // On the Mac only the bounds count (track_bounds); earlier Mac builds
@@ -351,6 +358,7 @@ pub fn build() -> Rc<MainWindow> {
         w.track_bounds();
         event.skip(true);
     });
+    system::on_text_scale_change(|| crate::on_ui(|w| w.text_scale_changed()));
     let w = window.clone();
     window.frame.on_close(move |event| {
         w.remember_window();
@@ -552,15 +560,21 @@ fn working_areas() -> Vec<Rect> {
 
 // wx on the Mac has no caption metric (-1), which left no screen showing
 // the saved title bar, so the window always opened centred (Elliott,
-// 2026-10-07). There it is what the frame has above its client area: the
-// menu bar is the screen's and there is no status bar.
+// 2026-10-07); nor does GTK's, which did the same under X11 (2026-10-12).
+// There it is what the frame has above its client area: on the Mac the
+// menu bar is the screen's and there is no status bar; on GTK the menu
+// bar is counted too, which errs towards more of the window showing.
 fn caption_height(window: &Frame) -> i32 {
-    if cfg!(target_os = "macos") {
-        let caption = window.get_size().height - window.get_client_size().height;
-        if caption > 0 { caption } else { 28 }
+    let metric = if cfg!(target_os = "macos") {
+        -1
     } else {
         SystemSettings::get_metric(SystemMetric::CaptionY, Some(window))
+    };
+    if metric > 0 {
+        return metric;
     }
+    let caption = window.get_size().height - window.get_client_size().height;
+    if caption > 0 { caption } else { 28 }
 }
 
 fn bounds(window: &Frame) -> Rect {
@@ -631,7 +645,15 @@ impl MainWindow {
             / f64::from(self.text_size.get().points(self.actual_points));
         chars.width *= share;
         chars.height *= share;
-        let window = placement::save(self.normal.get(), self.maximized.get(), chars);
+        let mut normal = self.normal.get();
+        // Where Wayland's desktop placed it, GTK does not know: the place
+        // last saved under X11 is kept for the next session there.
+        if !system::places_windows() {
+            let saved = self.settings.borrow().window;
+            normal.left = saved.map_or(0, |w| w.left);
+            normal.top = saved.map_or(0, |w| w.top);
+        }
+        let window = placement::save(normal, self.maximized.get(), chars);
         if self.settings.borrow().window == Some(window) {
             return;
         }
@@ -647,8 +669,48 @@ impl MainWindow {
             self.frame.maximize(false);
         }
         place_by_default(&self.frame);
-        self.announcer
-            .say("The window is back to its default size and position.");
+        // On Wayland the desktop keeps the window where it is.
+        self.announcer.say(if system::places_windows() {
+            "The window is back to its default size and position."
+        } else {
+            "The window is back to its default size."
+        });
+    }
+
+    // The window's minimum follows its characters, and the window grows if
+    // that outgrows it, staying on its screen; then the controls are laid
+    // out at their new sizes.
+    fn refit(&self) {
+        let minimum = minimum_size(&self.frame);
+        self.frame.set_min_size(minimum);
+        let now = self.frame.get_size();
+        if !self.frame.is_maximized() && (now.width < minimum.width || now.height < minimum.height)
+        {
+            self.frame.set_size(Size::new(
+                now.width.max(minimum.width),
+                now.height.max(minimum.height),
+            ));
+            let b = bounds(&self.frame);
+            let fits = working_areas().iter().any(|a| {
+                b.left >= a.left
+                    && b.top >= a.top
+                    && b.left + b.width <= a.left + a.width
+                    && b.top + b.height <= a.top + a.height
+            });
+            if !fits {
+                self.frame.centre();
+            }
+        }
+        self.panel.layout();
+    }
+
+    // GTK's text scaling changed under the app (GNOME's Large Text):
+    // nothing is said, as nothing is when other apps follow it.
+    fn text_scale_changed(&self) {
+        for control in &self.resizable {
+            system::forget_best_size(control.as_ref());
+        }
+        self.refit();
     }
 
     // Every control and the windows opened after take the new size; the
@@ -667,28 +729,7 @@ impl MainWindow {
                     control.set_font(&font);
                 }
             }
-            let minimum = minimum_size(&self.frame);
-            self.frame.set_min_size(minimum);
-            let now = self.frame.get_size();
-            if !self.frame.is_maximized()
-                && (now.width < minimum.width || now.height < minimum.height)
-            {
-                self.frame.set_size(Size::new(
-                    now.width.max(minimum.width),
-                    now.height.max(minimum.height),
-                ));
-                let b = bounds(&self.frame);
-                let fits = working_areas().iter().any(|a| {
-                    b.left >= a.left
-                        && b.top >= a.top
-                        && b.left + b.width <= a.left + a.width
-                        && b.top + b.height <= a.top + a.height
-                });
-                if !fits {
-                    self.frame.centre();
-                }
-            }
-            self.panel.layout();
+            self.refit();
         }
         let end = if !unchanged {
             ""
