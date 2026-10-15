@@ -5,10 +5,9 @@ they are not re-proposed without new information.
 
 ## Rust and wxWidgets
 
-After 0.1.0, Weatherspell is being rewritten in Rust with wxWidgets
-(through the wxDragon bindings), Windows first, so that the same code can
-later run on macOS and Linux. The released C# app gets fixes only until
-the new one replaces it (#24).
+From 0.2.0, Weatherspell is written in Rust with wxWidgets (through the
+wxDragon bindings), and the same code runs on Windows, macOS and Linux.
+The C# app that was 0.1 gets fixes only (#24).
 
 wxWidgets drives each system's own controls: Win32 on Windows, AppKit on
 macOS, GTK on Linux. Those are the controls screen readers know best, and
@@ -59,7 +58,7 @@ from the main window without the window presenting itself to UI
 Automation: when it did, NVDA switched to reading it through UI
 Automation instead of its usual way, which read worse in testing.
 
-The Rust app keeps its settings and cache in 0.1's folder,
+On Windows, the Rust app keeps its settings and cache in 0.1's folder,
 `%APPDATA%\Weatherspell`, in the same files: each app reads what the
 other writes, which the port's tests check in both directions, so moving
 between them keeps saved locations, nicknames and seen alerts. Since they
@@ -72,8 +71,9 @@ spoken, are in one Edit Location dialog that names the place. In 0.1 the
 alert switch sat under the Manage Locations list and acted on whichever
 location was selected, which nothing said.
 
-The Rust app follows the light or dark mode chosen in Windows, where 0.1
-is always light. It uses wxWidgets' own dark mode, which also switches
+The Rust app follows the system's light or dark mode, where 0.1 is always
+light (see "Each system's own conventions" for the Mac and Linux). On
+Windows it uses wxWidgets' own dark mode, which also switches
 the open windows when the mode changes. It stays light while a high
 contrast theme is on, since wxWidgets doesn't check for one and would
 draw its own dark colours over the theme's. In dark mode wxWidgets draws
@@ -86,21 +86,29 @@ key they do not know. Narrator reads the new line itself, so with
 Narrator as the only screen reader running the app leaves the heading to
 it; 0.1 had Narrator say it twice.
 
-## One exe
+## One file on each system
 
-The whole program is a single `Weatherspell.exe` that runs the moment it is
-downloaded, with nothing installed first and nothing beside it. The C# app
-gets there with .NET Framework 4.8, which Windows already has (see "The C#
-app"); the Rust app by linking everything into the exe.
+On Windows the whole program is a single `Weatherspell.exe` that runs the
+moment it is downloaded, with nothing installed first and nothing beside
+it. The C# app gets there with .NET Framework 4.8, which Windows already
+has (see "The C# app"); the Rust app by linking everything into the exe.
+The Mac and Linux keep to the same idea in their own forms: one app, and
+one AppImage.
 
-## Settings live in `%APPDATA%\Weatherspell`
+## Settings live in the user's own folders
 
-Not beside the exe. Storing next to the exe breaks under `Program Files` and,
-under winget, whose upgrade and uninstall delete the whole package folder. A per-user
- AppData folder survives both and works when the exe sits somewhere read-only.
-The only potential cost is that settings do not travel with the exe on a USB
-stick; a portable-marker mode can be added later if
-anyone asks.
+Not beside the program. On Windows, storing next to the exe breaks under
+`Program Files` and under winget, whose upgrade and uninstall delete the
+whole package folder; a per-user AppData folder, `%APPDATA%\Weatherspell`,
+survives both and works when the exe sits somewhere read-only. The Mac
+and Linux use their own places for the same two things: settings in
+`~/Library/Application Support/Weatherspell` and
+`$XDG_CONFIG_HOME/weatherspell` (usually `~/.config/weatherspell`), and
+the saved forecasts, which can always be fetched again, in
+`~/Library/Caches/Weatherspell` and `$XDG_CACHE_HOME/weatherspell`.
+Linux's folder is lower case, as Linux folders usually are. The only
+potential cost is that settings do not travel with the program on a USB
+stick; a portable-marker mode can be added later if anyone asks.
 
 ## Windows are built in code
 
@@ -110,12 +118,95 @@ label association is then visible in one readable file and reviewable in a
 diff, which matters more here than drag-and-drop layout. The windows are
 simple enough that this costs little.
 
+## Each system's own conventions
+
+The app is the same on every system, but where a system has its own way
+of doing something, that way wins, settled one by one.
+
+Keys. On the Mac, Command takes Ctrl's place, and the Mac's own keys
+replace Windows': Cmd+R refreshes, Cmd+? opens the guide, and Settings
+is in the app menu with Cmd+comma, beside About and Quit, so there is no
+Settings menu. The sections are Cmd+] and Cmd+[, since Mac laptops have
+no Page Down, and Command or Option with the arrows already move through
+text. A button's letter goes with Command on the Mac (Cmd+U for Move
+Up) where Windows and Linux use Alt; in a list, the key the Mac labels
+Delete removes, as in its own lists. Linux keeps Windows' keys; GTK's text view uses
+Ctrl+PageDown and Ctrl+PageUp itself, so the app takes them first.
+GTK's stock OK and Cancel buttons carry Alt keys of their own, which took
+Settings' Alt+C; each becomes a plain button with the same text, so the
+Alt keys are the app's own on every system.
+
+Units and time. Each system's region decides metric or imperial (see
+"One unit system per location"), and 12 or 24 hours: Windows' region
+settings; the Mac's Language & Region; on Linux, the locale's
+measurement and time categories, with GNOME's and Cinnamon's own 12 or
+24 hour switch taking precedence where one is set, since that is what
+people change.
+
+Text size. Windows has a system Text size setting, which wxWidgets
+follows. The Mac has none that reaches an app like this, so the View
+menu has Bigger Text, Smaller Text and Actual Text Size, as Mac apps do;
+the size is not remembered between runs. On Linux the app follows the
+desktop's text scaling, and the main window refits when it changes while
+open; a dialog open at the time keeps its layout until reopened.
+
+Light and dark. The Mac follows its appearance setting, and GNOME's
+style and accent colour on Linux; other Linux desktops are untested.
+
+The window's place. Remembered on every system, with limits the systems
+set. The Mac keeps no maximized state: its zoom is not a mode, and full
+screen is left to the Mac. On Linux under Wayland, a program cannot
+place its own window, so only the size and maximized state are kept and
+the desktop places it; under X11 the place is kept too. Reset Window
+Size and Position only resizes on Wayland.
+
+The status bar. wxWidgets draws its status bar itself on the Mac and
+GTK, so VoiceOver and Orca found nothing in it. Both show a plain text
+line in its place, cut short on screen with "..." but whole for screen
+readers; on Linux the line sits in a panel with the status bar role,
+which is how Orca's status bar command finds it.
+
 ## Accessible name is the visible text
 
 Screen readers announce a control by the text it shows. Text-less inputs take
 their visible label's text as `AccessibleName`, verbatim. Not a reworded or
 longer alternative unless necessary: users who see the screen and hear it should get
 the same words (WCAG 2.5.3). Extra detail usually belongs in a tooltip or help text.
+
+## Accessibility on each system
+
+Each system's screen readers read the same controls differently, so each
+system has its own small fixes, all in the `wx-accessibility` crate, and
+nothing is added where the native object already reads right.
+
+Windows. NVDA reads MSAA and Narrator reads UI Automation, and both get
+the controls' own objects. Announcements are UI Automation notifications
+from a provider hosted on the main window (see "Rust and wxWidgets"). A
+line of help beside an input, such as Edit Location's "Leave it empty to
+use the full name.", is added to that input's own object as its
+description (for NVDA) and help text (for Narrator), by Dynamic
+Annotation, which leaves the rest of the object alone. NVDA still reads
+the line with the dialog's text as the dialog opens, so it is heard
+twice there; accepted, since it reads once on the field after that.
+
+The Mac. VoiceOver doesn't name an input from the label before it, and
+read a bare "edit text" or "pop up button", so each input is given its
+label's text as its accessibility label, which keeps the name the
+visible text. Linking the label instead (its title element) was tried
+first; VoiceOver ignored it on a pop-up. A line of help becomes the
+input's accessibility help, which VoiceOver says as a hint. Announcements
+are AppKit's announcement requests, at high priority.
+
+Linux. wxGTK links each label to whatever comes next in tab order, and
+ATK makes that link the next control's name, so Orca read a line of help
+as part of the check box after it, and a group's title on the button
+after the group. Only a label's link to an input is kept (moved onto the
+list itself where a list sits in a scrolled window). wxGTK's dialogs are
+plain windows to ATK, so each gets the dialog role, and Orca then reads
+a dialog's own text as it opens, as with About on Windows. A line of help
+is the input's description and linked to it, so Orca reads it once.
+Announcements are ATK's notification signal on the main window, from ATK
+2.50; systems older than that are #27.
 
 ## Weather data: keyless sources only
 
@@ -303,7 +394,8 @@ cluttered.
 Not Ctrl+Up / Ctrl+Down: NVDA 2024.1 and later handle those keys itself in
 editable text (paragraph navigation, a user setting) and JAWS users expect
 the same pair to move by paragraph. Ctrl+PageUp/Down is unbound in edit
-controls and in both screen readers.
+controls and in both screen readers. On the Mac they are Cmd+] and Cmd+[
+(see "Each system's own conventions").
 
 ## What goes where in the text
 
@@ -345,9 +437,9 @@ Fahrenheit for a Canadian city would get Environment Canada's Celsius in
 one paragraph and this app's Fahrenheit in the next. A location's whole
 text is therefore in one system, decided by its weather service: Canada is
 metric, which is all Environment Canada writes; the United States follows
-the Windows region, with the NWS forecast requested in the same system
+the system's region, with the NWS forecast requested in the same system
 (`?units=si` gives "High near 16. Southwest wind 7 to 13 km/h."); everywhere
-else follows the Windows region, since only this app's own numbers are
+else follows the system's region, since only this app's own numbers are
 involved. The one reader left out is an imperial-minded one looking at
 Canada, which is what #14 (converting the official text) is parked for.
 
@@ -409,8 +501,9 @@ to mistype, and a spin box is a composite (in WinForms, an unnamed inner
 edit plus buttons) whose reading would need its own testing. A value outside
 the list, edited by hand into settings.json, is kept and listed in its
 place, so opening the dialog never silently changes it. The dialog has no
-accelerator: Windows has no conventional one for a settings dialog (Ctrl+comma
-is macOS's), and Alt+S, S is two keys.
+accelerator on Windows and Linux: Windows has no conventional one for a
+settings dialog, and Alt+S, S is two keys. On the Mac it is Settings in the
+app menu, with Cmd+comma, as Mac apps have.
 
 ## Windows scale by font
 
@@ -434,6 +527,9 @@ border is moved back onto it.
 The C# app is aware of the main display's scale only: moving its window to
 a display with a different scale gets it bitmap-scaled by Windows, correct
 but soft (see "The C# app"). The Rust app has no such limit.
+
+All of this is Windows; text size on the Mac and Linux is in "Each
+system's own conventions".
 
 ## The C# app (0.1)
 

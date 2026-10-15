@@ -422,6 +422,8 @@ mod keys {
     pub const PREVIOUS_SECTION: &str = "	Ctrl+[";
     pub const GUIDE: &str = "	Ctrl+?";
     pub const SETTINGS: &str = "	Ctrl+,";
+    // Written out in text, where wx does not turn Ctrl into Cmd.
+    pub const ADD_LOCATION_TEXT: &str = "Cmd+Shift+L";
 }
 // Settings has no shortcut: Windows has no convention for a settings
 // dialog, and Alt+S, S is two keys.
@@ -432,6 +434,7 @@ mod keys {
     pub const PREVIOUS_SECTION: &str = "	Ctrl+PageUp";
     pub const GUIDE: &str = "	F1";
     pub const SETTINGS: &str = "";
+    pub const ADD_LOCATION_TEXT: &str = "Ctrl+Shift+L";
 }
 
 // The menu commands MainWindow::command carries out; keep the two alike.
@@ -993,10 +996,10 @@ impl MainWindow {
         *self.refresh_problem.borrow_mut() = None;
         self.set_text(&[Section::new(
             "Welcome",
-            vec![
-                "No location yet. Press Ctrl+Shift+L, or use Locations > Add Location, to add one."
-                    .to_string(),
-            ],
+            vec![format!(
+                "No location yet. Press {}, or use Locations > Add Location, to add one.",
+                keys::ADD_LOCATION_TEXT
+            )],
         )]);
     }
 

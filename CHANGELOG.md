@@ -15,7 +15,14 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
   Spotlight to find it straight away (#25).
 - NVDA, Narrator and VoiceOver read Edit Location's "Leave it empty to
   use the full name." with the nickname field, as Orca does.
-- The third-party notices cover the runtime inside the Linux AppImage.
+- The third-party notices cover the runtime inside the Linux AppImage,
+  and releases include that runtime's source.
+- The user guide and README cover the Mac and Linux, with each system's
+  keys side by side.
+
+### Fixed
+- On the Mac, the forecast text shown before any location is added named
+  Ctrl+Shift+L rather than Cmd+Shift+L.
 
 ## [0.2.0-alpha.2] - 2026-10-15
 

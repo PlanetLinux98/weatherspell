@@ -3,7 +3,7 @@ name: Linux
 # The app on Linux (GTK 3), built in Ubuntu 22.04 so that it runs on any
 # system at least as new (glibc 2.35), checked to ask only for libraries
 # every GTK desktop has, and packed as an AppImage, uploaded as
-# weatherspell-linux. Called by rust.yml on every push that touches the
+# weatherspell-linux with the source of the AppImage's runtime. Called by rust.yml on every push that touches the
 # Rust build, and by release.yml for a release.
 on:
   workflow_call:
@@ -99,6 +99,27 @@ jobs:
             APPIMAGE_RUNTIME=target/appimage-tools/runtime \
             sh tools/linux/make-appimage.sh target/release/weatherspell \
             target/linux-download/Weatherspell-x86_64.AppImage
+
+      # The runtime links libfuse under the LGPL 2.1, whose source is
+      # offered from the same place as the AppImage: releases attach this
+      # archive. The runtime's source at the commit the notices name (git
+      # checks it is that commit) and libfuse's release, checked against
+      # the digest the runtime's own build uses.
+      - name: The runtime's source
+        run: |
+          commit=$(cut -d' ' -f2 tools/notices/appimage/release)
+          work=target/runtime-source
+          src=$work/appimage-runtime-source
+          rm -rf "$work"
+          mkdir -p "$src"
+          git init -q "$work/repo"
+          git -C "$work/repo" fetch -q --depth 1 https://github.com/AppImage/type2-runtime "$commit"
+          test "$(git -C "$work/repo" rev-parse FETCH_HEAD)" = "$commit"
+          git -C "$work/repo" archive --prefix="type2-runtime-$commit/" FETCH_HEAD | tar -x -C "$src"
+          curl -sSfLo "$src/fuse-3.15.0.tar.xz" https://github.com/libfuse/libfuse/releases/download/fuse-3.15.0/fuse-3.15.0.tar.xz
+          echo "70589cfd5e1cff7ccd6ac91c86c01be340b227285c5e200baa284e401eea2ca0  $src/fuse-3.15.0.tar.xz" | sha256sum -c
+          sed "s/COMMIT/$commit/g" tools/notices/appimage/source-readme.txt > "$src/README.txt"
+          tar -C "$work" -czf target/linux-download/appimage-runtime-source.tar.gz appimage-runtime-source
 
       - uses: actions/upload-artifact@v7
         with:

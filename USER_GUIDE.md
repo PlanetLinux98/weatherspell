@@ -5,7 +5,11 @@ lightweight weather app that makes it fast and simple to get the forecast
 and urgent alerts whenever you need them.
 
 This guide covers everything Weatherspell does, from adding your first
-location to reading alerts.
+location to reading alerts, on Windows, the Mac and Linux. Keys are given
+as Windows and Linux use them, with the Mac's after them in brackets where
+they differ, such as "press F5 (Cmd+R on the Mac)", or just "F5 (Cmd+R)"
+further on. Enter is the Return key on a Mac keyboard. [Keyboard
+shortcuts](#keyboard-shortcuts) lists every key for each system.
 
 - [Getting started](#getting-started)
 - [Reading the forecast](#reading-the-forecast)
@@ -20,12 +24,14 @@ location to reading alerts.
 
 ## Getting started
 
+### Installing on Windows
+
 Weatherspell runs on 64-bit Windows 10 (version 1709 and later) and
 Windows 11.
 
 Weatherspell is a single executable, `Weatherspell.exe`, with nothing to
-install: download
-it from the [Releases page](https://github.com/PlanetLinux98/weatherspell/releases),
+install: download it from the
+[Releases page](https://github.com/PlanetLinux98/weatherspell/releases),
 put it wherever you like, and open it.
 
 You can also install it with winget:
@@ -34,6 +40,58 @@ You can also install it with winget:
 winget install PlanetLinux98.Weatherspell
 ```
 
+### Installing on the Mac
+
+Weatherspell runs on macOS 15 (Sequoia) and later, on Macs with Apple
+silicon or Intel.
+
+To install it, open Terminal (in the Utilities folder inside Applications,
+or search for it in Spotlight), paste this line, and press Return:
+
+```
+curl -fsSL https://raw.githubusercontent.com/PlanetLinux98/weatherspell/main/tools/mac/install.sh | sh
+```
+
+It downloads the latest release, checks it against the release's
+checksums, and copies Weatherspell into your Applications folder (or the
+Applications folder in your home folder, if your account can't add apps
+for everyone). You can then open Weatherspell from Spotlight or the
+Applications folder.
+
+Weatherspell isn't notarized by Apple at this time. The command above
+installs it so it opens without a warning. If you download
+`Weatherspell.dmg` from the Releases page in a browser instead, macOS
+blocks Weatherspell the first time it opens, until you allow it in System
+Settings, under Privacy & Security.
+
+### Installing on Linux
+
+Weatherspell runs on 64-bit PCs with GTK 3, on Ubuntu 22.04, Debian 12,
+Fedora 36, Linux Mint 21, openSUSE Leap 16 or later, Arch, and other
+systems at least as new. It's been tested with GNOME and Orca at this
+time, and should work on other desktops.
+
+Weatherspell comes as one file, an AppImage:
+
+1. Download `Weatherspell-x86_64.AppImage` from the
+   [Releases page](https://github.com/PlanetLinux98/weatherspell/releases),
+   and put it wherever you like.
+2. Allow it to run as a program, in its properties in your file manager,
+   or with this command in a terminal:
+
+   ```
+   chmod +x Weatherspell-x86_64.AppImage
+   ```
+
+3. Open it.
+
+It uses your system's own GTK, so it looks and reads like your other apps.
+If it doesn't open, your system may need FUSE, usually the `fuse3`
+package. An AppImage manager, such as Gear Lever, can add Weatherspell to
+your desktop's list of apps.
+
+### Your first location
+
 The first time you open Weatherspell, the Add Location dialog opens so you
 can add your first location. Type a place name, postal code or coordinates,
 then press Enter or choose Search. Select your place in the Results list and
@@ -41,22 +99,28 @@ choose Add. [Adding a location](#adding-a-location) has more on searching.
 
 ### Updating Weatherspell
 
-To update, replace `Weatherspell.exe` with the newer one from the Releases
-page. If you installed with winget, run this instead:
+Your locations and settings stay as they were when you update.
 
-```
-winget upgrade PlanetLinux98.Weatherspell
-```
+- **Windows**: replace `Weatherspell.exe` with the newer one from the
+  Releases page. If you installed with winget, run this instead:
 
-Either way, your locations and settings stay as they were.
+  ```
+  winget upgrade PlanetLinux98.Weatherspell
+  ```
+
+- **The Mac**: quit Weatherspell, and run the install command from
+  [Installing on the Mac](#installing-on-the-mac) again. It replaces the
+  app with the latest release.
+- **Linux**: download the newer `Weatherspell-x86_64.AppImage`, allow it
+  to run as a program, and put it in place of the old one.
 
 ## Reading the forecast
 
 The main window has three parts: the Location box at the top, the Forecast
-box below it, and the status bar along the bottom. The Location box shows
-which of your locations you're looking at, the Forecast box holds the
-forecast text, and the status bar gives the time of the last update and
-where it came from.
+box below it, and the status bar along the bottom (on the Mac, a status
+line). The Location box shows which of your locations you're looking at,
+the Forecast box holds the forecast text, and the status bar gives the
+time of the last update and where it came from.
 
 When you open Weatherspell or switch locations, the Forecast box says the
 forecast is being fetched until it arrives. Your screen reader then
@@ -76,9 +140,9 @@ The forecast text is divided into sections, each starting with a heading:
 ### Moving between sections
 
 To move to the next section, choose Next Section from the View menu, or
-press Ctrl+PageDown. Previous Section (Ctrl+PageUp) moves back. To go
-straight to the alerts, choose Alerts from the View menu, or press
-Ctrl+Shift+A.
+press Ctrl+PageDown (Cmd+] on the Mac). Previous Section (Ctrl+PageUp,
+or Cmd+[) moves back. To go straight to the alerts, choose Alerts from the
+View menu, or press Ctrl+Shift+A (Cmd+Shift+A).
 
 ### Where the forecast comes from
 
@@ -92,20 +156,29 @@ added in the future.
 
 ### Units and times
 
-Weatherspell uses metric or imperial units according to your Windows region
-settings, with one system for each location's whole forecast. Forecasts for
-Canada are always metric, since Environment and Climate Change Canada
-publishes them that way.
+Weatherspell uses metric or imperial units according to your system's
+region settings, with one system for each location's whole forecast:
 
-Times are given in the location's own time. When your computer is in a
-different time zone, your time follows in brackets, for example "6:40 am
-(9:40 am your time)".
+- **Windows**: the region chosen in Settings, under Time & language.
+- **The Mac**: the measurement system in System Settings, under General,
+  then Language & Region.
+- **Linux**: your region's formats (on GNOME, in Settings, under System,
+  then Region & Language).
+
+Forecasts for Canada are always metric, since Environment and Climate
+Change Canada publishes them that way.
+
+Times are given in the location's own time, in your system's 12-hour or
+24-hour format. When your computer is in a different time zone, your
+time follows in brackets, for example "6:40 am (9:40 am your time)".
 
 ### Copying the forecast
 
 You can select and copy the forecast text as you would any other text, or
-use Copy and Select All in the right-click menu (Shift+F10 or the
-Applications key opens it from the keyboard).
+use Copy and Select All in its context menu. To open the context menu
+from the keyboard, press Shift+F10, or the Applications key on Windows or
+the Menu key on Linux. On the Mac, Control-click the text, or press
+VO+Shift+M with VoiceOver.
 
 ### Keeping the forecast up to date
 
@@ -115,22 +188,23 @@ in the text stays where it was. If you have text selected when a refresh
 comes in, the new forecast waits until you clear the selection, for up to
 5 minutes, so as to avoid interfering with your reason for selecting the text.
 
-To refresh now, choose Refresh from the File menu, or press F5.
+To refresh now, choose Refresh from the File menu, or press F5 (Cmd+R).
 
 Once the forecast on screen is 30 minutes old, a line under Right now says
 so, such as "Showing the forecast from 45 minutes ago."
 
 If Weatherspell can't reach the weather service, it keeps showing the last
 forecast it has, and that line gives the reason, such as "Showing the
-forecast from 2 hours ago; couldn't reach the weather service." This also happens when you
-open Weatherspell without an internet connection, using the forecast it
-saved the last time.
+forecast from 2 hours ago; couldn't reach the weather service." This also
+happens when you open Weatherspell without an internet connection, using
+the forecast it saved the last time.
 
 ## Adding a location
 
 To add a location, choose Add Location from the Locations menu, or press
-Ctrl+Shift+L. It's also the Add... button in Manage Locations, and the Add
-Location dialog opens on its own the first time you open Weatherspell.
+Ctrl+Shift+L (Cmd+Shift+L). It's also the Add... button in
+Manage Locations, and the Add Location dialog opens on its own the first
+time you open Weatherspell.
 
 Type a place name, postal code or coordinates in the search box, then press
 Enter or choose Search. The places found appear in the Results list with
@@ -168,7 +242,8 @@ its coordinates.
 
 To switch to another of your locations, choose it in the Location box. The
 Locations menu also lists your first nine locations, with a check beside
-the one you're viewing, and Ctrl+1 to Ctrl+9 switch straight to them.
+the one you're viewing, and Ctrl+1 to Ctrl+9 (Cmd+1 to Cmd+9)
+switch straight to them.
 
 Weatherspell opens on the location you viewed last.
 
@@ -176,7 +251,7 @@ Weatherspell opens on the location you viewed last.
 
 To change the order of your locations, give them nicknames, remove them or
 choose which ones notify you about alerts, choose Manage Locations from the
-Locations menu, or press Ctrl+L.
+Locations menu, or press Ctrl+L (Cmd+L).
 
 The Saved locations list shows each location's full name, with its
 nickname first if it has one, such as "Home (Peterborough, Ontario,
@@ -193,6 +268,10 @@ Canada)". Select a location, then use:
   notifications" follows the location's name in the list. Its Alerts
   section in the forecast text still shows every alert either way.
 - **Remove** to remove it from your locations.
+
+Each button's Alt key (Cmd key on the Mac), such as Alt+U for Move Up,
+presses it and leaves you in the list, so you can move a location step by
+step. Delete removes the selected location and F2 edits it.
 
 Choose OK to keep your changes, or Cancel to undo all of them. Since Cancel
 undoes everything, nothing asks you to confirm along the way.
@@ -213,7 +292,7 @@ red, as in "Orange rainfall warning." With no alerts in effect, it says "No
 alerts in effect."
 
 To go straight to the alerts, choose Alerts from the View menu, or press
-Ctrl+Shift+A.
+Ctrl+Shift+A (Cmd+Shift+A).
 
 ### Reading an alert's details
 
@@ -244,8 +323,9 @@ the alerts from the last check that did, with how long ago that was.
 
 ## Changing settings
 
-To change settings, choose Settings from the Settings menu. There are two
-groups:
+To change settings, choose Settings from the Settings menu. On the Mac,
+Settings is in the Weatherspell menu, and Cmd+comma opens it. There are
+two groups:
 
 - **Forecast**: "Refresh the forecast every" 15 minutes, 30 minutes (the
   default), 1 hour or 2 hours.
@@ -258,17 +338,28 @@ saving them.
 
 ### Text size and the window
 
-Weatherspell follows your Windows text size and display scale settings, so
-its text and windows grow with them.
+Weatherspell's text follows your system's text size:
 
-Weatherspell also follows the light or dark mode chosen in Windows' colour
-settings, and changes with it. With a contrast theme turned on, it uses the
-theme's colours. If you turn one on while Weatherspell is open in dark
-mode, please restart Weatherspell to see them.
+- **Windows**: the Text size and display scale settings, so its text and
+  windows grow with them.
+- **The Mac**: Bigger Text, Smaller Text and Actual Text Size in the View
+  menu (Cmd+Plus, Cmd+Minus and Cmd+0) change the size of Weatherspell's
+  text and windows while it's open.
+- **Linux**: your desktop's text size and scaling (on GNOME, Large Text
+  and the text scaling factor). The main window follows a change while
+  it's open; a dialog that's open at the time keeps its size until you
+  open it again.
+
+Weatherspell also follows your system's light or dark mode, and changes
+with it. On Windows, with a contrast theme turned on, it uses the theme's
+colours. If you turn one on while Weatherspell is open in dark mode,
+please restart Weatherspell to see them.
 
 The main window opens where you last left it, at the same size, and
-maximized if it was. To put it back where and how it first opened, choose
-Reset Window Size and Position from the View menu.
+maximized if it was. On Linux in a Wayland session, your desktop decides
+where windows open, so Weatherspell keeps only the size. To put the window
+back where and how it first opened, choose Reset Window Size and Position
+from the View menu.
 
 ## Keyboard shortcuts
 
@@ -276,50 +367,61 @@ Every command is also in the menus, with its shortcut shown beside it.
 
 ### Main window
 
-| Action | Keys |
-| --- | --- |
-| Refresh the forecast | F5 |
-| Manage Locations | Ctrl+L |
-| Add Location | Ctrl+Shift+L |
-| Switch to one of your first nine locations | Ctrl+1 to Ctrl+9 |
-| Move to the Location box | Alt+O |
-| Next section | Ctrl+PageDown |
-| Previous section | Ctrl+PageUp |
-| Go to the alerts | Ctrl+Shift+A |
-| Open this guide | F1 |
-| Exit | Alt+F4 |
+| Action | Windows and Linux | Mac |
+| --- | --- | --- |
+| Refresh the forecast | F5 | Cmd+R |
+| Manage Locations | Ctrl+L | Cmd+L |
+| Add Location | Ctrl+Shift+L | Cmd+Shift+L |
+| Switch to one of your first nine locations | Ctrl+1 to Ctrl+9 | Cmd+1 to Cmd+9 |
+| Move to the Location box | Alt+O | Shift+Tab from the Forecast box |
+| Next section | Ctrl+PageDown | Cmd+] |
+| Previous section | Ctrl+PageUp | Cmd+[ |
+| Go to the alerts | Ctrl+Shift+A | Cmd+Shift+A |
+| Settings | No shortcut | Cmd+comma |
+| Bigger, smaller or actual text size | Your system's settings | Cmd+Plus, Cmd+Minus, Cmd+0 |
+| Open this guide | F1 | Cmd+? |
+| Exit | Alt+F4 | Cmd+Q |
 
 ### Forecast text
 
-| Action | Keys |
-| --- | --- |
-| Open an alert's details, from its line | Enter |
-| Select all | Ctrl+A |
-| Copy | Ctrl+C |
-| Open the right-click menu | Shift+F10 or the Applications key |
+| Action | Windows and Linux | Mac |
+| --- | --- | --- |
+| Open an alert's details, from its line | Enter | Return |
+| Select all | Ctrl+A | Cmd+A |
+| Copy | Ctrl+C | Cmd+C |
+| Open the context menu | Shift+F10, or the Applications key (Windows) or Menu key (Linux) | Control-click, or VO+Shift+M with VoiceOver |
 
 ### Manage Locations
 
-| Action | Keys |
-| --- | --- |
-| Move Up | Alt+U |
-| Move Down | Alt+D |
-| Add | Alt+A |
-| Edit | Alt+E or F2 |
-| Remove | Alt+R or Delete |
+| Action | Windows and Linux | Mac |
+| --- | --- | --- |
+| Move Up | Alt+U | Cmd+U |
+| Move Down | Alt+D | Cmd+D |
+| Add | Alt+A | Cmd+A |
+| Edit | Alt+E or F2 | Cmd+E or F2 |
+| Remove | Alt+R or Delete | Cmd+R or Delete |
 
 These keys work from the Saved locations list, and you stay in the list.
 
 ## Where your settings are kept
 
-Weatherspell keeps your locations, your settings and the last forecast for
-each location in `%APPDATA%\Weatherspell`. To open that folder, type
-`%APPDATA%\Weatherspell` into File Explorer's address bar or the Run dialog
-(Windows+R).
+Weatherspell keeps your locations and settings, and the last forecast for
+each location, in your own account's folders:
 
-Everything there stays when the executable is moved, replaced or updated.
-It doesn't travel with the executable, though, so a copy on another
-computer starts fresh.
+- **Windows**: everything is in `%APPDATA%\Weatherspell`. To open that
+  folder, type `%APPDATA%\Weatherspell` into File Explorer's address bar
+  or the Run dialog (Windows+R).
+- **The Mac**: your locations and settings are in
+  `~/Library/Application Support/Weatherspell`, and the saved forecasts in
+  `~/Library/Caches/Weatherspell`. To open one, choose Go to Folder from
+  Finder's Go menu (Cmd+Shift+G), and type its name.
+- **Linux**: your locations and settings are in `~/.config/weatherspell`,
+  and the saved forecasts in `~/.cache/weatherspell` (or wherever your
+  system's XDG folders point).
+
+Everything there stays when Weatherspell is moved, replaced or updated.
+It doesn't travel with Weatherspell, though, so a copy on another computer
+starts fresh.
 
 If Weatherspell ever can't read its settings, it tells you and starts
 without your saved locations. The file it couldn't read is kept as
@@ -327,30 +429,35 @@ without your saved locations. The file it couldn't read is kept as
 
 ### Removing Weatherspell
 
-To remove Weatherspell, delete `Weatherspell.exe`, or run this if you
-installed it with winget:
+- **Windows**: delete `Weatherspell.exe`, or run this if you installed it
+  with winget:
 
-```
-winget uninstall PlanetLinux98.Weatherspell
-```
+  ```
+  winget uninstall PlanetLinux98.Weatherspell
+  ```
 
-To remove your locations and settings as well, delete the
-`%APPDATA%\Weatherspell` folder.
+- **The Mac**: quit Weatherspell, and move it from your Applications
+  folder to the Trash.
+- **Linux**: delete `Weatherspell-x86_64.AppImage`. If an AppImage manager
+  added it to your list of apps, remove it there instead.
+
+To remove your locations and settings as well, delete the folders listed
+under [Where your settings are kept](#where-your-settings-are-kept).
 
 ## Getting help
 
-To open this guide, choose User Guide from the Help menu, or press F1. It
-opens in your web browser, or default HTML viewer.
+To open this guide, choose User Guide from the Help menu, or press F1
+(Cmd+?). It opens in your web browser, or default HTML viewer.
 
-About Weatherspell, in the Help menu, gives the version you're running and
-short credits, with buttons for the full credits and licences and for
-Weatherspell's website.
+About Weatherspell, in the Help menu (in the Weatherspell menu on the
+Mac), gives the version you're running and short credits, with buttons
+for the full credits and licences and for Weatherspell's website.
 
 If something doesn't work as expected, or reads or behaves badly with your
 screen reader, magnifier or other assistive technology, please
 [report it on GitHub](https://github.com/PlanetLinux98/weatherspell/issues/new/choose).
 Ideas for Weatherspell are welcome there too. Reporting needs a free GitHub
-account, and including the version from About helps.
+account, and including the version from About, and your system, helps.
 
 ## Credits and licences
 
@@ -412,6 +519,7 @@ Weatherspell's licence:
 > USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Weatherspell is built with [wxWidgets](https://www.wxwidgets.org/), the
-libraries that come with it, and libraries written in Rust. Their
-licences, and the credit each one asks for, are in the
+libraries that come with it, and libraries written in Rust; on Linux, the
+AppImage also holds the AppImage runtime that starts it. Their licences,
+and the credit each one asks for, are in the
 [third-party notices](THIRD-PARTY-NOTICES.md).

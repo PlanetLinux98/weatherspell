@@ -2661,7 +2661,7 @@ obstacle to adoption, that text has been removed.
 
 ### libfuse
 
-[libfuse](https://github.com/libfuse/libfuse) 3.15.0 lets the AppImage be mounted as a folder. It is under the GNU Lesser General Public Licence, version 2.1. Its source is at [libfuse 3.15.0](https://github.com/libfuse/libfuse/releases/tag/fuse-3.15.0), and the one change the runtime makes to it, with everything needed to build the runtime again, is in [the runtime's source](https://github.com/AppImage/type2-runtime/tree/dd6cebedcbddde9c82f89b011e8e1d40b6e43868).
+[libfuse](https://github.com/libfuse/libfuse) 3.15.0 lets the AppImage be mounted as a folder. It is under the GNU Lesser General Public Licence, version 2.1. Its source is at [libfuse 3.15.0](https://github.com/libfuse/libfuse/releases/tag/fuse-3.15.0), and the one change the runtime makes to it, with everything needed to build the runtime again, is in [the runtime's source](https://github.com/AppImage/type2-runtime/tree/dd6cebedcbddde9c82f89b011e8e1d40b6e43868). Both are also attached to each Weatherspell release that includes the AppImage, as `appimage-runtime-source.tar.gz`.
 
 ```
 GNU LESSER GENERAL PUBLIC LICENSE

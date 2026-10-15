@@ -10,7 +10,8 @@ name: Release
 # version is the Rust app (#24). Either way the asset is Weatherspell.exe,
 # the name winget and the updater know; the Rust app also gets
 # Weatherspell.dmg for the Mac (mac.yml; tools/mac/install.sh installs it)
-# and Weatherspell-x86_64.AppImage for Linux (linux.yml). Run by hand on a
+# and Weatherspell-x86_64.AppImage for Linux with its runtime's source,
+# appimage-runtime-source.tar.gz (linux.yml). Run by hand on a
 # branch, it builds and checks all three and keeps them as workflow
 # artifacts, drafting nothing.
 on:
@@ -145,7 +146,7 @@ jobs:
         shell: pwsh
         run: |
           # sha256sum format, LF-terminated, so standard tools can verify it.
-          $lines = foreach ($name in 'Weatherspell.exe', 'Weatherspell.dmg', 'Weatherspell-x86_64.AppImage') {
+          $lines = foreach ($name in 'Weatherspell.exe', 'Weatherspell.dmg', 'Weatherspell-x86_64.AppImage', 'appimage-runtime-source.tar.gz') {
             if (Test-Path "artifacts/$name") {
               $hash = (Get-FileHash "artifacts/$name" -Algorithm SHA256).Hash.ToLower()
               "$hash  $name"
@@ -217,7 +218,8 @@ jobs:
           $flags = @()
           if ("${{ github.ref_name }}" -match '-') { $flags += '--prerelease' }
           $assets = @('artifacts/Weatherspell.exe')
-          foreach ($name in 'Weatherspell.dmg', 'Weatherspell-x86_64.AppImage') {
+          # The runtime's source goes with the AppImage (linux.yml).
+          foreach ($name in 'Weatherspell.dmg', 'Weatherspell-x86_64.AppImage', 'appimage-runtime-source.tar.gz') {
             if (Test-Path "artifacts/$name") { $assets += "artifacts/$name" }
           }
           $assets += 'artifacts/SHA256SUMS'

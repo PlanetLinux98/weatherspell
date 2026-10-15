@@ -22,6 +22,7 @@ on:
       - "tools/Check-SingleExe.ps1"
       - "tools/mac/**"
       - "tools/linux/**"
+      - "tools/notices/appimage/**"
       - "Assets/**"
       - ".github/workflows/rust.yml"
       - ".github/workflows/linux.yml"
