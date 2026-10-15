@@ -10,7 +10,19 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 
 ## [Unreleased]
 
+## [0.2.0-alpha.2] - 2026-10-15
+
 ### Added
+- Weatherspell for the Mac, as `Weatherspell.dmg`, for Macs with Apple
+  silicon on macOS 15 (Sequoia) or later, with a script that installs it
+  without Gatekeeper's warning. It follows the Mac's keys and menus
+  (Cmd+R refreshes, Cmd+] and Cmd+[ move between sections, Settings is
+  in the app menu) and its region settings, and the View menu has Bigger
+  Text, Smaller Text and Actual Text Size (#25).
+- Weatherspell for Linux, as `Weatherspell-x86_64.AppImage`, for 64-bit
+  PCs with GTK 3, such as Ubuntu 22.04, Debian 12 and Fedora 36 or later.
+  Units, time format, text size, and light or dark mode follow the
+  system's settings (#26).
 - View > Reset Window Size and Position puts the main window back where
   and how it first opened.
 
@@ -81,6 +93,7 @@ guide.
   and opens how it was last closed (#5, #16).
 - A user guide (F1), and an About dialog with credits for each source (#8).
 
-[Unreleased]: https://github.com/PlanetLinux98/weatherspell/compare/v0.2.0-alpha.1...HEAD
+[Unreleased]: https://github.com/PlanetLinux98/weatherspell/compare/v0.2.0-alpha.2...HEAD
+[0.2.0-alpha.2]: https://github.com/PlanetLinux98/weatherspell/compare/v0.2.0-alpha.1...v0.2.0-alpha.2
 [0.2.0-alpha.1]: https://github.com/PlanetLinux98/weatherspell/compare/v0.1.0...v0.2.0-alpha.1
 [0.1.0]: https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.1.0
