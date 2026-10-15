@@ -9,9 +9,10 @@ name: Release
 # A v0.1.x tag builds the C# app, which gets fixes only; every later
 # version is the Rust app (#24). Either way the asset is Weatherspell.exe,
 # the name winget and the updater know; the Rust app also gets
-# Weatherspell-x86_64.AppImage for Linux (linux.yml). Run by hand on a
-# branch, it builds and checks both and keeps them as workflow artifacts,
-# drafting nothing.
+# Weatherspell.dmg for the Mac (mac.yml; tools/mac/install.sh installs it)
+# and Weatherspell-x86_64.AppImage for Linux (linux.yml). Run by hand on a
+# branch, it builds and checks all three and keeps them as workflow
+# artifacts, drafting nothing.
 on:
   push:
     tags: ['v*']
@@ -21,14 +22,19 @@ permissions:
   contents: write
 
 jobs:
+  mac:
+    if: ${{ !startsWith(github.ref_name, 'v0.1.') }}
+    uses: ./.github/workflows/mac.yml
+
   linux:
     if: ${{ !startsWith(github.ref_name, 'v0.1.') }}
     uses: ./.github/workflows/linux.yml
 
   release:
-    needs: linux
-    # Also when the Linux build was skipped (a C# tag), never when it failed.
-    if: ${{ !cancelled() && needs.linux.result != 'failure' }}
+    needs: [mac, linux]
+    # Also when the Mac and Linux builds were skipped (a C# tag), never when
+    # one failed.
+    if: ${{ !cancelled() && needs.mac.result != 'failure' && needs.linux.result != 'failure' }}
     runs-on: windows-latest
     env:
       CSHARP: ${{ startsWith(github.ref_name, 'v0.1.') }}
@@ -121,13 +127,25 @@ jobs:
           name: weatherspell-linux
           path: artifacts
 
+      # Only the disk image: the artifact also holds the tree dump tool.
+      - uses: actions/download-artifact@v7
+        if: env.CSHARP != 'true'
+        with:
+          name: weatherspell-mac
+          path: mac-download
+
+      - name: Stage the disk image
+        if: env.CSHARP != 'true'
+        shell: pwsh
+        run: Copy-Item mac-download/Weatherspell.dmg artifacts/
+
       # Both apps.
 
       - name: Write the checksum manifest
         shell: pwsh
         run: |
           # sha256sum format, LF-terminated, so standard tools can verify it.
-          $lines = foreach ($name in 'Weatherspell.exe', 'Weatherspell-x86_64.AppImage') {
+          $lines = foreach ($name in 'Weatherspell.exe', 'Weatherspell.dmg', 'Weatherspell-x86_64.AppImage') {
             if (Test-Path "artifacts/$name") {
               $hash = (Get-FileHash "artifacts/$name" -Algorithm SHA256).Hash.ToLower()
               "$hash  $name"
@@ -136,8 +154,8 @@ jobs:
           [IO.File]::WriteAllText("$PWD/artifacts/SHA256SUMS", ($lines -join "`n") + "`n")
           Get-Content artifacts/SHA256SUMS
 
-      # The AppImage is kept as linux.yml uploaded it; the manifest here
-      # covers both.
+      # The disk image and AppImage are kept as mac.yml and linux.yml
+      # uploaded them; the manifest here covers all three.
       - name: Keep the exe of a run by hand
         if: github.ref_type != 'tag'
         uses: actions/upload-artifact@v7
@@ -199,6 +217,8 @@ jobs:
           $flags = @()
           if ("${{ github.ref_name }}" -match '-') { $flags += '--prerelease' }
           $assets = @('artifacts/Weatherspell.exe')
-          if (Test-Path artifacts/Weatherspell-x86_64.AppImage) { $assets += 'artifacts/Weatherspell-x86_64.AppImage' }
+          foreach ($name in 'Weatherspell.dmg', 'Weatherspell-x86_64.AppImage') {
+            if (Test-Path "artifacts/$name") { $assets += "artifacts/$name" }
+          }
           $assets += 'artifacts/SHA256SUMS'
           gh release create "${{ github.ref_name }}" @assets --draft --title "Weatherspell ${{ github.ref_name }}" --notes-file artifacts/notes.md @flags

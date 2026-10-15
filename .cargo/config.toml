@@ -6,6 +6,8 @@ rustflags = ["-C", "target-feature=+crt-static"]
 # Linux (x86_64): wxWidgets options that wxdragon-sys has no switch for,
 # given to its CMake build as a toolchain file (tools/linux/wx-options.cmake
 # says which and why). Read only when wx is configured afresh: a build
-# folder from before keeps its options.
+# from before keeps its options until both target/release's wx folders
+# (wxWidgets, wxwidgets_cmake_build, wxdragon_sys_cmake_build) and
+# `cargo clean --release -p wxdragon-sys` clear it.
 [env]
 CMAKE_TOOLCHAIN_FILE_x86_64_unknown_linux_gnu = { value = "tools/linux/wx-options.cmake", relative = true }

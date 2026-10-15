@@ -1,0 +1,61 @@
+name: Mac
+
+# The app on the Mac (Apple Silicon, macOS 15 and later, signed ad hoc),
+# built as Weatherspell.dmg, uploaded as weatherspell-mac with dump-a11y.js
+# beside it, then linted and tested: uploaded first, so a test that trips
+# on the Mac still leaves something to try. Called by rust.yml on every
+# push that touches the Rust build (symbols kept, so a crash report on the
+# Mac names the functions it went through) and by release.yml for a
+# release.
+on:
+  workflow_call:
+    inputs:
+      keep-symbols:
+        type: boolean
+        default: false
+
+jobs:
+  disk-image:
+    runs-on: macos-latest
+    env:
+      MACOSX_DEPLOYMENT_TARGET: "15.0"
+      CARGO_PROFILE_RELEASE_STRIP: ${{ inputs.keep-symbols && 'false' || 'true' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            target/release/wxWidgets
+            target/release/wxwidgets_cmake_build
+            target/release/wxdragon_sys_cmake_build
+          key: wx-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: wx-${{ runner.os }}-
+
+      # wxdragon-sys falls back to make without Ninja, more slowly.
+      - name: Ninja
+        run: command -v ninja || HOMEBREW_NO_AUTO_UPDATE=1 brew install ninja
+
+      # The two side by side in one folder, so the download holds them
+      # without the repo's folders around them.
+      - name: Build the app and disk image
+        run: |
+          sh tools/mac/make-app.sh
+          mkdir -p target/mac-download
+          cp target/release/Weatherspell.dmg tools/mac/dump-a11y.js target/mac-download/
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: weatherspell-mac
+          path: target/mac-download/
+          retention-days: 14
+
+      - name: Lint
+        run: cargo clippy --release -p weatherspell -p wx-accessibility --all-targets -- -D warnings
+
+      - name: Test
+        run: cargo test --release -p weatherspell -p wx-accessibility

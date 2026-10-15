@@ -3,7 +3,8 @@
 # target/release/Weatherspell.app and target/release/Weatherspell.dmg.
 # The app is signed ad hoc (Apple Silicon runs nothing unsigned), not with
 # a developer certificate, so a copy downloaded through a browser is
-# blocked until it is allowed in System Settings > Privacy & Security.
+# blocked until it is allowed in System Settings > Privacy & Security;
+# tools/mac/install.sh installs it without that block.
 # The disk image is what CI uploads: an artifact is a zip, which drops the
 # program's executable bit, and a disk image keeps it.
 
