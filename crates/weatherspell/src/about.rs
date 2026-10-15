@@ -16,7 +16,7 @@ const ID_CREDITS: Id = ID_HIGHEST + 1;
 const ID_WEBSITE: Id = ID_HIGHEST + 2;
 
 pub const WEBSITE: &str = "https://github.com/PlanetLinux98/weatherspell";
-const LOGO: &[u8] = include_bytes!("../../../Assets/Weatherspell.svg");
+pub const LOGO: &[u8] = include_bytes!("../../../Assets/Weatherspell.svg");
 
 fn paragraphs() -> Vec<String> {
     vec![

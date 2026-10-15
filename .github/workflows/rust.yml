@@ -3,7 +3,8 @@ name: Rust
 # The Rust rewrite (#24). Its logic is built and tested on Windows, macOS
 # and Linux from the start, so the later ports find it already working;
 # the app itself is built on Windows, checked to be one exe, on the Mac,
-# as a disk image to download and test, and on Linux. The wx test window
+# as a disk image to download and test, and on Linux, as an AppImage to
+# download and test, started on other systems too. The wx test window
 # is not built here. Unlike CI, this runs on every branch, but only for
 # changes to what the Rust build reads.
 on:
@@ -20,8 +21,10 @@ on:
       - "tools/GuideBuilder/template.html"
       - "tools/Check-SingleExe.ps1"
       - "tools/mac/**"
+      - "tools/linux/**"
       - "Assets/**"
       - ".github/workflows/rust.yml"
+      - ".github/workflows/linux.yml"
   pull_request:
   workflow_dispatch:
 
@@ -137,43 +140,46 @@ jobs:
       - name: Test
         run: cargo test --release -p weatherspell -p wx-accessibility
 
-  # The app on Linux (GTK 3), built and tested so the port starts from code
-  # that compiles; nothing is uploaded yet.
+  # The app on Linux, built, tested and packed as an AppImage (linux.yml).
   linux:
+    uses: ./.github/workflows/linux.yml
+
+  # The AppImage started on other systems with only their GTK 3 added: a
+  # library it needs that one lacks, or names differently, shows here.
+  linux-elsewhere:
+    needs: linux
+    strategy:
+      fail-fast: false
+      matrix:
+        system: ["fedora:latest", "archlinux:latest", "debian:12", "ubuntu:22.04"]
     runs-on: ubuntu-latest
+    container: ${{ matrix.system }}
     steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - uses: actions/cache@v6
-        with:
-          path: |
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            target/release/wxWidgets
-            target/release/wxwidgets_cmake_build
-            target/release/wxdragon_sys_cmake_build
-          key: wx-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
-          restore-keys: wx-${{ runner.os }}-
-
-      # What wxdragon-sys's build.rs links on Linux, plus Ninja, libclang
-      # for its bindings and a virtual screen for the tests.
-      - name: GTK and the libraries wxWidgets links
+      - name: GTK 3 and a virtual screen
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends ninja-build libclang-dev \
-            libgtk-3-dev libxkbcommon-dev libwayland-dev libx11-dev libxtst-dev \
-            libsm-dev libice-dev libpng-dev libjpeg-dev libexpat1-dev libtiff-dev \
-            libgl-dev libegl-dev xvfb
+          case "${{ matrix.system }}" in
+            fedora*) dnf install -y gtk3 xorg-x11-server-Xvfb ;;
+            arch*) pacman -Syu --noconfirm gtk3 xorg-server-xvfb ;;
+            *) apt-get update
+               DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+                 libgtk-3-0 xvfb ;;
+          esac
 
-      - name: Lint
-        run: cargo clippy --release -p weatherspell -p wx-accessibility --all-targets -- -D warnings
+      - uses: actions/download-artifact@v7
+        with:
+          name: weatherspell-linux
 
-      # The lint test builds every window, which GTK cannot do without a
-      # display.
-      - name: Test
-        run: xvfb-run -a cargo test --release -p weatherspell -p wx-accessibility
-
-      - name: Build
-        run: cargo build --release -p weatherspell
+      # Unpacked, since a container has no FUSE: the same files the
+      # AppImage mounts. Every library found, then the app still running
+      # after ten seconds (offline, in a folder of its own).
+      - name: Start it
+        run: |
+          chmod +x Weatherspell-x86_64.AppImage
+          ./Weatherspell-x86_64.AppImage --appimage-extract >/dev/null
+          if ldd squashfs-root/usr/bin/weatherspell | grep 'not found'; then exit 1; fi
+          mkdir data
+          Xvfb :99 & sleep 2
+          DISPLAY=:99 WEATHERSPELL_OFFLINE=1 WEATHERSPELL_DATA=$PWD/data \
+            timeout 10 squashfs-root/AppRun && status=0 || status=$?
+          echo "Exit status $status (124: still running at ten seconds)."
+          test "$status" = 124

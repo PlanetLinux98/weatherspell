@@ -1,0 +1,107 @@
+name: Linux
+
+# The app on Linux (GTK 3), built in Ubuntu 22.04 so that it runs on any
+# system at least as new (glibc 2.35), checked to ask only for libraries
+# every GTK desktop has, and packed as an AppImage, uploaded as
+# weatherspell-linux. Called by rust.yml on every push that touches the
+# Rust build, and by release.yml for a release.
+on:
+  workflow_call:
+
+jobs:
+  appimage:
+    runs-on: ubuntu-latest
+    container: ubuntu:22.04
+    steps:
+      # What wxdragon-sys's build.rs links on Linux, plus the build tools,
+      # libclang for its bindings, git for the version, file for
+      # appimagetool, and a virtual screen with fonts for the tests.
+      - name: Build tools, GTK and the libraries wxWidgets links
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            git ca-certificates curl file build-essential cmake ninja-build pkg-config \
+            libclang-dev libssl-dev libgtk-3-dev libxkbcommon-dev libwayland-dev \
+            libx11-dev libxtst-dev libsm-dev libice-dev libpng-dev libjpeg-dev \
+            libexpat1-dev libtiff-dev \
+            xvfb xauth fonts-dejavu-core
+
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # The checkout belongs to another user than the container's root, so
+      # git refuses it, and build.rs's git describe would quietly give
+      # 0.0.0. Its answer is the app's version (build/version.rs).
+      - name: Version
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git describe --tags --long --match "v[0-9]*"
+
+      - name: Rust
+        run: |
+          curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal -c clippy
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+
+      - uses: actions/cache/restore@v6
+        id: wx
+        with:
+          path: &wx-folders |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            target/release/wxWidgets
+            target/release/wxwidgets_cmake_build
+            target/release/wxdragon_sys_cmake_build
+          # A build under other wx options is never restored: it would
+          # keep its own.
+          key: wx-ubuntu-22.04-${{ hashFiles('tools/linux/wx-options.cmake') }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: wx-ubuntu-22.04-${{ hashFiles('tools/linux/wx-options.cmake') }}-
+
+      - name: Lint
+        run: cargo clippy --release -p weatherspell -p wx-accessibility --all-targets -- -D warnings
+
+      # The lint test builds every window, which GTK cannot do without a
+      # display.
+      - name: Test
+        run: xvfb-run -a cargo test --release -p weatherspell -p wx-accessibility
+
+      - name: Build
+        run: cargo build --release -p weatherspell
+
+      # Saved once wx is built, so a later step's failure does not cost the
+      # next run a cold build.
+      - uses: actions/cache/save@v6
+        if: steps.wx.outputs.cache-hit != 'true'
+        with:
+          path: *wx-folders
+          key: ${{ steps.wx.outputs.cache-primary-key }}
+
+      - name: Libraries every GTK desktop has, glibc 2.35 at most
+        run: sh tools/linux/check-libraries.sh target/release/weatherspell
+
+      # Pinned, and checked against the digests GitHub gives for them. No
+      # FUSE in a container, so appimagetool unpacks itself to run.
+      - name: Pack the AppImage
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: "1"
+        run: |
+          mkdir -p target/appimage-tools target/linux-download
+          cd target/appimage-tools
+          curl -sSfLo appimagetool https://github.com/AppImage/appimagetool/releases/download/1.9.1/appimagetool-x86_64.AppImage
+          curl -sSfLo runtime https://github.com/AppImage/type2-runtime/releases/download/20251108/runtime-x86_64
+          printf '%s\n' \
+            "ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0  appimagetool" \
+            "2fca8b443c92510f1483a883f60061ad09b46b978b2631c807cd873a47ec260d  runtime" \
+            | sha256sum -c
+          chmod +x appimagetool
+          cd ../..
+          APPIMAGETOOL=target/appimage-tools/appimagetool \
+            APPIMAGE_RUNTIME=target/appimage-tools/runtime \
+            sh tools/linux/make-appimage.sh target/release/weatherspell \
+            target/linux-download/Weatherspell-x86_64.AppImage
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: weatherspell-linux
+          path: target/linux-download/
+          retention-days: 14

@@ -8,9 +8,10 @@ name: Release
 #
 # A v0.1.x tag builds the C# app, which gets fixes only; every later
 # version is the Rust app (#24). Either way the asset is Weatherspell.exe,
-# the name winget and the updater know. Run by hand on a branch, it builds
-# and checks the Rust exe and keeps it as a workflow artifact, drafting
-# nothing.
+# the name winget and the updater know; the Rust app also gets
+# Weatherspell-x86_64.AppImage for Linux (linux.yml). Run by hand on a
+# branch, it builds and checks both and keeps them as workflow artifacts,
+# drafting nothing.
 on:
   push:
     tags: ['v*']
@@ -20,7 +21,14 @@ permissions:
   contents: write
 
 jobs:
+  linux:
+    if: ${{ !startsWith(github.ref_name, 'v0.1.') }}
+    uses: ./.github/workflows/linux.yml
+
   release:
+    needs: linux
+    # Also when the Linux build was skipped (a C# tag), never when it failed.
+    if: ${{ !cancelled() && needs.linux.result != 'failure' }}
     runs-on: windows-latest
     env:
       CSHARP: ${{ startsWith(github.ref_name, 'v0.1.') }}
@@ -107,16 +115,29 @@ jobs:
             throw "The exe says $version, not the tag's version."
           }
 
+      - uses: actions/download-artifact@v7
+        if: env.CSHARP != 'true'
+        with:
+          name: weatherspell-linux
+          path: artifacts
+
       # Both apps.
 
       - name: Write the checksum manifest
         shell: pwsh
         run: |
-          $hash = (Get-FileHash artifacts/Weatherspell.exe -Algorithm SHA256).Hash.ToLower()
           # sha256sum format, LF-terminated, so standard tools can verify it.
-          [IO.File]::WriteAllText("$PWD/artifacts/SHA256SUMS", "$hash  Weatherspell.exe`n")
+          $lines = foreach ($name in 'Weatherspell.exe', 'Weatherspell-x86_64.AppImage') {
+            if (Test-Path "artifacts/$name") {
+              $hash = (Get-FileHash "artifacts/$name" -Algorithm SHA256).Hash.ToLower()
+              "$hash  $name"
+            }
+          }
+          [IO.File]::WriteAllText("$PWD/artifacts/SHA256SUMS", ($lines -join "`n") + "`n")
           Get-Content artifacts/SHA256SUMS
 
+      # The AppImage is kept as linux.yml uploaded it; the manifest here
+      # covers both.
       - name: Keep the exe of a run by hand
         if: github.ref_type != 'tag'
         uses: actions/upload-artifact@v7
@@ -177,4 +198,7 @@ jobs:
           # "latest" and out of the winget workflow's release event.
           $flags = @()
           if ("${{ github.ref_name }}" -match '-') { $flags += '--prerelease' }
-          gh release create "${{ github.ref_name }}" artifacts/Weatherspell.exe artifacts/SHA256SUMS --draft --title "Weatherspell ${{ github.ref_name }}" --notes-file artifacts/notes.md @flags
+          $assets = @('artifacts/Weatherspell.exe')
+          if (Test-Path artifacts/Weatherspell-x86_64.AppImage) { $assets += 'artifacts/Weatherspell-x86_64.AppImage' }
+          $assets += 'artifacts/SHA256SUMS'
+          gh release create "${{ github.ref_name }}" @assets --draft --title "Weatherspell ${{ github.ref_name }}" --notes-file artifacts/notes.md @flags

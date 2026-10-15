@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.planetlinux98.weatherspell</id>
+  <name>Weatherspell</name>
+  <summary>The forecast and urgent alerts as readable text</summary>
+  <developer id="io.github.planetlinux98">
+    <name>PlanetLinux98</name>
+  </developer>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <description>
+    <p>
+      Weatherspell shows current conditions, the forecast and urgent weather alerts for any place in the world, as clear text you can read, arrow through and copy. It's built keyboard-first and screen-reader-first, for anyone who wants the weather in a simple and straightforward way. It's a single file, with no account or API key needed.
+    </p>
+  </description>
+  <launchable type="desktop-id">io.github.planetlinux98.weatherspell.desktop</launchable>
+  <url type="homepage">https://github.com/PlanetLinux98/weatherspell</url>
+  <url type="bugtracker">https://github.com/PlanetLinux98/weatherspell/issues</url>
+  <url type="help">https://github.com/PlanetLinux98/weatherspell/blob/HEAD/USER_GUIDE.md</url>
+  <categories>
+    <category>Utility</category>
+  </categories>
+  <keywords>
+    <keyword>weather</keyword>
+    <keyword>forecast</keyword>
+    <keyword>alerts</keyword>
+    <keyword>accessibility</keyword>
+    <keyword>screen reader</keyword>
+  </keywords>
+  <provides>
+    <binary>weatherspell</binary>
+  </provides>
+  <supports>
+    <control>keyboard</control>
+    <control>pointing</control>
+  </supports>
+  <content_rating type="oars-1.1"/>
+</component>

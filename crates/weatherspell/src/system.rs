@@ -292,8 +292,10 @@ fn high_contrast() -> bool {
 
 // The exe's own icon (resource 1, build.rs) on a window, at the sizes the
 // title bar and Alt+Tab take at the window's scale, rather than one size
-// scaled. Windows only for now; the Mac gives a window no icon of its own.
-pub fn set_window_icon(window: &impl wxdragon::prelude::WxWidget) {
+// scaled. The Mac gives a window no icon of its own. On Linux, X11
+// desktops show the window's icon; GNOME on Wayland ignores it and takes
+// the icon of the desktop entry whose StartupWMClass is the program's name.
+pub fn set_window_icon(window: &wxdragon::prelude::Frame) {
     #[cfg(windows)]
     unsafe {
         use windows::Win32::Foundation::{HINSTANCE, HWND, LPARAM, WPARAM};
@@ -304,6 +306,7 @@ pub fn set_window_icon(window: &impl wxdragon::prelude::WxWidget) {
             SendMessageW, WM_SETICON,
         };
         use windows::core::PCWSTR;
+        use wxdragon::prelude::WxWidget;
         let hwnd = HWND(window.get_handle());
         let Ok(module) = GetModuleHandleW(None) else {
             return;
@@ -329,7 +332,19 @@ pub fn set_window_icon(window: &impl wxdragon::prelude::WxWidget) {
             }
         }
     }
-    #[cfg(not(windows))]
+    #[cfg(not(any(windows, target_os = "macos")))]
+    {
+        use wxdragon::prelude::{BitmapBundle, Size};
+        // One size, which the window manager scales: 128 pixels covers
+        // Alt+Tab at twice the scale.
+        let size = Size::new(128, 128);
+        if let Some(icon) =
+            BitmapBundle::from_svg_data(crate::about::LOGO, size).and_then(|b| b.get_bitmap(size))
+        {
+            window.set_icon(&icon);
+        }
+    }
+    #[cfg(target_os = "macos")]
     let _ = window;
 }
 

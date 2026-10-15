@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Weatherspell
+GenericName=Weather
+Comment=A text-based weather app.
+Exec=weatherspell
+Icon=io.github.planetlinux98.weatherspell
+Terminal=false
+Categories=Utility;
+Keywords=weather;forecast;alerts;
+StartupNotify=true
+StartupWMClass=weatherspell
