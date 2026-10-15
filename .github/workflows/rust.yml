@@ -91,7 +91,7 @@ jobs:
         shell: pwsh
         run: ./tools/Check-SingleExe.ps1
 
-  # The Mac app, for testing (mac.yml): Apple Silicon only, signed ad hoc,
+  # The Mac app, for testing (mac.yml): Apple silicon and Intel, signed ad hoc,
   # symbols kept.
   mac:
     uses: ./.github/workflows/mac.yml

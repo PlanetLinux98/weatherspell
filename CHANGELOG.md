@@ -10,6 +10,13 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 
 ## [Unreleased]
 
+### Changed
+- The Mac app runs on Intel Macs too, and the install script asks
+  Spotlight to find it straight away (#25).
+- NVDA, Narrator and VoiceOver read Edit Location's "Leave it empty to
+  use the full name." with the nickname field, as Orca does.
+- The third-party notices cover the runtime inside the Linux AppImage.
+
 ## [0.2.0-alpha.2] - 2026-10-15
 
 ### Added

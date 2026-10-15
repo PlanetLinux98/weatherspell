@@ -338,8 +338,9 @@ pub struct Edited {
 // and the announcements then use while Manage Locations keeps the full
 // name beside it, and whether its new alerts are spoken. The field's label
 // names the place, so the name a screen reader gives the field says which
-// location is being edited; the hint after it is the dialog's own text,
-// which NVDA reads as the dialog opens.
+// location is being edited; the hint after it is the field's description
+// (wx_accessibility::describe), and still the dialog's own text, which
+// NVDA reads as the dialog opens.
 pub fn edit(
     parent: &dyn WxWidget,
     full_name: &str,

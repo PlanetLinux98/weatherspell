@@ -44,14 +44,85 @@ pub fn name_inputs(window: &impl WxWidget) {
 // after its name and role; it is not part of the name. On GTK the line
 // and the input are also linked (described by, description for): Orca
 // reads a dialog's lines that belong to no control as it opens, which
-// said the hint once there and again with the input. GTK only so far:
-// what NVDA and VoiceOver read of such a line is to be checked first
-// (Elliott, 2026-10-08).
+// said the hint once there and again with the input.
+//
+// Windows and the Mac: NVDA and VoiceOver read the line with the dialog's
+// text (NVDA before the field, VoiceOver after it), but on the field said
+// only its name (Elliott, 2026-10-15). Windows: the field's own MSAA
+// object is kept and only its description added, by Dynamic Annotation;
+// oleacc keeps an annotation by window handle, so it is cleared as the
+// field is destroyed, before the handle can go to another window. The
+// Mac: the field's accessibility help, which VoiceOver says after its
+// name and role as a hint.
 pub fn describe(input: &impl WxWidget, hint: &StaticText) {
     #[cfg(not(any(windows, target_os = "macos")))]
     gtk_impl::describe(input.get_handle(), hint.get_handle(), &hint.get_label());
-    #[cfg(any(windows, target_os = "macos"))]
-    let _ = (input, hint);
+    #[cfg(windows)]
+    win_impl::describe(input.get_handle(), &hint.get_label());
+    #[cfg(target_os = "macos")]
+    mac_impl::describe(input.get_handle(), &hint.get_label());
+}
+
+#[cfg(windows)]
+mod win_impl {
+    use std::ffi::c_void;
+    use windows::Win32::Foundation::{HWND, LPARAM, LRESULT, WPARAM};
+    use windows::Win32::System::Com::{CLSCTX_INPROC_SERVER, CoCreateInstance};
+    use windows::Win32::UI::Accessibility::{
+        CAccPropServices, HelpText_Property_GUID, IAccPropServices, PROPID_ACC_DESCRIPTION,
+    };
+    use windows::Win32::UI::Shell::{DefSubclassProc, RemoveWindowSubclass, SetWindowSubclass};
+    use windows::Win32::UI::WindowsAndMessaging::{CHILDID_SELF, OBJID_CLIENT, WM_NCDESTROY};
+    use windows::core::HSTRING;
+
+    const SUBCLASS_ID: usize = 0x5744; // "WD"
+    const PROPERTIES: [windows::core::GUID; 2] = [PROPID_ACC_DESCRIPTION, HelpText_Property_GUID];
+
+    fn services() -> Option<IAccPropServices> {
+        unsafe { CoCreateInstance(&CAccPropServices, None, CLSCTX_INPROC_SERVER).ok() }
+    }
+
+    pub fn describe(input: *mut c_void, help: &str) {
+        let hwnd = HWND(input);
+        let Some(services) = services() else {
+            return;
+        };
+        let help = HSTRING::from(help);
+        unsafe {
+            let set = PROPERTIES.iter().all(|&property| {
+                services
+                    .SetHwndPropStr(hwnd, OBJID_CLIENT.0 as u32, CHILDID_SELF, property, &help)
+                    .is_ok()
+            });
+            if set {
+                let _ = SetWindowSubclass(hwnd, Some(forget), SUBCLASS_ID, 0);
+            }
+        }
+    }
+
+    unsafe extern "system" fn forget(
+        hwnd: HWND,
+        msg: u32,
+        wparam: WPARAM,
+        lparam: LPARAM,
+        id: usize,
+        _data: usize,
+    ) -> LRESULT {
+        unsafe {
+            if msg == WM_NCDESTROY {
+                if let Some(services) = services() {
+                    let _ = services.ClearHwndProps(
+                        hwnd,
+                        OBJID_CLIENT.0 as u32,
+                        CHILDID_SELF,
+                        &PROPERTIES,
+                    );
+                }
+                let _ = RemoveWindowSubclass(hwnd, Some(forget), id);
+            }
+            DefSubclassProc(hwnd, msg, wparam, lparam)
+        }
+    }
 }
 
 #[cfg(target_os = "macos")]
@@ -90,6 +161,15 @@ mod mac_impl {
             }
             walk(child);
             previous = child;
+        }
+    }
+
+    pub fn describe(input: Id, help: &str) {
+        unsafe {
+            let text = mac::string(help);
+            if !text.is_null() {
+                mac::id_with(input, c"setAccessibilityHelp:", text);
+            }
         }
     }
 

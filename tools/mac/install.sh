@@ -9,10 +9,6 @@
 set -eu
 repo=PlanetLinux98/weatherspell
 
-if [ "$(uname -m)" != arm64 ]; then
-    echo "Weatherspell needs a Mac with Apple silicon at this time."
-    exit 1
-fi
 major=$(sw_vers -productVersion | cut -d. -f1)
 if [ "$major" -lt 15 ]; then
     echo "Weatherspell needs macOS 15 (Sequoia) or later."
@@ -56,6 +52,12 @@ if [ -z "$expected" ] || [ "$expected" != "$actual" ]; then
 fi
 
 hdiutil attach -quiet -nobrowse -readonly -mountpoint "$work/volume" "$work/Weatherspell.dmg"
+# Releases before 0.2.0 were built for Apple silicon only. file, not
+# lipo: lipo needs the Command Line Tools.
+if ! file -b "$work/volume/Weatherspell.app/Contents/MacOS/Weatherspell" | grep -qw "$(uname -m)"; then
+    echo "Weatherspell $tag does not run on this Mac's processor. Nothing was installed."
+    exit 1
+fi
 # /Applications when this account may write there (an administrator's
 # can), otherwise the account's own Applications folder.
 if [ -w /Applications ]; then
@@ -66,4 +68,10 @@ else
 fi
 rm -rf "$folder/Weatherspell.app"
 ditto "$work/volume/Weatherspell.app" "$folder/Weatherspell.app"
-echo "Installed Weatherspell $tag in $folder. Open it from Spotlight, Launchpad or that folder."
+# Spotlight and Launch Services find a new app on their own, but not
+# always straight away (Elliott, 2026-10-15): ask both now. Neither is
+# needed for the app to run.
+lsregister=/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister
+"$lsregister" -f "$folder/Weatherspell.app" 2>/dev/null || true
+mdimport "$folder/Weatherspell.app" 2>/dev/null || true
+echo "Installed Weatherspell $tag in $folder. Open it from Spotlight or that folder."

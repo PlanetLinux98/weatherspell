@@ -108,6 +108,16 @@ fn main() -> windows::core::Result<()> {
                     t.CurrentToggleState().map(|s| s.0).unwrap_or(-1)
                 ));
             }
+            if let Ok(h) = e.CurrentHelpText()
+                && !h.is_empty()
+            {
+                facts.push(format!("help=\"{}\"", short(&h.to_string(), 50)));
+            }
+            if let Ok(d) = e.GetCurrentPropertyValue(UIA_FullDescriptionPropertyId)
+                && !text(&d).is_empty()
+            {
+                facts.push(format!("description=\"{}\"", short(&text(&d), 50)));
+            }
             if let Ok(k) = e.CurrentAcceleratorKey()
                 && !k.is_empty()
             {

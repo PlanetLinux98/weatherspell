@@ -64,5 +64,37 @@ $parts += "## Rust libraries"
 $parts += "Weatherspell is written in Rust, with these libraries from [crates.io](https://crates.io/), grouped by licence. Where a library offers a choice of licences, it's listed under the one Weatherspell uses."
 $parts += $crateText
 
+# The AppImage's runtime, which linux.yml downloads and appimagetool puts
+# in front of the app: its texts are kept in tools/notices/appimage for
+# the release named in its release file (tag, then commit), and the
+# libraries are the ones its Makefile links (its own LICENSE leaves out
+# mimalloc). Versions from the runtime's install-dependencies.sh and
+# Alpine's packages for the release it builds on (3.21; zlib's version
+# there has moved since, so none is given).
+$runtimeDir = Join-Path $root "tools\notices\appimage"
+function Read-Runtime([string]$name) { [IO.File]::ReadAllText((Join-Path $runtimeDir $name), $utf8).Replace("`r`n", "`n").Trim() }
+$tag, $commit = (Read-Runtime "release") -split " "
+$pinned = [regex]::Match([IO.File]::ReadAllText((Join-Path $root ".github\workflows\linux.yml"), $utf8), "type2-runtime/releases/download/([^/]+)/").Groups[1].Value
+if ($pinned -ne $tag) { throw "linux.yml uses the AppImage runtime $pinned, but tools\notices\appimage holds $tag's licences; refresh them." }
+# The runtime's own licence is its first part; the rest lists libraries.
+$runtimeLicence = [regex]::Match((Read-Runtime "type2-runtime-LICENSE"), "(?s)^.*?SOFTWARE\.").Value
+$runtimeParts = @(
+    @{ Name = "musl"; Url = "https://musl.libc.org/"; Version = "1.2.5"; Does = "is the C library"; File = "musl-COPYRIGHT" },
+    @{ Name = "libfuse"; Url = "https://github.com/libfuse/libfuse"; Version = "3.15.0"; Does = "lets the AppImage be mounted as a folder. It is under the GNU Lesser General Public Licence, version 2.1. Its source is at [libfuse 3.15.0](https://github.com/libfuse/libfuse/releases/tag/fuse-3.15.0), and the one change the runtime makes to it, with everything needed to build the runtime again, is in [the runtime's source](https://github.com/AppImage/type2-runtime/tree/$commit)"; File = "libfuse-LGPL2.txt" },
+    @{ Name = "squashfuse"; Url = "https://github.com/vasi/squashfuse"; Version = "0.5.2"; Does = "reads the AppImage's files"; File = "squashfuse-LICENSE" },
+    @{ Name = "Zstandard"; Url = "https://facebook.github.io/zstd/"; Version = "1.5.6"; Does = "decompresses them (used under its BSD licence)"; File = "zstd-LICENSE" },
+    @{ Name = "zlib"; Url = "https://zlib.net/"; Version = ""; Does = "decompresses them too"; File = "zlib-LICENSE" },
+    @{ Name = "mimalloc"; Url = "https://github.com/microsoft/mimalloc"; Version = "2.1.7"; Does = "manages the runtime's memory"; File = "mimalloc-LICENSE" }
+)
+$parts += "## The AppImage's runtime (Linux)"
+$parts += "On Linux, Weatherspell comes as an AppImage, which begins with AppImage's [type2 runtime](https://github.com/AppImage/type2-runtime) (release $tag): a small program, separate from Weatherspell's own, that opens the AppImage and starts the app inside. It is under the MIT licence:"
+$parts += Fenced $runtimeLicence
+$parts += "The runtime is built with these libraries."
+foreach ($r in $runtimeParts) {
+    $parts += "### $($r.Name)"
+    $parts += ("[$($r.Name)]($($r.Url)) $($r.Version) $($r.Does)." -replace "  ", " ")
+    $parts += Fenced (Read-Runtime $r.File)
+}
+
 [IO.File]::WriteAllText((Join-Path $root $Out), (($parts -join "`n`n") + "`n"), $utf8)
 "Wrote $Out ($((Get-Item (Join-Path $root $Out)).Length) bytes)."

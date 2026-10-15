@@ -1,7 +1,8 @@
 #!/bin/sh
-# Builds Weatherspell.app and a disk image holding it, on a Mac:
+# Builds Weatherspell.app and a disk image holding it, on a Mac with
+# Rust's aarch64-apple-darwin and x86_64-apple-darwin targets:
 # target/release/Weatherspell.app and target/release/Weatherspell.dmg.
-# The app is signed ad hoc (Apple Silicon runs nothing unsigned), not with
+# The app is signed ad hoc (Apple silicon runs nothing unsigned), not with
 # a developer certificate, so a copy downloaded through a browser is
 # blocked until it is allowed in System Settings > Privacy & Security;
 # tools/mac/install.sh installs it without that block.
@@ -11,18 +12,29 @@
 set -eu
 cd "$(dirname "$0")/../.."
 
+# One program for both kinds of Mac: built for Apple silicon and for
+# Intel (wxdragon-sys builds wxWidgets for each), then joined by lipo.
 # build.rs writes Info.plist into the build script's output folder, which
-# only cargo knows.
-out_dir=$(cargo build --release -p weatherspell --message-format=json-render-diagnostics |
-    grep '"reason":"build-script-executed"' |
-    grep '/crates/weatherspell#' |
-    sed -n 's/.*"out_dir":"\([^"]*\)".*/\1/p')
-if [ -z "$out_dir" ]; then
-    echo "Could not find the build script's output folder." >&2
-    exit 1
-fi
+# only cargo knows; it is the same for both.
+out_dir=
+programs=
+for target in aarch64-apple-darwin x86_64-apple-darwin; do
+    dir=$(cargo build --release -p weatherspell --target "$target" --message-format=json-render-diagnostics |
+        grep '"reason":"build-script-executed"' |
+        grep '/crates/weatherspell#' |
+        sed -n 's/.*"out_dir":"\([^"]*\)".*/\1/p')
+    if [ -z "$dir" ] || [ ! -f "target/$target/release/weatherspell" ]; then
+        echo "The build for $target failed." >&2
+        exit 1
+    fi
+    out_dir=${out_dir:-$dir}
+    programs="$programs target/$target/release/weatherspell"
+done
 
 release=target/release
+mkdir -p "$release"
+# shellcheck disable=SC2086 # two paths, without spaces
+lipo -create -output "$release/weatherspell" $programs
 app=$release/Weatherspell.app
 rm -rf "$app"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"

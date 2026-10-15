@@ -1,12 +1,12 @@
 name: Mac
 
-# The app on the Mac (Apple Silicon, macOS 15 and later, signed ad hoc),
-# built as Weatherspell.dmg, uploaded as weatherspell-mac with dump-a11y.js
-# beside it, then linted and tested: uploaded first, so a test that trips
-# on the Mac still leaves something to try. Called by rust.yml on every
-# push that touches the Rust build (symbols kept, so a crash report on the
-# Mac names the functions it went through) and by release.yml for a
-# release.
+# The app on the Mac (Apple silicon and Intel in one program, macOS 15
+# and later, signed ad hoc), built as Weatherspell.dmg, uploaded as
+# weatherspell-mac with dump-a11y.js beside it, then linted and tested:
+# uploaded first, so a test that trips on the Mac still leaves something
+# to try. Called by rust.yml on every push that touches the Rust build
+# (symbols kept, so a crash report on the Mac names the functions it went
+# through) and by release.yml for a release.
 on:
   workflow_call:
     inputs:
@@ -30,11 +30,14 @@ jobs:
           path: |
             ~/.cargo/registry/index/
             ~/.cargo/registry/cache/
-            target/release/wxWidgets
-            target/release/wxwidgets_cmake_build
-            target/release/wxdragon_sys_cmake_build
-          key: wx-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
-          restore-keys: wx-${{ runner.os }}-
+            target/*-apple-darwin/release/wxWidgets
+            target/*-apple-darwin/release/wxwidgets_cmake_build
+            target/*-apple-darwin/release/wxdragon_sys_cmake_build
+          key: wx-mac-universal-${{ hashFiles('Cargo.lock') }}
+          restore-keys: wx-mac-universal-
+
+      - name: Rust for Intel Macs too
+        run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
 
       # wxdragon-sys falls back to make without Ninja, more slowly.
       - name: Ninja
@@ -54,8 +57,16 @@ jobs:
           path: target/mac-download/
           retention-days: 14
 
+      # For the runner's own Apple silicon, named so the build above is
+      # reused rather than made a third time.
       - name: Lint
-        run: cargo clippy --release -p weatherspell -p wx-accessibility --all-targets -- -D warnings
+        run: cargo clippy --release --target aarch64-apple-darwin -p weatherspell -p wx-accessibility --all-targets -- -D warnings
 
       - name: Test
-        run: cargo test --release -p weatherspell -p wx-accessibility
+        run: cargo test --release --target aarch64-apple-darwin -p weatherspell -p wx-accessibility
+
+      # Intel's half, under Rosetta: no Intel Mac tests it otherwise.
+      - name: Test for Intel
+        run: |
+          arch -x86_64 /usr/bin/true 2>/dev/null || softwareupdate --install-rosetta --agree-to-license
+          cargo test --release --target x86_64-apple-darwin -p weatherspell -p wx-accessibility
