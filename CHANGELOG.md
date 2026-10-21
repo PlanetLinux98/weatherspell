@@ -10,6 +10,8 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 
 ## [Unreleased]
 
+## [0.2.0-beta.1] - 2026-10-20
+
 ### Changed
 - The Mac app runs on Intel Macs too, and the install script asks
   Spotlight to find it straight away (#25).
@@ -111,7 +113,8 @@ guide.
   and opens how it was last closed (#5, #16).
 - A user guide (F1), and an About dialog with credits for each source (#8).
 
-[Unreleased]: https://github.com/PlanetLinux98/weatherspell/compare/v0.2.0-alpha.2...HEAD
+[Unreleased]: https://github.com/PlanetLinux98/weatherspell/compare/v0.2.0-beta.1...HEAD
+[0.2.0-beta.1]: https://github.com/PlanetLinux98/weatherspell/compare/v0.2.0-alpha.2...v0.2.0-beta.1
 [0.2.0-alpha.2]: https://github.com/PlanetLinux98/weatherspell/compare/v0.2.0-alpha.1...v0.2.0-alpha.2
 [0.2.0-alpha.1]: https://github.com/PlanetLinux98/weatherspell/compare/v0.1.0...v0.2.0-alpha.1
 [0.1.0]: https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.1.0
