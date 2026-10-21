@@ -34,7 +34,7 @@ install: download it from the
 [Releases page](https://github.com/PlanetLinux98/weatherspell/releases),
 put it wherever you like, and open it.
 
-You can also install it with winget:
+Once Weatherspell is available in winget, you can also install it with:
 
 ```
 winget install PlanetLinux98.Weatherspell
@@ -69,7 +69,10 @@ Settings, under Privacy & Security.
 Weatherspell runs on 64-bit PCs with GTK 3, on Ubuntu 22.04, Debian 12,
 Fedora 36, Linux Mint 21, openSUSE Leap 16 or later, Arch, and other
 systems at least as new. It's been tested with GNOME and Orca at this
-time, and should work on other desktops.
+time, and should work on other desktops. Its announcements (of new alerts,
+and that the forecast is ready) need Ubuntu 24.04, Linux Mint 22, Debian 13
+or a system as new at this time; on older ones, the forecast and alerts
+show as usual, but your screen reader may not announce them.
 
 Weatherspell comes as one file, an AppImage:
 
@@ -316,7 +319,9 @@ change how often it checks, and choose whether to announce all new alerts,
 only severe and extreme ones, or none.
 
 Alerts are announced while Weatherspell is open, and some screen readers
-may only announce them while Weatherspell is the active window.
+may only announce them while Weatherspell is the active window. On Linux,
+announcements need a recent system; see
+[Installing on Linux](#installing-on-linux).
 
 If an alert check doesn't get through, the Alerts section says so and shows
 the alerts from the last check that did, with how long ago that was.

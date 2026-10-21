@@ -36,7 +36,7 @@ Weatherspell is a single `Weatherspell.exe`. Download it from the
 put it wherever you like, and run it. It needs nothing else on 64-bit
 Windows 10 (version 1709 and later) and Windows 11.
 
-You can also install it with winget:
+Once Weatherspell is available in winget, you can also install it with:
 
 ```
 winget install PlanetLinux98.Weatherspell
@@ -73,7 +73,10 @@ Your saved locations and settings live in
 Weatherspell runs on 64-bit PCs with GTK 3, on Ubuntu 22.04, Debian 12,
 Fedora 36, Linux Mint 21, openSUSE Leap 16 or later, Arch, and other
 systems at least as new. It's been tested with GNOME and Orca at this
-time, and should work on other desktops.
+time, and should work on other desktops. Its announcements (of new alerts,
+and that the forecast is ready) need Ubuntu 24.04, Linux Mint 22, Debian 13
+or a system as new at this time; on older ones, the forecast and alerts
+show as usual, but your screen reader may not announce them.
 
 Download `Weatherspell-x86_64.AppImage` from the
 [latest release](https://github.com/PlanetLinux98/weatherspell/releases/latest),
