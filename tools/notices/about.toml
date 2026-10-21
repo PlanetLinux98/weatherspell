@@ -1,7 +1,9 @@
 # cargo-about's settings for THIRD-PARTY-NOTICES.md (tools/Update-Notices.ps1).
 # Where a crate offers a choice, the first licence here that it offers is
-# the one credited. Only what goes into the Windows exe is listed: no
-# build or test dependencies, and not the workspace's own crates.
+# the one credited. Only what goes into the shipped apps is listed (the
+# Windows exe, the Mac app's two halves, the Linux AppImage; one page
+# covers all three): no build or test dependencies, and not the
+# workspace's own crates. tests/notices.rs checks the same targets.
 accepted = [
     "MIT",
     "Apache-2.0",
@@ -13,7 +15,12 @@ accepted = [
     "0BSD",
     "Unlicense",
 ]
-targets = ["x86_64-pc-windows-msvc"]
+targets = [
+    "x86_64-pc-windows-msvc",
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    "x86_64-unknown-linux-gnu",
+]
 ignore-build-dependencies = true
 ignore-dev-dependencies = true
 private = { ignore = true }
