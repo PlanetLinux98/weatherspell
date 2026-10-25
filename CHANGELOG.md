@@ -12,11 +12,17 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 
 ## [0.2.0] - 2026-10-25
 
-The first release for the Mac and Linux, alongside Windows. On Windows,
-download `Weatherspell.exe` and run it; on the Mac, install it with the
-Terminal command in the README; on Linux, download
-`Weatherspell-x86_64.AppImage` and allow it to run as a program. Press F1
+The first release for the Mac and Linux, alongside Windows. Press F1
 (Cmd+? on the Mac) for the user guide, which covers all three systems.
+
+- **Windows:** download `Weatherspell.exe` and run it.
+- **Mac:** paste this line into Terminal and press Return. It downloads
+  the latest release, checks it against the release's checksums, and
+  copies Weatherspell into your Applications folder:
+  `curl -fsSL https://raw.githubusercontent.com/PlanetLinux98/weatherspell/main/tools/mac/install.sh | sh`
+- **Linux:** download `Weatherspell-x86_64.AppImage`, allow it to run as
+  a program (in its properties in your file manager, or with
+  `chmod +x`), and open it.
 
 ### Added
 - Weatherspell for the Mac, for macOS 15 (Sequoia) or later on Apple
