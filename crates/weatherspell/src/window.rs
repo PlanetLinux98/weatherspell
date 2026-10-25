@@ -51,6 +51,7 @@ const ID_MANAGE: Id = ID_HIGHEST + 5;
 const ID_ADD: Id = ID_HIGHEST + 6;
 const ID_GUIDE: Id = ID_HIGHEST + 7;
 const ID_RESET_WINDOW: Id = ID_HIGHEST + 8;
+const ID_DONATE: Id = ID_HIGHEST + 9;
 const ID_BIGGER: Id = ID_HIGHEST + 20;
 const ID_SMALLER: Id = ID_HIGHEST + 21;
 const ID_ACTUAL_SIZE: Id = ID_HIGHEST + 22;
@@ -451,6 +452,7 @@ fn handles(id: Id) -> bool {
             | ID_PREFERENCES
             | ID_GUIDE
             | ID_RESET_WINDOW
+            | ID_DONATE
             | ID_BIGGER
             | ID_SMALLER
             | ID_ACTUAL_SIZE
@@ -501,6 +503,9 @@ fn menu_bar(settings: &AppSettings) -> MenuBar {
     let help = Menu::builder()
         .append_item(ID_GUIDE, &format!("&User Guide{}", keys::GUIDE), "")
         .append_separator()
+        // Not "Support Weatherspell", which in a Help menu reads as getting
+        // help. Only this item: no dialog, no reminders.
+        .append_item(ID_DONATE, "&Donate", "")
         .append_item(ID_ABOUT, "&About Weatherspell", "")
         .build();
     let mut bar = MenuBar::builder()
@@ -816,6 +821,7 @@ impl MainWindow {
             ID_PREFERENCES => self.show_settings(),
             ID_GUIDE => guide::open(&self.frame, None),
             ID_RESET_WINDOW => self.reset_window(),
+            ID_DONATE => about::open(&self.frame, about::DONATE),
             ID_BIGGER => self.change_text_size(self.text_size.get().bigger()),
             ID_SMALLER => self.change_text_size(self.text_size.get().smaller()),
             ID_ACTUAL_SIZE => self.change_text_size(TextSize::ACTUAL),

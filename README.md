@@ -188,6 +188,12 @@ The C# app that was Weatherspell 0.1 is still in `src\`, for fixes to
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how changes are made and reviewed,
 and [NOTES.md](NOTES.md) for the design decisions behind the project.
 
+## Supporting Weatherspell
+
+Weatherspell is free. If you'd like to support its development, you can
+give once or monthly on [Ko-fi](https://ko-fi.com/planetlinux), and
+Donate in the app's Help menu opens the same page. Thank you!
+
 ## Licence
 
 [MIT](LICENSE).

@@ -10,6 +10,10 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 
 ## [Unreleased]
 
+### Added
+- Donate, in the Help menu, opens Weatherspell's Ko-fi page, for anyone
+  who'd like to support its development.
+
 ## [0.2.0-beta.1] - 2026-10-20
 
 ### Changed

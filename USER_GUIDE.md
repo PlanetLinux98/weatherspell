@@ -464,6 +464,15 @@ screen reader, magnifier or other assistive technology, please
 Ideas for Weatherspell are welcome there too. Reporting needs a free GitHub
 account, and including the version from About, and your system, helps.
 
+## Supporting Weatherspell
+
+Weatherspell is free for everyone. If it's helped you and you'd like to
+support its development, choose Donate from the Help menu, which opens
+Weatherspell's page on [Ko-fi](https://ko-fi.com/planetlinux) in your web
+browser. You can give once or monthly, by card or PayPal, without a Ko-fi
+account. Donations go toward the time, testing and tools that keep
+Weatherspell going, and are always appreciated, but never expected.
+
 ## Credits and licences
 
 Weatherspell is free and open source, released under the MIT licence

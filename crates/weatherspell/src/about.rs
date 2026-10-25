@@ -16,6 +16,9 @@ const ID_CREDITS: Id = ID_HIGHEST + 1;
 const ID_WEBSITE: Id = ID_HIGHEST + 2;
 
 pub const WEBSITE: &str = "https://github.com/PlanetLinux98/weatherspell";
+// Help > Donate; the guide's and README's Supporting Weatherspell sections
+// and .github/FUNDING.yml name the same page.
+pub const DONATE: &str = "https://ko-fi.com/planetlinux";
 pub const LOGO: &[u8] = include_bytes!("../../../Assets/Weatherspell.svg");
 
 fn paragraphs() -> Vec<String> {
