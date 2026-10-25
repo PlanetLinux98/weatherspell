@@ -10,67 +10,43 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-25
+
+The first release for the Mac and Linux, alongside Windows. On Windows,
+download `Weatherspell.exe` and run it; on the Mac, install it with the
+Terminal command in the README; on Linux, download
+`Weatherspell-x86_64.AppImage` and allow it to run as a program. Press F1
+(Cmd+? on the Mac) for the user guide, which covers all three systems.
+
 ### Added
+- Weatherspell for the Mac, for macOS 15 (Sequoia) or later on Apple
+  silicon and Intel, installed with one Terminal command that checks the
+  download. It follows the Mac's keys and menus (Cmd+R refreshes, Cmd+]
+  and Cmd+[ move between sections, Settings is in the app menu) and its
+  region settings, and the View menu has Bigger Text, Smaller Text and
+  Actual Text Size (#25).
+- Weatherspell for Linux, as one AppImage, for 64-bit PCs with GTK 3,
+  such as Ubuntu 22.04, Debian 12 and Fedora 36 or later. Units, time
+  format, text size, and light or dark mode follow the system's
+  settings. Announcements need Ubuntu 24.04, Debian 13 or a system as
+  new at this time (#26, #27).
+- Follows the system's light or dark mode, and changes along with it
+  while open (#24).
+- View > Reset Window Size and Position puts the main window back where
+  and how it first opened.
 - Donate, in the Help menu, opens Weatherspell's Ko-fi page, for anyone
   who'd like to support its development.
 
-## [0.2.0-beta.1] - 2026-10-20
-
 ### Changed
-- The Mac app runs on Intel Macs too, and the install script asks
-  Spotlight to find it straight away (#25).
-- NVDA, Narrator and VoiceOver read Edit Location's "Leave it empty to
-  use the full name." with the nickname field, as Orca does.
-- The third-party notices cover every library in the Mac and Linux apps
-  and the runtime inside the Linux AppImage, and releases include that
-  runtime's source.
-- The user guide and README cover the Mac and Linux, with each system's
-  keys side by side, and say which Linux systems have announcements
-  (#27).
-
-### Fixed
-- Updated the library behind secure connections, for its latest security
-  fixes.
-- On the Mac, the forecast text shown before any location is added named
-  Ctrl+Shift+L rather than Cmd+Shift+L.
-
-## [0.2.0-alpha.2] - 2026-10-15
-
-### Added
-- Weatherspell for the Mac, as `Weatherspell.dmg`, for Macs with Apple
-  silicon on macOS 15 (Sequoia) or later, with a script that installs it
-  without Gatekeeper's warning. It follows the Mac's keys and menus
-  (Cmd+R refreshes, Cmd+] and Cmd+[ move between sections, Settings is
-  in the app menu) and its region settings, and the View menu has Bigger
-  Text, Smaller Text and Actual Text Size (#25).
-- Weatherspell for Linux, as `Weatherspell-x86_64.AppImage`, for 64-bit
-  PCs with GTK 3, such as Ubuntu 22.04, Debian 12 and Fedora 36 or later.
-  Units, time format, text size, and light or dark mode follow the
-  system's settings (#26).
-- View > Reset Window Size and Position puts the main window back where
-  and how it first opened.
-
-### Changed
-- Environment Canada's alerts are named with their colour level first, as
-  in "Yellow wind warning".
-
-### Fixed
-- In dark mode, Narrator didn't say whether a check box was checked when
-  it was toggled.
-
-## [0.2.0-alpha.1] - 2026-10-06
-
-### Added
-- Follows the light or dark mode chosen in Windows (#24).
-
-### Changed
-- Weatherspell is rebuilt in Rust with wxWidgets, to streamline
-  development and as the base for Mac and Linux versions later. It's still
-  one executable, and it keeps using your saved locations and settings
-  from prior versions. Requires 64-bit Windows at this time (#24).
+- Weatherspell is rebuilt in Rust with wxWidgets, which is what makes the
+  Mac and Linux versions possible. On Windows it's still one executable,
+  and it keeps your saved locations and settings from 0.1. It now needs
+  64-bit Windows: Windows 10 (version 1709 and later) or Windows 11 (#24).
 - Manage Locations: Rename becomes Edit (Alt+E or F2), and the choice of
   whether a location's alerts are announced moves into the Edit Location
   dialog, which names the place (#24).
+- Environment Canada's alerts are named with their colour level first,
+  as in "Yellow wind warning".
 
 ### Fixed
 - With Narrator, the heading was said twice after Ctrl+PageDown,
@@ -117,8 +93,6 @@ guide.
   and opens how it was last closed (#5, #16).
 - A user guide (F1), and an About dialog with credits for each source (#8).
 
-[Unreleased]: https://github.com/PlanetLinux98/weatherspell/compare/v0.2.0-beta.1...HEAD
-[0.2.0-beta.1]: https://github.com/PlanetLinux98/weatherspell/compare/v0.2.0-alpha.2...v0.2.0-beta.1
-[0.2.0-alpha.2]: https://github.com/PlanetLinux98/weatherspell/compare/v0.2.0-alpha.1...v0.2.0-alpha.2
-[0.2.0-alpha.1]: https://github.com/PlanetLinux98/weatherspell/compare/v0.1.0...v0.2.0-alpha.1
+[Unreleased]: https://github.com/PlanetLinux98/weatherspell/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/PlanetLinux98/weatherspell/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.1.0

@@ -23,12 +23,6 @@ by anyone who wants the weather in a simple and straightforward manner.
 
 ## Running it
 
-Weatherspell 0.2.0, the first release for the Mac and Linux, is still to
-come. Until then, the Mac and Linux versions are in the newest preview on
-the [Releases page](https://github.com/PlanetLinux98/weatherspell/releases);
-on the Mac, end the install line below with `| sh -s -- --preview` in
-place of `| sh`.
-
 ### Windows
 
 Weatherspell is a single `Weatherspell.exe`. Download it from the
