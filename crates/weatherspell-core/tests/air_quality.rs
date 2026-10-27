@@ -194,6 +194,10 @@ fn a_forecast_that_starts_soon_stands_for_now_and_one_that_has_not_started_says_
         lines(&later),
         ["There is no Air Quality Health Index for this hour yet."]
     );
+    // An old forecast's hours, all past: nothing about now, and no
+    // section at all without pollen.
+    let past = quality(Scale::Us, vec![hour(3, 40.0, None), hour(6, 45.0, None)]);
+    assert!(air::section(&past, now_local()).is_none());
 }
 
 #[test]

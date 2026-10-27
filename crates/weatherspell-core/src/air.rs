@@ -615,12 +615,14 @@ pub fn section(air: &AirQuality, now_local: DateTime) -> Option<Section> {
                 paragraphs.push(format!(
                     "Air quality couldn't be checked this time ({problem}). Press F5 to try again."
                 ));
-            } else if !air.hours.is_empty() || air.observed.is_some() {
+            } else if air.hours.iter().any(|h| h.local_time > hour) {
                 paragraphs.push(format!(
                     "There is no {} for this hour yet.",
                     air.scale.name()
                 ));
             }
+            // Hours all past (an old forecast from the cache, whose age
+            // Right now gives): nothing to say about now.
         }
     }
     if let Some(line) = pollen_line(&air.pollen, now_local) {
