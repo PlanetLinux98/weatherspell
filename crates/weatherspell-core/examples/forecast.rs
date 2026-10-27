@@ -1,15 +1,17 @@
 // The port's forecast text for a place, fetched live, as the app will show
 // it: a quick look at the real services before there is a window.
 //
-//     cargo run -p weatherspell-core --features net --example forecast -- "Peterborough, Canada" [--imperial]
+//     cargo run -p weatherspell-core --features net --example forecast -- "Peterborough, Canada" [--imperial] [--details]
 //
 // A place name, postal code or coordinates, as Add Location takes them;
 // for a name, the first place found whose full name contains the words
-// after the comma. This PC's time zone, and the 12-hour clock.
+// after the comma. This PC's time zone, and the 12-hour clock. --details
+// adds each alert's details as the dialog shows them.
 
 use jiff::Timestamp;
 use jiff::tz::TimeZone;
-use weatherspell_core::clock::TimeFormat;
+use weatherspell_core::alerts;
+use weatherspell_core::clock::{Clock, TimeFormat};
 use weatherspell_core::coordinates::{self, CoordinateReading};
 use weatherspell_core::fetch::{ForecastService, check_alerts};
 use weatherspell_core::location::Location;
@@ -82,12 +84,30 @@ fn main() {
         time_format: TimeFormat::new("h:mm tt", "AM", "PM"),
         refresh_problem: None,
     };
-    let alerts = check_alerts(&http, &place, now);
-    for section in writer::write(&forecast, &options, Some(&alerts)) {
+    let report = check_alerts(&http, &place, now);
+    for section in writer::write(&forecast, &options, Some(&report)) {
         println!("{}\n", section.heading);
         for paragraph in section.paragraphs {
             println!("{paragraph}\n");
         }
         println!();
+    }
+    if args.iter().any(|a| a == "--details") {
+        let clock = Clock::new(
+            forecast.utc_offset,
+            options.pc_zone.clone(),
+            options.time_format.clone(),
+        );
+        let now_local = forecast.utc_offset.to_datetime(now);
+        for alert in &report.alerts {
+            println!("Details: {}\n", alert.event);
+            for paragraph in alerts::details(alert, &clock, now_local) {
+                println!("{paragraph}\n");
+            }
+            println!(
+                "Official page: {}\n",
+                alert.url.as_deref().unwrap_or("none")
+            );
+        }
     }
 }

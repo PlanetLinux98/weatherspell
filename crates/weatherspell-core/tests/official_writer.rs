@@ -400,6 +400,8 @@ fn the_forecast_text_leads_with_the_alerts_and_credits_their_source() {
         instruction: None,
         url: None,
         expires: None,
+        references: None,
+        notice: None,
     };
     let report = AlertReport {
         alerts: vec![a.clone()],

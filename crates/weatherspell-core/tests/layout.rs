@@ -22,6 +22,8 @@ fn frost() -> WeatherAlert {
         instruction: None,
         url: Some("https://weather.gc.ca/".to_string()),
         expires: None,
+        references: None,
+        notice: None,
     }
 }
 

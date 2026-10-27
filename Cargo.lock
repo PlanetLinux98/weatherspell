@@ -1815,6 +1815,7 @@ dependencies = [
 name = "weatherspell-core"
 version = "0.0.0"
 dependencies = [
+ "flate2",
  "jiff",
  "regex",
  "roxmltree",

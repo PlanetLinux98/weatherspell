@@ -1,0 +1,1478 @@
+{
+ "warnings": [
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261020091423.8c16555e-2a7d-4671-9964-6744a1a0c9de",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "From Belfast Lough to Carlingford Lough to Carnsore Point, on the Irish Sea",
+        "geocode": [
+         {
+          "value": "EI811",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI807",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI808",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI810",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI824",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI809",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI823",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI825",
+          "valueName": "EMMA_ID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Northwest winds will reach gale force 8 at times.</p>",
+      "effective": "2026-10-20T09:14:23+01:00",
+      "event": "Yellow Gale",
+      "expires": "2026-10-21T12:00:00+01:00",
+      "headline": "Status Yellow - Marine Gale warning from Belfast Lough to Carlingford Lough to Carnsore Point, on the Irish Sea",
+      "language": "en-GB",
+      "onset": "2026-10-21T04:00:00+01:00",
+      "parameter": [
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Monitor"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-20T09:14:23+01:00",
+    "status": "Actual"
+   },
+   "uuid": "b55908e7-7dd4-4b80-a52c-e765d73a9088"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261020221541.fe58ae6f-0f22-427b-a3df-8b6aa5ff8206",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "From Erris Head to Rossan Point to Bloody Foreland",
+        "geocode": [
+         {
+          "value": "EI820",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI821",
+          "valueName": "EMMA_ID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Northwesterly winds will reach gale force 8 for a time tonight.</p>",
+      "effective": "2026-10-20T22:15:41+01:00",
+      "event": "Yellow Gale",
+      "expires": "2026-10-21T02:00:00+01:00",
+      "headline": "Status Yellow - Marine Gale warning from Erris Head to Rossan Point to Bloody Foreland",
+      "language": "en-GB",
+      "onset": "2026-10-21T00:00:00+01:00",
+      "parameter": [
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Monitor"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-20T22:15:41+01:00",
+    "status": "Actual"
+   },
+   "uuid": "5c6018af-8f28-479d-b644-f884f8737653"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261021054948.53a21afc-3b4f-4997-96dc-73db1ba31bc9",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "From Rossan Point to Belfast Lough to Carnsore Point, on the Irish Sea",
+        "geocode": [
+         {
+          "value": "EI811",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI822",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI806",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI821",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI807",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI808",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI810",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI805",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI824",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI809",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI823",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI825",
+          "valueName": "EMMA_ID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Northwest winds will reach gale force 8 at times.</p>",
+      "effective": "2026-10-21T05:49:48+01:00",
+      "event": "Yellow Gale",
+      "expires": "2026-10-21T16:00:00+01:00",
+      "headline": "Status Yellow - Marine Gale warning from Rossan Point to Belfast Lough to Carnsore Point, on the Irish Sea",
+      "language": "en-GB",
+      "onset": "2026-10-21T06:00:00+01:00",
+      "parameter": [
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Monitor"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-21T05:49:48+01:00",
+    "status": "Actual"
+   },
+   "uuid": "e8bafc25-9b43-4875-b1f4-592a6f874275"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261021063648.e7fdba99-f826-4162-a59d-abb43488b761",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Dublin, Wicklow",
+        "geocode": [
+         {
+          "value": "EI07",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI31",
+          "valueName": "FIPS"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>A spell of heavy rain with strong and gusty winds.</p><p>Be aware of potential impacts:</p><ul><li>Difficult travelling conditions</li><li>Localised flooding possible</li></ul>",
+      "effective": "2026-10-20T10:42:17+01:00",
+      "event": "Yellow Rain",
+      "expires": "2026-10-21T10:00:00+01:00",
+      "headline": "Status Yellow - Rain warning for Dublin, Wicklow",
+      "language": "en-GB",
+      "onset": "2026-10-21T01:00:00+01:00",
+      "parameter": [
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Monitor"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Update",
+    "references": "forecasts@met.ie,2.49.0.1.372.0.261020104217.b119a2dc-6ecf-4334-80bc-076e64d192aa,2026-10-20T10:42:17+01:00",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-21T06:36:48+01:00",
+    "status": "Actual"
+   },
+   "uuid": "76c95e47-ff0b-44b3-b483-f53699ff3c4f"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261021082347.dd7ed559-6a8f-4245-b1fb-cd450af3c26c",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "From Wicklow Head to Dungarvan to Valentia, on the Irish Sea South of Anglesey",
+        "geocode": [
+         {
+          "value": "EI811",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI812",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI813",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI814",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI815",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI816",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI823",
+          "valueName": "EMMA_ID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Storm Austen: North to northwest winds will reach storm force 10 at times.</p>",
+      "effective": "2026-10-21T08:23:47+01:00",
+      "event": "Orange Gale",
+      "expires": "2026-10-23T07:00:00+01:00",
+      "headline": "Status Orange - Marine Storm warning from Wicklow Head to Dungarvan to Valentia, on the Irish Sea South of Anglesey",
+      "language": "en-GB",
+      "onset": "2026-10-22T21:00:00+01:00",
+      "parameter": [
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "3; orange; Severe",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Severe",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-21T08:23:47+01:00",
+    "status": "Actual"
+   },
+   "uuid": "943d92bb-2cff-4ab0-923e-fb2f0540ae5c"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261021103853.9d551def-41ab-45ed-be1d-59cf78e9d011",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Cork, Kerry, Waterford",
+        "geocode": [
+         {
+          "value": "EI11",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI04",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI27",
+          "valueName": "FIPS"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Intense rain associated with Storm Austen.</p><p>&nbsp;</p><p>Prepare for impacts:</p><ul><li>Disruption and delays to public transport (rail, bus)</li><li>Flooding expected</li><li>Very difficult travelling conditions</li></ul>",
+      "effective": "2026-10-21T10:38:53+01:00",
+      "event": "Orange Rain",
+      "expires": "2026-10-23T05:00:00+01:00",
+      "headline": "Status Orange - Rain warning for Cork, Kerry, Waterford",
+      "language": "en-GB",
+      "onset": "2026-10-22T22:00:00+01:00",
+      "parameter": [
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "3; orange; Severe",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Severe",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-21T10:38:53+01:00",
+    "status": "Actual"
+   },
+   "uuid": "2430c6b2-d3ad-4f68-a468-a0cb310e24f5"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261021104122.797124aa-7cd2-4250-99c9-c021ddca2083",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Dublin, Wexford, Wicklow",
+        "geocode": [
+         {
+          "value": "EI07",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI30",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI31",
+          "valueName": "FIPS"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Intense rain associated with Storm Austen.</p><p>Prepare for impacts:</p><ul><li>Disruption and delays to public transport (rail, bus)</li><li>Flooding expected</li><li>Very difficult travelling conditions</li></ul>",
+      "effective": "2026-10-21T10:41:22+01:00",
+      "event": "Orange Rain",
+      "expires": "2026-10-23T08:00:00+01:00",
+      "headline": "Status Orange - Rain warning for Dublin, Wexford, Wicklow",
+      "language": "en-GB",
+      "onset": "2026-10-23T02:00:00+01:00",
+      "parameter": [
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "3; orange; Severe",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Severe",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-21T10:41:22+01:00",
+    "status": "Actual"
+   },
+   "uuid": "6a44945b-5a48-4c19-850a-6c6049f7a1a1"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261021151026.07743cb6-50ed-4d27-b341-d1a4b2eaba51",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "From Fair Head to Carnsore Point to Slyne Head, on the Irish Sea",
+        "geocode": [
+         {
+          "value": "EI811",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI817",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI806",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI812",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI807",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI808",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI810",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI813",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI814",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI815",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI816",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI818",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI824",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI809",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI823",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI825",
+          "valueName": "EMMA_ID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Storm Austen: Cyclonic variable winds, becoming northwesterly will reach gale force 8 or strong gale force 9 at times.</p>",
+      "effective": "2026-10-20T15:55:51+01:00",
+      "event": "Yellow Gale",
+      "expires": "2026-10-23T19:00:00+01:00",
+      "headline": "Status Yellow - Marine Gale warning from Fair Head to Carnsore Point to Slyne Head, on the Irish Sea",
+      "language": "en-GB",
+      "onset": "2026-10-22T18:00:00+01:00",
+      "parameter": [
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Monitor"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Update",
+    "references": "forecasts@met.ie,2.49.0.1.372.0.261020155551.3a3e5b26-53ad-4424-8df1-7f1fb987570a,2026-10-20T15:55:51+01:00",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-21T15:10:26+01:00",
+    "status": "Actual"
+   },
+   "uuid": "3f2d3d9c-4da6-41d6-a433-b4a37851a59a"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261022095713.d9a85519-4da0-40a0-a10c-bfc6632296ff",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Leinster, Munster",
+        "geocode": [
+         {
+          "value": "EI07",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI15",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI18",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI12",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI29",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI01",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI19",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI23",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI21",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI03",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI11",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI30",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI16",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI04",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI13",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI31",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI27",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI26",
+          "valueName": "FIPS"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Heavy rain associated with Storm Austen will spread eastwards across the country. Strong easterly winds will back northwesterly and strengthen further, especially in the south and southeast.</p><p>Be aware of potential impacts:</p><ul><li>Difficult travelling conditions</li><li>Localised flooding possible</li><li>Outdoor events impacted</li><li>Debris, loose objects displaced</li><li>Some fallen trees, branches</li></ul>",
+      "effective": "2026-10-20T10:56:52+01:00",
+      "event": "Yellow Rain",
+      "expires": "2026-10-23T10:00:00+01:00",
+      "headline": "Status Yellow - Rain & Wind warning for Leinster & Munster",
+      "language": "en-GB",
+      "onset": "2026-10-22T19:00:00+01:00",
+      "parameter": [
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Monitor"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Update",
+    "references": "forecasts@met.ie,2.49.0.1.372.0.261022093800.4dc2f102-f033-44a5-a819-ce84cfe303a6,2026-10-22T09:38:00+01:00",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-22T09:57:13+01:00",
+    "status": "Actual"
+   },
+   "uuid": "361d4257-aa6c-4a07-b215-75e14c3e4cfa"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261022143209.ed9ff7c4-77f6-4e00-a2ff-17f9e665bc9d",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "All coasts of Ireland and on the Irish Sea",
+        "geocode": [
+         {
+          "value": "EI811",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI822",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI817",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI806",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI812",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI819",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI820",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI821",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI807",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI808",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI810",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI805",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI813",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI814",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI815",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI816",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI818",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI824",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI809",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI823",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI825",
+          "valueName": "EMMA_ID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Storm Boelo: Southerly winds veering westerly will reach gale force 8 or higher at times.&nbsp;</p>",
+      "effective": "2026-10-22T06:44:39+01:00",
+      "event": "Yellow Gale",
+      "expires": "2026-10-25T22:00:00+00:00",
+      "headline": "Status Yellow - Marine Gale warning for all coasts of Ireland and on the Irish Sea",
+      "language": "en-GB",
+      "onset": "2026-10-24T04:00:00+01:00",
+      "parameter": [
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Monitor"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Update",
+    "references": "forecasts@met.ie,2.49.0.1.372.0.261022064439.96be1a06-68d8-40d1-b5cd-7ef6891bc952,2026-10-22T06:44:39+01:00",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-22T14:32:09+01:00",
+    "status": "Actual"
+   },
+   "uuid": "192f34c4-0e11-4ae8-8139-6d0932e90521"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261023085908.8c250866-df47-44ea-b365-2e3d0aa6152c",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Clare, Cork, Donegal, Galway, Kerry, Leitrim, Limerick, Mayo, Sligo",
+        "geocode": [
+         {
+          "value": "EI14",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI10",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI20",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI03",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI11",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI25",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI16",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI06",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI04",
+          "valueName": "FIPS"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Storm Boelo will bring spells of heavy rain.&nbsp;</p><p>Be aware of potential impacts:</p><ul><li>Difficult travelling conditions</li><li>Localised flooding possible</li><li>Outdoor events impacted</li></ul>",
+      "effective": "2026-10-23T08:59:08+01:00",
+      "event": "Yellow Rain",
+      "expires": "2026-10-24T15:00:00+01:00",
+      "headline": "Status Yellow - Rain warning for Clare, Cork, Donegal, Galway, Kerry, Leitrim, Limerick, Mayo, Sligo",
+      "language": "en-GB",
+      "onset": "2026-10-24T04:00:00+01:00",
+      "parameter": [
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Monitor"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-23T08:59:08+01:00",
+    "status": "Actual"
+   },
+   "uuid": "0d7509ff-8183-4cb6-bf7f-10e6ede5b08c"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261023091139.14f6d8ac-abbc-49c9-912b-06b9e68dcffb",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Connacht, Clare, Kerry, Limerick",
+        "geocode": [
+         {
+          "value": "EI14",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI10",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI20",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI03",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI11",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI25",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI16",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI24",
+          "valueName": "FIPS"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Storm Boelo: Very strong southwest winds will veer westerly with severe gusts and coastal gales.&nbsp;</p><p>Be aware of potential impacts:</p><ul><li>Debris, loose objects displaced</li><li>Difficult driving and cycling conditions</li><li>Large coastal waves</li><li>Some fallen trees, branches</li><li>Outdoor events impacted</li></ul>",
+      "effective": "2026-10-23T09:11:39+01:00",
+      "event": "Yellow Wind",
+      "expires": "2026-10-25T12:00:00+00:00",
+      "headline": "Status Yellow - Wind warning for Connacht, Clare, Kerry, Limerick",
+      "language": "en-GB",
+      "onset": "2026-10-24T13:00:00+01:00",
+      "parameter": [
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Monitor"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-23T09:11:39+01:00",
+    "status": "Actual"
+   },
+   "uuid": "ed0c797b-1518-4273-9e24-389271fc5984"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261023091842.e947eb0b-d1f7-4798-a72f-dbea8742cce0",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Donegal",
+        "geocode": [
+         {
+          "value": "EI06",
+          "valueName": "FIPS"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Storm Boelo: Very strong southwest winds will veer westerly with severe gusts and coastal gales.</p><p>Be aware of potential impacts:</p><ul><li>Debris, loose objects displaced</li><li>Difficult driving and cycling conditions</li><li>Large coastal waves</li><li>Some fallen trees, branches</li><li>Outdoor events impacted</li></ul>",
+      "effective": "2026-10-23T09:14:07+01:00",
+      "event": "Yellow Wind",
+      "expires": "2026-10-25T15:00:00+00:00",
+      "headline": "Status Yellow - Wind warning for Donegal",
+      "language": "en-GB",
+      "onset": "2026-10-24T13:00:00+01:00",
+      "parameter": [
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Monitor"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Update",
+    "references": "forecasts@met.ie,2.49.0.1.372.0.261023091407.e41b3063-1c81-4600-8962-029975ca2003,2026-10-23T09:14:07+01:00",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-23T09:18:42+01:00",
+    "status": "Actual"
+   },
+   "uuid": "a42d097e-7956-42d9-b592-39e12ba95657"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261023102509.d52a83e2-3993-44cf-8372-64a9fdbd114d",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Donegal, Galway, Leitrim, Mayo, Sligo",
+        "geocode": [
+         {
+          "value": "EI14",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI10",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI20",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI25",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI06",
+          "valueName": "FIPS"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Storm Boelo: Gale force westerly winds with severe and damaging gusts.</p><p>Prepare for impacts:</p><ul><li>Damage to already weakened structures</li><li>Damage to power lines, power outages</li><li>Disruption and delays to public transport likely (air, rail, bus, ferry)</li><li>Fallen trees</li><li>Large coastal waves</li><li>Loose objects displaced</li><li>Coastal flooding where winds onshore</li><li>Very difficult travelling conditions, dangerous conditions at sea</li></ul>",
+      "effective": "2026-10-23T09:22:16+01:00",
+      "event": "Orange Wind",
+      "expires": "2026-10-25T09:00:00+00:00",
+      "headline": "Status Orange - Wind warning for Donegal, Galway, Leitrim, Mayo, Sligo",
+      "language": "en-GB",
+      "onset": "2026-10-24T14:00:00+01:00",
+      "parameter": [
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "3; orange; Severe",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Severe",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Update",
+    "references": "forecasts@met.ie,2.49.0.1.372.0.261023092216.ebc4165c-684d-4293-99a7-c721dc4d4d5d,2026-10-23T09:22:16+01:00",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-23T10:25:09+01:00",
+    "status": "Actual"
+   },
+   "uuid": "7a00b3f4-848b-4210-bd96-b5435c9ffb00"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261023222831.65a2ad0d-72df-4b96-86a3-3e1b230773e8",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Galway, Kerry",
+        "geocode": [
+         {
+          "value": "EI10",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI11",
+          "valueName": "FIPS"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Storm Boelo will bring spells of very heavy rain.&nbsp;</p><p>Possible Impacts:</p><ul><li>Damage to homes and businesses possible</li><li>Disruption and delays to public transport (rail, bus)</li><li>Flooding expected</li><li>Outdoor events disrupted</li><li>Difficult travelling conditions</li></ul>",
+      "effective": "2026-10-23T09:17:47+01:00",
+      "event": "Orange Rain",
+      "expires": "2026-10-24T14:00:00+01:00",
+      "headline": "Status Orange - Rain warning for Galway, Kerry",
+      "language": "en-GB",
+      "onset": "2026-10-24T07:00:00+01:00",
+      "parameter": [
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "3; orange; Severe",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Severe",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Update",
+    "references": "forecasts@met.ie,2.49.0.1.372.0.261023091747.7cd5f885-adba-492b-a9e0-68b4e7efce69,2026-10-23T09:17:47+01:00",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-23T22:28:31+01:00",
+    "status": "Actual"
+   },
+   "uuid": "91ed500a-9498-4f2e-ad2f-fcbf59d4a72c"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261024081905.50f22198-3eca-4d01-a61d-438433469359",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Cavan, Dublin, Longford, Louth, Meath, Monaghan, Westmeath",
+        "geocode": [
+         {
+          "value": "EI07",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI18",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI29",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI19",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI21",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI02",
+          "valueName": "FIPS"
+         },
+         {
+          "value": "EI22",
+          "valueName": "FIPS"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Storm Boelo: Very strong southwesterly winds will veer westerly with severe gusts.</p><p>&nbsp;</p><p>Be aware of potential impacts:</p><ul><li>Debris, loose objects displaced</li><li>Difficult driving and cycling conditions</li><li>Some fallen trees, branches</li><li>Outdoor events impacted</li></ul><p>&nbsp;</p>",
+      "effective": "2026-10-23T20:59:15+01:00",
+      "event": "Yellow Wind",
+      "expires": "2026-10-25T12:00:00+00:00",
+      "headline": "Status Yellow - Wind warning for Cavan, Dublin, Longford, Louth, Meath, Monaghan, Westmeath",
+      "language": "en-GB",
+      "onset": "2026-10-24T18:00:00+01:00",
+      "parameter": [
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Monitor"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Update",
+    "references": "forecasts@met.ie,2.49.0.1.372.0.261023205915.e5318149-5145-493e-beb6-92f2a6f98a35,2026-10-23T20:59:15+01:00",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-24T08:19:05+01:00",
+    "status": "Actual"
+   },
+   "uuid": "a6260610-d0f9-4491-91ac-4f9d6f3c7da0"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261024165643.042586db-9640-4a29-9fe1-148f918339ea",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "From Slyne Head to Rossan Point to Fair Head",
+        "geocode": [
+         {
+          "value": "EI822",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI819",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI820",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI821",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI805",
+          "valueName": "EMMA_ID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p><span data-teams=\"true\">Storm Boelo: Westerly winds will reach violent storm force 11 at times.</span></p><p>&nbsp;</p>",
+      "effective": "2026-10-24T10:28:15+01:00",
+      "event": "Red Gale",
+      "expires": "2026-10-25T06:00:00+00:00",
+      "headline": "Status Red - Marine Violent Storm warning from Slyne Head to Rossan Point to Fair Head",
+      "language": "en-GB",
+      "onset": "2026-10-24T19:00:00+01:00",
+      "parameter": [
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "4; red; Extreme",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Shelter"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Extreme",
+      "urgency": "Future",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Update",
+    "references": "forecasts@met.ie,2.49.0.1.372.0.261024102815.bda1e247-ac25-4f6e-9cc2-cd33c44ebc3d,2026-10-24T10:28:15+01:00",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-24T16:56:43+01:00",
+    "status": "Actual"
+   },
+   "uuid": "4b7dfeb1-b60b-4fe2-aaab-6af448cb5f66"
+  },
+  {
+   "alert": {
+    "identifier": "2.49.0.1.372.0.261025050156.4b9d18bc-166d-4f7e-94e8-6af1732c4833",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "From Bloody Foreland to Malin Head to Belfast Lough",
+        "geocode": [
+         {
+          "value": "EI822",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI806",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "EI805",
+          "valueName": "EMMA_ID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "forecasts@met.ie",
+      "description": "<p>Storm Boelo: West to northwest winds will reach storm force 10 at times.</p>",
+      "effective": "2026-10-22T14:19:49+01:00",
+      "event": "Orange Gale",
+      "expires": "2026-10-25T09:00:00+00:00",
+      "headline": "Status Orange - Marine Storm warning from Bloody Foreland to Malin Head to Belfast Lough",
+      "language": "en-GB",
+      "onset": "2026-10-24T18:00:00+01:00",
+      "parameter": [
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "3; orange; Severe",
+        "valueName": "awareness_level"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Met Éireann",
+      "severity": "Severe",
+      "urgency": "Immediate",
+      "web": "https://www.met.ie/warnings"
+     }
+    ],
+    "msgType": "Update",
+    "references": "forecasts@met.ie,2.49.0.1.372.0.261022141949.666aed2b-d1e8-485c-9817-7af4c298c2a2,2026-10-22T14:19:49+01:00",
+    "scope": "Public",
+    "sender": "forecasts@met.ie",
+    "sent": "2026-10-25T05:01:56+00:00",
+    "status": "Actual"
+   },
+   "uuid": "3dc41ac6-7ca7-4a26-9b80-be3a83b8bc9a"
+  }
+ ]
+}

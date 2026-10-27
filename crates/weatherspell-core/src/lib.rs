@@ -6,7 +6,10 @@
 // how the two are compared.
 
 pub mod alerts;
+pub mod area;
+pub mod bom;
 pub mod cache;
+pub mod cap;
 pub mod clock;
 pub mod compass;
 pub mod coordinates;
@@ -14,20 +17,28 @@ pub mod environment_canada;
 pub mod fetch;
 mod files;
 pub mod forecast;
+#[cfg(feature = "net")]
+mod ftp;
+pub mod hko;
 mod iso;
 pub mod layout;
 pub mod location;
 pub mod location_editor;
+pub mod meteoalarm;
+pub mod metservice;
 #[cfg(feature = "net")]
 pub mod net;
 pub mod nominatim;
 pub mod nws;
 pub mod official;
 pub mod open_meteo;
+pub mod pagasa;
 pub mod placement;
 pub mod postal_codes;
+pub mod saws;
 pub mod search;
 pub mod settings;
+pub mod shapes;
 pub mod text_size;
 pub mod units;
 pub mod weather_codes;

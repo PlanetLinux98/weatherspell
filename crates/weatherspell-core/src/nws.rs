@@ -470,6 +470,8 @@ pub fn parse_alerts(json: &str) -> Result<Vec<WeatherAlert>, OfficialError> {
             instruction: a.instruction.clone().filter(|i| !i.trim().is_empty()),
             url: product_url(&a, event),
             expires: optional_time(&a.expires)?,
+            references: None,
+            notice: None,
         });
     }
     Ok(list)

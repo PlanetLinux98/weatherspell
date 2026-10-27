@@ -434,6 +434,8 @@ pub fn parse_alerts(
             instruction: None,
             url: url.map(str::to_string),
             expires,
+            references: None,
+            notice: None,
         });
     }
     Ok(list)

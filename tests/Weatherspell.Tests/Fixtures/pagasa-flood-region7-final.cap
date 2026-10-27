@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2"><identifier>da3e8383-a066-49ed-99ef-8dd3fe93fb55</identifier><sender>PAGASA-DOST</sender><sent>2026-10-26T05:22:53+08:00</sent><status>Actual</status><msgType>Update</msgType><scope>Public</scope><references>PAGASA-DOST,f1232c02-5d52-4786-90aa-46865ab991a4,2026-10-25T17:27:04+08:00</references><info><category>Met</category><event>General Flood Advisory (Final)</event><responseType>AllClear</responseType><urgency>Past</urgency><severity>Minor</severity><certainty>Unlikely</certainty><expires>2026-10-26T17:22:53+08:00</expires><senderName>PAGASA-DOST</senderName><headline>General Flood Advisory (Final)</headline><description>Under present weather conditions, Intertropical Convergence Zone (ITCZ) is affecting the western section of Mindanao.  
+The 12-hour rainfall forecast is Isolated rainshowers or thunderstorms.  
+WATERCOURSES NO LONGER TO BE AFFECTED :  
+
+ + **Cebu** - Rivers and its tributaries particularly Kotkot, Mananga, Guinabasan, Balamban and Sabangdaku.  
+ + **Bohol** - Rivers and its tributaries particularly Inabanga, Ipil, Matulid, Loboc and Abatan.  
+</description><instruction>With this development and unless significant rain occurs, this is the final general flood advisory for this event.</instruction><web>http://www.pagasa.dost.gov.ph/index.php/26-hydromet/1582-flood-forecast-terms-and-symbols</web><contact>PAGASA-DOST</contact><parameter><valueName>layer:Google:Region:0.1</valueName><value>Region 7 (Central Visayas)</value></parameter><area><areaDesc>Cebu</areaDesc><polygon>11.279571745154,124.06402010447 10.891460097031,124.05486497221 10.748523676901,124.00722297004 10.497213137475,124.03569779642 10.358642259622,124.00471785971 10.090718234034,123.65286599049 9.8737076175448,123.61167912647 9.5788497515669,123.47241706529 9.5152571054988,123.30174992613 10.050868790407,123.41767041285 10.497911678321,123.71563618948 10.930121956137,123.90300882146 11.187283166084,123.9459944833 11.279571745154,124.06402010447</polygon><geocode><valueName>SAME</valueName><value>072200000</value></geocode></area><area><areaDesc>Bohol</areaDesc><polygon>10.173692890697,124.28752320704 10.069241147236,124.51629061398 9.8085215323764,124.59386793305 9.5959609865933,124.23826032863 9.6361580071956,123.85788879274 9.7914152225412,123.78681678344 9.9080807733075,123.86951301395 9.9866365859325,124.04576876778 10.153519461443,124.15631604933 10.173692890697,124.28752320704</polygon><geocode><valueName>SAME</valueName><value>071200000</value></geocode></area></info><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>znmZGdZqqCZNiLW9KPGY0agyezE=</DigestValue></Reference></SignedInfo><SignatureValue>zHzCLXwjdg8TBRW6kpryJ6biMgccHuDxr6aFh0r+7DXZ6nVLzfmr7or2oR+DYfmY
+9/VTjAPRmTjdgagzgG+OHTRLgWL0/cNLOVsldF2JPdQxHqWW6P9HJnmoqyV5MrBj
+LXgpGGbrMM2Gn2US20Jsa6ngc6QbDAhrQ8u3EqXF6QNnRQ9ux+nl/dqfHO2jTv2H
+nA3g78JlA26TpEkFt9OOCOGmeEHtVgHoq9On4s+GwJEZmgfA/tSemXUv2liyVF4L
+ZciHiv+iRxOBNICq4KRzIk5AcOMN2WuRho4X87EEAN50ptN71e+szHu7QGWfOPFm
+5b7hh5GOA6z/TtMdkGpQZZoR3QpDID/PbQegxqA6MAvriOhe5N1ia0u88KG2rAJI
+ICN+RlSePnFFGL456BDvBmQdtm+8g9qPRyWgNZMNb1dGIe5TjDK7ZmmalGWkLh4v
+N47NHBs4mW+ZzOZBM7cegz+s6teD+HNRHHN9sI4a8BwolsoHL9Cjee4BztWsWYuR
+YZ/52btF9hNOoMsp9AJyOHNF1r8O0hxKHB/sKyWJbmTjoJAF37lDy0M6hcLQ6hs5
+wLP24YZS1mnb1hroVpI1dQ19Zgkmz4cSHF2QxftPgPrBOP/osISEZxhNnR7l8UhN
+Ckn9TPDfBbGrHgCkytcbFaY+sLDeKP0s8futQZAyQAg=</SignatureValue><KeyInfo><KeyValue>
+<RSAKeyValue>
+<Modulus>
+1pm7X28TTIESx7uWklHbVIlO0Y+fUBZ7LynhaRQ9w1rMsMhF0dNEvUdYBKVF1xPz
+SGD0IrbU6Uemw8Xb/sOy263ZOkSxqWIh3UEluOW7s6J3Hgv8UMDZkWDgj3+m2qWT
+UTgbNO3drHGvlRBg6liD15iNusSdSMw/kqmHxe/9tnStpsHo/u57rsH3/ROTvuz2
+yHD2t7I7zo0Kv7mfAAHodU4QoL8/7c3u29szxRu13M4SRkiLKwbgrwlsMCvXhkys
+oEKlX8/SnXDL8iSPExAiP7xVpfbmh8TNiGvtbjH7Ro2EYjUsEcv9qC7G5jLu7Klt
+8TkTobHqES26/F5/u42Ra3rIDunTxczbIHF1qoumAzdsJmFCBc9D1IKTTWKR3D2J
+eAZfpuvMeOEcpRxBayYf2jOBx8iD8gag5cIZWl2/62IfUxTk92A00M5QrzTocNkg
+0U5K1gN5WmhObUN/3fa/Ob5uriELGzRdzXJ+3QE8FpPmSPJZFA//UWmpJqsboO7p
+AhbB8efPIV42nxjwQEbJdkxUOlfAyPMRGcp4RhmaAnX7KmB33j4klYeNktH+OeV8
+S9q/nMJoA/d76K1hCbo9PJTa/UxwZJYh0LEs1YnHP/5wgydZJcyNjmcu7P5ur90L
+qyr2FB0fZYAmWi6SEaA0F7yi2Y0uqV4FP7dfcbfOf+E=
+</Modulus>
+<Exponent>
+AQAB
+</Exponent>
+</RSAKeyValue>
+</KeyValue></KeyInfo></Signature></alert>

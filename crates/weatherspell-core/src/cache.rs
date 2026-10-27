@@ -7,7 +7,8 @@
 // saved locations and no more; files for locations no longer saved are
 // pruned at startup. Read only after a fetch has failed: showing it first
 // and swapping in the live text would replace the words under a reader
-// (see NOTES.md).
+// (see NOTES.md). The Bureau of Meteorology's warning areas are kept in a
+// folder of their own inside it (fetch.rs), which pruning leaves alone.
 
 use std::collections::HashSet;
 use std::fs;

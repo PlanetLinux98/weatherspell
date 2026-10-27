@@ -28,9 +28,11 @@ pub fn data_folder() -> PathBuf {
     app_data().join(FOLDER)
 }
 
-// The forecasts kept for when a fetch fails. Windows keeps them in the
-// app's folder, as 0.1 does; the Mac in its Caches folder and Linux in
-// XDG's cache folder, which are for whatever can be fetched again.
+// The forecasts kept for when a fetch fails, and the Bureau of
+// Meteorology's warning areas (a folder of their own in it). Windows keeps
+// them in the app's folder, as 0.1 does; the Mac in its Caches folder and
+// Linux in XDG's cache folder, which are for whatever can be fetched
+// again.
 pub fn cache_folder() -> PathBuf {
     #[cfg(not(windows))]
     let own = std::env::var_os("WEATHERSPELL_DATA").is_some_and(|v| !v.is_empty());

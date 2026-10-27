@@ -1,9 +1,10 @@
-// Weather alerts, source-neutral: what the NWS and Environment Canada
-// parsers produce (nws.rs, environment_canada.rs), how they are ordered and
-// tracked, and the words for them: the Alerts section, the spoken
-// announcement of new alerts, and the text of the details dialog, one line
-// per alert, event first, in the location's own time, with the service's
-// own words for the details.
+// Weather alerts, source-neutral: what each service's parser produces
+// (nws.rs, environment_canada.rs, meteoalarm.rs, metservice.rs, bom.rs,
+// hko.rs, pagasa.rs, saws.rs), how they are ordered and tracked, and the
+// words for them: the Alerts section, the spoken announcement of new
+// alerts, and the text of the details dialog, one line per alert, event
+// first, in the location's own time, with the service's own words for the
+// details.
 
 use jiff::Timestamp;
 use jiff::civil::DateTime;
@@ -62,9 +63,14 @@ pub enum AlertKind {
     Other,
 }
 
-// One alert in effect for a location. The id is stable across a service's
-// updates of the same alert, so each alert is announced once (each parser
-// says how). Source is the phrase that follows "from" in a sentence
+// One alert in effect for a location. For the NWS and Environment Canada
+// the id is stable across a service's updates of the same alert, so each
+// alert is announced once (each parser says how). CAP sources give each
+// update an id of its own and name the ones it replaces in references
+// (None for the others): track follows that chain. The Bureau of
+// Meteorology's keep one id per warning and an empty list (bom.rs). Notice is a paragraph
+// the source asks to have shown with its alerts (MeteoAlarm's disclaimer).
+// Source is the phrase that follows "from" in a sentence
 // ("Environment Canada", "the National Weather Service"); sender is the
 // issuing office as the service names it. Ends is when the hazard is
 // expected to end, and only that: expires is when this message runs out,
@@ -92,6 +98,10 @@ pub struct WeatherAlert {
     pub url: Option<String>,
     #[serde(default, with = "crate::iso::stamp_opt")]
     pub expires: Option<Timestamp>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub references: Option<Vec<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub notice: Option<String>,
 }
 
 impl WeatherAlert {
@@ -111,6 +121,53 @@ impl WeatherAlert {
             _ => AlertKind::Other,
         }
     }
+
+    // Higher for a more severe alert, and within one severity for a
+    // warning over a watch: what makes an update worth announcing again.
+    fn rank(&self) -> u32 {
+        self.severity as u32 * 10 + (AlertKind::Other as u32 - self.kind() as u32)
+    }
+
+    // What the seen list keeps: the id, and for a CAP source's alert the
+    // rank as well ("eu:2.49...@32"), so that an update can be compared
+    // with what was heard. Lists written before CAP sources, and 0.1's,
+    // hold plain ids, which still match.
+    fn seen_entry(&self) -> String {
+        match self.references {
+            Some(_) => format!("{}@{}", self.id, self.rank()),
+            None => self.id.clone(),
+        }
+    }
+}
+
+fn seen_id(entry: &str) -> &str {
+    entry.rsplit_once('@').map_or(entry, |(id, _)| id)
+}
+
+fn seen_rank(entry: &str) -> Option<u32> {
+    entry
+        .rsplit_once('@')
+        .and_then(|(_, rank)| rank.parse().ok())
+}
+
+// New, or an update of an alert already heard that raises it (yellow to
+// orange, a watch to a warning). An update that only extends or rewords
+// one is not new. An id seen before is the same message, or for the
+// Bureau of Meteorology the same warning, which keeps its id through its
+// updates: new only if its rank has risen.
+fn is_fresh(seen: &[String], a: &WeatherAlert) -> bool {
+    if let Some(entry) = seen.iter().find(|s| seen_id(s) == a.id) {
+        return seen_rank(entry).is_some_and(|rank| a.rank() > rank);
+    }
+    let Some(references) = &a.references else {
+        return true;
+    };
+    let earlier = seen
+        .iter()
+        .filter(|s| references.iter().any(|r| r == seen_id(s)))
+        .map(|s| seen_rank(s).unwrap_or(u32::MAX))
+        .max();
+    earlier.is_none_or(|rank| a.rank() > rank)
 }
 
 // What one check for a location produced. Attribution is None where no
@@ -180,21 +237,22 @@ pub fn order(mut alerts: Vec<WeatherAlert>) -> Vec<WeatherAlert> {
 }
 
 // Which of a location's alerts are new since the last check, given the ids
-// seen before. The seen list is replaced with the current ids, so an alert
-// that ends and is later issued afresh under a new id counts as new again,
-// and the list never grows past what is in effect. Callers keep the list
-// per saved location and persist it, so a relaunch during a long-running
-// alert does not announce it a second time.
+// seen before (is_fresh). The seen list is replaced with the current ids,
+// so an alert that ends and is later issued afresh under a new id counts
+// as new again, and the list never grows past what is in effect. Callers
+// keep the list per saved location and persist it, so a relaunch during a
+// long-running alert does not announce it a second time.
 pub fn track(seen: &mut Vec<String>, current: &[WeatherAlert]) -> Vec<WeatherAlert> {
     let fresh = current
         .iter()
-        .filter(|a| !seen.contains(&a.id))
+        .filter(|a| is_fresh(seen, a))
         .cloned()
         .collect();
     seen.clear();
     for a in current {
-        if !seen.contains(&a.id) {
-            seen.push(a.id.clone());
+        let entry = a.seen_entry();
+        if !seen.contains(&entry) {
+            seen.push(entry);
         }
     }
     fresh
@@ -353,6 +411,9 @@ pub fn details(a: &WeatherAlert, clock: &Clock, now_local: DateTime) -> Vec<Stri
             *first = format!("Instructions: {first}");
             paragraphs.extend(instructions);
         }
+    }
+    if let Some(notice) = &a.notice {
+        paragraphs.push(notice.clone());
     }
     paragraphs
 }

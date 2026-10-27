@@ -281,18 +281,29 @@ undoes everything, nothing asks you to confirm along the way.
 
 ## Weather alerts
 
-Weather alerts are available for Canada and the United States at this time,
-with more regions planned. They come from Environment and Climate Change
-Canada and the National Weather Service. For other locations, the Alerts
+Weather alerts are available at this time for Canada (Environment and
+Climate Change Canada), the United States (the National Weather Service),
+most of Europe (each country's national weather service via MeteoAlarm),
+including the United Kingdom and Ireland, Australia (the Bureau of
+Meteorology), New Zealand (MetService), Hong Kong (the Hong Kong
+Observatory), the Philippines (PAGASA) and South Africa (the South African
+Weather Service), with more regions planned. For other locations, the Alerts
 section says "Alerts are not available for this region."
 
 The Alerts section, at the top of the forecast text, has a line for each
 alert in effect, most severe first. Each line gives the alert, when it ends
 and who issued it, such as "Flood warning until 8:00 am Tuesday, from the
-National Weather Service. Press Enter for details." Alerts from Environment
-and Climate Change Canada begin with their colour level, yellow, orange or
-red, as in "Orange rainfall warning." With no alerts in effect, it says "No
-alerts in effect."
+National Weather Service. Press Enter for details." In jurisdictions that
+issue alert colours or levels, such as much of Europe, the UK, New Zealand,
+Canada and South Africa, alerts begin with their level, as in "Orange
+rainfall warning". With no alerts in effect, it says "No alerts in effect."
+
+The first time Weatherspell checks alerts for a location in Australia, it
+downloads the Bureau of Meteorology's warning areas, about 30 MB, so that
+first forecast can take a little longer. They're kept for next time. The
+Bureau's alerts come over FTP, so on a network that blocks it, Australia's
+alerts can't be checked. Tsunami warnings are shown for locations within
+about 3 kilometres of the coast.
 
 To go straight to the alerts, choose Alerts from the View menu, or press
 Ctrl+Shift+A (Cmd+Shift+A).
@@ -301,9 +312,10 @@ Ctrl+Shift+A (Cmd+Shift+A).
 
 To read an alert in full, press Enter on its line, or double-click it. The
 details window gives the alert's headline, its timing, the area it covers,
-its full description and any instructions. Official page opens the
-issuer's own page for the alert in your web browser, and Close returns you
-to the forecast.
+its full description and any instructions. Official page opens the issuer's
+own page for the alert in your web browser, and Close returns you to the
+forecast. Alerts for Europe end with a note from MeteoAlarm saying that its
+own website may be more up to date.
 
 ### Alert announcements
 
@@ -313,10 +325,15 @@ or switch locations, the announcement that the forecast is ready also names
 any alerts already in effect.
 
 Weatherspell checks for alerts every 10 minutes by default, for every
-location with "Notify me about alerts for this location" turned on, not
-only the one you're viewing. In [Settings](#changing-settings), you can
-change how often it checks, and choose whether to announce all new alerts,
-only severe and extreme ones, or none.
+location with "Notify me about alerts for this location" turned on, not only
+the one you're viewing. In [Settings](#changing-settings), you can change
+how often it checks, and choose whether to announce all new alerts, only
+severe and extreme ones, or none. Locations in Europe are checked at least
+every 10 minutes whatever this setting says, as required by MeteoAlarm's
+terms.
+
+An alert that's updated isn't announced again, unless the update raises it,
+such as from yellow to orange, or from a watch to a warning.
 
 Alerts are announced while Weatherspell is open, and some screen readers
 may only announce them while Weatherspell is the active window. On Linux,
@@ -335,8 +352,9 @@ two groups:
 - **Forecast**: "Refresh the forecast every" 15 minutes, 30 minutes (the
   default), 1 hour or 2 hours.
 - **Alerts and announcements**: "Check for alerts every" 5, 10 (the
-  default), 15 or 30 minutes, and "Announce new alerts": All new alerts (the
-  default), Severe and extreme only, or Off.
+  default), 15 or 30 minutes (locations in Europe are checked at least every
+  10 minutes), and "Announce new alerts": All new alerts (the default),
+  Severe and extreme only, or Off.
 
 Choose OK or Apply to save your changes; Cancel closes Settings without
 saving them.
@@ -475,10 +493,10 @@ Weatherspell going, and are always appreciated, but never expected.
 
 ## Credits and licences
 
-Weatherspell is free and open source, released under the MIT licence
-below. It is built on openly licensed data and software, credited here as
-each one asks. The Sources section at the end of every forecast names the
-sources used for that location.
+Weatherspell is free and open source, released under the MIT licence below.
+It is built on data and software that are openly licensed or free to use,
+credited here as each one asks. The Sources section at the end of every
+forecast names the sources used for that location.
 
 ### Weather
 
@@ -491,6 +509,33 @@ sources used for that location.
   forecast text, current conditions and alerts in Canada.
 - The [National Weather Service](https://www.weather.gov/): forecast text,
   current conditions and alerts in the United States, in the public domain.
+- Each European country's national weather service, through
+  [MeteoAlarm](https://meteoalarm.org/) (EUMETNET), under
+  [its terms](https://meteoalarm.org/en/live/page/terms-and-conditions),
+  which are those of
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) with a few
+  additions: alerts in Europe, including the United Kingdom and Ireland. The
+  outlines of MeteoAlarm's warning regions, simplified, are built into
+  Weatherspell.
+- [MetService](https://www.metservice.com/), licensed
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): alerts in New
+  Zealand.
+- © [Bureau of Meteorology](https://www.bom.gov.au/), for your own use under
+  [its copyright terms](https://www.bom.gov.au/copyright): alerts in
+  Australia, from its anonymous FTP service. The outlines of its warning
+  areas aren't built into Weatherspell: it downloads them from the Bureau
+  the first time they're needed.
+- The [Hong Kong Observatory](https://www.hko.gov.hk/), from its open data
+  on [DATA.GOV.HK](https://data.gov.hk/): alerts in Hong Kong.
+- [PAGASA](https://www.pagasa.dost.gov.ph/), licensed
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): alerts in the
+  Philippines. The outlines of the provinces, simplified, are built into
+  Weatherspell, from [geoBoundaries](https://www.geoboundaries.org/)' copy
+  of the boundaries published by NAMRIA and the Philippine Statistics
+  Authority, licensed
+  [CC BY 3.0 IGO](https://creativecommons.org/licenses/by/3.0/igo/).
+- The [South African Weather Service](https://www.weathersa.co.za/): alerts
+  in South Africa, in the public domain.
 
 ### Places
 

@@ -11,7 +11,7 @@ use jiff::tz::Offset;
 use serde::Deserialize;
 
 use crate::forecast::{CurrentConditions, DayForecast, Forecast, HourPoint};
-use crate::location::{Location, NWS_TERRITORIES};
+use crate::location::{Location, NWS_TERRITORIES, UNNAMED_COUNTRIES};
 use crate::round_even;
 use crate::units::{self, UnitSystem};
 
@@ -317,7 +317,12 @@ pub fn parse_search(json: &str) -> Result<Vec<Location>, ParseError> {
         let territory = r
             .country_code
             .as_deref()
-            .and_then(|code| NWS_TERRITORIES.iter().find(|(c, _)| *c == code))
+            .and_then(|code| {
+                NWS_TERRITORIES
+                    .iter()
+                    .chain(&UNNAMED_COUNTRIES)
+                    .find(|(c, _)| *c == code)
+            })
             .map(|(_, name)| name.to_string());
         let country = if blank && territory.is_some() {
             territory

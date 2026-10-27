@@ -1,0 +1,3080 @@
+{
+ "warnings": [
+  {
+   "alert": {
+    "code": [
+     "id:2.49.0.0.276.0.DWD.PVW.1792690260000.ad207e6c-860e-4cc4-99de-13cefa074602",
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.276.0.DWD.PVW.1792690260000.ad207e6c-860e-4cc4-99de-13cefa074602.MUL",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "altitude": 0.0,
+        "areaDesc": "Stadt Salzgitter",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE334",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103102000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Wolfenbüttel",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE220",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103158000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Hameln-Pyrmont",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE111",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103252000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Nienburg (Weser)",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE298",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103256000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Hildesheim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE384",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103254000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Peine",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE257",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103157000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Northeim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE294",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103155000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Schaumburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE225",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103257000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Region Hannover",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE169",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103241000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Holzminden",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE176",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103255000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "Deutscher Wetterdienst",
+      "description": "Es treten Windböen mit Geschwindigkeiten bis 60 km/h (17 m/s, 33 kn, Bft 7) aus südwestlicher Richtung auf. In Schauernähe sowie in exponierten Lagen muss mit Sturmböen um 70 km/h (20 m/s, 38 kn, Bft 8) gerechnet werden.",
+      "event": "WINDBÖEN",
+      "eventCode": [
+       {
+        "value": "2.1.14",
+        "valueName": "PROFILE_VERSION"
+       },
+       {
+        "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+        "valueName": "LICENSE"
+       },
+       {
+        "value": "51",
+        "valueName": "II"
+       },
+       {
+        "value": "WIND",
+        "valueName": "GROUP"
+       },
+       {
+        "value": "255 235 59",
+        "valueName": "AREA_COLOR"
+       }
+      ],
+      "expires": "2026-10-24T04:00:00+02:00",
+      "headline": "Amtliche WARNUNG vor WINDBÖEN",
+      "instruction": "Hinweis auf: umherfliegende leichte Gegenstände. \nHandlungsempfehlungen: \nlose Gegenstände sichern; z.B. Zelte und Abdeckungen befestigen",
+      "language": "de-DE",
+      "onset": "2026-10-23T12:00:00+02:00",
+      "parameter": [
+       {
+        "value": "south-west",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "<60 [km/h]",
+        "valueName": "gusts"
+       },
+       {
+        "value": "umherfliegende leichte Gegenstände",
+        "valueName": "impacts"
+       },
+       {
+        "value": "~70 [km/h]",
+        "valueName": "exposed gusts"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Deutscher Wetterdienst",
+      "severity": "Minor",
+      "urgency": "Immediate",
+      "web": "https://dwd.de/warnungen"
+     },
+     {
+      "area": [
+       {
+        "altitude": 0.0,
+        "areaDesc": "Stadt Salzgitter",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE334",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103102000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Wolfenbüttel",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE220",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103158000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Hameln-Pyrmont",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE111",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103252000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Nienburg (Weser)",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE298",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103256000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Hildesheim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE384",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103254000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Peine",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE257",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103157000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Northeim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE294",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103155000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Schaumburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE225",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103257000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Region Hannover",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE169",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103241000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Holzminden",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE176",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103255000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "Deutscher Wetterdienst",
+      "description": "There is a risk of wind gusts (level 1 of 4).\nMax. gusts: < 60 km/h; Wind direction: south-west; Increased gusts: near showers and in exposed locations ~ 70 km/h",
+      "event": "wind gusts",
+      "eventCode": [
+       {
+        "value": "2.1.14",
+        "valueName": "PROFILE_VERSION"
+       },
+       {
+        "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+        "valueName": "LICENSE"
+       },
+       {
+        "value": "51",
+        "valueName": "II"
+       },
+       {
+        "value": "WIND",
+        "valueName": "GROUP"
+       },
+       {
+        "value": "255 235 59",
+        "valueName": "AREA_COLOR"
+       }
+      ],
+      "expires": "2026-10-24T04:00:00+02:00",
+      "headline": "Official WARNING of WIND GUSTS",
+      "instruction": "Hazard(s) to expect: light objects flying through the air. \nRecommendations for what to do: \nSecure loose objects. For example, fasten tents and coverings.",
+      "language": "en",
+      "onset": "2026-10-23T12:00:00+02:00",
+      "parameter": [
+       {
+        "value": "south-west",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "<60 [km/h]",
+        "valueName": "gusts"
+       },
+       {
+        "value": "light objects flying through the air",
+        "valueName": "impacts"
+       },
+       {
+        "value": "~70 [km/h]",
+        "valueName": "exposed gusts"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Deutscher Wetterdienst",
+      "severity": "Minor",
+      "urgency": "Immediate",
+      "web": "https://dwd.de/warnungen"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "opendata@dwd.de",
+    "sent": "2026-10-22T19:31:00+02:00",
+    "source": "PVW",
+    "status": "Actual"
+   },
+   "uuid": "e3ec312a-a28c-4611-96f9-5eceb338549f"
+  },
+  {
+   "alert": {
+    "code": [
+     "id:2.49.0.0.276.0.DWD.PVW.1792776180000.68523c09-61d5-4d94-94ea-2ac4decad47d",
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.276.0.DWD.PVW.1792776180000.68523c09-61d5-4d94-94ea-2ac4decad47d.MUL",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Harburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE170",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103353000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Rotenburg (Wümme)",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE142",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103357000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Verden",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE393",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103361000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Nienburg (Weser)",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE298",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103256000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Osterholz",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE209",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103356000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Hansestadt Bremen",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE369",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "104011000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Dithmarschen - Binnenland",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE081",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "901051001",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Dithmarschen - Küste",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE091",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "901051002",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Steinburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE158",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "101061000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Region Hannover",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE169",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103241000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Stade",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE222",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103359000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Pinneberg (ohne Helgoland)",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE058",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "901056001",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Cuxhaven - Binnenland",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE030",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "903352001",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Heidekreis",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE317",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103358000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Diepholz",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE310",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103251000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "Deutscher Wetterdienst",
+      "description": "Es treten Windböen mit Geschwindigkeiten um 60 km/h (17 m/s, 33 kn, Bft 7) anfangs aus südlicher, später aus südwestlicher Richtung auf. In Schauernähe sowie in exponierten Lagen muss mit Sturmböen bis 75 km/h (21 m/s, 41 kn, Bft 9) gerechnet werden.",
+      "event": "WINDBÖEN",
+      "eventCode": [
+       {
+        "value": "2.1.14",
+        "valueName": "PROFILE_VERSION"
+       },
+       {
+        "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+        "valueName": "LICENSE"
+       },
+       {
+        "value": "51",
+        "valueName": "II"
+       },
+       {
+        "value": "WIND",
+        "valueName": "GROUP"
+       },
+       {
+        "value": "255 235 59",
+        "valueName": "AREA_COLOR"
+       }
+      ],
+      "expires": "2026-10-24T18:00:00+02:00",
+      "headline": "Amtliche WARNUNG vor WINDBÖEN",
+      "instruction": "Hinweis auf: umherfliegende leichte Gegenstände. \nHandlungsempfehlungen: \nlose Gegenstände sichern; z.B. Zelte und Abdeckungen befestigen",
+      "language": "de-DE",
+      "onset": "2026-10-24T04:00:00+02:00",
+      "parameter": [
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "subsequent wind direction"
+       },
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "~60 [km/h]",
+        "valueName": "gusts"
+       },
+       {
+        "value": "umherfliegende leichte Gegenstände",
+        "valueName": "impacts"
+       },
+       {
+        "value": "<75 [km/h]",
+        "valueName": "exposed gusts"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Deutscher Wetterdienst",
+      "severity": "Minor",
+      "urgency": "Immediate",
+      "web": "https://dwd.de/warnungen"
+     },
+     {
+      "area": [
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Harburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE170",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103353000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Rotenburg (Wümme)",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE142",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103357000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Verden",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE393",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103361000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Nienburg (Weser)",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE298",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103256000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Osterholz",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE209",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103356000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Hansestadt Bremen",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE369",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "104011000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Dithmarschen - Binnenland",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE081",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "901051001",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Dithmarschen - Küste",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE091",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "901051002",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Steinburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE158",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "101061000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Region Hannover",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE169",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103241000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Stade",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE222",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103359000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Pinneberg (ohne Helgoland)",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE058",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "901056001",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Cuxhaven - Binnenland",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE030",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "903352001",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Heidekreis",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE317",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103358000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Diepholz",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE310",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103251000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "Deutscher Wetterdienst",
+      "description": "There is a risk of wind gusts (level 1 of 4).\nMax. gusts: ~ 60 km/h; Wind direction: south then south-west; Increased gusts: near showers and in exposed locations < 75 km/h",
+      "event": "wind gusts",
+      "eventCode": [
+       {
+        "value": "2.1.14",
+        "valueName": "PROFILE_VERSION"
+       },
+       {
+        "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+        "valueName": "LICENSE"
+       },
+       {
+        "value": "51",
+        "valueName": "II"
+       },
+       {
+        "value": "WIND",
+        "valueName": "GROUP"
+       },
+       {
+        "value": "255 235 59",
+        "valueName": "AREA_COLOR"
+       }
+      ],
+      "expires": "2026-10-24T18:00:00+02:00",
+      "headline": "Official WARNING of WIND GUSTS",
+      "instruction": "Hazard(s) to expect: light objects flying through the air. \nRecommendations for what to do: \nSecure loose objects. For example, fasten tents and coverings.",
+      "language": "en",
+      "onset": "2026-10-24T04:00:00+02:00",
+      "parameter": [
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "subsequent wind direction"
+       },
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "~60 [km/h]",
+        "valueName": "gusts"
+       },
+       {
+        "value": "light objects flying through the air",
+        "valueName": "impacts"
+       },
+       {
+        "value": "<75 [km/h]",
+        "valueName": "exposed gusts"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Deutscher Wetterdienst",
+      "severity": "Minor",
+      "urgency": "Immediate",
+      "web": "https://dwd.de/warnungen"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "opendata@dwd.de",
+    "sent": "2026-10-23T19:23:00+02:00",
+    "source": "PVW",
+    "status": "Actual"
+   },
+   "uuid": "d860b6cb-98a6-45fc-aa24-2e133f19a165"
+  },
+  {
+   "alert": {
+    "code": [
+     "id:2.49.0.0.276.0.DWD.PVW.1792806000000.c9822272-9298-4200-8c98-8c587363b199",
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.276.0.DWD.PVW.1792806000000.c9822272-9298-4200-8c98-8c587363b199.MUL",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis und Stadt Osnabrück",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE024",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "903459999",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Nienburg (Weser)",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE298",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103256000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Vechta",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE188",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103460000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Emsland",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE376",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103454000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Grafschaft Bentheim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE237",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103456000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Schaumburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE225",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103257000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Diepholz",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE310",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103251000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Region Hannover",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE169",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103241000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "Deutscher Wetterdienst",
+      "description": "Es treten Sturmböen mit Geschwindigkeiten zwischen 50 km/h (14 m/s, 28 kn, Bft 7) und 65 km/h (18 m/s, 35 kn, Bft 8) aus südwestlicher Richtung auf. In Schauernähe sowie in exponierten Lagen muss mit Sturmböen bis 80 km/h (22 m/s, 44 kn, Bft 9) gerechnet werden.",
+      "event": "STURMBÖEN",
+      "eventCode": [
+       {
+        "value": "2.1.14",
+        "valueName": "PROFILE_VERSION"
+       },
+       {
+        "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+        "valueName": "LICENSE"
+       },
+       {
+        "value": "52",
+        "valueName": "II"
+       },
+       {
+        "value": "WIND",
+        "valueName": "GROUP"
+       },
+       {
+        "value": "251 140 0",
+        "valueName": "AREA_COLOR"
+       }
+      ],
+      "expires": "2026-10-24T08:00:00+02:00",
+      "headline": "Amtliche WARNUNG vor STURMBÖEN",
+      "instruction": "Gefahr durch: einzelne herabstürzende Äste; umherfliegende Gegenstände. \nHandlungsempfehlungen: \nfrei stehende Objekte sichern (z.B. Leinwände und Möbel); z.B. Zelte und Abdeckungen befestigen; im Freien auf herabfallende Gegenstände (z.B. Äste) achten",
+      "language": "de-DE",
+      "onset": "2026-10-24T04:00:00+02:00",
+      "parameter": [
+       {
+        "value": "50-65 [km/h]",
+        "valueName": "gusts"
+       },
+       {
+        "value": "<80 [km/h]",
+        "valueName": "exposed gusts"
+       },
+       {
+        "value": "south-west",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "einzelne herabstürzende Äste",
+        "valueName": "impacts"
+       },
+       {
+        "value": "umherfliegende Gegenstände",
+        "valueName": "impacts"
+       },
+       {
+        "value": "3; orange; Severe",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Deutscher Wetterdienst",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://dwd.de/warnungen"
+     },
+     {
+      "area": [
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis und Stadt Osnabrück",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE024",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "903459999",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Nienburg (Weser)",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE298",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103256000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Vechta",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE188",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103460000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Emsland",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE376",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103454000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Grafschaft Bentheim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE237",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103456000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Schaumburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE225",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103257000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Diepholz",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE310",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103251000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Region Hannover",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE169",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103241000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "Deutscher Wetterdienst",
+      "description": "There is a risk of gale-force gusts (level 2 of 4).\nMax. gusts: 50-65 km/h; Wind direction: south-west; Increased gusts: near showers and in exposed locations < 80 km/h",
+      "event": "gale-force gusts",
+      "eventCode": [
+       {
+        "value": "2.1.14",
+        "valueName": "PROFILE_VERSION"
+       },
+       {
+        "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+        "valueName": "LICENSE"
+       },
+       {
+        "value": "52",
+        "valueName": "II"
+       },
+       {
+        "value": "WIND",
+        "valueName": "GROUP"
+       },
+       {
+        "value": "251 140 0",
+        "valueName": "AREA_COLOR"
+       }
+      ],
+      "expires": "2026-10-24T08:00:00+02:00",
+      "headline": "Official WARNING of GALE-FORCE GUSTS",
+      "instruction": "Hazard(s) caused by: single branches falling; objects flying through the air. \nRecommendations for what to do: \nSecure free-standing objects (e.g. screens and furniture). For example, fasten tents and coverings. Watch out for falling objects outdoors (e.g. branches).",
+      "language": "en",
+      "onset": "2026-10-24T04:00:00+02:00",
+      "parameter": [
+       {
+        "value": "50-65 [km/h]",
+        "valueName": "gusts"
+       },
+       {
+        "value": "<80 [km/h]",
+        "valueName": "exposed gusts"
+       },
+       {
+        "value": "south-west",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "single branches falling",
+        "valueName": "impacts"
+       },
+       {
+        "value": "objects flying through the air",
+        "valueName": "impacts"
+       },
+       {
+        "value": "3; orange; Severe",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Deutscher Wetterdienst",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://dwd.de/warnungen"
+     }
+    ],
+    "msgType": "Update",
+    "references": "opendata@dwd.de,2.49.0.0.276.0.DWD.PVW.1792776180000.2eb937bf-0e5f-4b34-b871-8c7c7d00e535.MUL,2026-10-23T19:23:00+02:00",
+    "scope": "Public",
+    "sender": "opendata@dwd.de",
+    "sent": "2026-10-24T03:40:00+02:00",
+    "source": "PVW",
+    "status": "Actual"
+   },
+   "uuid": "8b2ab1c5-8d7b-4638-8cd7-47644e5ee96f"
+  },
+  {
+   "alert": {
+    "code": [
+     "id:2.49.0.0.276.0.DWD.PVW.1792853820000.da1913f8-830c-4bc5-95b1-2949748c6f68",
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.276.0.DWD.PVW.1792853820000.da1913f8-830c-4bc5-95b1-2949748c6f68.MUL",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Hameln-Pyrmont",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE111",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103252000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Schaumburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE225",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103257000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Region Hannover",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE169",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103241000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "Deutscher Wetterdienst",
+      "description": "Es treten Sturmböen mit Geschwindigkeiten zwischen 55 km/h (15 m/s, 30 kn, Bft 7) und 65 km/h (18 m/s, 35 kn, Bft 8) anfangs aus südlicher, später aus südwestlicher Richtung auf. In Schauernähe sowie in exponierten Lagen muss mit Sturmböen um 75 km/h (21 m/s, 41 kn, Bft 9) gerechnet werden.",
+      "event": "STURMBÖEN",
+      "eventCode": [
+       {
+        "value": "2.1.14",
+        "valueName": "PROFILE_VERSION"
+       },
+       {
+        "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+        "valueName": "LICENSE"
+       },
+       {
+        "value": "52",
+        "valueName": "II"
+       },
+       {
+        "value": "WIND",
+        "valueName": "GROUP"
+       },
+       {
+        "value": "251 140 0",
+        "valueName": "AREA_COLOR"
+       }
+      ],
+      "expires": "2026-10-25T06:00:00+01:00",
+      "headline": "Amtliche WARNUNG vor STURMBÖEN",
+      "instruction": "Gefahr durch: einzelne herabstürzende Äste; umherfliegende Gegenstände. \nHandlungsempfehlungen: \nfrei stehende Objekte sichern (z.B. Leinwände und Möbel); z.B. Zelte und Abdeckungen befestigen; im Freien auf herabfallende Gegenstände (z.B. Äste) achten",
+      "language": "de-DE",
+      "onset": "2026-10-25T00:00:00+02:00",
+      "parameter": [
+       {
+        "value": "55-65 [km/h]",
+        "valueName": "gusts"
+       },
+       {
+        "value": "~75 [km/h]",
+        "valueName": "exposed gusts"
+       },
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "subsequent wind direction"
+       },
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "einzelne herabstürzende Äste",
+        "valueName": "impacts"
+       },
+       {
+        "value": "umherfliegende Gegenstände",
+        "valueName": "impacts"
+       },
+       {
+        "value": "3; orange; Severe",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Deutscher Wetterdienst",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://dwd.de/warnungen"
+     },
+     {
+      "area": [
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Hameln-Pyrmont",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE111",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103252000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Schaumburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE225",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103257000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Region Hannover",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE169",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103241000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "Deutscher Wetterdienst",
+      "description": "There is a risk of gale-force gusts (level 2 of 4).\nMax. gusts: 55-65 km/h; Wind direction: south then south-west; Increased gusts: near showers and in exposed locations ~ 75 km/h",
+      "event": "gale-force gusts",
+      "eventCode": [
+       {
+        "value": "2.1.14",
+        "valueName": "PROFILE_VERSION"
+       },
+       {
+        "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+        "valueName": "LICENSE"
+       },
+       {
+        "value": "52",
+        "valueName": "II"
+       },
+       {
+        "value": "WIND",
+        "valueName": "GROUP"
+       },
+       {
+        "value": "251 140 0",
+        "valueName": "AREA_COLOR"
+       }
+      ],
+      "expires": "2026-10-25T06:00:00+01:00",
+      "headline": "Official WARNING of GALE-FORCE GUSTS",
+      "instruction": "Hazard(s) caused by: single branches falling; objects flying through the air. \nRecommendations for what to do: \nSecure free-standing objects (e.g. screens and furniture). For example, fasten tents and coverings. Watch out for falling objects outdoors (e.g. branches).",
+      "language": "en",
+      "onset": "2026-10-25T00:00:00+02:00",
+      "parameter": [
+       {
+        "value": "55-65 [km/h]",
+        "valueName": "gusts"
+       },
+       {
+        "value": "~75 [km/h]",
+        "valueName": "exposed gusts"
+       },
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "subsequent wind direction"
+       },
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "single branches falling",
+        "valueName": "impacts"
+       },
+       {
+        "value": "objects flying through the air",
+        "valueName": "impacts"
+       },
+       {
+        "value": "3; orange; Severe",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Deutscher Wetterdienst",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://dwd.de/warnungen"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "opendata@dwd.de",
+    "sent": "2026-10-24T16:57:00+02:00",
+    "source": "PVW",
+    "status": "Actual"
+   },
+   "uuid": "76ce85c2-bb8c-49f1-9d59-bbab89dcaeeb"
+  },
+  {
+   "alert": {
+    "code": [
+     "id:2.49.0.0.276.0.DWD.PVW.1792853820000.50058e0c-69fa-4945-b9eb-8652dbe167ff",
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.276.0.DWD.PVW.1792853820000.50058e0c-69fa-4945-b9eb-8652dbe167ff.MUL",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Hameln-Pyrmont",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE111",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103252000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Nienburg (Weser)",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE298",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103256000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Uelzen",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE350",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103360000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Herzogtum Lauenburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE236",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "101053000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Stadt Braunschweig",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE275",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103101000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Goslar",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE328",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103153000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Peine",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE257",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103157000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Region Hannover",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE169",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103241000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Celle",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE138",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103351000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Lüneburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE383",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103355000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Stadt Salzgitter",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE334",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103102000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Wolfenbüttel",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE220",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103158000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Helmstedt",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE415",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103154000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Hildesheim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE384",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103254000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Lüchow-Dannenberg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE122",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103354000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Heidekreis",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE317",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103358000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Stadt Wolfsburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE319",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103103000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Gifhorn",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE244",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103151000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Göttingen",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE151",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "DE326",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103159000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Northeim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE294",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103155000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Holzminden",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE176",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103255000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "Deutscher Wetterdienst",
+      "description": "Es treten Windböen mit Geschwindigkeiten um 60 km/h (17 m/s, 33 kn, Bft 7) anfangs aus südlicher, später aus südwestlicher Richtung auf. In Schauernähe sowie in exponierten Lagen muss mit Sturmböen um 70 km/h (20 m/s, 38 kn, Bft 8) gerechnet werden.",
+      "event": "WINDBÖEN",
+      "eventCode": [
+       {
+        "value": "2.1.14",
+        "valueName": "PROFILE_VERSION"
+       },
+       {
+        "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+        "valueName": "LICENSE"
+       },
+       {
+        "value": "51",
+        "valueName": "II"
+       },
+       {
+        "value": "WIND",
+        "valueName": "GROUP"
+       },
+       {
+        "value": "255 235 59",
+        "valueName": "AREA_COLOR"
+       }
+      ],
+      "expires": "2026-10-25T18:00:00+01:00",
+      "headline": "Amtliche WARNUNG vor WINDBÖEN",
+      "instruction": "Hinweis auf: umherfliegende leichte Gegenstände. \nHandlungsempfehlungen: \nlose Gegenstände sichern; z.B. Zelte und Abdeckungen befestigen",
+      "language": "de-DE",
+      "onset": "2026-10-25T00:00:00+02:00",
+      "parameter": [
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "subsequent wind direction"
+       },
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "~60 [km/h]",
+        "valueName": "gusts"
+       },
+       {
+        "value": "umherfliegende leichte Gegenstände",
+        "valueName": "impacts"
+       },
+       {
+        "value": "~70 [km/h]",
+        "valueName": "exposed gusts"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Deutscher Wetterdienst",
+      "severity": "Minor",
+      "urgency": "Immediate",
+      "web": "https://dwd.de/warnungen"
+     },
+     {
+      "area": [
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Hameln-Pyrmont",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE111",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103252000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Nienburg (Weser)",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE298",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103256000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Uelzen",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE350",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103360000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Herzogtum Lauenburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE236",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "101053000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Stadt Braunschweig",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE275",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103101000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Goslar",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE328",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103153000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Peine",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE257",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103157000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Region Hannover",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE169",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103241000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Celle",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE138",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103351000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Lüneburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE383",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103355000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Stadt Salzgitter",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE334",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103102000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Wolfenbüttel",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE220",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103158000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Helmstedt",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE415",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103154000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Hildesheim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE384",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103254000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Lüchow-Dannenberg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE122",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103354000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Heidekreis",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE317",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103358000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Stadt Wolfsburg",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE319",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103103000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Gifhorn",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE244",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103151000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Göttingen",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE151",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "DE326",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103159000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Northeim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE294",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103155000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Holzminden",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE176",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103255000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "Deutscher Wetterdienst",
+      "description": "There is a risk of wind gusts (level 1 of 4).\nMax. gusts: ~ 60 km/h; Wind direction: south then south-west; Increased gusts: near showers and in exposed locations ~ 70 km/h",
+      "event": "wind gusts",
+      "eventCode": [
+       {
+        "value": "2.1.14",
+        "valueName": "PROFILE_VERSION"
+       },
+       {
+        "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+        "valueName": "LICENSE"
+       },
+       {
+        "value": "51",
+        "valueName": "II"
+       },
+       {
+        "value": "WIND",
+        "valueName": "GROUP"
+       },
+       {
+        "value": "255 235 59",
+        "valueName": "AREA_COLOR"
+       }
+      ],
+      "expires": "2026-10-25T18:00:00+01:00",
+      "headline": "Official WARNING of WIND GUSTS",
+      "instruction": "Hazard(s) to expect: light objects flying through the air. \nRecommendations for what to do: \nSecure loose objects. For example, fasten tents and coverings.",
+      "language": "en",
+      "onset": "2026-10-25T00:00:00+02:00",
+      "parameter": [
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "subsequent wind direction"
+       },
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "~60 [km/h]",
+        "valueName": "gusts"
+       },
+       {
+        "value": "light objects flying through the air",
+        "valueName": "impacts"
+       },
+       {
+        "value": "~70 [km/h]",
+        "valueName": "exposed gusts"
+       },
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Deutscher Wetterdienst",
+      "severity": "Minor",
+      "urgency": "Immediate",
+      "web": "https://dwd.de/warnungen"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "opendata@dwd.de",
+    "sent": "2026-10-24T16:57:00+02:00",
+    "source": "PVW",
+    "status": "Actual"
+   },
+   "uuid": "6cedb33d-8f74-49c5-83ec-7a864f7bb920"
+  },
+  {
+   "alert": {
+    "code": [
+     "id:2.49.0.0.276.0.DWD.PVW.1792909560000.84c49473-6133-4981-8670-b2d110f1399a",
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.276.0.DWD.PVW.1792909560000.84c49473-6133-4981-8670-b2d110f1399a.MUL",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "altitude": 0.0,
+        "areaDesc": "Stadt Salzgitter",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE334",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103102000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Wolfenbüttel",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE220",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103158000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Hildesheim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE384",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103254000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Stadt Braunschweig",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE275",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103101000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Gifhorn",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE244",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103151000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Goslar",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE328",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103153000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Peine",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE257",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103157000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Northeim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE294",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103155000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Region Hannover",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE169",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103241000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "Deutscher Wetterdienst",
+      "description": "Es treten Sturmböen mit Geschwindigkeiten zwischen 55 km/h (15 m/s, 30 kn, Bft 7) und 65 km/h (18 m/s, 35 kn, Bft 8) anfangs aus südlicher, später aus südwestlicher Richtung auf. In Schauernähe sowie in exponierten Lagen muss mit Sturmböen um 75 km/h (21 m/s, 41 kn, Bft 9) gerechnet werden.",
+      "event": "STURMBÖEN",
+      "eventCode": [
+       {
+        "value": "2.1.14",
+        "valueName": "PROFILE_VERSION"
+       },
+       {
+        "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+        "valueName": "LICENSE"
+       },
+       {
+        "value": "52",
+        "valueName": "II"
+       },
+       {
+        "value": "WIND",
+        "valueName": "GROUP"
+       },
+       {
+        "value": "251 140 0",
+        "valueName": "AREA_COLOR"
+       }
+      ],
+      "expires": "2026-10-25T12:00:00+01:00",
+      "headline": "Amtliche WARNUNG vor STURMBÖEN",
+      "instruction": "Gefahr durch: einzelne herabstürzende Äste; umherfliegende Gegenstände. \nHandlungsempfehlungen: \nfrei stehende Objekte sichern (z.B. Leinwände und Möbel); z.B. Zelte und Abdeckungen befestigen; im Freien auf herabfallende Gegenstände (z.B. Äste) achten",
+      "language": "de-DE",
+      "onset": "2026-10-25T07:26:00+01:00",
+      "parameter": [
+       {
+        "value": "55-65 [km/h]",
+        "valueName": "gusts"
+       },
+       {
+        "value": "~75 [km/h]",
+        "valueName": "exposed gusts"
+       },
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "subsequent wind direction"
+       },
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "einzelne herabstürzende Äste",
+        "valueName": "impacts"
+       },
+       {
+        "value": "umherfliegende Gegenstände",
+        "valueName": "impacts"
+       },
+       {
+        "value": "3; orange; Severe",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Deutscher Wetterdienst",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://dwd.de/warnungen"
+     },
+     {
+      "area": [
+       {
+        "altitude": 0.0,
+        "areaDesc": "Stadt Salzgitter",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE334",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103102000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Wolfenbüttel",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE220",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103158000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Hildesheim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE384",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103254000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Stadt Braunschweig",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE275",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103101000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Gifhorn",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE244",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103151000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Goslar",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE328",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103153000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Peine",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE257",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103157000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Kreis Northeim",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE294",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103155000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       },
+       {
+        "altitude": 0.0,
+        "areaDesc": "Region Hannover",
+        "ceiling": 9842.5197,
+        "geocode": [
+         {
+          "value": "DE169",
+          "valueName": "EMMA_ID"
+         },
+         {
+          "value": "103241000",
+          "valueName": "WARNCELLID"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "contact": "Deutscher Wetterdienst",
+      "description": "There is a risk of gale-force gusts (level 2 of 4).\nMax. gusts: 55-65 km/h; Wind direction: south then south-west; Increased gusts: near showers and in exposed locations ~ 75 km/h",
+      "event": "gale-force gusts",
+      "eventCode": [
+       {
+        "value": "2.1.14",
+        "valueName": "PROFILE_VERSION"
+       },
+       {
+        "value": "© GeoBasis-DE / BKG 2021 (Daten modifiziert)",
+        "valueName": "LICENSE"
+       },
+       {
+        "value": "52",
+        "valueName": "II"
+       },
+       {
+        "value": "WIND",
+        "valueName": "GROUP"
+       },
+       {
+        "value": "251 140 0",
+        "valueName": "AREA_COLOR"
+       }
+      ],
+      "expires": "2026-10-25T12:00:00+01:00",
+      "headline": "Official WARNING of GALE-FORCE GUSTS",
+      "instruction": "Hazard(s) caused by: single branches falling; objects flying through the air. \nRecommendations for what to do: \nSecure free-standing objects (e.g. screens and furniture). For example, fasten tents and coverings. Watch out for falling objects outdoors (e.g. branches).",
+      "language": "en",
+      "onset": "2026-10-25T07:26:00+01:00",
+      "parameter": [
+       {
+        "value": "55-65 [km/h]",
+        "valueName": "gusts"
+       },
+       {
+        "value": "~75 [km/h]",
+        "valueName": "exposed gusts"
+       },
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "subsequent wind direction"
+       },
+       {
+        "value": "south",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "south-west",
+        "valueName": "wind direction"
+       },
+       {
+        "value": "single branches falling",
+        "valueName": "impacts"
+       },
+       {
+        "value": "objects flying through the air",
+        "valueName": "impacts"
+       },
+       {
+        "value": "3; orange; Severe",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       }
+      ],
+      "responseType": [
+       "Prepare"
+      ],
+      "senderName": "Deutscher Wetterdienst",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://dwd.de/warnungen"
+     }
+    ],
+    "msgType": "Update",
+    "references": "opendata@dwd.de,2.49.0.0.276.0.DWD.PVW.1792909500000.9938a457-f56b-4d32-bd24-99b98a8a04ac.MUL,2026-10-25T07:25:00+01:00",
+    "scope": "Public",
+    "sender": "opendata@dwd.de",
+    "sent": "2026-10-25T07:26:00+01:00",
+    "source": "PVW",
+    "status": "Actual"
+   },
+   "uuid": "40cd07cd-b8ce-487a-9fbf-1296c03375ef"
+  }
+ ]
+}

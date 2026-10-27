@@ -25,6 +25,11 @@ pub const NWS_TERRITORIES: [(&str, &str); 5] = [
     ("AS", "American Samoa"),
 ];
 
+// Others the geocoder gives only a code, named by the search too: without
+// one, Hong Kong's places read as "Kowloon" alone, and its alerts could
+// not tell them from anywhere else (hko.rs).
+pub const UNNAMED_COUNTRIES: [(&str, &str); 2] = [("HK", "Hong Kong"), ("MO", "Macao")];
+
 fn present(value: &Option<String>) -> Option<&str> {
     value.as_deref().filter(|v| !v.trim().is_empty())
 }
@@ -56,7 +61,8 @@ impl Location {
         if let Some(region) = present(&self.region).filter(|r| *r != self.name) {
             parts.push(region);
         }
-        if let Some(country) = present(&self.country) {
+        // "Hong Kong", not "Hong Kong, Hong Kong".
+        if let Some(country) = present(&self.country).filter(|c| *c != self.name) {
             parts.push(country);
         }
         parts.join(", ")

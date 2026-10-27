@@ -1,0 +1,2953 @@
+{
+ "warnings": [
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261022115503.1618425",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-22T11:55:03+02:00",
+      "event": "Groene waarschuwing voor wind",
+      "expires": "2026-10-24T02:00:00+02:00",
+      "headline": "Groene waarschuwing voor wind in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-22T11:55:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-22T11:55:03+02:00",
+      "event": "Green warning for wind",
+      "expires": "2026-10-24T02:00:00+02:00",
+      "headline": "Green warning for wind in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-22T11:55:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261022055353.1618403,2026-10-22T07:55:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-22T07:55:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "4dabfd42-575b-4ddd-8c78-a3aaa2dd5eee"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261022153004.1618464",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-22T15:30:04+02:00",
+      "event": "Groene waarschuwing voor wind",
+      "expires": "2026-10-24T02:00:00+02:00",
+      "headline": "Groene waarschuwing voor wind in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-22T15:30:04+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-22T15:30:04+02:00",
+      "event": "Green warning for wind",
+      "expires": "2026-10-24T02:00:00+02:00",
+      "headline": "Green warning for wind in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-22T15:30:04+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261022095140.1618414,2026-10-22T11:55:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-22T11:55:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "b99f810b-05c2-48ab-856c-0207e70869b9"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261023053503.1618493",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-23T05:35:03+02:00",
+      "event": "Groene waarschuwing voor wind",
+      "expires": "2026-10-24T01:00:00+02:00",
+      "headline": "Groene waarschuwing voor wind in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-23T05:35:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-23T05:35:03+02:00",
+      "event": "Green warning for wind",
+      "expires": "2026-10-24T01:00:00+02:00",
+      "headline": "Green warning for wind in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-23T05:35:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261022132838.1618446,2026-10-22T15:30:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-22T15:30:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "fc5b951d-777b-4ac8-8309-268f39d6f030"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261023063503.1618529",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-23T06:35:03+02:00",
+      "event": "Groene waarschuwing voor wind",
+      "expires": "2026-10-24T01:00:00+02:00",
+      "headline": "Groene waarschuwing voor wind in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-23T06:35:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Expected",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-23T06:35:03+02:00",
+      "event": "Green warning for wind",
+      "expires": "2026-10-24T01:00:00+02:00",
+      "headline": "Green warning for wind in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-23T06:35:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Expected",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261023033309.1618475,2026-10-23T05:35:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-23T05:35:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "c5d472a9-5f02-43ac-9e51-1d6b14a1dcfa"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261023064503.1618567",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-23T06:45:03+02:00",
+      "event": "Groene waarschuwing voor regen",
+      "expires": "2026-10-24T05:00:00+02:00",
+      "headline": "Groene waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-23T06:45:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-23T06:45:03+02:00",
+      "event": "Green warning for rain",
+      "expires": "2026-10-24T05:00:00+02:00",
+      "headline": "Green warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-23T06:45:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261022103341.1618436,2026-10-22T12:35:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-22T12:35:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "1dec691e-51ce-4803-b04b-35600d0d7929"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261023065003.1618597",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-23T06:50:03+02:00",
+      "event": "Groene waarschuwing voor regen",
+      "expires": "2026-10-24T06:00:00+02:00",
+      "headline": "Groene waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-23T06:50:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-23T06:50:03+02:00",
+      "event": "Green warning for rain",
+      "expires": "2026-10-24T06:00:00+02:00",
+      "headline": "Green warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-23T06:50:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261023044214.1618547,2026-10-23T06:45:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-23T06:45:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "ce9e62d8-9601-4a36-9f14-7789176c8660"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261023065023.1618611",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-23T06:50:23+02:00",
+      "event": "Groene waarschuwing voor regen",
+      "expires": "2026-10-25T11:00:00+01:00",
+      "headline": "Groene waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-23T06:50:23+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-23T06:50:23+02:00",
+      "event": "Green warning for rain",
+      "expires": "2026-10-25T11:00:00+01:00",
+      "headline": "Green warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-23T06:50:23+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261023044214.1618561,2026-10-23T06:45:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-23T06:45:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "f4b222f6-d40b-4a07-b0d5-e53e401816d6"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261023095503.1618637",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-23T09:55:03+02:00",
+      "event": "Groene waarschuwing voor regen",
+      "expires": "2026-10-24T06:00:00+02:00",
+      "headline": "Groene waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-23T09:55:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-23T09:55:03+02:00",
+      "event": "Green warning for rain",
+      "expires": "2026-10-24T06:00:00+02:00",
+      "headline": "Green warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-23T09:55:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261023044526.1618577,2026-10-23T06:50:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-23T06:50:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "792356e6-9c0e-4f15-a976-5e202d07ffbd"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261023095525.1618651",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-23T09:55:25+02:00",
+      "event": "Groene waarschuwing voor regen",
+      "expires": "2026-10-25T11:00:00+01:00",
+      "headline": "Groene waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-23T09:55:25+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-23T09:55:25+02:00",
+      "event": "Green warning for rain",
+      "expires": "2026-10-25T11:00:00+01:00",
+      "headline": "Green warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-23T09:55:25+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261023044526.1618591,2026-10-23T06:50:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-23T06:50:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "1ed7b2ae-b493-497f-a4a1-0d2f63e4501d"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261023162500.1618673",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-23T16:25:00+02:00",
+      "event": "Groene waarschuwing voor wind",
+      "expires": "2026-10-24T01:00:00+02:00",
+      "headline": "Groene waarschuwing voor wind in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-23T16:25:00+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Expected",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-23T16:25:00+02:00",
+      "event": "Green warning for wind",
+      "expires": "2026-10-24T01:00:00+02:00",
+      "headline": "Green warning for wind in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-23T16:25:00+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Expected",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261023043315.1618511,2026-10-23T06:35:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-23T06:35:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "688d084d-4a60-4a50-acaa-686437e9ef0f"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261023213003.1618705",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-23T21:30:03+02:00",
+      "event": "Groene waarschuwing voor wind",
+      "expires": "2026-10-24T01:00:00+02:00",
+      "headline": "Groene waarschuwing voor wind in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-23T21:30:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-23T21:30:03+02:00",
+      "event": "Green warning for wind",
+      "expires": "2026-10-24T01:00:00+02:00",
+      "headline": "Green warning for wind in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-23T21:30:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261023142210.1618661,2026-10-23T16:25:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-23T16:25:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "12c37b1c-cfcb-4e4e-99c2-ba3e5c34ad4e"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261023192655.1618690",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Er worden rukwinden tussen 80 en 100 km/u (70 en 90 km/u bij bebladerde bomen) verwacht. Wees waakzaam.",
+      "event": "Gele waarschuwing voor wind",
+      "expires": "2026-10-24T01:00:00+02:00",
+      "headline": "Gele waarschuwing voor wind in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-23T21:00:00+02:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "There is a strong wind expected with wind gusts between 80 and 100 km/h (70 and 90 km/h with leafed trees). Be careful.",
+      "event": "Yellow warning for wind",
+      "expires": "2026-10-24T01:00:00+02:00",
+      "headline": "Yellow warning for wind in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-23T21:00:00+02:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-23T21:30:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "6e73a173-1db9-474e-b0c4-0843d46f85ce"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261023225003.1618744",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-23T22:50:03+02:00",
+      "event": "Groene waarschuwing voor regen",
+      "expires": "2026-10-24T06:00:00+02:00",
+      "headline": "Groene waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-23T22:50:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-23T22:50:03+02:00",
+      "event": "Green warning for rain",
+      "expires": "2026-10-24T06:00:00+02:00",
+      "headline": "Green warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-23T22:50:03+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261023075224.1618617,2026-10-23T09:55:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-23T09:55:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "52a53519-9146-4704-a1c5-0b533bebadd6"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261023225027.1618758",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-23T22:50:27+02:00",
+      "event": "Groene waarschuwing voor regen",
+      "expires": "2026-10-25T11:00:00+01:00",
+      "headline": "Groene waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-23T22:50:27+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-23T22:50:27+02:00",
+      "event": "Green warning for rain",
+      "expires": "2026-10-25T11:00:00+01:00",
+      "headline": "Green warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-23T22:50:27+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261023075224.1618631,2026-10-23T09:55:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-23T09:55:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "94bd2b1a-d56b-4e01-898e-4b9a4552f7c5"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261023192655.1618761",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Er worden rukwinden tussen 80 en 100 km/u (70 en 90 km/u bij bebladerde bomen) verwacht. Wees waakzaam.",
+      "event": "Gele waarschuwing voor wind",
+      "expires": "2026-10-24T01:00:00+02:00",
+      "headline": "Gele waarschuwing voor wind in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-23T21:00:00+02:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "There is a strong wind expected with wind gusts between 80 and 100 km/h (70 and 90 km/h with leafed trees). Be careful.",
+      "event": "Yellow warning for wind",
+      "expires": "2026-10-24T01:00:00+02:00",
+      "headline": "Yellow warning for wind in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-23T21:00:00+02:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-24T01:00:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "62cc92e5-18d3-4ab4-9b42-04123ba28613"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261024053001.1618791",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-24T05:30:01+02:00",
+      "event": "Groene waarschuwing voor regen",
+      "expires": "2026-10-24T06:00:00+02:00",
+      "headline": "Groene waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-24T05:30:01+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-24T05:30:01+02:00",
+      "event": "Green warning for rain",
+      "expires": "2026-10-24T06:00:00+02:00",
+      "headline": "Green warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-24T05:30:01+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261023204941.1618724,2026-10-23T22:50:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-23T22:50:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "1bb9b415-8ed1-4a41-a146-9243ba94c503"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261024053028.1618805",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-24T05:30:28+02:00",
+      "event": "Groene waarschuwing voor regen",
+      "expires": "2026-10-25T11:00:00+01:00",
+      "headline": "Groene waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-24T05:30:28+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-24T05:30:28+02:00",
+      "event": "Green warning for rain",
+      "expires": "2026-10-25T11:00:00+01:00",
+      "headline": "Green warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-24T05:30:28+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261023204941.1618738,2026-10-23T22:50:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-23T22:50:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "0ea63699-0089-4869-863d-ddf433d8d8f2"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261024032747.1618773",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Er wordt veel regen verwacht: ofwel 10 t.e.m. 30 l/m² in 1 uur, of 20 t.e.m. 40 l/m² in 6 uur, of 25 t.e.m. 50 l/m² in 24 uur. Wees waakzaam.",
+      "event": "Gele waarschuwing voor regen",
+      "expires": "2026-10-24T06:00:00+02:00",
+      "headline": "Gele waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-24T05:00:00+02:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "A lot of rain is expected: 10 to 30 l/m² in 1 hour, or 20 to 40 l/m² in 6 hours, or 25 to 50 l/m² in 24 hours. Be careful.",
+      "event": "Yellow warning for rain",
+      "expires": "2026-10-24T06:00:00+02:00",
+      "headline": "Yellow warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-24T05:00:00+02:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-24T05:30:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "726dd22e-64d1-447f-91fb-18f180134b9d"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261024032747.1618810",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Er wordt veel regen verwacht: ofwel 10 t.e.m. 30 l/m² in 1 uur, of 20 t.e.m. 40 l/m² in 6 uur, of 25 t.e.m. 50 l/m² in 24 uur. Wees waakzaam.",
+      "event": "Gele waarschuwing voor regen",
+      "expires": "2026-10-24T06:00:00+02:00",
+      "headline": "Gele waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-24T05:00:00+02:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "A lot of rain is expected: 10 to 30 l/m² in 1 hour, or 20 to 40 l/m² in 6 hours, or 25 to 50 l/m² in 24 hours. Be careful.",
+      "event": "Yellow warning for rain",
+      "expires": "2026-10-24T06:00:00+02:00",
+      "headline": "Yellow warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-24T05:00:00+02:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-24T06:00:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "83414fc1-782b-4800-a04a-baffd8bd449b"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261024071016.1618836",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-24T07:10:16+02:00",
+      "event": "Groene waarschuwing voor regen",
+      "expires": "2026-10-25T11:00:00+01:00",
+      "headline": "Groene waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-24T07:10:16+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-24T07:10:16+02:00",
+      "event": "Green warning for rain",
+      "expires": "2026-10-25T11:00:00+01:00",
+      "headline": "Green warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-24T07:10:16+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261024032747.1618787,2026-10-24T05:30:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-24T05:30:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "04328547-021b-4a51-8247-2a3ea2c1e995"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261024123009.1618875",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-24T12:30:09+02:00",
+      "event": "Groene waarschuwing voor regen",
+      "expires": "2026-10-25T11:00:00+01:00",
+      "headline": "Groene waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-24T12:30:09+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-24T12:30:09+02:00",
+      "event": "Green warning for rain",
+      "expires": "2026-10-25T11:00:00+01:00",
+      "headline": "Green warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-24T12:30:09+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261024050753.1618822,2026-10-24T07:10:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-24T07:10:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "6e98858e-6b79-4af1-9245-4c1fc1ddb36b"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261024123509.1618895",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-24T12:35:09+02:00",
+      "event": "Groene waarschuwing voor regen",
+      "expires": "2026-10-25T07:00:00+01:00",
+      "headline": "Groene waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-24T12:35:09+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Expected",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-24T12:35:09+02:00",
+      "event": "Green warning for rain",
+      "expires": "2026-10-25T07:00:00+01:00",
+      "headline": "Green warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-24T12:35:09+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Expected",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261024102714.1618855,2026-10-24T12:30:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-24T12:30:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "7df0d978-18df-41c3-b0f7-5f2fe896b1f9"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261024215005.1618912",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-24T21:50:05+02:00",
+      "event": "Groene waarschuwing voor wind",
+      "expires": "2026-10-25T05:00:00+01:00",
+      "headline": "Groene waarschuwing voor wind in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-24T21:50:05+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-24T21:50:05+02:00",
+      "event": "Green warning for wind",
+      "expires": "2026-10-25T05:00:00+01:00",
+      "headline": "Green warning for wind in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-24T21:50:05+02:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261024094527.1618862,2026-10-24T12:30:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-24T12:30:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "07b20470-5974-40ec-aa5d-bf073ae92ca0"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261024194724.1618901",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Er worden rukwinden tussen 80 en 100 km/u (70 en 90 km/u bij bebladerde bomen) verwacht. Wees waakzaam.",
+      "event": "Gele waarschuwing voor wind",
+      "expires": "2026-10-25T05:00:00+01:00",
+      "headline": "Gele waarschuwing voor wind in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-24T21:00:00+02:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "There is a strong wind expected with wind gusts between 80 and 100 km/h (70 and 90 km/h with leafed trees). Be careful.",
+      "event": "Yellow warning for wind",
+      "expires": "2026-10-25T05:00:00+01:00",
+      "headline": "Yellow warning for wind in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-24T21:00:00+02:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-24T21:50:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "d28bfeda-bf83-4968-bb68-37f598e520ad"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261024195121.1618919",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Er worden hoge waterstanden verwacht: 5,60 t.e.m. 6,20 m TAW in Oostende of 6,60 t.e.m. 7,20 m TAW in Antwerpen. Wees waakzaam.",
+      "event": "Gele waarschuwing voor stormtij",
+      "expires": "2026-10-26T05:00:00+01:00",
+      "headline": "Gele waarschuwing voor stormtij in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-26T02:00:00+01:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "7; coastalevent",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "7; coastalevent may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "High tides are expected: TAW 5,60 to 6,20 m in Ostend or TAW 6,60 to 7,20 m in Antwerp. Be careful.",
+      "event": "Yellow warning for storm surge",
+      "expires": "2026-10-26T05:00:00+01:00",
+      "headline": "Yellow warning for storm surge in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-26T02:00:00+01:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "7; coastalevent",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "7; coastalevent may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Future",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-24T21:55:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "0e3a3b88-3691-4712-88bb-c481f98e5e51"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261024194724.1618922",
+    "incidents": "Alert",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Er worden rukwinden tussen 80 en 100 km/u (70 en 90 km/u bij bebladerde bomen) verwacht. Wees waakzaam.",
+      "event": "Gele waarschuwing voor wind",
+      "expires": "2026-10-25T05:00:00+01:00",
+      "headline": "Gele waarschuwing voor wind in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-24T21:00:00+02:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "There is a strong wind expected with wind gusts between 80 and 100 km/h (70 and 90 km/h with leafed trees). Be careful.",
+      "event": "Yellow warning for wind",
+      "expires": "2026-10-25T05:00:00+01:00",
+      "headline": "Yellow warning for wind in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-24T21:00:00+02:00",
+      "parameter": [
+       {
+        "value": "2; yellow; Moderate",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "1; Wind",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "1; Wind may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Immediate",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Alert",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-25T05:00:00+01:00",
+    "status": "Actual"
+   },
+   "uuid": "2a7547ea-144c-40d0-ae2d-892a75164c93"
+  },
+  {
+   "alert": {
+    "code": [
+     "MCP:v2.0"
+    ],
+    "identifier": "2.49.0.0.56.0.BE.20261025054009.1618948",
+    "incidents": "Update",
+    "info": [
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerpen",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "Geen verhoogde waakzaamheid is benodigd",
+      "effective": "2026-10-25T05:40:09+01:00",
+      "event": "Groene waarschuwing voor regen",
+      "expires": "2026-10-25T07:00:00+01:00",
+      "headline": "Groene waarschuwing voor regen in België - Antwerpen",
+      "instruction": "Be vigilant",
+      "language": "nl-BE",
+      "onset": "2026-10-25T05:40:09+01:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Koninklijk Meteorologisch Instituut van België",
+      "severity": "Moderate",
+      "urgency": "Expected",
+      "web": "https://www.meteo.be/nl/weer/waarschuwingen/overzichtskaart-belgie"
+     },
+     {
+      "area": [
+       {
+        "areaDesc": "Antwerp",
+        "geocode": [
+         {
+          "value": "BE21",
+          "valueName": "NUTS2"
+         }
+        ]
+       }
+      ],
+      "category": [
+       "Met"
+      ],
+      "certainty": "Likely",
+      "description": "No special attention necessary",
+      "effective": "2026-10-25T05:40:09+01:00",
+      "event": "Green warning for rain",
+      "expires": "2026-10-25T07:00:00+01:00",
+      "headline": "Green warning for rain in Belgium - Antwerp",
+      "instruction": "Be vigilant",
+      "language": "en-GB",
+      "onset": "2026-10-25T05:40:09+01:00",
+      "parameter": [
+       {
+        "value": "1; Green; Minor",
+        "valueName": "awareness_level"
+       },
+       {
+        "value": "10; Rain",
+        "valueName": "awareness_type"
+       },
+       {
+        "value": "10; Rain may threat public safety and/or damage infrastructure",
+        "valueName": "impacts"
+       }
+      ],
+      "responseType": [
+       "None"
+      ],
+      "senderName": "Royal Meteorological Institute of Belgium",
+      "severity": "Moderate",
+      "urgency": "Expected",
+      "web": "https://www.meteo.be/en/weather/warnings/overview-belgium"
+     }
+    ],
+    "msgType": "Update",
+    "references": "kmi-irm,2.49.0.0.56.0.BE.20261024102949.1618885,2026-10-24T12:35:00+02:00",
+    "scope": "Public",
+    "sender": "kmi-irm",
+    "sent": "2026-10-24T12:35:00+02:00",
+    "status": "Actual"
+   },
+   "uuid": "8ce130eb-500c-48d5-a3c6-8e90832c5164"
+  }
+ ]
+}

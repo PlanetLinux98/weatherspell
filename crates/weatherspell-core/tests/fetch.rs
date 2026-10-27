@@ -595,11 +595,11 @@ fn a_failed_alert_check_names_the_problem() {
 #[test]
 fn elsewhere_alerts_are_not_available_and_nothing_is_asked() {
     let place = Location::new(
-        "Paris",
-        Some("\u{ce}le-de-France"),
-        Some("France"),
-        48.8534,
-        2.3488,
+        "Kathmandu",
+        Some("Bagmati Province"),
+        Some("Nepal"),
+        27.7017,
+        85.3206,
     );
     let http = Fake::default();
     let report = check_alerts(&http, &place, at("2026-09-13T04:00:00Z"));

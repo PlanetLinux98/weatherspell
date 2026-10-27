@@ -10,6 +10,23 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 
 ## [Unreleased]
 
+### Added
+- Weather alerts for Europe (all 38 supported countries, including the
+  UK and Ireland) via MeteoAlarm; New Zealand via MetService; Australia
+  via the Bureau of Meteorology (adding a first Australian location
+  downloads the Bureau's warning area info locally); Hong Kong via the
+  Hong Kong Observatory; the Philippines via PAGASA; and South Africa via
+  the South African Weather Service. European locations are checked at
+  least every 10 minutes, as required by MeteoAlarm's terms. (#9, #29,
+  #30, #31)
+
+### Changed
+- Places in Hong Kong and Macao are found with their territory's name.
+
+### Fixed
+- Place names no longer repeat their country (now "Singapore", not
+  "Singapore, Singapore").
+
 ## [0.2.0] - 2026-10-25
 
 The first release for the Mac and Linux, alongside Windows. Press F1

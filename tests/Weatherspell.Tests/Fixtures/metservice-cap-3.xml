@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><alert xmlns="urn:oasis:names:tc:emergency:cap:1.2"><identifier>2.49.0.0.554.0.severeweather.nz.20261025072833748.5</identifier><sender>https://www.metservice.com</sender><sent>2026-10-25T20:28:33+13:00</sent><status>Actual</status><msgType>Update</msgType><scope>Public</scope><references>https://www.metservice.com,2.49.0.0.554.0.severeweather.nz.20261024200303269.5,2026-10-25T09:03:03+13:00</references><info><category>Met</category><event>rain</event><responseType>Monitor</responseType><urgency>Future</urgency><severity>Minor</severity><certainty>Possible</certainty><onset>2026-10-27T02:00:00+13:00</onset><expires>2026-10-27T11:00:00+13:00</expires><senderName>Meteorological Service of New Zealand Limited</senderName><headline>Heavy Rain Watch</headline><description>A period of heavy rain, and amounts may approach warning criteria. Chance of upgrading to a Warning: Moderate.</description><instruction>Action: Monitor for updates.</instruction><web>https://metservice.com/warnings/home</web><parameter><valueName>ChanceOfUpgrade</valueName><value>Moderate</value></parameter><parameter><valueName>ColourCode</valueName><value>Yellow</value></parameter><parameter><valueName>ColourCodeHex</valueName><value>#FFEB18</value></parameter><parameter><valueName>NextUpdate</valueName><value>2026-10-26T10:00:00+13:00</value></parameter><area><areaDesc>Tararua Range</areaDesc><polygon>-40.978,175.162 -40.972,175.158 -40.933,175.152 -40.882,175.164 -40.826,175.192 -40.791,175.215 -40.731,175.263 -40.696,175.294 -40.655,175.340 -40.597,175.397 -40.543,175.474 -40.526,175.539 -40.526,175.576 -40.527,175.582 -40.530,175.584 -40.527,175.587 -40.529,175.602 -40.530,175.610 -40.545,175.638 -40.567,175.653 -40.599,175.653 -40.632,175.644 -40.668,175.619 -40.727,175.582 -40.734,175.578 -40.802,175.539 -40.845,175.511 -40.914,175.465 -40.952,175.434 -41.002,175.386 -41.040,175.317 -41.036,175.262 -41.034,175.235 -41.006,175.181 -40.978,175.162</polygon></area></info><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"/><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><DigestValue>v4Cyemb6vNL9itlN0gACE8OtmF6WBF9SMTe91JFT2xk=</DigestValue></Reference></SignedInfo><SignatureValue>RCnJK01f+iu2L25mfUmQ0omeNrPMS/YRtzTEMdV4Qfu4EX2FT5h4zru+ui9kZC0FneZiw2nnyocB&#13;
+BAMvg8hUaVPXCm5M+L2h0uZFl02BqMTKwxtBq0hcQeA3LXT4M5BnVL3bOsgcS/Uq2NSYSiVO599u&#13;
+VG8F5qNMbZmlUr3sVCXEMG7xhDNDfthH5gGNKp82abgJR1BbHXOIx/tHaEEUd9PfnOm396b2XkXw&#13;
+fxPdynYaQ9TpypkARUUpcHnyHwS9CwPnrBd51g9eUIS2nnbsmhL/f1Xq8++TGMakjB5OeKHFnkG1&#13;
+yT/98r6GMtATsk+z4qz2hsu4L+YA3ErDnY2KZw==</SignatureValue><KeyInfo><X509Data><X509Certificate>MIID+zCCAuOgAwIBAgIEQXDSuTANBgkqhkiG9w0BAQsFADCBrTELMAkGA1UEBhMCTloxEzARBgNV&#13;
+BAgTCldlbGxpbmd0b24xEzARBgNVBAcTCldlbGxpbmd0b24xNjA0BgNVBAoTLU1FVEVPUk9MT0dJ&#13;
+Q0FMIFNFUlZJQ0UgT0YgTkVXIFpFQUxBTkQgTElNSVRFRDEfMB0GA1UECxMWSW5mb3JtYXRpb24g&#13;
+VGVjaG5vbG9neTEbMBkGA1UEAxMSY2FwLm1ldHNlcnZpY2UuY29tMB4XDTI1MTAyMDIyNDU1NloX&#13;
+DTI2MTAyMDIyNDU1Nlowga0xCzAJBgNVBAYTAk5aMRMwEQYDVQQIEwpXZWxsaW5ndG9uMRMwEQYD&#13;
+VQQHEwpXZWxsaW5ndG9uMTYwNAYDVQQKEy1NRVRFT1JPTE9HSUNBTCBTRVJWSUNFIE9GIE5FVyBa&#13;
+RUFMQU5EIExJTUlURUQxHzAdBgNVBAsTFkluZm9ybWF0aW9uIFRlY2hub2xvZ3kxGzAZBgNVBAMT&#13;
+EmNhcC5tZXRzZXJ2aWNlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAOtYoScZ&#13;
+w+ucewOrHmJLm0jtfWRqYQzN22od96kr1ruHroKyUWfP9ckX0qaewA51m8gZEC+cms3+U9tFELWL&#13;
+xvMfCw1vqexbyQbudu6jf9BIBx9FpZtxIjVuJL/6bLlqyDJhBH8Dq9A5Z5aK0Wc6GHoBijDH9O1H&#13;
+Z/vZsPVqVoBKVby3vvMeMdDPPomVpYZdRpQy4ApLUsmiYoqiQeEDIb5EQ/HrX2WjK9iuwfp+eOn7&#13;
+Mz5v4b0Kl7PuSzqAzIdyJePiibmhEu+o6MWQOl34qXH4cPo/SJD9lHM0j3ZoAQoIVqEXY2Jg2QJc&#13;
+/zd96n1qXPm+Gp0zeed5G0HCU4epXX0CAwEAAaMhMB8wHQYDVR0OBBYEFKxsISH42wf950TylFDE&#13;
+xkSCqq52MA0GCSqGSIb3DQEBCwUAA4IBAQAjS+EC5034C1JjYxFeej/9E4/0F1lrshbX5dEkKUNy&#13;
+fbSxv6+UeES51P01lUp4qBRMZGLOQJtla1b9haumYxzOg83vw4HIFP1dK71P5bh5RapKBxnGLo7z&#13;
+Xstq1dyBgAC9F6ztgSEMAeLEKImQOmV0Rfzsu9PdiUv7YMU6MIkCMr7Nqz5kqN49Lb1RrneHw2be&#13;
+UyQUUh6GL0SOx19p1NpzDr2uFlEI7UXR6RzrI1fOaceR3q6EhoPy7YGil3VRe/e6OhnHbpOfxUeE&#13;
+xqYPOKJ8bXTA8aBVGIpRz4RAqr8e1KqtrQeMpy8fPkmtJefUeiltRfUdUDOHvCqbgtItoPpQ</X509Certificate></X509Data></KeyInfo></Signature></alert>

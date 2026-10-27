@@ -339,19 +339,23 @@ after 00:00 UTC there may be none yet, which is one refresh of generated
 text. The site list is fetched once per session, the NWS grid and station
 once per location.
 
-Candidates for later: Australia (Bureau of Meteorology open data) and Ireland
-(Met Eireann open data), both English. The UK Met Office needs an API key, so
-it stays out. Norway, Germany, Japan and others publish only in their respective
+Candidates for later: Australia (Bureau of Meteorology open data) and
+Ireland (Met Eireann open data), both English. The UK Met Office's forecasts
+need an API key, so they stay out; its warnings come through MeteoAlarm.
+Norway, Germany, Japan and others publish only in their respective
 languages, worth considering alongside translation efforts.
 
 ## Alerts are regional by necessity
 
 No keyless service covers alerts worldwide. Coverage is built one source at
-a time: Environment Canada and the NWS first, MeteoAlarm (Europe) next.
-A location outside every supported region gets an explicit "alerts are not
-available for this region" line, never silence, so nobody mistakes a gap in
-coverage for a quiet day. A source that cannot be reached is stated just as
-plainly ("Alerts couldn't be checked this time"), for the same reason.
+a time: Environment Canada and the NWS first, then MeteoAlarm for Europe,
+MetService for New Zealand, the Bureau of Meteorology for Australia, the
+Hong Kong Observatory, PAGASA for the Philippines and the South African
+Weather Service. A location outside every supported region gets an explicit
+"alerts are not available for this region" line, never silence, so nobody
+mistakes a gap in coverage for a quiet day. A source that cannot be reached
+is stated just as plainly ("Alerts couldn't be checked this time"), for the
+same reason.
 
 Both sources answer a point query with everything the app shows: the NWS
 through `api.weather.gov/alerts/active?point=` and Environment Canada
@@ -368,6 +372,88 @@ Environment Canada's colour levels (yellow, orange, red) set an alert's
 severity, with its type as a floor (a warning is at least Severe), so that
 "severe and extreme only" means the same on both sides of the border, where
 every NWS warning is Severe or Extreme.
+
+Europe and New Zealand publish in the Common Alerting Protocol. MeteoAlarm
+(EUMETNET) gathers 38 countries' national services, the UK and Ireland
+included, in one keyless feed per country; every warning carries an English
+text. A feed holds the whole country, so it is fetched once per check and
+shared by every location there, and the app picks out what applies: messages
+not replaced by a later update, not all-clear, not ended, at least yellow
+(green means no warning), in an area that holds the location. Areas come as
+outlines in the warning, as MeteoAlarm region codes, whose outlines the app
+carries simplified (from MeteoAlarm's published file), or as NUTS and FIPS
+codes matched by name or by county. Sea areas take no margin, so a coastal
+town does not get the sea's gale warnings. The services name their warnings
+in a dozen styles, so each is named from its colour level and hazard,
+"Orange wind warning", as MeteoAlarm and the national colour systems do,
+with the service's own headline and text in the details; the flood agencies'
+warnings, which name a place, keep their own names. MeteoAlarm's terms ask
+for the national service to be named, the time of issue, a link, a
+disclaimer (at the end of each European alert's details), and alerts no more
+than ten minutes behind its site, so European locations are checked at least
+every ten minutes whatever the setting says.
+
+MetService's feed lists the watches and warnings in effect, each a CAP file
+with its area's outline, fetched once since a CAP file never changes. Its
+system is colour-coded like Environment Canada's (yellow watches, orange and
+red warnings), so its warnings read colour first, "Orange heavy rain
+warning", and the colour sets the severity.
+
+Both give each update a new identifier and name the messages it replaces, so
+an alert is followed through that chain: an update is not announced again
+unless it raises the alert (yellow to orange, a watch to a warning).
+
+Australia's Bureau of Meteorology publishes its warnings as CAP files. Its
+website turns away programs and points them to its anonymous FTP service, so
+the app reads them there, with a small FTP client of its own. The Bureau's
+terms let a person download its material for their own use but not pass it
+on, so each copy of Weatherspell fetches for its own user, and nothing of
+the Bureau's is built into the app or its tests. A warning names its areas
+only by the Bureau's codes (forecast districts, fire weather districts,
+river catchments, coastal waters); the outlines are the Bureau's own map
+files, which the app downloads the first time an Australian location is
+checked, keeps simplified in its cache folder, and downloads again only when
+the Bureau's listing shows one has changed. A warning for a larger area
+reaches the smaller ones it holds, and a catchment that crosses a state
+border brings the other state's warnings. The Bureau's warnings aren't
+colour-coded, so each reads as its headline names it ("Severe thunderstorm
+warning"); where the Bureau gives no severity, the kind sets it, so a severe
+thunderstorm warning counts as severe. A city's warning and its district's
+can both hold a location and would read the same, so then each keeps the
+area its headline names ("Severe thunderstorm warning for Greater Brisbane
+and Surrounds"). A warning keeps one identifier through its updates and is
+announced again only when an update raises it (minor to major flooding).
+
+Australia's tsunami warnings come from the Joint Australian Tsunami Warning
+Centre's own products, for zones drawn at sea along the coast. No distance
+is published for who should hear one: the Bureau tells people under a land
+threat to go at least 1 km inland, and the app takes in places within 3 km
+of a zone, so that towns along the beaches, whose centres can be 2 or 3 km
+back, hear them too, and city centres further inland don't.
+
+The Hong Kong Observatory's open data lists the warnings and signals in
+force for the whole territory, so there are no areas to match. Each reads by
+the Observatory's own name ("Amber rainstorm warning signal", "Number 8
+northeast gale or storm signal", "No." read as "number"), and an upgrade,
+amber to red or signal 3 to 8, is a new warning.
+
+PAGASA's feed holds general flood advisories and tropical cyclone alerts,
+with outlines, and tropical cyclone wind signals, which name provinces but
+carry no outlines; the app carries the provinces' outlines to place those.
+Each bulletin's signals come as a file per level and name none of the last
+bulletin's, so only a storm's latest bulletin counts: a province lowered
+from signal 2 to 1 hears 1. PAGASA rates signals 1 and 2 minor and moderate;
+the signal sets the severity (3 severe, 4 and 5 extreme), so "severe and
+extreme only" hears signal 3 and up, and a storm's signal is announced again
+only when raised.
+
+The South African Weather Service's feed keeps every warning since 2025, so
+only the last few days' are read, and of those the newest file of each
+office and kind, since a later one replaces an earlier one without saying
+so. Its impact-based warnings are colour-coded with a level from 1 to 10 (1
+to 4 yellow, 5 to 8 orange, 9 and 10 red); its CAP rates every one minor and
+heads it with the hazard alone, so each reads colour and level first, as
+SAWS announces them, and the colour sets the severity.
 
 Rejected: a keyed aggregator (OpenWeatherMap One Call carries alerts
 globally) for the reason above: every user would need an account and a key.

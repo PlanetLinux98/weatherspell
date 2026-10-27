@@ -245,6 +245,8 @@ fn simple(id: &str, event: &str, severity: AlertSeverity, ends_hour: i8) -> Weat
         instruction: None,
         url: None,
         expires: None,
+        references: None,
+        notice: None,
     }
 }
 
@@ -384,6 +386,8 @@ fn alert(event: &str, ends: Option<Timestamp>, severity: AlertSeverity) -> Weath
         instruction: None,
         url: None,
         expires: None,
+        references: None,
+        notice: None,
     }
 }
 

@@ -20,10 +20,11 @@ use jiff::tz::Offset;
 use weatherspell_core::alerts::{self, AlertReport, WeatherAlert};
 use weatherspell_core::cache::ForecastCache;
 use weatherspell_core::clock::Clock;
-use weatherspell_core::fetch::{FetchError, ForecastService, ServiceError, check_alerts};
+use weatherspell_core::fetch::{FetchError, ForecastService, ServiceError};
 use weatherspell_core::forecast::Forecast;
 use weatherspell_core::layout::{RewritePlan, SectionLayout, SelectionHold};
 use weatherspell_core::location::Location;
+use weatherspell_core::meteoalarm;
 use weatherspell_core::net::UreqFetch;
 use weatherspell_core::placement::{self, CharSize, Rect};
 use weatherspell_core::search::LocationSearch;
@@ -98,6 +99,9 @@ pub struct MainWindow {
     generation: Cell<u64>,
     polling: Cell<bool>,
     poll_changed: Cell<bool>,
+    // When every location's alerts were last checked; European ones are
+    // checked more often (poll_alerts).
+    full_poll_at: Cell<Option<Instant>>,
     // The other locations' alerts are first checked once the one on
     // screen has its forecast.
     first_poll: Cell<bool>,
@@ -267,7 +271,7 @@ pub fn build() -> Rc<MainWindow> {
         load_problem,
         settings: RefCell::new(settings),
         http: Arc::new(UreqFetch::new(&format!("Weatherspell/{}", crate::VERSION))),
-        service: Arc::new(ForecastService::new()),
+        service: Arc::new(ForecastService::with_cache_folder(system::cache_folder())),
         search: Arc::new(LocationSearch::new()),
         region: system::region(),
         layout: RefCell::new(SectionLayout::default()),
@@ -278,6 +282,7 @@ pub fn build() -> Rc<MainWindow> {
         generation: Cell::new(0),
         polling: Cell::new(false),
         poll_changed: Cell::new(false),
+        full_poll_at: Cell::new(None),
         first_poll: Cell::new(false),
         shown_at: Cell::new(Instant::now()),
         closed: Cell::new(false),
@@ -797,8 +802,15 @@ impl MainWindow {
         self.forecast_timer.start(minutes as i32 * 60_000, false);
     }
 
+    // MeteoAlarm's terms keep European alerts within ten minutes of its
+    // own site, so the timer ticks at least that often; locations
+    // elsewhere are still checked at the interval chosen (poll_alerts).
     fn start_alert_timer(&self) {
-        let minutes = self.settings.borrow().alert_check_minutes;
+        let minutes = self
+            .settings
+            .borrow()
+            .alert_check_minutes
+            .min(meteoalarm::MAX_CHECK_MINUTES);
         self.alert_timer.start(minutes as i32 * 60_000, false);
     }
 
@@ -1044,7 +1056,7 @@ impl MainWindow {
                 // it is waited for either way: an alert service that answers
                 // while the forecast's does not still gives live alerts.
                 std::thread::scope(|s| {
-                    let alerts = s.spawn(|| check_alerts(&*http, &location, now));
+                    let alerts = s.spawn(|| service.alerts(&*http, &location, now));
                     let forecast = service.forecast(&*http, &location, units, FORECAST_DAYS, now);
                     (forecast, alerts.join())
                 })
@@ -1526,10 +1538,22 @@ impl MainWindow {
     // Every saved location that asks to be notified, plus the one on screen
     // so its Alerts section stays current. A source that cannot be reached
     // leaves that location's seen list alone, so nothing is announced twice
-    // after an outage. Never moves focus or the caret.
+    // after an outage. Never moves focus or the caret. The timer may tick
+    // more often than the interval chosen (start_alert_timer): between
+    // full rounds only European locations are checked.
     fn poll_alerts(&self, include_current: bool) {
         if self.polling.replace(true) {
             return;
+        }
+        let interval =
+            Duration::from_secs(u64::from(self.settings.borrow().alert_check_minutes) * 60);
+        // A timer tick can come a moment early.
+        let full = self
+            .full_poll_at
+            .get()
+            .is_none_or(|at| at.elapsed() + Duration::from_secs(30) >= interval);
+        if full {
+            self.full_poll_at.set(Some(Instant::now()));
         }
         let current = self.current_index();
         let targets: Vec<(usize, Location)> = self
@@ -1546,11 +1570,13 @@ impl MainWindow {
                 }
             })
             .map(|(i, s)| (i, s.to_location()))
+            .filter(|(_, location)| full || meteoalarm::country_of(location).is_some())
             .collect();
         let http = self.http.clone();
+        let service = self.service.clone();
         std::thread::spawn(move || {
             for (index, location) in targets {
-                let report = check_alerts(&*http, &location, Timestamp::now());
+                let report = service.alerts(&*http, &location, Timestamp::now());
                 on_ui(move |w| w.polled(index, &location, &report));
             }
             on_ui(|w| w.poll_done());

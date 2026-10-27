@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+  <channel>
+    <title>Metservice Public CAP Alerts</title>
+    <link>https://www.metservice.com</link>
+    <description>Current Watches, Warnings and Advisories for New Zealand issued by MetService</description>
+    <copyright>Copyright Meteorological Service of New Zealand Limited, 2026. Licensed under Creative Commons BY 4.0.</copyright>
+    <pubDate>Sun, 25 Oct 2026 20:48:05 +1300</pubDate>
+    <item>
+      <title>Strong Wind Watch</title>
+      <guid>2.49.0.0.554.0.severeweather.nz.20261025072833748.0</guid>
+      <category>Met</category>
+      <pubDate>Sun, 25 Oct 2026 20:28:33 +1300</pubDate>
+      <description>Northwest winds may approach severe gale in exposed places, especially about Banks Peninsula. Chance of upgrading to a Warning: Moderate.</description>
+      <link>https://alerts.metservice.com/cap/alert?id=2.49.0.0.554.0.severeweather.nz.20261025072833748.0</link>
+    </item>
+    <item>
+      <title>Strong Wind Warning - Orange</title>
+      <guid>2.49.0.0.554.0.severeweather.nz.20261025072833748.9</guid>
+      <category>Met</category>
+      <pubDate>Sun, 25 Oct 2026 20:28:33 +1300</pubDate>
+      <description>Severe gale northwest winds gusting 120 km/h in exposed places. Impact: Damage to trees, powerlines, and unsecured structures possible. Driving may be difficult, especially for high-sided vehicles and motorcycles. Chance of upgrading to a Red Warning: Minimal.</description>
+      <link>https://alerts.metservice.com/cap/alert?id=2.49.0.0.554.0.severeweather.nz.20261025072833748.9</link>
+    </item>
+    <item>
+      <title>Heavy Rain Watch</title>
+      <guid>2.49.0.0.554.0.severeweather.nz.20261025072833748.5</guid>
+      <category>Met</category>
+      <pubDate>Sun, 25 Oct 2026 20:28:33 +1300</pubDate>
+      <description>A period of heavy rain, and amounts may approach warning criteria. Chance of upgrading to a Warning: Moderate.</description>
+      <link>https://alerts.metservice.com/cap/alert?id=2.49.0.0.554.0.severeweather.nz.20261025072833748.5</link>
+    </item>
+    </channel>
+</rss>

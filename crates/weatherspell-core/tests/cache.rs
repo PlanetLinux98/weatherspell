@@ -66,6 +66,8 @@ fn alert(id: &str, event: &str, ends: Option<Timestamp>) -> WeatherAlert {
         instruction: Some("Take care.".to_string()),
         url: Some("https://weather.gc.ca/".to_string()),
         expires: None,
+        references: None,
+        notice: None,
     }
 }
 

@@ -15,8 +15,9 @@ by anyone who wants the weather in a simple and straightforward manner.
   choose, as readable text.
 - Remembers your locations so switching between them is a keystroke away.
 - Shows urgent weather alerts for your locations, and can announce new ones
-  as they arrive. Alerts are available for Canada and the United States at
-  this time, with more regions planned.
+  as they arrive. Alerts are available for Canada, the United States, most
+  of Europe, Australia, New Zealand, Hong Kong, the Philippines and South
+  Africa at this time, with more regions planned.
 - Comes as one file on each system, with no account and no API key.
 - Follows each system's own keys, menus, units, time format, text size and
   light or dark mode.
@@ -97,9 +98,9 @@ other assistive technology, that is a bug: please
 
 ## Data sources
 
-Weatherspell uses these openly licensed sources, and credits them in
-About Weatherspell and on the Sources line of every forecast. The list grows as
-sources are added.
+Weatherspell uses these sources, most of them openly licensed, and credits
+them in About Weatherspell and on the Sources line of every forecast. The
+list grows as sources are added.
 
 - Forecasts and place-name search: [Open-Meteo](https://open-meteo.com/),
   licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
@@ -110,6 +111,34 @@ sources are added.
 - Forecast text, current conditions and alerts in the United States: the
   [National Weather Service](https://www.weather.gov/), from its weather.gov
   forecast pages and its API, public domain.
+- Alerts in Europe, including the United Kingdom and Ireland: each country's
+  national weather service, through [MeteoAlarm](https://meteoalarm.org/)
+  (EUMETNET), under
+  [its terms](https://meteoalarm.org/en/live/page/terms-and-conditions),
+  which are those of
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) with a few
+  additions. The outlines of MeteoAlarm's warning regions, simplified, are
+  built into the app.
+- Alerts in New Zealand: [MetService](https://www.metservice.com/), from its
+  public alert feed, licensed
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+- Alerts in Australia: the [Bureau of Meteorology](https://www.bom.gov.au/),
+  from its anonymous FTP service, for your own use under
+  [its copyright terms](https://www.bom.gov.au/copyright). The outlines of
+  its warning areas aren't built into the app: it downloads them from the
+  Bureau the first time they're needed.
+- Alerts in Hong Kong: the [Hong Kong Observatory](https://www.hko.gov.hk/),
+  from its open data on [DATA.GOV.HK](https://data.gov.hk/).
+- Alerts in the Philippines: [PAGASA](https://www.pagasa.dost.gov.ph/), from
+  its public alert feed, licensed
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The outlines of
+  the provinces, simplified, are built into the app, from
+  [geoBoundaries](https://www.geoboundaries.org/)' copy of the boundaries
+  published by NAMRIA and the Philippine Statistics Authority, licensed
+  [CC BY 3.0 IGO](https://creativecommons.org/licenses/by/3.0/igo/).
+- Alerts in South Africa: the
+  [South African Weather Service](https://www.weathersa.co.za/), from its
+  public alert feed, which it places in the public domain.
 - Postal codes for Canada, the UK, Australia, New Zealand and Ireland:
   [GeoNames](https://www.geonames.org/) postal code data, licensed
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), built into
