@@ -287,3 +287,28 @@ fn pruning_keeps_the_saved_locations_and_drops_the_rest() {
     assert_eq!(cache(&dir).load(&toronto), None);
     assert!(dir.join("cache").join("notes.txt").exists());
 }
+
+#[test]
+fn air_quality_and_the_services_hours_come_back_as_they_went_in() {
+    let dir = TempDir::new();
+    let mut f = sample();
+    assert_eq!(f.official_hours.as_ref().unwrap().hours.len(), 24);
+    assert_eq!(f.time_zone.as_deref(), Some("America/Toronto"));
+    f.hours[0].feels_like = Some(-3.5);
+    let air = weatherspell_core::air::parse_open_meteo(
+        &fixture("open-meteo-air-madrid.json"),
+        weatherspell_core::air::Scale::European,
+    )
+    .unwrap();
+    f.air = Some(weatherspell_core::air::AirQuality {
+        scale: weatherspell_core::air::Scale::Aqhi,
+        community: Some("Peterborough".to_string()),
+        observed: Some(air.hours[0].clone()),
+        hours: air.hours,
+        pollen: air.pollen,
+        sources: vec!["Air quality: somewhere.".to_string()],
+        problem: None,
+    });
+    cache(&dir).save(&peterborough(), &f, None).unwrap();
+    assert_eq!(cache(&dir).load(&peterborough()).unwrap().forecast, f);
+}

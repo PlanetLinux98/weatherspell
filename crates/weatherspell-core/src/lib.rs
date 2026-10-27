@@ -5,6 +5,7 @@
 // captured responses are the specification; see tests/reference.rs for
 // how the two are compared.
 
+pub mod air;
 pub mod alerts;
 pub mod area;
 pub mod bom;
@@ -20,6 +21,7 @@ pub mod forecast;
 #[cfg(feature = "net")]
 mod ftp;
 pub mod hko;
+pub mod hourly;
 mod iso;
 pub mod layout;
 pub mod location;

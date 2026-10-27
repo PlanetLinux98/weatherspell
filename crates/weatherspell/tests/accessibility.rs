@@ -7,13 +7,31 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::Arc;
 
-use weatherspell::{about, add_location, details, manage, settings_dialog, window};
+use weatherspell::{about, add_location, details, hourly, manage, settings_dialog, window};
 use weatherspell_core::location::Location;
 use weatherspell_core::net::UreqFetch;
 use weatherspell_core::search::LocationSearch;
 use weatherspell_core::settings::{AppSettings, SavedLocation, SettingsStore};
 use wx_accessibility::lint;
 use wxdragon::prelude::*;
+
+// A day of hours, as the dialog shows them.
+fn hour_by_hour() -> weatherspell_core::hourly::HourlyText {
+    let mut text = weatherspell_core::hourly::HourlyText::default();
+    let lines = "Tuesday, October 27
+
+3:00 pm: sunny, 8 degrees, light wind.
+4:00 pm: sunny, 7 degrees, light wind.
+
+Sources
+
+Hours: Open-Meteo (open-meteo.com), licensed CC BY 4.0.
+
+";
+    text.layout.text = lines.to_string();
+    text.layout.length = lines.encode_utf16().count();
+    text
+}
 
 // How many windows were checked, their problems, and what the lint found
 // in the one made wrong.
@@ -78,6 +96,7 @@ fn main() {
                 &["Frost advisory from Environment Canada.".to_string()],
                 Some("https://weather.gc.ca/"),
             ),
+            hourly::build(&frame, "Hour by Hour: Home", &hour_by_hour(), 0),
         ];
         let mut problems = lint::check(&frame);
         for dialog in &dialogs {

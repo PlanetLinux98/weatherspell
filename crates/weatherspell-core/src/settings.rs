@@ -40,6 +40,10 @@ pub struct AppSettings {
     #[serde(deserialize_with = "whole")]
     pub alert_check_minutes: u32,
     pub alert_announcements: Announcements,
+    // The Air quality section and its request; on unless turned off. Not
+    // in 0.1's file, which it ignores.
+    #[serde(deserialize_with = "on_unless_off")]
+    pub show_air_quality: bool,
     // Where the main window was when it last closed; None until then.
     pub window: Option<SavedWindow>,
 }
@@ -53,6 +57,7 @@ impl Default for AppSettings {
             forecast_refresh_minutes: DEFAULT_FORECAST_MINUTES,
             alert_check_minutes: DEFAULT_ALERT_MINUTES,
             alert_announcements: Announcements::All,
+            show_air_quality: true,
             window: None,
         }
     }
@@ -223,6 +228,11 @@ fn or_default<'de, D: Deserializer<'de>, T: Deserialize<'de> + Default>(
     d: D,
 ) -> Result<T, D::Error> {
     Ok(Option::<T>::deserialize(d)?.unwrap_or_default())
+}
+
+// A switch that is on unless the file says false.
+fn on_unless_off<'de, D: Deserializer<'de>>(d: D) -> Result<bool, D::Error> {
+    Ok(Option::<bool>::deserialize(d)?.unwrap_or(true))
 }
 
 // A count or an index; a negative one (hand-edited) reads as 0, which

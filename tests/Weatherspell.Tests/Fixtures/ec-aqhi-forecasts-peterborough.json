@@ -1,0 +1,1710 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610262100-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610262100-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "5:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "5h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T21:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610262200-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610262200-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "6:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "6h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T22:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610262300-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610262300-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "7:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "7h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T23:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270000-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270000-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "8:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "8h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-27T00:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270100-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270100-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "9:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "9h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-27T01:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270200-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270200-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "10:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "10h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-27T02:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270300-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270300-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "11:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "11h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-27T03:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270400-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270400-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "12:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "12h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T04:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270500-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270500-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "1:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "1h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T05:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270600-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270600-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "2:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "2h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T06:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270700-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270700-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "3:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "3h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T07:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270800-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270800-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "4:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "4h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T08:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270900-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270900-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "5:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "5h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T09:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271000-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271000-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "6:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "6h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T10:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271100-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271100-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "7:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "7h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T11:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271200-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271200-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "8:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "8h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T12:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271300-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271300-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "9:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "9h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T13:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271400-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271400-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "10:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "10h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T14:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271500-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271500-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "11:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "11h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T15:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271600-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271600-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "12:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "12h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T16:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271700-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271700-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "1:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "1h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T17:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271800-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271800-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "2:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "2h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T18:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271900-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271900-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "3:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "3h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T19:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610272000-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610272000-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "4:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "4h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T20:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610272100-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610272100-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "5:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "5h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T21:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610272200-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610272200-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "6:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "6h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T22:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610272300-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610272300-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "7:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "7h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T23:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610280000-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610280000-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "8:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "8h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-28T00:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610280100-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610280100-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "9:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "9h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-28T01:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610280200-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610280200-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "10:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "10h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-28T02:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610280300-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610280300-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "11:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "11h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-28T03:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610280400-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610280400-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "12:00 AM EDT Wednesday 28 October 2026",
+    "forecast_datetime_text_fr": "12h00 AM HAE mercredi 28 octobre 2026",
+    "forecast_datetime": "2026-10-28T04:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610280500-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610280500-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "1:00 AM EDT Wednesday 28 October 2026",
+    "forecast_datetime_text_fr": "1h00 AM HAE mercredi 28 octobre 2026",
+    "forecast_datetime": "2026-10-28T05:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610280600-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610280600-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "2:00 AM EDT Wednesday 28 October 2026",
+    "forecast_datetime_text_fr": "2h00 AM HAE mercredi 28 octobre 2026",
+    "forecast_datetime": "2026-10-28T06:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610280700-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610280700-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "3:00 AM EDT Wednesday 28 October 2026",
+    "forecast_datetime_text_fr": "3h00 AM HAE mercredi 28 octobre 2026",
+    "forecast_datetime": "2026-10-28T07:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610280800-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610280800-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "4:00 AM EDT Wednesday 28 October 2026",
+    "forecast_datetime_text_fr": "4h00 AM HAE mercredi 28 octobre 2026",
+    "forecast_datetime": "2026-10-28T08:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610280900-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610280900-202610262100",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_datetime_text_en": "5:00 AM EDT Wednesday 28 October 2026",
+    "forecast_datetime_text_fr": "5h00 AM HAE mercredi 28 octobre 2026",
+    "forecast_datetime": "2026-10-28T09:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-period-202610262100",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-period-202610262100",
+    "aqhi_type": "AQHI-Forecast-Period",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T21:00:00Z",
+    "forecast_period": {
+     "period_2": {
+      "forecast_period_en": "Tonight",
+      "forecast_period_fr": "Ce soir et cette nuit",
+      "aqhi": 2,
+      "aqhi_insmoke": null
+     },
+     "period_3": {
+      "forecast_period_en": "Tomorrow",
+      "forecast_period_fr": "Demain",
+      "aqhi": 2,
+      "aqhi_insmoke": null
+     },
+     "period_4": {
+      "forecast_period_en": "Tomorrow Night",
+      "forecast_period_fr": "Demain soir et nuit",
+      "aqhi": 2,
+      "aqhi_insmoke": null
+     },
+     "period_5": {
+      "forecast_period_en": "Day 3",
+      "forecast_period_fr": "Jour 3",
+      "aqhi": 2,
+      "aqhi_insmoke": null
+     }
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610261000-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610261000-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "6:00 AM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "6h00 AM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T10:00:00Z",
+    "aqhi": 3
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610261100-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610261100-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "7:00 AM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "7h00 AM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T11:00:00Z",
+    "aqhi": 3
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610261200-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610261200-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "8:00 AM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "8h00 AM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T12:00:00Z",
+    "aqhi": 3
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610261300-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610261300-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "9:00 AM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "9h00 AM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T13:00:00Z",
+    "aqhi": 3
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610261400-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610261400-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "10:00 AM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "10h00 AM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T14:00:00Z",
+    "aqhi": 3
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610261500-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610261500-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "11:00 AM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "11h00 AM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T15:00:00Z",
+    "aqhi": 3
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610261600-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610261600-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "12:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "12h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T16:00:00Z",
+    "aqhi": 3
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610261700-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610261700-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "1:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "1h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T17:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610261800-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610261800-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "2:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "2h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T18:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610261900-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610261900-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "3:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "3h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T19:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610262000-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610262000-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "4:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "4h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T20:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610262100-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610262100-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "5:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "5h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T21:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610262200-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610262200-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "6:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "6h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T22:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610262300-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610262300-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "7:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "7h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-26T23:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270000-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270000-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "8:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "8h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-27T00:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270100-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270100-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "9:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "9h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-27T01:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270200-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270200-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "10:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "10h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-27T02:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270300-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270300-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "11:00 PM EDT Monday 26 October 2026",
+    "forecast_datetime_text_fr": "11h00 PM HAE lundi 26 octobre 2026",
+    "forecast_datetime": "2026-10-27T03:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270400-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270400-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "12:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "12h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T04:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270500-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270500-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "1:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "1h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T05:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270600-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270600-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "2:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "2h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T06:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270700-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270700-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "3:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "3h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T07:00:00Z",
+    "aqhi": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270800-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270800-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "4:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "4h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T08:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610270900-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610270900-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "5:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "5h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T09:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271000-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271000-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "6:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "6h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T10:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271100-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271100-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "7:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "7h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T11:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271200-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271200-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "8:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "8h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T12:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271300-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271300-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "9:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "9h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T13:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271400-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271400-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "10:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "10h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T14:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271500-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271500-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "11:00 AM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "11h00 AM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T15:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271600-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271600-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "12:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "12h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T16:00:00Z",
+    "aqhi": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "AQ_FCST-FDGEJ-202610271700-202610261000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_FCST-FDGEJ-202610271700-202610261000",
+    "aqhi_type": "AQHI-Forecast",
+    "forecast_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "publication_datetime": "2026-10-26T10:00:00Z",
+    "forecast_datetime_text_en": "1:00 PM EDT Tuesday 27 October 2026",
+    "forecast_datetime_text_fr": "1h00 PM HAE mardi 27 octobre 2026",
+    "forecast_datetime": "2026-10-27T17:00:00Z",
+    "aqhi": 1
+   }
+  }
+ ],
+ "numberMatched": 70,
+ "numberReturned": 70,
+ "timeStamp": "2026-10-27T07:56:01.333745Z"
+}

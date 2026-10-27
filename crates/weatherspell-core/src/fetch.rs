@@ -29,7 +29,7 @@ use crate::forecast::{Forecast, OfficialPeriod};
 use crate::location::Location;
 use crate::official::{self, OfficialError, OfficialForecast};
 use crate::units::UnitSystem;
-use crate::{bom, files, hko, meteoalarm, metservice, nws, open_meteo, pagasa, saws};
+use crate::{air, bom, files, hko, meteoalarm, metservice, nws, open_meteo, pagasa, saws};
 
 pub trait Fetch: Sync {
     // The body of a successful answer. The timeout, when given, replaces
@@ -141,6 +141,7 @@ impl From<OfficialError> for Problem {
 #[derive(Clone, Debug)]
 struct Grid {
     forecast_url: String,
+    hourly_url: Option<String>,
     attribution: String,
     station_id: Option<String>,
     station_name: Option<String>,
@@ -177,6 +178,7 @@ pub struct ForecastService {
     south_africa_files: Mutex<HashMap<String, Arc<CapAlert>>>,
     philippines: Mutex<Recent<Vec<String>>>,
     philippines_files: Mutex<HashMap<String, Arc<CapAlert>>>,
+    communities: Mutex<Option<Vec<air::Community>>>,
     folder: Option<PathBuf>,
     australia: Mutex<Recent<bom::Areas>>,
     australia_listing: Mutex<Recent<Vec<bom::Listed>>>,
@@ -195,16 +197,19 @@ impl ForecastService {
         }
     }
 
+    // air_quality: also ask for the Air quality section (a setting).
     pub fn forecast(
         &self,
         http: &dyn Fetch,
         location: &Location,
         units: UnitSystem,
         days: u32,
+        air_quality: bool,
         now: Timestamp,
     ) -> Result<Forecast, ServiceError> {
-        let (base, official) = std::thread::scope(|s| {
+        let (base, official, air) = std::thread::scope(|s| {
             let official = s.spawn(|| self.official(http, location, units, now));
+            let air = s.spawn(|| air_quality.then(|| self.air_quality(http, location)));
             let base = http
                 .get(&open_meteo::forecast_url(location, units, days), None)
                 .map_err(ServiceError::Fetch)
@@ -215,14 +220,102 @@ impl ForecastService {
             (
                 base,
                 official.join().expect("the official fetch does not panic"),
+                air.join().expect("the air quality fetch does not panic"),
             )
         });
         let base = base?;
-        Ok(match official {
+        let mut forecast = match official {
             Ok(Some(o)) => official::compose(&base, &o),
             Ok(None) => base,
             Err(problem) => official::with_problem(base, Some(problem)),
+        };
+        if let Some(fetched) = air {
+            let zone = forecast.zone();
+            let air = air::compose(fetched, |t| zone.to_datetime(t));
+            forecast.sources.extend(air.sources.iter().cloned());
+            forecast.air = Some(air);
+        }
+        Ok(forecast)
+    }
+
+    // Environment Canada's AQHI near one of its communities, Open-Meteo's
+    // index (and its pollen) everywhere, asked side by side. Each failure
+    // is kept for the text to name rather than failing the forecast.
+    fn air_quality(&self, http: &dyn Fetch, location: &Location) -> air::Fetched {
+        let scale = air::open_meteo_scale(location);
+        let canada = location.country.as_deref() == Some("Canada");
+        std::thread::scope(|s| {
+            let aqhi = s.spawn(|| canada.then(|| self.aqhi(http, location)));
+            let open_meteo = http
+                .get(&air::open_meteo_url(location, scale), None)
+                .map_err(|e| e.to_string())
+                .and_then(|json| air::parse_open_meteo(&json, scale).map_err(|e| e.to_string()));
+            let mut fetched = air::Fetched {
+                open_meteo: Some(open_meteo),
+                open_meteo_scale: Some(scale),
+                ..air::Fetched::default()
+            };
+            if let Some(aqhi) = aqhi.join().expect("the AQHI fetch does not panic") {
+                fetched.community = aqhi.community;
+                fetched.observed = aqhi.observed;
+                fetched.forecasts = aqhi.forecasts;
+                fetched.aqhi_problem = aqhi.aqhi_problem;
+            }
+            fetched
         })
+    }
+
+    // The nearest community's latest reading and newest forecast; nothing
+    // when no community is near enough, or when the list of communities
+    // cannot be had (asked again next time).
+    fn aqhi(&self, http: &dyn Fetch, location: &Location) -> air::Fetched {
+        let community = {
+            let mut communities = self.communities.lock().unwrap_or_else(|e| e.into_inner());
+            if communities.is_none() {
+                match http
+                    .get(air::STATIONS_URL, None)
+                    .map_err(|e| e.to_string())
+                    .and_then(|json| air::parse_communities(&json).map_err(|e| e.to_string()))
+                {
+                    Ok(list) => *communities = Some(list),
+                    Err(_) => return air::Fetched::default(),
+                }
+            }
+            communities
+                .as_deref()
+                .and_then(|list| air::nearest_community(list, location))
+                .map(|(c, _)| c.clone())
+        };
+        let Some(community) = community else {
+            return air::Fetched::default();
+        };
+        let (observed, forecasts) = std::thread::scope(|s| {
+            let observed = s.spawn(|| {
+                http.get(&air::observation_url(&community), None)
+                    .map_err(|e| e.to_string())
+                    .and_then(|json| air::parse_observation(&json).map_err(|e| e.to_string()))
+            });
+            let forecasts = http
+                .get(&air::forecasts_url(&community), None)
+                .map_err(|e| e.to_string())
+                .and_then(|json| air::parse_forecasts(&json).map_err(|e| e.to_string()));
+            (
+                observed.join().expect("the AQHI reading does not panic"),
+                forecasts,
+            )
+        });
+        // Either one is enough; both failing is the problem to name.
+        let aqhi_problem = match (&observed, &forecasts) {
+            (Err(e), Err(_)) => Some(e.clone()),
+            _ => None,
+        };
+        air::Fetched {
+            community: Some(community),
+            observed: observed.ok().flatten(),
+            forecasts: forecasts.unwrap_or_default(),
+            aqhi_problem,
+            ..air::Fetched::default()
+        }
     }
 
     // The official forecast, None where no service covers the place, or
@@ -260,13 +353,23 @@ impl ForecastService {
         units: UnitSystem,
     ) -> Result<OfficialForecast, Problem> {
         let grid = self.grid(http, location)?;
-        let (periods, observation) = std::thread::scope(|s| {
+        let (periods, observation, hourly) = std::thread::scope(|s| {
             let observation = s.spawn(|| {
                 // A station that is down should not cost the forecast text:
                 // the base's current conditions stand in, and the Sources
                 // line says so.
                 let id = grid.station_id.as_deref()?;
                 http.get(&nws::observation_url(id), None).ok()
+            });
+            // The hours likewise: Open-Meteo's stand in, and the hour by
+            // hour's Sources line says why.
+            let hourly = s.spawn(|| {
+                let url = grid.hourly_url.as_deref()?;
+                Some(
+                    http.get(&nws::hourly_url(url, units), None)
+                        .map_err(Problem::from)
+                        .and_then(|json| Ok(nws::parse_hourly(&json)?)),
+                )
             });
             let periods = nws_periods(
                 http,
@@ -278,17 +381,25 @@ impl ForecastService {
                 observation
                     .join()
                     .expect("the observation fetch does not panic"),
+                hourly.join().expect("the hourly fetch does not panic"),
             )
         });
         let observation = match observation {
             Some(json) => Some(nws::parse_observation(&json, grid.station_name.as_deref())?),
             None => None,
         };
+        let (hours, hours_problem) = match hourly {
+            Some(Ok(hours)) => (hours, None),
+            Some(Err(problem)) => (Vec::new(), Some(problem_text(problem))),
+            None => (Vec::new(), None),
+        };
         Ok(OfficialForecast {
             source_name: nws::SOURCE_NAME.to_string(),
             attribution: grid.attribution,
             periods: periods?,
             observation,
+            hours,
+            hours_problem,
         })
     }
 
@@ -304,6 +415,7 @@ impl ForecastService {
             station.map_or((None, None), |(id, name)| (Some(id), name));
         let grid = Grid {
             forecast_url: points.forecast_url,
+            hourly_url: points.hourly_url,
             attribution: points.attribution,
             station_id,
             station_name,

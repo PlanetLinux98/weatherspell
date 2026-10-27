@@ -66,6 +66,7 @@ fn hour(
         dew_point: Some(dew),
         humidity: Some(humidity),
         is_day,
+        feels_like: None,
     }
 }
 
@@ -261,11 +262,14 @@ fn sample_with(units: UnitSystem, current_code: i32) -> Forecast {
         location: toronto(),
         fetched_at: now() - SignedDuration::from_mins(3),
         utc_offset: offset(-4),
+        time_zone: None,
         units,
         current,
         hours,
         days,
         periods: Vec::new(),
+        official_hours: None,
+        air: None,
         source_name: "Open-Meteo".to_string(),
         sources: vec![
             "Forecast and current conditions: Open-Meteo (open-meteo.com), licensed CC BY 4.0."

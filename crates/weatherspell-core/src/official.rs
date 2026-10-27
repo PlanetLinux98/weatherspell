@@ -8,16 +8,36 @@ use std::fmt;
 
 use jiff::Timestamp;
 
-use crate::forecast::{CurrentConditions, Forecast, OfficialPeriod};
+use crate::forecast::{CurrentConditions, Forecast, OfficialHour, OfficialHours, OfficialPeriod};
 use crate::open_meteo;
 use crate::units;
 
+// hours is the service's own hour by hour, empty when it has none;
+// hours_problem is why, when they had to be asked for separately (the
+// NWS) and could not be had.
 #[derive(Clone, Debug)]
 pub struct OfficialForecast {
     pub source_name: String,
     pub attribution: String,
     pub periods: Vec<OfficialPeriod>,
     pub observation: Option<Observation>,
+    pub hours: Vec<ServiceHour>,
+    pub hours_problem: Option<String>,
+}
+
+// One of a service's hours as it dates it, before it is put on the
+// location's clock (compose). Values are in the location's units already
+// (see OfficialHour).
+#[derive(Clone, Debug, PartialEq)]
+pub struct ServiceHour {
+    pub start: Timestamp,
+    pub condition: String,
+    pub temperature: f64,
+    pub feels_like: Option<f64>,
+    pub chance: Option<i32>,
+    pub wind_speed: f64,
+    pub wind_direction: Option<i32>,
+    pub wind_gusts: Option<f64>,
 }
 
 // Nones are values the station did not report this time (the NWS marks
@@ -113,9 +133,43 @@ pub fn compose(f: &Forecast, official: &OfficialForecast) -> Forecast {
         }
     }
     composed.periods = official.periods.clone();
+    composed.official_hours = official_hours(f, official);
     composed.source_name = format!("{} and {}", official.source_name, open_meteo::SOURCE_NAME);
     composed.sources = sources;
     composed
+}
+
+// The service's hours on the location's clock. As the clocks go back an
+// hour repeats; the first of the two is kept, so each hour of the clock
+// has one line, as Open-Meteo's own hours have.
+fn official_hours(f: &Forecast, official: &OfficialForecast) -> Option<OfficialHours> {
+    if official.hours.is_empty() && official.hours_problem.is_none() {
+        return None;
+    }
+    let zone = f.zone();
+    let mut hours: Vec<OfficialHour> = Vec::new();
+    for h in &official.hours {
+        let local_time = zone.to_datetime(h.start);
+        if hours.iter().any(|o| o.local_time == local_time) {
+            continue;
+        }
+        hours.push(OfficialHour {
+            local_time,
+            condition: h.condition.clone(),
+            temperature: h.temperature,
+            feels_like: h.feels_like,
+            chance: h.chance,
+            wind_speed: h.wind_speed,
+            wind_direction: h.wind_direction,
+            wind_gusts: h.wind_gusts,
+        });
+    }
+    hours.sort_by_key(|h| h.local_time);
+    Some(OfficialHours {
+        attribution: official.attribution.clone(),
+        hours,
+        problem: official.hours_problem.clone(),
+    })
 }
 
 // The station's numbers in the location's units; what it did not report

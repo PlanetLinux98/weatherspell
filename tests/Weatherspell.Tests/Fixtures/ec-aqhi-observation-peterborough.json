@@ -1,0 +1,34 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "id": "AQ_OBS-FDGEJ-20261027070000",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "id": "AQ_OBS-FDGEJ-20261027070000",
+    "aqhi_type": "AQHI-Observation",
+    "observation_type": "original",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "observation_datetime": "2026-10-27T07:00:00Z",
+    "observation_datetime_text_en": "3:00 AM EDT Tuesday 27 October 2026",
+    "observation_datetime_text_fr": "3h00 AM HAE mardi 27 octobre 2026",
+    "aqhi": 1.32,
+    "special_notes_en": "",
+    "special_notes_fr": "",
+    "latest": true
+   }
+  }
+ ],
+ "numberMatched": 1,
+ "numberReturned": 1,
+ "timeStamp": "2026-10-27T07:56:01.196240Z"
+}

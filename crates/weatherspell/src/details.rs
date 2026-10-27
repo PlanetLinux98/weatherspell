@@ -32,7 +32,7 @@ pub fn build(parent: &Frame, title: &str, paragraphs: &[String], url: Option<&st
     // Read-only text is grey by default; it is for reading.
     text.set_background_color(SystemSettings::get_colour(SystemColour::Window));
     text.change_value(&paragraphs.join("\n\n"));
-    edit::hook(&text, None);
+    edit::hook(&text, None, None);
 
     let official = Button::builder(&dialog)
         .with_id(ID_OFFICIAL)

@@ -22,7 +22,7 @@ const FORECAST_ENDPOINT: &str = "https://api.open-meteo.com/v1/forecast";
 const GEOCODING_ENDPOINT: &str = "https://geocoding-api.open-meteo.com/v1/search";
 
 const CURRENT_FIELDS: &str = "temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl";
-const HOURLY_FIELDS: &str = "temperature_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,visibility,dew_point_2m,relative_humidity_2m,is_day";
+const HOURLY_FIELDS: &str = "temperature_2m,apparent_temperature,precipitation_probability,precipitation,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,visibility,dew_point_2m,relative_humidity_2m,is_day";
 const DAILY_FIELDS: &str = "weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,daylight_duration,uv_index_max,precipitation_sum,precipitation_probability_max,snowfall_sum,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant";
 
 #[derive(Debug)]
@@ -83,6 +83,7 @@ pub(crate) fn escape(text: &str) -> String {
 struct ForecastResponse {
     #[serde(default)]
     utc_offset_seconds: i32,
+    timezone: Option<String>,
     current: Option<CurrentBlock>,
     hourly: Option<HourlyBlock>,
     daily: Option<DailyBlock>,
@@ -110,6 +111,8 @@ type Column = Option<Vec<Option<f64>>>;
 struct HourlyBlock {
     time: Option<Vec<String>>,
     temperature_2m: Column,
+    #[serde(default)]
+    apparent_temperature: Column,
     precipitation_probability: Column,
     precipitation: Column,
     weather_code: Column,
@@ -238,6 +241,7 @@ pub fn parse(
             dew_point: at(&h.dew_point_2m, i),
             humidity: at_int(&h.relative_humidity_2m, i),
             is_day: at_int(&h.is_day, i).unwrap_or(1) == 1,
+            feels_like: at(&h.apparent_temperature, i),
         });
     }
 
@@ -277,11 +281,15 @@ pub fn parse(
         location: location.clone(),
         fetched_at,
         utc_offset,
+        // "GMT" when no zone was found for the point.
+        time_zone: r.timezone.filter(|z| !z.is_empty() && z != "GMT"),
         units,
         current,
         hours,
         days,
         periods: Vec::new(),
+        official_hours: None,
+        air: None,
         source_name: SOURCE_NAME.to_string(),
         sources: vec![format!("Forecast and current conditions: {SOURCE_NOTE}.")],
     })

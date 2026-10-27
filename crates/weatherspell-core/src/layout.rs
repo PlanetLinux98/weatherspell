@@ -8,6 +8,7 @@
 // as 0.1's did; the app converts them to its text control's positions (a
 // plain EDIT control counts each break as two).
 
+use jiff::civil::DateTime;
 use jiff::{SignedDuration, Timestamp};
 
 use crate::alerts::WeatherAlert;
@@ -23,6 +24,8 @@ pub struct SectionLayout {
     pub headings: Vec<(String, usize)>,
     // Start and end of each alert line, and its alert.
     pub alert_ranges: Vec<(usize, usize, WeatherAlert)>,
+    // Start and end of each line that opens Hour by Hour, and its hour.
+    pub hour_ranges: Vec<(usize, usize, DateTime)>,
 }
 
 // What a rewrite does with the text box. KeepText: take the new layout
@@ -49,6 +52,12 @@ impl SectionLayout {
             layout
                 .headings
                 .push((section.heading.clone(), layout.length));
+            if let Some(hour) = section.heading_hour {
+                let start = layout.length;
+                layout
+                    .hour_ranges
+                    .push((start, start + units(&section.heading), hour));
+            }
             layout.append(&section.heading);
             layout.append(BREAK);
             layout.append(BREAK);
@@ -63,6 +72,18 @@ impl SectionLayout {
                     layout
                         .alert_ranges
                         .push((start, start + units(paragraph), alert.clone()));
+                }
+                if let Some(hour) = section
+                    .hours
+                    .as_ref()
+                    .and_then(|h| h.get(i))
+                    .copied()
+                    .flatten()
+                {
+                    let start = layout.length;
+                    layout
+                        .hour_ranges
+                        .push((start, start + units(paragraph), hour));
                 }
                 layout.append(paragraph);
                 layout.append(BREAK);
@@ -108,6 +129,29 @@ impl SectionLayout {
             .iter()
             .find(|(start, end, _)| (*start..=*end).contains(&offset))
             .map(|(_, _, alert)| alert)
+    }
+
+    // The hour a line opens Hour by Hour at; None for a line that opens
+    // nothing (an alert, Sources, a blank line).
+    pub fn hour_at(&self, offset: usize) -> Option<DateTime> {
+        self.hour_ranges
+            .iter()
+            .find(|(start, end, _)| (*start..=*end).contains(&offset))
+            .map(|(_, _, hour)| *hour)
+    }
+
+    // The hour for Hour by Hour at a caret: its line's, or on a blank line
+    // the hour of the line above it in the same section.
+    pub fn hour_near(&self, offset: usize) -> Option<DateTime> {
+        if let Some(hour) = self.hour_at(offset) {
+            return Some(hour);
+        }
+        let section = self.headings[self.section_at(offset)?].1;
+        self.hour_ranges
+            .iter()
+            .rev()
+            .find(|(start, end, _)| *start >= section && *end < offset)
+            .map(|(_, _, hour)| *hour)
     }
 
     // The heading at or before the offset; None before the first.

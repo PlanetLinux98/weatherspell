@@ -15,9 +15,10 @@ use weatherspell_core::environment_canada as ec;
 use weatherspell_core::fetch::{
     Fetch, FetchError, ForecastService, PAGE_TIMEOUT, ServiceError, check_alerts,
 };
+use weatherspell_core::forecast::Forecast;
 use weatherspell_core::location::Location;
 use weatherspell_core::units::UnitSystem;
-use weatherspell_core::{nws, open_meteo};
+use weatherspell_core::{air, nws, open_meteo};
 
 // Answers each address it knows; anything else is a 404, as a server
 // would say for a folder that is not there yet.
@@ -133,6 +134,7 @@ fn the_page_text_is_used_and_the_api_is_not_asked() {
             &place,
             UnitSystem::Imperial,
             7,
+            false,
             at("2026-09-12T07:15:00Z"),
         )
         .unwrap();
@@ -172,7 +174,7 @@ fn the_api_text_stands_in_when_the_page_cannot_be_had_or_read() {
         Err(FetchError::TimedOut { host: host(&page_url) }),
     ] {
         let http = nws_fake(&place, UnitSystem::Imperial).answer(&page_url, page.clone()).with(API_FORECAST, "nws-forecast-albany.json");
-        let f = ForecastService::new().forecast(&http, &place, UnitSystem::Imperial, 7, at("2026-09-12T07:15:00Z")).unwrap();
+        let f = ForecastService::new().forecast(&http, &place, UnitSystem::Imperial, 7, false, at("2026-09-12T07:15:00Z")).unwrap();
 
         assert_eq!(f.periods[0].name, "Overnight", "{page:?}");
         assert!(f.periods[0].text.ends_with("Wind around 0 miles per hour."));
@@ -192,6 +194,7 @@ fn a_metric_reader_asks_both_for_si_text() {
             &place,
             UnitSystem::Metric,
             7,
+            false,
             at("2026-09-12T07:15:00Z"),
         )
         .unwrap();
@@ -227,6 +230,7 @@ fn a_station_that_is_down_costs_only_the_observation() {
             &place,
             UnitSystem::Imperial,
             7,
+            false,
             at("2026-09-12T07:15:00Z"),
         )
         .unwrap();
@@ -256,6 +260,7 @@ fn the_grid_is_looked_up_once_per_session() {
                 &place,
                 UnitSystem::Imperial,
                 7,
+                false,
                 at("2026-09-12T07:15:00Z"),
             )
             .unwrap();
@@ -293,6 +298,7 @@ fn a_point_with_no_forecast_grid_is_said_as_a_fact() {
             &place,
             UnitSystem::Imperial,
             7,
+            false,
             at("2026-09-12T07:15:00Z"),
         )
         .unwrap();
@@ -337,6 +343,7 @@ fn canada_walks_back_to_the_latest_hour_with_the_site_s_page() {
             &place,
             UnitSystem::Metric,
             7,
+            false,
             at("2026-09-12T05:10:00Z"),
         )
         .unwrap();
@@ -377,6 +384,7 @@ fn the_site_list_is_fetched_once_per_session() {
                 &place,
                 UnitSystem::Metric,
                 7,
+                false,
                 at("2026-09-12T05:10:00Z"),
             )
             .unwrap();
@@ -394,6 +402,7 @@ fn a_place_far_from_every_site_gets_generated_text_and_says_why() {
             &place,
             UnitSystem::Metric,
             7,
+            false,
             at("2026-09-12T05:10:00Z"),
         )
         .unwrap();
@@ -424,6 +433,7 @@ fn an_observation_only_site_is_said_as_a_fact() {
             &place,
             UnitSystem::Metric,
             7,
+            false,
             at("2026-09-12T05:10:00Z"),
         )
         .unwrap();
@@ -449,6 +459,7 @@ fn a_slow_service_is_said_to_have_taken_too_long() {
             &place,
             UnitSystem::Metric,
             7,
+            false,
             at("2026-09-12T05:10:00Z"),
         )
         .unwrap();
@@ -469,6 +480,7 @@ fn open_meteo_failing_fails_the_refresh() {
         &place,
         UnitSystem::Metric,
         7,
+        false,
         at("2026-09-12T05:10:00Z"),
     );
 
@@ -499,6 +511,7 @@ fn elsewhere_only_open_meteo_is_asked() {
             &place,
             UnitSystem::Metric,
             7,
+            false,
             at("2026-09-12T05:10:00Z"),
         )
         .unwrap();
@@ -608,4 +621,228 @@ fn elsewhere_alerts_are_not_available_and_nothing_is_asked() {
         weatherspell_core::alerts::AlertReport::not_available()
     );
     assert!(http.asked().is_empty());
+}
+
+// Hour by Hour's hours and the Air quality section: asked beside the
+// forecast, and never the reason a refresh fails.
+
+const HOURLY: &str = "https://api.weather.gov/gridpoints/ALY/72,63/forecast/hourly";
+
+#[test]
+fn the_nws_hours_are_asked_beside_its_text_in_the_readers_units() {
+    let place = albany();
+    let http = nws_fake(&place, UnitSystem::Metric)
+        .with(
+            &nws::page_url(&place, UnitSystem::Metric),
+            "nws-page-buckley-si.json",
+        )
+        .with(
+            &nws::hourly_url(HOURLY, UnitSystem::Metric),
+            "nws-hourly-spokane.json",
+        );
+    let f = ForecastService::new()
+        .forecast(
+            &http,
+            &place,
+            UnitSystem::Metric,
+            7,
+            false,
+            at("2026-09-12T07:15:00Z"),
+        )
+        .unwrap();
+    assert_eq!(http.times_asked(&format!("{HOURLY}?units=si")), 1);
+    let hours = f.official_hours.unwrap();
+    // One hour of the two the clocks give 1 am as they go back.
+    assert_eq!(hours.hours.len(), 24 + 14 - 1);
+    assert_eq!(hours.problem, None);
+    assert!(hours.attribution.starts_with("National Weather Service"));
+}
+
+#[test]
+fn nws_hours_that_cannot_be_had_cost_only_the_hours() {
+    let place = albany();
+    let http = nws_fake(&place, UnitSystem::Imperial)
+        .with(
+            &nws::page_url(&place, UnitSystem::Imperial),
+            "nws-page-buckley.json",
+        )
+        .answer(HOURLY, Err(status(503, "Service Unavailable", HOURLY)));
+    let f = ForecastService::new()
+        .forecast(
+            &http,
+            &place,
+            UnitSystem::Imperial,
+            7,
+            false,
+            at("2026-09-12T07:15:00Z"),
+        )
+        .unwrap();
+    assert_eq!(f.periods[0].name, "Tonight");
+    let hours = f.official_hours.unwrap();
+    assert!(hours.hours.is_empty());
+    assert_eq!(
+        hours.problem.as_deref(),
+        Some("503 Service Unavailable from api.weather.gov")
+    );
+}
+
+fn peterborough_community() -> air::Community {
+    air::parse_communities(&fixture("ec-aqhi-stations.json"))
+        .unwrap()
+        .into_iter()
+        .find(|c| c.name == "Peterborough")
+        .unwrap()
+}
+
+// Canada's forecast with air quality: Environment Canada's AQHI for the
+// nearest community, and Open-Meteo's response beside it.
+fn canada_air_fake(place: &Location) -> Fake {
+    let community = peterborough_community();
+    canada_fake(place)
+        .with(air::STATIONS_URL, "ec-aqhi-stations.json")
+        .with(
+            &air::observation_url(&community),
+            "ec-aqhi-observation-peterborough.json",
+        )
+        .with(
+            &air::forecasts_url(&community),
+            "ec-aqhi-forecasts-peterborough.json",
+        )
+        .with(
+            &air::open_meteo_url(place, air::Scale::Us),
+            "open-meteo-air-kathmandu.json",
+        )
+}
+
+fn with_air(http: &Fake, place: &Location, service: &ForecastService) -> Forecast {
+    service
+        .forecast(
+            http,
+            place,
+            UnitSystem::Metric,
+            7,
+            true,
+            at("2026-09-12T05:10:00Z"),
+        )
+        .unwrap()
+}
+
+#[test]
+fn canada_reads_environment_canadas_index_near_a_community() {
+    let place = peterborough();
+    let http = canada_air_fake(&place);
+    let service = ForecastService::new();
+    let f = with_air(&http, &place, &service);
+    let air = f.air.as_ref().unwrap();
+    assert_eq!(air.scale, air::Scale::Aqhi);
+    assert_eq!(air.community.as_deref(), Some("Peterborough"));
+    assert!(air.observed.is_some());
+    assert_eq!(air.hours.len(), 37);
+    assert_eq!(
+        f.sources.last().unwrap(),
+        "Air quality: Environment and Climate Change Canada's Air Quality Health Index for Peterborough (weather.gc.ca)."
+    );
+    // The list of communities is asked for once a session.
+    with_air(&http, &place, &service);
+    assert_eq!(http.times_asked(air::STATIONS_URL), 1);
+}
+
+#[test]
+fn without_environment_canadas_index_the_us_index_stands_in() {
+    let place = peterborough();
+    let community = peterborough_community();
+    let observation = air::observation_url(&community);
+    let forecasts = air::forecasts_url(&community);
+    let http = canada_air_fake(&place)
+        .answer(
+            &observation,
+            Err(status(503, "Service Unavailable", &observation)),
+        )
+        .answer(
+            &forecasts,
+            Err(status(503, "Service Unavailable", &forecasts)),
+        );
+    let f = with_air(&http, &place, &ForecastService::new());
+    let air = f.air.as_ref().unwrap();
+    assert_eq!(air.scale, air::Scale::Us);
+    assert!(!air.hours.is_empty());
+    assert!(f.sources.iter().any(|s| s
+        == "Environment Canada's Air Quality Health Index for Peterborough could not be fetched this time (503 Service Unavailable from api.weather.gc.ca), so this is the US Air Quality Index."));
+}
+
+#[test]
+fn a_list_of_communities_that_cannot_be_had_is_asked_for_again() {
+    let place = peterborough();
+    let http = canada_air_fake(&place).answer(
+        air::STATIONS_URL,
+        Err(status(500, "Internal Server Error", air::STATIONS_URL)),
+    );
+    let service = ForecastService::new();
+    let f = with_air(&http, &place, &service);
+    assert_eq!(f.air.unwrap().scale, air::Scale::Us);
+    with_air(&http, &place, &service);
+    assert_eq!(http.times_asked(air::STATIONS_URL), 2);
+}
+
+#[test]
+fn europe_reads_the_european_index_and_its_pollen() {
+    let place = Location::new("Madrid", None, Some("Spain"), 40.4165, -3.7026);
+    let http = Fake::default()
+        .with(
+            &open_meteo::forecast_url(&place, UnitSystem::Metric, 7),
+            "open-meteo-toronto.json",
+        )
+        .with(
+            &air::open_meteo_url(&place, air::Scale::European),
+            "open-meteo-air-madrid.json",
+        );
+    let f = with_air(&http, &place, &ForecastService::new());
+    let air = f.air.as_ref().unwrap();
+    assert_eq!(air.scale, air::Scale::European);
+    assert!(!air.pollen.is_empty());
+    assert_eq!(
+        f.sources.last().unwrap(),
+        "Air quality and pollen: Open-Meteo (open-meteo.com), licensed CC BY 4.0, from the Copernicus Atmosphere Monitoring Service."
+    );
+    // Nothing of Canada's is asked for elsewhere.
+    assert!(!http.asked().iter().any(|u| u.contains("aqhi")));
+}
+
+#[test]
+fn air_quality_that_cannot_be_had_does_not_fail_the_refresh() {
+    let place = Location::new("Madrid", None, Some("Spain"), 40.4165, -3.7026);
+    let url = air::open_meteo_url(&place, air::Scale::European);
+    let http = Fake::default()
+        .with(
+            &open_meteo::forecast_url(&place, UnitSystem::Metric, 7),
+            "open-meteo-toronto.json",
+        )
+        .answer(&url, Err(FetchError::TimedOut { host: host(&url) }));
+    let f = with_air(&http, &place, &ForecastService::new());
+    let air = f.air.as_ref().unwrap();
+    assert_eq!(air.problem.as_deref(), Some("it took too long to answer"));
+    assert!(f.sources.iter().all(|s| !s.contains("Air quality")));
+}
+
+#[test]
+fn with_air_quality_turned_off_nothing_is_asked_for_it() {
+    let place = peterborough();
+    let http = canada_air_fake(&place);
+    let f = ForecastService::new()
+        .forecast(
+            &http,
+            &place,
+            UnitSystem::Metric,
+            7,
+            false,
+            at("2026-09-12T05:10:00Z"),
+        )
+        .unwrap();
+    assert!(f.air.is_none());
+    assert!(
+        !http
+            .asked()
+            .iter()
+            .any(|u| u.contains("aqhi") || u.contains("air-quality"))
+    );
 }

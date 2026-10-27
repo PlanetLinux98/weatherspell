@@ -20,9 +20,12 @@ use jiff::tz::Offset;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+use crate::air::AirQuality;
 use crate::alerts::{AlertReport, WeatherAlert};
 use crate::files;
-use crate::forecast::{CurrentConditions, DayForecast, Forecast, HourPoint, OfficialPeriod};
+use crate::forecast::{
+    CurrentConditions, DayForecast, Forecast, HourPoint, OfficialHours, OfficialPeriod,
+};
 use crate::location::Location;
 use crate::units::UnitSystem;
 
@@ -69,6 +72,13 @@ struct ForecastData {
     periods: Vec<OfficialPeriod>,
     source_name: String,
     sources: Vec<String>,
+    // Not in 0.1's files, which it ignores.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    time_zone: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    official_hours: Option<OfficialHours>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    air_quality: Option<AirQuality>,
 }
 
 impl ForecastData {
@@ -89,6 +99,9 @@ impl ForecastData {
             periods: f.periods.clone(),
             source_name: f.source_name.clone(),
             sources: f.sources.clone(),
+            time_zone: f.time_zone.clone(),
+            official_hours: f.official_hours.clone(),
+            air_quality: f.air.clone(),
         }
     }
 
@@ -102,6 +115,7 @@ impl ForecastData {
             location: location.clone(),
             fetched_at: self.fetched_at,
             utc_offset: Offset::from_seconds(self.utc_offset_seconds).ok()?,
+            time_zone: self.time_zone,
             units: match self.units.as_deref() {
                 Some("imperial") => UnitSystem::Imperial,
                 _ => UnitSystem::Metric,
@@ -110,6 +124,8 @@ impl ForecastData {
             hours: self.hours,
             days: self.days,
             periods: self.periods,
+            official_hours: self.official_hours,
+            air: self.air_quality,
             source_name: self.source_name,
             sources: self.sources,
         })

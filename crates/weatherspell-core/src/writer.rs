@@ -9,16 +9,20 @@ use crate::alerts::{self, AlertReport, WeatherAlert};
 use crate::clock::{self, Clock, TimeFormat};
 use crate::forecast::{DayForecast, Forecast, HourPoint, OfficialPeriod};
 use crate::units::{self, UnitSystem};
-use crate::{compass, round_away, round_even, weather_codes as codes};
+use crate::{air, compass, round_away, round_even, weather_codes as codes};
 
 // Alerts, when set, runs parallel to paragraphs: the alert each line
 // stands for, which Enter on that line opens; None for a line that is not
-// one.
+// one. Hours likewise: the hour a line's forecast starts at, where Enter
+// (with no alert there) opens Hour by Hour; heading_hour is the heading
+// line's.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Section {
     pub heading: String,
     pub paragraphs: Vec<String>,
     pub alerts: Option<Vec<Option<WeatherAlert>>>,
+    pub hours: Option<Vec<Option<DateTime>>>,
+    pub heading_hour: Option<DateTime>,
 }
 
 impl Section {
@@ -27,7 +31,16 @@ impl Section {
             heading: heading.to_string(),
             paragraphs,
             alerts: None,
+            hours: None,
+            heading_hour: None,
         }
+    }
+
+    // Every line of the section opens Hour by Hour at one hour.
+    fn at_hour(mut self, hour: DateTime) -> Section {
+        self.hours = Some(vec![Some(hour); self.paragraphs.len()]);
+        self.heading_hour = Some(hour);
+        self
     }
 }
 
@@ -47,9 +60,10 @@ pub fn write(f: &Forecast, o: &WriterOptions, alerts: Option<&AlertReport>) -> V
     let clock = Clock::new(f.utc_offset, o.pc_zone.clone(), o.time_format.clone());
     let now_local = f.utc_offset.to_datetime(o.now);
 
+    let hour = floor(now_local);
     let mut sections = vec![
         alerts::section(alerts, &clock, now_local),
-        right_now(f, o, &clock, now_local),
+        right_now(f, o, &clock, now_local).at_hour(hour),
     ];
 
     let (today, days) = if !f.periods.is_empty() {
@@ -64,10 +78,8 @@ pub fn write(f: &Forecast, o: &WriterOptions, alerts: Option<&AlertReport>) -> V
                     .days
                     .iter()
                     .find(|d| Some(d.date) == day.date.tomorrow().ok());
-                Section::new(
-                    &clock::day_heading(day.date),
-                    day_and_night(day, following, f),
-                )
+                let (paragraphs, hours) = day_and_night(day, following, f).into_iter().unzip();
+                with_hours(&clock::day_heading(day.date), paragraphs, hours)
             })
             .collect();
         (rest_of_today(f, now_local), days)
@@ -75,10 +87,18 @@ pub fn write(f: &Forecast, o: &WriterOptions, alerts: Option<&AlertReport>) -> V
 
     // The sun and UV are today's, so they close Rest of today rather than
     // wait in a section of their own after the coming days.
-    let mut rest = today.clone();
-    rest.extend(sun_and_uv(f, now_local, &clock, &today));
+    let (mut rest, mut rest_hours): (Vec<String>, Vec<Option<DateTime>>) =
+        today.into_iter().unzip();
+    let sun = sun_and_uv(f, now_local, &clock, &rest);
+    rest_hours.extend(sun.iter().map(|_| Some(hour)));
+    rest.extend(sun);
     if !rest.is_empty() {
-        sections.push(Section::new("Rest of today", rest));
+        let mut section = with_hours("Rest of today", rest, rest_hours);
+        section.heading_hour = Some(hour);
+        sections.push(section);
+    }
+    if let Some(section) = f.air.as_ref().and_then(|a| air::section(a, now_local)) {
+        sections.push(section);
     }
     sections.extend(days);
     let mut sources = f.sources.clone();
@@ -89,11 +109,19 @@ pub fn write(f: &Forecast, o: &WriterOptions, alerts: Option<&AlertReport>) -> V
     sections
 }
 
+// A section whose heading opens Hour by Hour where its first line does.
+fn with_hours(heading: &str, paragraphs: Vec<String>, hours: Vec<Option<DateTime>>) -> Section {
+    let mut section = Section::new(heading, paragraphs);
+    section.heading_hour = hours.first().copied().flatten();
+    section.hours = Some(hours);
+    section
+}
+
 // A weather service's periods as written, under this app's headings:
 // today's under "Rest of today", the rest one section per day, each
 // paragraph led by the service's own period name. A night period is dated
 // by the day it follows, so before dawn yesterday's is still today's news.
-fn official_today(f: &Forecast, now_local: DateTime) -> Vec<String> {
+fn official_today(f: &Forecast, now_local: DateTime) -> Vec<(String, Option<DateTime>)> {
     let today = now_local.date();
     let yesterday = today.yesterday().ok();
     f.periods
@@ -102,22 +130,45 @@ fn official_today(f: &Forecast, now_local: DateTime) -> Vec<String> {
             p.date == today
                 || (Some(p.date) == yesterday && is_night(&p.name) && now_local.hour() < 6)
         })
-        .map(paragraph)
+        .map(|p| (paragraph(p), Some(period_start(f, p))))
         .collect()
 }
 
 fn official_days(f: &Forecast, now_local: DateTime) -> Vec<Section> {
-    let mut groups: Vec<(Date, Vec<String>)> = Vec::new();
+    let mut groups: Vec<(Date, Vec<String>, Vec<Option<DateTime>>)> = Vec::new();
     for p in f.periods.iter().filter(|p| p.date > now_local.date()) {
-        match groups.iter_mut().find(|(date, _)| *date == p.date) {
-            Some((_, paragraphs)) => paragraphs.push(paragraph(p)),
-            None => groups.push((p.date, vec![paragraph(p)])),
+        let start = Some(period_start(f, p));
+        match groups.iter_mut().find(|(date, _, _)| *date == p.date) {
+            Some((_, paragraphs, hours)) => {
+                paragraphs.push(paragraph(p));
+                hours.push(start);
+            }
+            None => groups.push((p.date, vec![paragraph(p)], vec![start])),
         }
     }
     groups
         .into_iter()
-        .map(|(date, paragraphs)| Section::new(&clock::day_heading(date), paragraphs))
+        .map(|(date, paragraphs, hours)| with_hours(&clock::day_heading(date), paragraphs, hours))
         .collect()
+}
+
+// Where a service's period begins, near enough for Hour by Hour to open
+// there: a night at its day's sunset, an afternoon at noon, "Overnight" at
+// midnight, a day (a weekday, "Today", a holiday's name) at sunrise. Hour
+// by Hour starts at the hour in progress, so a period under way opens
+// there.
+fn period_start(f: &Forecast, p: &OfficialPeriod) -> DateTime {
+    let day = f.days.iter().find(|d| d.date == p.date);
+    let name = p.name.to_lowercase();
+    if name == "overnight" {
+        p.date.at(0, 0, 0, 0)
+    } else if is_night(&p.name) {
+        floor(day.and_then(|d| d.sunset).unwrap_or(p.date.at(18, 0, 0, 0)))
+    } else if name.ends_with("afternoon") {
+        p.date.at(12, 0, 0, 0)
+    } else {
+        floor(day.and_then(|d| d.sunrise).unwrap_or(p.date.at(6, 0, 0, 0)))
+    }
 }
 
 fn paragraph(p: &OfficialPeriod) -> String {
@@ -266,7 +317,7 @@ fn breezy_threshold(units: UnitSystem) -> f64 {
     }
 }
 
-fn rest_of_today(f: &Forecast, now_local: DateTime) -> Vec<String> {
+fn rest_of_today(f: &Forecast, now_local: DateTime) -> Vec<(String, Option<DateTime>)> {
     let today = now_local.date();
     let tomorrow = today.tomorrow().expect("a date within range");
     let five = today.at(5, 0, 0, 0);
@@ -298,10 +349,13 @@ fn rest_of_today(f: &Forecast, now_local: DateTime) -> Vec<String> {
     if let Some(day) = today_day
         && !overnight.is_empty()
     {
-        paragraphs.push(format!(
-            "Today's high {}, tonight's low {}.",
-            units::degrees_bare(day.high),
-            units::degrees_bare(min_of(&overnight, |h| h.temperature))
+        paragraphs.push((
+            format!(
+                "Today's high {}, tonight's low {}.",
+                units::degrees_bare(day.high),
+                units::degrees_bare(min_of(&overnight, |h| h.temperature))
+            ),
+            Some(hour_floor),
         ));
     }
 
@@ -310,7 +364,7 @@ fn rest_of_today(f: &Forecast, now_local: DateTime) -> Vec<String> {
         if hours.is_empty() {
             continue;
         }
-        paragraphs.push(part_sentence(label, &hours, f.units));
+        paragraphs.push((part_sentence(label, &hours, f.units), Some(start)));
     }
     paragraphs
 }
@@ -402,7 +456,11 @@ fn worst_code(hours: &[&HourPoint]) -> i32 {
 // from sunrise to sunset, "Saturday night" until the next sunrise. Built
 // from the hourly data; the daily aggregates are the fallback when the
 // hours run out near the end of the horizon.
-fn day_and_night(day: &DayForecast, following: Option<&DayForecast>, f: &Forecast) -> Vec<String> {
+fn day_and_night(
+    day: &DayForecast,
+    following: Option<&DayForecast>,
+    f: &Forecast,
+) -> Vec<(String, Option<DateTime>)> {
     let day_start = floor(day.sunrise.unwrap_or(day.date.at(6, 0, 0, 0)));
     let day_end = floor(day.sunset.unwrap_or(day.date.at(18, 0, 0, 0)));
     let next_morning = day
@@ -415,18 +473,21 @@ fn day_and_night(day: &DayForecast, following: Option<&DayForecast>, f: &Forecas
     let night_hours = between(&f.hours, day_end, night_end);
 
     if day_hours.len() < 3 {
-        return vec![day_paragraph(day, f.units)];
+        return vec![(day_paragraph(day, f.units), Some(day_start))];
     }
 
     let weekday = clock::weekday_name(day.date);
-    let mut paragraphs = vec![format!(
-        "{weekday}: {}.",
-        day_sentence(&day_hours, day, f.units)
+    let mut paragraphs = vec![(
+        format!("{weekday}: {}.", day_sentence(&day_hours, day, f.units)),
+        Some(day_start),
     )];
     if night_hours.len() >= 3 {
-        paragraphs.push(format!(
-            "{weekday} night: {}.",
-            night_sentence(&night_hours, f.units)
+        paragraphs.push((
+            format!(
+                "{weekday} night: {}.",
+                night_sentence(&night_hours, f.units)
+            ),
+            Some(day_end),
         ));
     }
     paragraphs

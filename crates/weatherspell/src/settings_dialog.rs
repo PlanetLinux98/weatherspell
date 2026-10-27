@@ -16,6 +16,7 @@ pub struct Chosen {
     pub forecast_minutes: u32,
     pub alert_minutes: u32,
     pub announcements: Announcements,
+    pub air_quality: bool,
 }
 
 // apply is called for OK and for each Apply.
@@ -53,6 +54,19 @@ pub fn build(
         forecast_choices
             .iter()
             .position(|m| *m == settings.forecast_refresh_minutes),
+    );
+    // Its own request each refresh, so it can be turned off. Alt+Q: Alt+A
+    // is Apply's.
+    let air_quality = CheckBox::builder(&forecast.2)
+        .with_label("Show air &quality")
+        .build();
+    air_quality.set_value(settings.show_air_quality);
+    wx_accessibility::report_toggles(&air_quality);
+    forecast.0.add(
+        &air_quality,
+        0,
+        SizerFlag::Left | SizerFlag::Right | SizerFlag::Bottom,
+        6,
     );
     sizer.add_sizer(
         &forecast.0,
@@ -114,6 +128,7 @@ pub fn build(
         alert_minutes: alert_choices[alert_minutes.get_selection().unwrap_or(0) as usize],
         announcements: choices::ANNOUNCEMENTS[announcements.get_selection().unwrap_or(0) as usize]
             .0,
+        air_quality: air_quality.get_value(),
     };
     let apply = std::rc::Rc::new(apply);
     let (a, c) = (apply.clone(), chosen.clone());

@@ -16,6 +16,7 @@ use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use jiff::Timestamp;
+use jiff::civil::DateTime;
 use jiff::tz::Offset;
 use weatherspell_core::alerts::{self, AlertReport, WeatherAlert};
 use weatherspell_core::cache::ForecastCache;
@@ -36,7 +37,9 @@ use wx_accessibility::{Announcer, ScreenReaders};
 use wxdragon::prelude::*;
 
 use crate::system::{self, Region};
-use crate::{about, add_location, details, dialogs, edit, guide, manage, on_ui, settings_dialog};
+use crate::{
+    about, add_location, details, dialogs, edit, guide, hourly, manage, on_ui, settings_dialog,
+};
 
 pub const APP_NAME: &str = "Weatherspell";
 const FORECAST_DAYS: u32 = 7;
@@ -56,6 +59,7 @@ const ID_DONATE: Id = ID_HIGHEST + 9;
 const ID_BIGGER: Id = ID_HIGHEST + 20;
 const ID_SMALLER: Id = ID_HIGHEST + 21;
 const ID_ACTUAL_SIZE: Id = ID_HIGHEST + 22;
+const ID_HOUR_BY_HOUR: Id = ID_HIGHEST + 23;
 // Ctrl+1 to Ctrl+9: the first nine saved locations.
 const ID_LOCATION: Id = ID_HIGHEST + 10;
 const MENU_LOCATIONS: usize = 9;
@@ -323,14 +327,22 @@ pub fn build() -> Rc<MainWindow> {
             && !key.control_down()
             && !key.shift_down()
             && !key.alt_down()
-            && let Some(alert) = w.alert_at_caret()
         {
-            w.show_details(&alert);
-            return;
+            // An alert's line opens its details; a forecast's, Hour by Hour
+            // at the hour it is about.
+            if let Some(alert) = w.alert_at_caret() {
+                w.show_details(&alert);
+                return;
+            }
+            let hour = w.layout.borrow().hour_near(w.caret());
+            if let Some(hour) = hour {
+                w.show_hour_by_hour(Some(hour));
+                return;
+            }
         }
         event.skip(true);
     });
-    edit::hook(&window.text, Some(double_clicked));
+    edit::hook(&window.text, Some(double_clicked), Some(hour_by_hour_at));
     // Cmd+Plus is Cmd+Shift+= on most keyboards, which the menu takes;
     // Apple's apps take Cmd+= as well, and a menu item carries one key.
     if cfg!(target_os = "macos") {
@@ -426,6 +438,8 @@ mod keys {
     pub const REFRESH: &str = "	Ctrl+R";
     pub const NEXT_SECTION: &str = "	Ctrl+]";
     pub const PREVIOUS_SECTION: &str = "	Ctrl+[";
+    // Cmd+H hides the app on the Mac.
+    pub const HOUR_BY_HOUR: &str = "	Ctrl+Shift+H";
     pub const GUIDE: &str = "	Ctrl+?";
     pub const SETTINGS: &str = "	Ctrl+,";
     // Written out in text, where wx does not turn Ctrl into Cmd.
@@ -438,6 +452,7 @@ mod keys {
     pub const REFRESH: &str = "	F5";
     pub const NEXT_SECTION: &str = "	Ctrl+PageDown";
     pub const PREVIOUS_SECTION: &str = "	Ctrl+PageUp";
+    pub const HOUR_BY_HOUR: &str = "	Ctrl+H";
     pub const GUIDE: &str = "	F1";
     pub const SETTINGS: &str = "";
     pub const ADD_LOCATION_TEXT: &str = "Ctrl+Shift+L";
@@ -452,6 +467,7 @@ fn handles(id: Id) -> bool {
             | ID_NEXT_SECTION
             | ID_PREVIOUS_SECTION
             | ID_ALERTS
+            | ID_HOUR_BY_HOUR
             | ID_MANAGE
             | ID_ADD
             | ID_PREFERENCES
@@ -493,6 +509,11 @@ fn menu_bar(settings: &AppSettings) -> MenuBar {
         )
         .append_separator()
         .append_item(ID_ALERTS, "&Alerts	Ctrl+Shift+A", "")
+        .append_item(
+            ID_HOUR_BY_HOUR,
+            &format!("&Hour by Hour{}", keys::HOUR_BY_HOUR),
+            "",
+        )
         .append_separator();
     // Windows has its own Text size setting, which wx follows.
     if cfg!(target_os = "macos") {
@@ -599,6 +620,14 @@ fn bounds(window: &Frame) -> Rect {
 // word under the pointer.
 fn double_clicked(position: usize) {
     on_ui(move |w| w.double_clicked(position));
+}
+
+// The forecast's context menu item, from the line it was opened on.
+fn hour_by_hour_at(position: usize) {
+    on_ui(move |w| {
+        let hour = w.layout.borrow().hour_near(w.offset(position as i64));
+        w.show_hour_by_hour(hour);
+    });
 }
 
 // "; frost advisory in effect", or nothing.
@@ -828,6 +857,11 @@ impl MainWindow {
                     self.move_caret(&heading, at);
                 }
             }
+            // At the hour of the caret's line, or the hour in progress.
+            ID_HOUR_BY_HOUR => {
+                let hour = self.layout.borrow().hour_near(self.caret());
+                self.show_hour_by_hour(hour);
+            }
             ID_MANAGE => self.manage_locations(),
             ID_ADD => self.add_location(),
             ID_PREFERENCES => self.show_settings(),
@@ -927,17 +961,31 @@ impl MainWindow {
         });
     }
 
-    // The new intervals start from now.
+    // The new intervals start from now. Air quality turned off leaves the
+    // text at once; turned on, it is fetched as F5 would.
     fn apply_settings(&self, chosen: settings_dialog::Chosen) {
-        {
+        let air_was = {
             let mut settings = self.settings.borrow_mut();
             settings.forecast_refresh_minutes = chosen.forecast_minutes;
             settings.alert_check_minutes = chosen.alert_minutes;
             settings.alert_announcements = chosen.announcements;
-        }
+            std::mem::replace(&mut settings.show_air_quality, chosen.air_quality)
+        };
         self.save_settings();
         self.start_forecast_timer();
         self.start_alert_timer();
+        if air_was == chosen.air_quality {
+            return;
+        }
+        if chosen.air_quality {
+            self.refresh(true, false);
+            return;
+        }
+        let shown = self.shown.borrow().clone();
+        if let Some(forecast) = shown {
+            let alerts = self.shown_alerts.borrow().clone();
+            self.rewrite(forecast, alerts, false);
+        }
     }
 
     fn status(&self, text: &str) {
@@ -1047,6 +1095,7 @@ impl MainWindow {
         }
 
         let units = units::for_location(&location, self.region.units);
+        let air_quality = self.settings.borrow().show_air_quality;
         let http = self.http.clone();
         let service = self.service.clone();
         std::thread::spawn(move || {
@@ -1057,7 +1106,8 @@ impl MainWindow {
                 // while the forecast's does not still gives live alerts.
                 std::thread::scope(|s| {
                     let alerts = s.spawn(|| service.alerts(&*http, &location, now));
-                    let forecast = service.forecast(&*http, &location, units, FORECAST_DAYS, now);
+                    let forecast =
+                        service.forecast(&*http, &location, units, FORECAST_DAYS, air_quality, now);
                     (forecast, alerts.join())
                 })
             }));
@@ -1346,10 +1396,22 @@ impl MainWindow {
         }
     }
 
-    // The text for what is shown, as it reads now.
+    // The text for what is shown, as it reads now. With air quality
+    // turned off, a forecast that has it anyway (a refresh already under
+    // way, a cached one from before) is written without it.
     fn render(&self) -> Option<SectionLayout> {
         let shown = self.shown.borrow();
-        let forecast = shown.as_ref()?;
+        let mut forecast = shown.as_ref()?;
+        let without;
+        if !self.settings.borrow().show_air_quality
+            && let Some(air) = &forecast.air
+        {
+            let mut f = forecast.clone();
+            f.sources.retain(|s| !air.sources.contains(s));
+            f.air = None;
+            without = f;
+            forecast = &without;
+        }
         let alerts = self.shown_alerts.borrow();
         Some(SectionLayout::build(&writer::write(
             forecast,
@@ -1475,12 +1537,36 @@ impl MainWindow {
     fn double_clicked(&self, position: usize) {
         let offset = self.offset(position as i64);
         let alert = self.layout.borrow().alert_at(offset).cloned();
+        let hour = self.layout.borrow().hour_at(offset);
+        // A selection left behind would hold off the next automatic
+        // refresh.
         if let Some(alert) = alert {
-            // A selection left behind would hold off the next automatic
-            // refresh.
             self.set_caret(offset);
             self.show_details(&alert);
+        } else if let Some(hour) = hour {
+            self.set_caret(offset);
+            self.show_hour_by_hour(Some(hour));
         }
+    }
+
+    // On the hour asked for, or the hour in progress; written from the
+    // forecast on screen as it reads now (its age line too).
+    fn show_hour_by_hour(&self, at: Option<DateTime>) {
+        let shown = self.shown.borrow().clone();
+        let Some(forecast) = shown else {
+            MessageDialog::builder(
+                &self.frame,
+                "There is no forecast to show hour by hour yet.",
+                "Hour by Hour",
+            )
+            .with_style(MessageDialogStyle::OK | MessageDialogStyle::IconInformation)
+            .build()
+            .show_modal();
+            return;
+        };
+        let text = weatherspell_core::hourly::write(&forecast, &self.options());
+        let title = format!("Hour by Hour: {}", forecast.location.display_name());
+        hourly::show(&self.frame, &title, &text, text.opening(at));
     }
 
     fn show_details(&self, alert: &WeatherAlert) {
