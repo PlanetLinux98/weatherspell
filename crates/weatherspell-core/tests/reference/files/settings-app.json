@@ -45,6 +45,7 @@
   "forecastRefreshMinutes": 60,
   "alertCheckMinutes": 5,
   "alertAnnouncements": "severe",
+  "showAirQuality": true,
   "window": {
     "left": -11,
     "top": 0,

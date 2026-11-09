@@ -15,7 +15,7 @@ use serde::Deserialize;
 use crate::alerts::{AlertSeverity, WeatherAlert};
 use crate::forecast::OfficialPeriod;
 use crate::location::Location;
-use crate::official::{self, Observation, OfficialError};
+use crate::official::{self, Observation, OfficialError, ServiceHour};
 use crate::units::UnitSystem;
 
 pub const SOURCE_NAME: &str = "National Weather Service";
@@ -49,6 +49,12 @@ pub fn forecast_url(grid_forecast_url: &str, units: UnitSystem) -> String {
     }
 }
 
+// The grid's hour by hour, in the units its text is asked in, so its
+// numbers are the text's (forecast_url).
+pub fn hourly_url(grid_hourly_url: &str, units: UnitSystem) -> String {
+    forecast_url(grid_hourly_url, units)
+}
+
 // The forecast page's data, in SI when asked as the API is.
 pub fn page_url(location: &Location, units: UnitSystem) -> String {
     let url = format!(
@@ -73,6 +79,7 @@ pub fn observation_url(station_id: &str) -> String {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Points {
     pub forecast_url: String,
+    pub hourly_url: Option<String>,
     pub stations_url: String,
     pub attribution: String,
 }
@@ -86,6 +93,7 @@ struct PointsResponse {
 #[serde(rename_all = "camelCase")]
 struct PointsProperties {
     forecast: Option<String>,
+    forecast_hourly: Option<String>,
     observation_stations: Option<String>,
     relative_location: Option<RelativeLocation>,
 }
@@ -128,6 +136,7 @@ pub fn parse_points(json: &str) -> Result<Points, OfficialError> {
     }
     Ok(Points {
         forecast_url: forecast.to_string(),
+        hourly_url: present(&p.forecast_hourly).map(str::to_string),
         stations_url: stations.to_string(),
         attribution,
     })
@@ -218,6 +227,87 @@ pub fn parse_periods(json: &str) -> Result<Vec<OfficialPeriod>, OfficialError> {
         ));
     }
     Ok(list)
+}
+
+// The grid's hour by hour (forecastHourly): about 156 hours, each with
+// the forecaster's short words ("Chance Rain Showers"), the temperature,
+// the chance and the wind as text ("10 mph", "5 to 10 km/h"). Its start
+// times carry the location's offset.
+#[derive(Deserialize)]
+struct HourlyResponse {
+    properties: Option<HourlyProperties>,
+}
+
+#[derive(Deserialize)]
+struct HourlyProperties {
+    periods: Option<Vec<HourlyPeriod>>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct HourlyPeriod {
+    start_time: Option<String>,
+    // A number, or with a feature flag an object with a value.
+    temperature: Option<serde_json::Value>,
+    probability_of_precipitation: Option<Value>,
+    wind_speed: Option<String>,
+    wind_direction: Option<String>,
+    short_forecast: Option<String>,
+}
+
+fn number(v: &Option<serde_json::Value>) -> Option<f64> {
+    match v.as_ref()? {
+        serde_json::Value::Object(o) => o.get("value")?.as_f64(),
+        other => other.as_f64(),
+    }
+}
+
+// The greater of "5 to 10 mph", as the strongest wind of the hour.
+fn wind_number(text: &str) -> Option<f64> {
+    text.split(|c: char| !c.is_ascii_digit() && c != '.')
+        .filter_map(|n| n.parse::<f64>().ok())
+        .fold(None, |best: Option<f64>, n| {
+            Some(best.map_or(n, |b| b.max(n)))
+        })
+}
+
+pub fn parse_hourly(json: &str) -> Result<Vec<ServiceHour>, OfficialError> {
+    let response: HourlyResponse = serde_json::from_str(json)?;
+    let periods = response
+        .properties
+        .and_then(|p| p.periods)
+        .unwrap_or_default();
+    let hours: Vec<ServiceHour> = periods
+        .iter()
+        .filter_map(|p| {
+            let start: Timestamp = p.start_time.as_deref()?.parse().ok()?;
+            Some(ServiceHour {
+                start,
+                condition: p
+                    .short_forecast
+                    .as_deref()
+                    .unwrap_or_default()
+                    .trim()
+                    .to_string(),
+                temperature: number(&p.temperature)?,
+                feels_like: None,
+                chance: value(&p.probability_of_precipitation).map(crate::round_even),
+                wind_speed: p.wind_speed.as_deref().and_then(wind_number).unwrap_or(0.0),
+                wind_direction: p
+                    .wind_direction
+                    .as_deref()
+                    .and_then(crate::compass::from_abbreviation)
+                    .map(crate::round_away),
+                wind_gusts: None,
+            })
+        })
+        .collect();
+    if hours.is_empty() {
+        return Err(OfficialError::Unreadable(
+            "NWS hourly forecast has no hours.".into(),
+        ));
+    }
+    Ok(hours)
 }
 
 // forecast.weather.gov/MapClick.php?FcstType=json: the data behind the

@@ -26,15 +26,17 @@ fn paragraphs() -> Vec<String> {
         format!("Weatherspell {}\nA text-based weather app.", crate::VERSION),
         "Copyright 2026 PlanetLinux98. Released under the MIT licence.".to_string(),
         format!(
-            "Weather data from {} (CC BY 4.0), {} and the {}. Alerts for Europe from \
-             each country's national weather service via MeteoAlarm (EUMETNET, CC BY \
+            "Weather data from {} (CC BY 4.0), {} and the {}. Air quality and pollen \
+             from the Copernicus Atmosphere Monitoring Service, via {}. Alerts for Europe \
+             from each country's national weather service via MeteoAlarm (EUMETNET, CC BY \
              4.0), New Zealand via MetService (CC BY 4.0), Australia via the Bureau of \
              Meteorology, Hong Kong via the Hong Kong Observatory, the Philippines via \
              PAGASA (CC BY 4.0) and South Africa via the South African Weather Service. \
              Province outlines for the Philippines from geoBoundaries (CC BY 3.0 IGO).",
             open_meteo::SOURCE_NAME,
             environment_canada::FULL_NAME,
-            nws::SOURCE_NAME
+            nws::SOURCE_NAME,
+            open_meteo::SOURCE_NAME
         ),
         "Place names from GeoNames (CC BY 4.0) and OpenStreetMap contributors (ODbL).".to_string(),
     ]

@@ -302,6 +302,8 @@ pub fn section(report: Option<&AlertReport>, clock: &Clock, now_local: DateTime)
             heading: HEADING.to_string(),
             paragraphs,
             alerts: Some(lines),
+            hours: None,
+            heading_hour: None,
         };
     }
     if report.alerts.is_empty() {
@@ -315,6 +317,8 @@ pub fn section(report: Option<&AlertReport>, clock: &Clock, now_local: DateTime)
             .map(|a| line(a, clock, now_local))
             .collect(),
         alerts: Some(report.alerts.iter().cloned().map(Some).collect()),
+        hours: None,
+        heading_hour: None,
     }
 }
 

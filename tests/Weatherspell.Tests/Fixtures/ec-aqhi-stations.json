@@ -1,0 +1,113 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -65.6283,
+     47.6261
+    ]
+   },
+   "properties": {
+    "eccc_administrative-zone": "atl",
+    "eccc_administrative-zone_name_en": "Atlantic",
+    "eccc_administrative-zone_name_fr": "Atlantique",
+    "location_name_en": "Bathurst",
+    "location_name_fr": "Bathurst",
+    "location_id": "DAFQX",
+    "url_msc-datamart_observation": "http://dd.meteo.gc.ca/today/air_quality/atl/observation/realtime/xml/AQ_OBS_DAFQX_CURRENT.xml",
+    "url_msc-datamart_forecast": "http://dd.meteo.gc.ca/today/air_quality/atl/forecast/realtime/xml/AQ_FCST_DAFQX_CURRENT.xml"
+   },
+   "id": "DAFQX"
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -79.6769699,
+     44.37124
+    ]
+   },
+   "properties": {
+    "eccc_administrative-zone": "ont",
+    "eccc_administrative-zone_name_en": "Ontario",
+    "eccc_administrative-zone_name_fr": "Ontario",
+    "location_name_en": "Barrie",
+    "location_name_fr": "Barrie",
+    "location_id": "FAFFD",
+    "url_msc-datamart_observation": "http://dd.meteo.gc.ca/today/air_quality/ont/observation/realtime/xml/AQ_OBS_FAFFD_CURRENT.xml",
+    "url_msc-datamart_forecast": "http://dd.meteo.gc.ca/today/air_quality/ont/forecast/realtime/xml/AQ_FCST_FAFFD_CURRENT.xml"
+   },
+   "id": "FAFFD"
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -89.2677778,
+     48.4013889
+    ]
+   },
+   "properties": {
+    "eccc_administrative-zone": "ont",
+    "eccc_administrative-zone_name_en": "Ontario",
+    "eccc_administrative-zone_name_fr": "Ontario",
+    "location_name_en": "Thunder Bay",
+    "location_name_fr": "Thunder Bay",
+    "location_id": "FCWFX",
+    "url_msc-datamart_observation": "http://dd.meteo.gc.ca/today/air_quality/ont/observation/realtime/xml/AQ_OBS_FCWFX_CURRENT.xml",
+    "url_msc-datamart_forecast": "http://dd.meteo.gc.ca/today/air_quality/ont/forecast/realtime/xml/AQ_FCST_FCWFX_CURRENT.xml"
+   },
+   "id": "FCWFX"
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.3333333,
+     44.3011111
+    ]
+   },
+   "properties": {
+    "eccc_administrative-zone": "ont",
+    "eccc_administrative-zone_name_en": "Ontario",
+    "eccc_administrative-zone_name_fr": "Ontario",
+    "location_name_en": "Peterborough",
+    "location_name_fr": "Peterborough",
+    "location_id": "FDGEJ",
+    "url_msc-datamart_observation": "http://dd.meteo.gc.ca/today/air_quality/ont/observation/realtime/xml/AQ_OBS_FDGEJ_CURRENT.xml",
+    "url_msc-datamart_forecast": "http://dd.meteo.gc.ca/today/air_quality/ont/forecast/realtime/xml/AQ_FCST_FDGEJ_CURRENT.xml"
+   },
+   "id": "FDGEJ"
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -79.3733333333333,
+     43.7416666666667
+    ]
+   },
+   "properties": {
+    "eccc_administrative-zone": "ont",
+    "eccc_administrative-zone_name_en": "Ontario",
+    "eccc_administrative-zone_name_fr": "Ontario",
+    "location_name_en": "Toronto",
+    "location_name_fr": "Toronto",
+    "location_id": "FEUZB",
+    "url_msc-datamart_observation": "http://dd.meteo.gc.ca/today/air_quality/ont/observation/realtime/xml/AQ_OBS_FEUZB_CURRENT.xml",
+    "url_msc-datamart_forecast": "http://dd.meteo.gc.ca/today/air_quality/ont/forecast/realtime/xml/AQ_FCST_FEUZB_CURRENT.xml"
+   },
+   "id": "FEUZB"
+  }
+ ],
+ "numberMatched": 5,
+ "numberReturned": 5,
+ "timeStamp": "2026-10-27T07:56:01.031628Z"
+}

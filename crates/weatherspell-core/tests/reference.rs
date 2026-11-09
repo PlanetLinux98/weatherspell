@@ -129,6 +129,8 @@ fn official(o: &Official) -> OfficialForecast {
         attribution: points.attribution,
         periods,
         observation,
+        hours: Vec::new(),
+        hours_problem: None,
     }
 }
 
@@ -338,6 +340,20 @@ fn each_case_writes_its_snapshot() {
     );
 }
 
+// What 0.1's cache file holds of a forecast: not the location's zone or
+// the service's own hours, which came later (and which a forecast read
+// from its file is simply without, Hour by Hour using Open-Meteo's).
+fn as_0_1_kept_it(forecast: &Forecast) -> Forecast {
+    let mut f = forecast.clone();
+    f.time_zone = None;
+    f.official_hours = None;
+    f.air = None;
+    for h in &mut f.hours {
+        h.feels_like = None;
+    }
+    f
+}
+
 // Environment Canada's alerts as 0.1 named them, without the colour the
 // app puts first ("Yellow frost advisory" was "Frost advisory").
 fn names_as_0_1_wrote_them(report: &AlertReport) -> AlertReport {
@@ -376,7 +392,7 @@ fn the_app_reads_0_1s_cache_files_and_keeps_its_own_format() {
         let cached = theirs
             .load(&place)
             .unwrap_or_else(|| panic!("{name}: the app could not read 0.1's file"));
-        assert_eq!(cached.forecast, forecast, "{name}");
+        assert_eq!(cached.forecast, as_0_1_kept_it(&forecast), "{name}");
         // 0.1's file holds its own alert names until the next check; the
         // records read are otherwise the case's own, so its text follows.
         assert_eq!(

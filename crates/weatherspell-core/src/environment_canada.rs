@@ -11,7 +11,7 @@ use jiff::civil::{Date, DateTime, Weekday};
 
 use crate::alerts::{AlertSeverity, WeatherAlert};
 use crate::forecast::OfficialPeriod;
-use crate::official::{self, Observation, OfficialError, OfficialForecast};
+use crate::official::{self, Observation, OfficialError, OfficialForecast, ServiceHour};
 
 pub const SOURCE_NAME: &str = "Environment Canada";
 // Its licence asks for the full name in the credit ("Data Source:
@@ -178,7 +178,45 @@ pub fn parse(xml: &str) -> Result<OfficialForecast, OfficialError> {
         attribution,
         periods: parse_periods(root)?,
         observation: parse_observation(root),
+        hours: parse_hours(root),
+        hours_problem: None,
     })
+}
+
+// The page's hour by hour: about 24 hours from the hour after it was
+// issued, metric as all of Canada's text is. An hour without a
+// temperature is left out; its wind is "VR" when variable.
+fn parse_hours(root: roxmltree::Node) -> Vec<ServiceHour> {
+    let Some(group) = child(root, "hourlyForecastGroup") else {
+        return Vec::new();
+    };
+    let number =
+        |node: Option<roxmltree::Node>| node.and_then(|n| value(n).trim().parse::<f64>().ok());
+    children(group, "hourlyForecast")
+        .filter_map(|h| {
+            // yyyyMMddHHmm, UTC.
+            let start = utc_stamp(&format!("{}00", h.attribute("dateTimeUTC")?.trim()))?;
+            let temperature = number(child(h, "temperature"))?;
+            let wind = child(h, "wind");
+            let direction = wind
+                .and_then(|w| child(w, "direction"))
+                .map(|d| value(d))
+                .and_then(|d| crate::compass::from_abbreviation(&d))
+                .map(crate::round_away);
+            Some(ServiceHour {
+                start,
+                condition: child(h, "condition")
+                    .map(|n| value(n).trim().to_string())
+                    .unwrap_or_default(),
+                temperature,
+                feels_like: number(child(h, "windChill")).or(number(child(h, "humidex"))),
+                chance: number(child(h, "lop")).map(crate::round_even),
+                wind_speed: number(wind.and_then(|w| child(w, "speed"))).unwrap_or(0.0),
+                wind_direction: direction,
+                wind_gusts: number(wind.and_then(|w| child(w, "gust"))),
+            })
+        })
+        .collect()
 }
 
 fn parse_periods(root: roxmltree::Node) -> Result<Vec<OfficialPeriod>, OfficialError> {

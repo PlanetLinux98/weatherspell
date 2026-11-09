@@ -7,6 +7,7 @@ use common::{fixture, offset, toronto};
 use jiff::civil::{DateTime, date};
 use jiff::tz::TimeZone;
 use jiff::{SignedDuration, Timestamp};
+use weatherspell_core::air::{AirHour, AirQuality, Scale};
 use weatherspell_core::clock::TimeFormat;
 use weatherspell_core::forecast::{CurrentConditions, DayForecast, Forecast, HourPoint};
 use weatherspell_core::open_meteo;
@@ -66,6 +67,7 @@ fn hour(
         dew_point: Some(dew),
         humidity: Some(humidity),
         is_day,
+        feels_like: None,
     }
 }
 
@@ -261,11 +263,14 @@ fn sample_with(units: UnitSystem, current_code: i32) -> Forecast {
         location: toronto(),
         fetched_at: now() - SignedDuration::from_mins(3),
         utc_offset: offset(-4),
+        time_zone: None,
         units,
         current,
         hours,
         days,
         periods: Vec::new(),
+        official_hours: None,
+        air: None,
         source_name: "Open-Meteo".to_string(),
         sources: vec![
             "Forecast and current conditions: Open-Meteo (open-meteo.com), licensed CC BY 4.0."
@@ -316,6 +321,42 @@ fn right_now_reads_as_a_sentence_in_words() {
         "Humidity 52 percent, dew point 11 degrees, pressure 1017 hectopascals, visibility 24 kilometres, cloud cover 40 percent."
     );
     assert_eq!(section.paragraphs.len(), 2);
+}
+
+// The air is a condition of now: its lines close Right now, opening Hour
+// by Hour at the current hour like the rest, with no section of its own.
+#[test]
+fn air_quality_follows_the_measurements_under_right_now() {
+    let mut f = sample();
+    let at = |h: i8, index: f64| AirHour {
+        local_time: date(2026, 9, 11).at(h, 0, 0, 0),
+        index,
+        main: None,
+    };
+    f.air = Some(AirQuality {
+        scale: Scale::Us,
+        community: None,
+        observed: None,
+        hours: vec![at(14, 32.0), at(18, 72.0)],
+        pollen: Vec::new(),
+        sources: Vec::new(),
+        problem: None,
+    });
+    let sections = write(&f);
+    let section = find(&sections, "Right now");
+    assert!(section.paragraphs[1].starts_with("Humidity 52 percent"));
+    assert_eq!(
+        section.paragraphs[2..],
+        [
+            "Air quality is good, 32 on the US Air Quality Index.",
+            "Forecast to reach moderate this evening, up to 72."
+        ]
+    );
+    let hour = Some(date(2026, 9, 11).at(14, 0, 0, 0));
+    assert_eq!(section.hours, Some(vec![hour; 4]));
+    let headings: Vec<&str> = sections.iter().map(|s| s.heading.as_str()).collect();
+    assert_eq!(headings[..3], ["Alerts", "Right now", "Rest of today"]);
+    assert!(!headings.contains(&"Air quality"));
 }
 
 // Fresh text carries no age; from 30 minutes, or after a failed refresh,

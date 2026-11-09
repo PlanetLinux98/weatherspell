@@ -24,3 +24,16 @@ pub fn from_degrees(degrees: f64) -> &'static str {
     let index = crate::round_away(normalized / 22.5) % 16;
     POINTS[index as usize]
 }
+
+// A direction as the services abbreviate it ("SW", "NNE"), in degrees;
+// None for anything else, such as Environment Canada's "VR" (variable).
+pub fn from_abbreviation(text: &str) -> Option<f64> {
+    const ABBREVIATIONS: [&str; 16] = [
+        "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW",
+        "NW", "NNW",
+    ];
+    ABBREVIATIONS
+        .iter()
+        .position(|a| a.eq_ignore_ascii_case(text.trim()))
+        .map(|i| i as f64 * 22.5)
+}

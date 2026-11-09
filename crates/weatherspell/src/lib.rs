@@ -9,6 +9,7 @@ pub mod details;
 mod dialogs;
 mod edit;
 mod guide;
+pub mod hourly;
 pub mod manage;
 pub mod settings_dialog;
 mod system;

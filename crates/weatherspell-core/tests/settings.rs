@@ -490,3 +490,28 @@ fn the_location_on_screen_is_followed_or_replaced_by_the_one_in_its_place() {
     let editor = LocationEditor::new(&saved[..1]);
     assert_eq!(editor.shown(None), Some(0));
 }
+
+#[test]
+fn air_quality_is_on_unless_the_file_turns_it_off() {
+    assert!(AppSettings::default().show_air_quality);
+    let dir = TempDir::new();
+    let store = store(&dir);
+    // 0.1's file has no such member; a hand-edited null reads as on.
+    for (contents, expected) in [
+        (&br#"{"version":1,"locations":[]}"#[..], true),
+        (&br#"{"version":1,"showAirQuality":null}"#[..], true),
+        (&br#"{"version":1,"showAirQuality":false}"#[..], false),
+        (&br#"{"version":1,"showAirQuality":true}"#[..], true),
+    ] {
+        write(&store, contents);
+        let (settings, problem) = store.load();
+        assert_eq!(problem, None);
+        assert_eq!(settings.show_air_quality, expected);
+    }
+    let mut off = AppSettings {
+        show_air_quality: false,
+        ..AppSettings::default()
+    };
+    store.save(&mut off).unwrap();
+    assert!(!store.load().0.show_air_quality);
+}

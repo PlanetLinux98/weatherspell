@@ -116,6 +116,7 @@ fn base_with(units: UnitSystem) -> Forecast {
             dew_point: Some(10.5),
             humidity: Some(85),
             is_day: h % 24 > 6 && h % 24 < 20,
+            feels_like: None,
         })
         .collect();
     let days = vec![
@@ -152,11 +153,14 @@ fn base_with(units: UnitSystem) -> Forecast {
         location: peterborough,
         fetched_at: now() - SignedDuration::from_mins(1),
         utc_offset: offset(-4),
+        time_zone: None,
         units,
         current,
         hours,
         days,
         periods: Vec::new(),
+        official_hours: None,
+        air: None,
         source_name: "Open-Meteo".to_string(),
         sources: vec![
             "Forecast and current conditions: Open-Meteo (open-meteo.com), licensed CC BY 4.0."
@@ -345,6 +349,8 @@ fn the_nws_words_read_the_same_way() {
         attribution: "National Weather Service (weather.gov), forecast for Albany, NY".to_string(),
         periods: nws::parse_periods(&fixture("nws-forecast-albany.json")).unwrap(),
         observation: None,
+        hours: Vec::new(),
+        hours_problem: None,
     };
     let at = options_at(eastern(date(2026, 9, 12).at(2, 30, 0, 0)));
     let sections = writer::write(&official::compose(&base(), &official), &at, None);

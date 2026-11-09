@@ -16,6 +16,7 @@ shortcuts](#keyboard-shortcuts) lists every key for each system.
 - [Adding a location](#adding-a-location)
 - [Managing your locations](#managing-your-locations)
 - [Weather alerts](#weather-alerts)
+- [Air quality](#air-quality)
 - [Changing settings](#changing-settings)
 - [Keyboard shortcuts](#keyboard-shortcuts)
 - [Where your settings are kept](#where-your-settings-are-kept)
@@ -132,8 +133,11 @@ announces that it's ready, along with any alerts in effect.
 The forecast text is divided into sections, each starting with a heading:
 
 - **Alerts**: any weather alerts in effect, or "No alerts in effect."
-- **Right now**: the current conditions, and a line with the humidity, dew
-  point, pressure, visibility and cloud cover.
+- **Right now**: the current conditions, a line with the humidity, dew
+  point, pressure, visibility and cloud cover, and then the air quality:
+  how clean the air is now, and whether it's forecast to change in the
+  next 12 hours. In Europe, the day's pollen follows. See
+  [Air quality](#air-quality).
 - **Rest of today**: what's ahead for the rest of the day and night,
   the times of sunrise and sunset, and the UV index during the day.
 - **A section for each coming day**, headed with its date, such as "Monday,
@@ -146,6 +150,31 @@ To move to the next section, choose Next Section from the View menu, or
 press Ctrl+PageDown (Cmd+] on the Mac). Previous Section (Ctrl+PageUp,
 or Cmd+[) moves back. To go straight to the alerts, choose Alerts from the
 View menu, or press Ctrl+Shift+A (Cmd+Shift+A).
+
+### Hour by hour
+
+To see the forecast hour by hour, choose Hour by Hour from the View
+menu, or press Ctrl+H (Cmd+Shift+H on the Mac). It opens at the current
+hour or the hour of the line you're on in the forecast. You can also
+press Enter on any line of Right now, Rest of today or a coming day to
+open it at that line's hour; on an alert's line, Enter still opens the
+alert's details.
+
+Each hour has its own line, such as "3:00 pm: overcast, 13 degrees,
+30 percent chance of rain, light wind.", under a heading for its day.
+Ctrl+PageDown and Ctrl+PageUp (Cmd+] and Cmd+[ on the Mac) move a day
+at a time. Press Enter or Escape to close it and return to the forecast
+where you left it.
+
+In Canada and the United States, the hours come from Environment and
+Climate Change Canada's and the National Weather Service's own hourly
+forecasts where they publish them: the next 24 hours in Canada, and
+about the next week in the United States. The rest come from Open-Meteo
+data. The Sources section at the end names which hours came from where.
+
+When your computer is in a different time zone, a line at the top gives
+the difference, such as "Times are local to Madrid, 5 hours ahead of
+yours," instead of a second time on every line.
 
 ### Where the forecast comes from
 
@@ -178,10 +207,11 @@ time follows in brackets, for example "6:40 am (9:40 am your time)".
 ### Copying the forecast
 
 You can select and copy the forecast text as you would any other text, or
-use Copy and Select All in its context menu. To open the context menu
-from the keyboard, press Shift+F10, or the Applications key on Windows or
-the Menu key on Linux. On the Mac, Control-click the text, or press
-VO+Shift+M with VoiceOver.
+use Copy and Select All in its context menu. On Windows, the context menu
+also has Hour by Hour, which opens at the line you opened the menu on. To
+open the context menu from the keyboard, press Shift+F10, or the
+Applications key on Windows or the Menu key on Linux. On the Mac,
+Control-click the text, or press VO+Shift+M with VoiceOver.
 
 ### Keeping the forecast up to date
 
@@ -343,6 +373,33 @@ announcements need a recent system; see
 If an alert check doesn't get through, the Alerts section says so and shows
 the alerts from the last check that did, with how long ago that was.
 
+## Air quality
+
+Right now ends with the air quality, after the line with the humidity
+and the other measurements. It describes how clean the air is now, on
+the index used where the location is:
+
+- **Canada**: Environment and Climate Change Canada's Air Quality Health
+  Index (AQHI), from 1 to 10 and above, for the nearest of the
+  communities it covers, such as "Air quality is low risk, 2 on the Air
+  Quality Health Index for Peterborough." Away from those communities,
+  the US Air Quality Index stands in.
+- **Europe**, including the United Kingdom and Ireland: the European Air
+  Quality Index, from good to extremely poor.
+- **Everywhere else**: the US Air Quality Index, from good to hazardous.
+
+When the air isn't good, the line names the main pollutant, such as
+"mostly from fine particles." A second line says when the next 12 hours
+are forecast to reach a different level, such as "Forecast to reach
+moderate this evening, up to 72."
+
+In Europe, a last line gives the day's pollen for the plants in season,
+such as "Pollen today: grass moderate, birch low." Pollen forecasts
+aren't available outside Europe at this time.
+
+Air quality is one more request each time the forecast is refreshed. To
+turn it off, clear "Show air quality" in [Settings](#changing-settings).
+
 ## Changing settings
 
 To change settings, choose Settings from the Settings menu. On the Mac,
@@ -350,7 +407,7 @@ Settings is in the Weatherspell menu, and Cmd+comma opens it. There are
 two groups:
 
 - **Forecast**: "Refresh the forecast every" 15 minutes, 30 minutes (the
-  default), 1 hour or 2 hours.
+  default), 1 hour or 2 hours; and "Show air quality" (on by default).
 - **Alerts and announcements**: "Check for alerts every" 5, 10 (the
   default), 15 or 30 minutes (locations in Europe are checked at least every
   10 minutes), and "Announce new alerts": All new alerts (the default),
@@ -400,6 +457,7 @@ Every command is also in the menus, with its shortcut shown beside it.
 | Next section | Ctrl+PageDown | Cmd+] |
 | Previous section | Ctrl+PageUp | Cmd+[ |
 | Go to the alerts | Ctrl+Shift+A | Cmd+Shift+A |
+| Hour by hour | Ctrl+H | Cmd+Shift+H |
 | Settings | No shortcut | Cmd+comma |
 | Bigger, smaller or actual text size | Your system's settings | Cmd+Plus, Cmd+Minus, Cmd+0 |
 | Open this guide | F1 | Cmd+? |
@@ -409,10 +467,18 @@ Every command is also in the menus, with its shortcut shown beside it.
 
 | Action | Windows and Linux | Mac |
 | --- | --- | --- |
-| Open an alert's details, from its line | Enter | Return |
+| Open an alert's details, or Hour by Hour at a forecast line's hour | Enter | Return |
 | Select all | Ctrl+A | Cmd+A |
 | Copy | Ctrl+C | Cmd+C |
 | Open the context menu | Shift+F10, or the Applications key (Windows) or Menu key (Linux) | Control-click, or VO+Shift+M with VoiceOver |
+
+### Hour by Hour
+
+| Action | Windows and Linux | Mac |
+| --- | --- | --- |
+| Next day | Ctrl+PageDown | Cmd+] |
+| Previous day | Ctrl+PageUp | Cmd+[ |
+| Close | Enter or Escape | Return or Escape |
 
 ### Manage Locations
 
@@ -502,13 +568,17 @@ forecast names the sources used for that location.
 
 - [Weather data by Open-Meteo.com](https://open-meteo.com/), licensed
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): forecasts for
-  every location, and current conditions where no official observation is
-  used. Weatherspell writes its own sentences from this data.
+  every location, current conditions where no official observation is
+  used, and air quality and pollen, from the
+  [Copernicus Atmosphere Monitoring Service](https://atmosphere.copernicus.eu/).
+  Weatherspell writes its own sentences from this data.
 - Data Source: [Environment and Climate Change Canada](https://weather.gc.ca/),
   under its [Data Server End-use Licence](https://eccc-msc.github.io/open-data/licence/readme_en/):
-  forecast text, current conditions and alerts in Canada.
+  forecast text, hourly forecasts, current conditions, alerts and the Air
+  Quality Health Index in Canada.
 - The [National Weather Service](https://www.weather.gov/): forecast text,
-  current conditions and alerts in the United States, in the public domain.
+  hourly forecasts, current conditions and alerts in the United States, in
+  the public domain.
 - Each European country's national weather service, through
   [MeteoAlarm](https://meteoalarm.org/) (EUMETNET), under
   [its terms](https://meteoalarm.org/en/live/page/terms-and-conditions),

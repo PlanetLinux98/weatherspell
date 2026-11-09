@@ -1,12 +1,13 @@
 // The port's forecast text for a place, fetched live, as the app will show
 // it: a quick look at the real services before there is a window.
 //
-//     cargo run -p weatherspell-core --features net --example forecast -- "Peterborough, Canada" [--imperial] [--details]
+//     cargo run -p weatherspell-core --features net --example forecast -- "Peterborough, Canada" [--imperial] [--details] [--hourly] [--no-air]
 //
 // A place name, postal code or coordinates, as Add Location takes them;
 // for a name, the first place found whose full name contains the words
 // after the comma. This PC's time zone, and the 12-hour clock. --details
-// adds each alert's details as the dialog shows them.
+// adds each alert's details as the dialog shows them, --hourly the Hour by
+// Hour text; --no-air leaves air quality out, as its setting does.
 
 use jiff::Timestamp;
 use jiff::tz::TimeZone;
@@ -14,6 +15,7 @@ use weatherspell_core::alerts;
 use weatherspell_core::clock::{Clock, TimeFormat};
 use weatherspell_core::coordinates::{self, CoordinateReading};
 use weatherspell_core::fetch::{ForecastService, check_alerts};
+use weatherspell_core::hourly;
 use weatherspell_core::location::Location;
 use weatherspell_core::net::UreqFetch;
 use weatherspell_core::search::LocationSearch;
@@ -71,7 +73,8 @@ fn main() {
     eprintln!("{} ({:?})", place.full_name(), units);
 
     let now = Timestamp::now();
-    let forecast = match ForecastService::new().forecast(&http, &place, units, 7, now) {
+    let air = !args.iter().any(|a| a == "--no-air");
+    let forecast = match ForecastService::new().forecast(&http, &place, units, 7, air, now) {
         Ok(f) => f,
         Err(e) => {
             eprintln!("The forecast could not be fetched: {e}.");
@@ -91,6 +94,13 @@ fn main() {
             println!("{paragraph}\n");
         }
         println!();
+    }
+    if args.iter().any(|a| a == "--hourly") {
+        println!(
+            "Hour by Hour
+"
+        );
+        print!("{}", hourly::write(&forecast, &options).layout.text);
     }
     if args.iter().any(|a| a == "--details") {
         let clock = Clock::new(

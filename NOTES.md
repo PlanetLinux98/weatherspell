@@ -496,6 +496,76 @@ what a listener is waiting for then. The UV index is the day's highest, so
 it is left out after sunset, and when Environment Canada's own text for
 today already gives it.
 
+Air quality closes Right now, after the measurements: it is a condition
+of now like the rest, and its forecast for the next 12 hours and the
+day's pollen stay beside it rather than scatter. A section of its own
+after Rest of today, the first idea, set it apart from the conditions it
+belongs with. Someone who has no use for it can turn it off in Settings.
+Hour by Hour is not in the text at all (see below).
+
+## Hour by hour is a dialog of its own
+
+A week of hours is 168 lines; in the forecast text they would bury the
+sections that matter most of the time. Hour by Hour opens on request
+(View > Hour by Hour, Ctrl+H; Cmd+Shift+H on the Mac, where Cmd+H hides
+the app) as read-only text like an alert's details, with a heading per
+day so the section keys move a day at a time, and arrowing past midnight
+runs on into the next day. A combo box of days, the first idea, was
+rejected: it is one more control, a day boundary would be a dead end,
+and the keys would differ from the main window's. One line per hour with
+no blank lines between, so each arrow is the next hour.
+
+It opens at the hour of the forecast line the caret is on (each line of
+Right now, Rest of today and the coming days records the hour it starts
+at), so Enter on "Saturday night" opens at Saturday's sunset. When a
+line about the forecast's age or this computer's clock comes first, the
+current hour opens at the top instead, so that line is not skipped
+unheard. This computer's time is said once, at the top, rather than in
+brackets on every line, with the day it changes when one side's
+daylight time ends before the other's.
+
+The hours are the official service's where its text is the one shown
+(Environment Canada's 24 hours from the same city page, the NWS's
+hourly forecast, about 156 hours), so the hours never disagree with
+the sentences above them; Open-Meteo's fill in after and elsewhere, and
+the Sources line says which hours came from where. The service's own
+words are kept, with its chance folded in ("Chance Rain Showers" at 48
+percent reads "50 percent chance of rain showers"). As the clocks go
+back, the repeated hour is read once, as Open-Meteo gives it.
+
+## Air quality: the authority's own index where it can be had
+
+People know the index their own authority publishes, so that is the one
+used where Weatherspell can get it without a key: Environment Canada's
+Air Quality Health Index (MSC GeoMet), the observation and its own
+forecast, for the nearest of its 134 communities within 40 kilometres.
+Elsewhere the index comes from Open-Meteo (CAMS) in the scale the region
+reads: the European Air Quality Index in Europe, the US Air Quality Index
+everywhere else, the scale most international apps show and the one
+most national scales are modelled on. The US's own AirNow needs a key.
+Other countries' own indices (Hong Kong's AQHI, the UK's Daily Air
+Quality Index, Australia's state indices) could be added one at a time,
+as the alerts were.
+
+An AQHI estimated from Open-Meteo's ozone, nitrogen dioxide and fine
+particle concentrations (Health Canada's formula) was tried for Canadian
+places away from a community, and left out. Against Environment
+Canada's own readings at all 134 communities over two days (6,851
+hours), it was within one point 94 percent of the time, but only
+because the air was mostly clean: it caught 6 of the 113 hours
+Environment Canada rated moderate risk or worse, and named 277 that were
+not. The moderate hours were downtown Toronto and Windsor traffic air,
+which a 45-kilometre model cannot see, and it read up to 3 points high
+in British Columbia's interior. A number that looks like Environment
+Canada's but disagrees with it when it matters would mislead; the US
+index there is plainly a model's.
+
+Pollen is Open-Meteo's (CAMS Europe), classed by MeteoSwiss's thresholds
+for a day's mean count (low, moderate, high, very high), and for olive,
+which MeteoSwiss does not class, by the Spanish Aerobiology Network's.
+Outside Europe there is none, and the line is left out rather than
+saying so in every forecast.
+
 ## Alerts poll every saved location
 
 Polling only the location on screen would miss a warning for home while the
@@ -590,6 +660,9 @@ place, so opening the dialog never silently changes it. The dialog has no
 accelerator on Windows and Linux: Windows has no conventional one for a
 settings dialog, and Alt+S, S is two keys. On the Mac it is Settings in the
 app menu, with Cmd+comma, as Mac apps have.
+
+"Show air quality" is the one check box: air quality is its own request
+each refresh, and someone who has no use for it can save it.
 
 ## Windows scale by font
 

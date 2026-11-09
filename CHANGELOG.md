@@ -19,6 +19,16 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
   the South African Weather Service. European locations are checked at
   least every 10 minutes, as required by MeteoAlarm's terms. (#9, #29,
   #30, #31)
+- Hour by Hour (View menu or Ctrl+H / Cmd+Shift+H): every hour from now
+  to the end of the forecast, a section for each day, from official
+  sources when published and Open-Meteo elsewhere. Pressing Enter on a
+  line of the forecast opens it at that line's hour. (#10)
+- Air quality info: Environment and Climate Change Canada's Air Quality
+  Health Index near its communities, the European Air Quality Index in
+  Europe and the US Air Quality Index in the US and elsewhere (until more
+  areas can be supported), with the main pollutant when the air isn't
+  good; and the day's pollen in Europe. It can be turned off in
+  Settings. (#10)
 
 ### Changed
 - Places in Hong Kong and Macao are found with their territory's name.

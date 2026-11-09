@@ -18,6 +18,8 @@ by anyone who wants the weather in a simple and straightforward manner.
   as they arrive. Alerts are available for Canada, the United States, most
   of Europe, Australia, New Zealand, Hong Kong, the Philippines and South
   Africa at this time, with more regions planned.
+- Shows the forecast hour by hour when you ask, and the air quality, with
+  the day's pollen in Europe.
 - Comes as one file on each system, with no account and no API key.
 - Follows each system's own keys, menus, units, time format, text size and
   light or dark mode.
@@ -102,15 +104,21 @@ Weatherspell uses these sources, most of them openly licensed, and credits
 them in About Weatherspell and on the Sources line of every forecast. The
 list grows as sources are added.
 
-- Forecasts and place-name search: [Open-Meteo](https://open-meteo.com/),
-  licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-- Forecast text, current conditions and alerts in Canada:
+- Forecasts, air quality, pollen and place-name search:
+  [Open-Meteo](https://open-meteo.com/), licensed
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); air quality
+  and pollen from the
+  [Copernicus Atmosphere Monitoring Service](https://atmosphere.copernicus.eu/).
+- Forecast text, hourly forecasts, current conditions, alerts and the Air
+  Quality Health Index in Canada:
   [Environment and Climate Change Canada](https://weather.gc.ca/), from the
-  [MSC Datamart](https://eccc-msc.github.io/open-data/), under its
+  [MSC Datamart](https://eccc-msc.github.io/open-data/) and
+  [MSC GeoMet](https://eccc-msc.github.io/open-data/msc-geomet/readme_en/),
+  under its
   [data licence](https://eccc-msc.github.io/open-data/licence/readme_en/).
-- Forecast text, current conditions and alerts in the United States: the
-  [National Weather Service](https://www.weather.gov/), from its weather.gov
-  forecast pages and its API, public domain.
+- Forecast text, hourly forecasts, current conditions and alerts in the
+  United States: the [National Weather Service](https://www.weather.gov/),
+  from its weather.gov forecast pages and its API, public domain.
 - Alerts in Europe, including the United Kingdom and Ireland: each country's
   national weather service, through [MeteoAlarm](https://meteoalarm.org/)
   (EUMETNET), under
