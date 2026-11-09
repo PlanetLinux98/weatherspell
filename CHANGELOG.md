@@ -26,6 +26,9 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 ### Fixed
 - Place names no longer repeat their country (now "Singapore", not
   "Singapore, Singapore").
+- On tiling Wayland desktops such as Hyprland, the window now fits its
+  tile; before, it was squeezed in, and clicks landed away from what was
+  drawn.
 
 ## [0.2.0] - 2026-10-25
 

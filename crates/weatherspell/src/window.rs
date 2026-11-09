@@ -227,11 +227,18 @@ pub fn build() -> Rc<MainWindow> {
     }
     let actual_points = frame.get_font().map_or(13, |f| f.get_point_size());
 
-    frame.set_min_size(minimum_size(&frame));
+    // No minimum of its own on Wayland: GTK holds a window to its minimum
+    // even in a tile the desktop made smaller, and Hyprland squeezed the
+    // larger window into the tile, clicks landing away from what was drawn
+    // (Elliott, 2026-11-08). There the desktop sizes it, and GTK still keeps
+    // it as wide as the menu bar.
+    let places = system::places_windows();
+    if places {
+        frame.set_min_size(minimum_size(&frame));
+    }
     // Where it was when it last closed, if a screen still shows enough of
     // it; otherwise centred, as on a first run. On Wayland its size alone,
     // the desktop placing it.
-    let places = system::places_windows();
     let restored = settings.window.and_then(|saved| {
         if places {
             placement::restore(
@@ -692,26 +699,30 @@ impl MainWindow {
 
     // The window's minimum follows its characters, and the window grows if
     // that outgrows it, staying on its screen; then the controls are laid
-    // out at their new sizes.
+    // out at their new sizes. On Wayland, where the window has no minimum
+    // (build), only the layout.
     fn refit(&self) {
-        let minimum = minimum_size(&self.frame);
-        self.frame.set_min_size(minimum);
-        let now = self.frame.get_size();
-        if !self.frame.is_maximized() && (now.width < minimum.width || now.height < minimum.height)
-        {
-            self.frame.set_size(Size::new(
-                now.width.max(minimum.width),
-                now.height.max(minimum.height),
-            ));
-            let b = bounds(&self.frame);
-            let fits = working_areas().iter().any(|a| {
-                b.left >= a.left
-                    && b.top >= a.top
-                    && b.left + b.width <= a.left + a.width
-                    && b.top + b.height <= a.top + a.height
-            });
-            if !fits {
-                self.frame.centre();
+        if system::places_windows() {
+            let minimum = minimum_size(&self.frame);
+            self.frame.set_min_size(minimum);
+            let now = self.frame.get_size();
+            if !self.frame.is_maximized()
+                && (now.width < minimum.width || now.height < minimum.height)
+            {
+                self.frame.set_size(Size::new(
+                    now.width.max(minimum.width),
+                    now.height.max(minimum.height),
+                ));
+                let b = bounds(&self.frame);
+                let fits = working_areas().iter().any(|a| {
+                    b.left >= a.left
+                        && b.top >= a.top
+                        && b.left + b.width <= a.left + a.width
+                        && b.top + b.height <= a.top + a.height
+                });
+                if !fits {
+                    self.frame.centre();
+                }
             }
         }
         self.panel.layout();
