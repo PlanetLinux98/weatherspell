@@ -515,3 +515,66 @@ fn air_quality_is_on_unless_the_file_turns_it_off() {
     store.save(&mut off).unwrap();
     assert!(!store.load().0.show_air_quality);
 }
+
+#[test]
+fn previews_are_offered_once_a_preview_has_run_until_the_box_is_cleared() {
+    let dir = TempDir::new();
+    let store = store(&dir);
+
+    // An official version never writes the member: 0.2's file, unchanged.
+    let mut settings = AppSettings::default();
+    assert!(!settings.includes_previews());
+    assert!(!settings.note_running(false));
+    store.save(&mut settings).unwrap();
+    assert!(
+        !std::fs::read_to_string(store.path())
+            .unwrap()
+            .contains("includePreviewVersions")
+    );
+    // Nor does OK in Settings with the box left as it was, so a preview
+    // run later still turns it on.
+    settings.set_includes_previews(false);
+    assert_eq!(settings.include_preview_versions, None);
+
+    // The first preview to run turns it on, once, and it is saved.
+    assert!(settings.note_running(true));
+    assert!(!settings.note_running(true));
+    assert!(settings.includes_previews());
+    store.save(&mut settings).unwrap();
+    assert!(
+        std::fs::read_to_string(store.path())
+            .unwrap()
+            .contains("\"includePreviewVersions\": true")
+    );
+    // It stays on in the official version that follows.
+    let (mut settings, _) = store.load();
+    assert!(!settings.note_running(false));
+    assert!(settings.includes_previews());
+
+    // Cleared, it stays cleared, in a preview too.
+    settings.set_includes_previews(false);
+    store.save(&mut settings).unwrap();
+    let (mut settings, _) = store.load();
+    assert_eq!(settings.include_preview_versions, Some(false));
+    assert!(!settings.note_running(true));
+    assert!(!settings.includes_previews());
+    settings.set_includes_previews(true);
+    assert!(settings.includes_previews());
+}
+
+#[test]
+fn a_preview_switch_that_is_not_one_reads_as_never_set() {
+    let dir = TempDir::new();
+    let store = store(&dir);
+    for contents in [
+        &br#"{"version":1,"includePreviewVersions":null,"alertCheckMinutes":5}"#[..],
+        &br#"{"version":1,"includePreviewVersions":"yes","alertCheckMinutes":5}"#[..],
+        &br#"{"version":1,"includePreviewVersions":1,"alertCheckMinutes":5}"#[..],
+    ] {
+        write(&store, contents);
+        let (settings, problem) = store.load();
+        assert_eq!(problem, None);
+        assert_eq!(settings.include_preview_versions, None);
+        assert_eq!(settings.alert_check_minutes, 5);
+    }
+}

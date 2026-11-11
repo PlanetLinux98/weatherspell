@@ -1,0 +1,165 @@
+[
+  {
+    "tag_name": "v0.2.0",
+    "name": "Weatherspell v0.2.0",
+    "draft": false,
+    "prerelease": false,
+    "published_at": "2026-10-25T05:32:19Z",
+    "html_url": "https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.2.0",
+    "assets": [
+      {
+        "name": "appimage-runtime-source.tar.gz",
+        "size": 4623044,
+        "digest": "sha256:cc682d7ac958998d96cf4ee50db4493be55fb41495963b50f0e2b36da1db2aa9",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0/appimage-runtime-source.tar.gz"
+      },
+      {
+        "name": "SHA256SUMS",
+        "size": 358,
+        "digest": "sha256:1cdf824679f8ade113b6f25498b377790d5cdce4e924b00649ce42fdf8f8f239",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0/SHA256SUMS"
+      },
+      {
+        "name": "Weatherspell-x86_64.AppImage",
+        "size": 6490616,
+        "digest": "sha256:1e84a9d9531539df3c2a7ea8b9e5aac4f5d20513010f84e188ef68d8eb10ffd4",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0/Weatherspell-x86_64.AppImage"
+      },
+      {
+        "name": "Weatherspell.dmg",
+        "size": 11133922,
+        "digest": "sha256:5db163f73c0294b6a32e428026ca4e2ffe11fbe3bb0fe0f38bb20d6ea608c1d2",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0/Weatherspell.dmg"
+      },
+      {
+        "name": "Weatherspell.exe",
+        "size": 14377472,
+        "digest": "sha256:64777ae435eb3e3d0450611b086a9e6a0f1263713e336557de658bf718ddcb6f",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0/Weatherspell.exe"
+      }
+    ],
+    "body": "The first release for the Mac and Linux, alongside Windows. Press F1 (Cmd+? on the Mac) for the user guide, which covers all three systems.\n\n- **Windows:** download `Weatherspell.exe` and run it.\n- **Mac:** paste this line into Terminal and press Return. It downloads the latest release, checks it against the release's checksums, and copies Weatherspell into your Applications folder:\n  `curl -fsSL https://raw.githubusercontent.com/PlanetLinux98/weatherspell/main/tools/mac/install.sh | sh`\n- **Linux:** download `Weatherspell-x86_64.AppImage`, allow it to run as a program (in its properties in your file manager, or with `chmod +x`), and open it.\n\n### Added\n- Weatherspell for the Mac, for macOS 15 (Sequoia) or later on Apple silicon and Intel, installed with one Terminal command that checks the download. It follows the Mac's keys and menus (Cmd+R refreshes, Cmd+] and Cmd+[ move between sections, Settings is in the app menu) and its region settings, and the View menu has Bigger Text, Smaller Text and Actual Text Size (#25).\n- Weatherspell for Linux, as one AppImage, for 64-bit PCs with GTK 3, such as Ubuntu 22.04, Debian 12 and Fedora 36 or later. Units, time format, text size, and light or dark mode follow the system's settings. Announcements need Ubuntu 24.04, Debian 13 or a system as new at this time (#26, #27).\n- Follows the system's light or dark mode, and changes along with it while open (#24).\n- View > Reset Window Size and Position puts the main window back where and how it first opened.\n- Donate, in the Help menu, opens Weatherspell's Ko-fi page, for anyone who'd like to support its development.\n\n### Changed\n- Weatherspell is rebuilt in Rust with wxWidgets, which is what makes the Mac and Linux versions possible. On Windows it's still one executable, and it keeps your saved locations and settings from 0.1. It now needs 64-bit Windows: Windows 10 (version 1709 and later) or Windows 11 (#24).\n- Manage Locations: Rename becomes Edit (Alt+E or F2), and the choice of whether a location's alerts are announced moves into the Edit Location dialog, which names the place (#24).\n- Environment Canada's alerts are named with their colour level first, as in \"Yellow wind warning\".\n\n### Fixed\n- With Narrator, the heading was said twice after Ctrl+PageDown, Ctrl+PageUp or Ctrl+Shift+A (#23).\n\n"
+  },
+  {
+    "tag_name": "v0.2.0-beta.1",
+    "name": "Weatherspell v0.2.0-beta.1",
+    "draft": false,
+    "prerelease": true,
+    "published_at": "2026-10-21T04:09:20Z",
+    "html_url": "https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.2.0-beta.1",
+    "assets": [
+      {
+        "name": "appimage-runtime-source.tar.gz",
+        "size": 4623044,
+        "digest": "sha256:ee7702c8efe5d597bf30a56a5bed5fc484be57e716d049db80fc9a9637504a8d",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0-beta.1/appimage-runtime-source.tar.gz"
+      },
+      {
+        "name": "SHA256SUMS",
+        "size": 358,
+        "digest": "sha256:86c8bdfc24253887d75e44c86ab3b34507f0d9645dc5ff064ef14d483019b7c2",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0-beta.1/SHA256SUMS"
+      },
+      {
+        "name": "Weatherspell-x86_64.AppImage",
+        "size": 6490616,
+        "digest": "sha256:b09d2e74bf03a5d5041bd9cc06ada8d2f973981a54a25228ea8a758b833069fe",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0-beta.1/Weatherspell-x86_64.AppImage"
+      },
+      {
+        "name": "Weatherspell.dmg",
+        "size": 11133581,
+        "digest": "sha256:11712fa1ddb3a8b25c5543351ac510f72e149bd63e7f79186547495855974081",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0-beta.1/Weatherspell.dmg"
+      },
+      {
+        "name": "Weatherspell.exe",
+        "size": 14373376,
+        "digest": "sha256:12cf0d3b37cbe9180d78f8f046bcd1922d52fdc072a0eaa77ba977537d5190d8",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0-beta.1/Weatherspell.exe"
+      }
+    ],
+    "body": "The first beta of Weatherspell 0.2, for Windows, the Mac and Linux. Screen reader passes with NVDA, Narrator, VoiceOver and Orca are done, and the user guide now covers all three systems. This beta is mainly to check the release itself before 0.2.0; feedback and issue reports are very welcome, especially from people using VoiceOver, Orca or a screen magnifier!\r\n\r\n## Downloading\r\n\r\n- **Windows:** download `Weatherspell.exe` and run it. If you've used Weatherspell before, it retains your saved locations and settings. Works on 64-bit Windows 10 (version 1709 and later) and Windows 11.\r\n- **Mac:** for macOS 15 (Sequoia) or later, now on Intel Macs as well as Apple silicon (Intel Macs haven't been tried on real hardware at this time, so reports are especially welcome). Weatherspell isn't notarized by Apple at this time, so to install it without macOS blocking it, paste this line into Terminal and press Return; it checks the download and copies Weatherspell into your Applications folder:\r\n  `curl -fsSL https://raw.githubusercontent.com/PlanetLinux98/weatherspell/main/tools/mac/install.sh | sh -s -- --preview`\r\n- **Linux:** for 64-bit PCs with GTK 3 support, such as Ubuntu 22.04, Debian 12 and Fedora 36 or later. Download `Weatherspell-x86_64.AppImage`, allow it to run as a program (in its properties in your file manager, or with `chmod +x`), and open it. Announcements (of new alerts, and that the forecast is ready) need Ubuntu 24.04, Linux Mint 22, Debian 13 or a system as new at this time. (#27)\r\n\r\n`SHA256SUMS` holds a checksum for each file, and `appimage-runtime-source.tar.gz` is the source of the small program that starts the AppImage, as its licence asks.\r\n\r\n## New since 0.2.0-alpha.2\r\n\r\n**Changed**\r\n- The Mac app runs on Intel Macs too, and the install script asks Spotlight to find it straight away. (#25)\r\n- NVDA, Narrator and VoiceOver read Edit Location's \"Leave it empty to use the full name.\" with the nickname field, as Orca does.\r\n- The user guide and README cover the Mac and Linux, with each system's keys side by side, and say which Linux systems have announcements. (#25, #26, #27)\r\n- The third-party notices cover every library in the Mac and Linux apps, and the AppImage's runtime.\r\n\r\n**Fixed**\r\n- On the Mac, the text shown before any location is added named Ctrl+Shift+L rather than Cmd+Shift+L.\r\n- Updated the library behind secure connections, for its latest security fixes.\r\n\r\n## Recap of 0.2 so far\r\n\r\n- Weatherspell for the Mac and for Linux, following each system's keys, menus, units, time format, text size and light or dark mode. (#25, #26)\r\n- Weatherspell is rebuilt in Rust with wxWidgets, which is what makes the Mac and Linux versions possible. (#24)\r\n- Follows the system's light or dark mode, and changes along with it while open. (#24)\r\n- View > Reset Window Size and Position puts the main window back where and how it first opened.\r\n- Manage Locations: Rename becomes Edit (Alt+E or F2), and the choice of whether a location's alerts are announced moves into the Edit Location dialog. (#24)\r\n- Environment Canada's alerts are named with their colour level first, as in \"Yellow wind warning\".\r\n- With Narrator, the heading is no longer spoken twice after Ctrl+PageDown, Ctrl+PageUp or Ctrl+Shift+A. (#23)\r\n\r\n## Still to come before 0.2.0\r\n\r\n- Fixes from this beta's testing and community feedback (much appreciated!)\r\n\r\nAlerts for Europe, an hour-by-hour view, air quality and Check for Updates are planned for future 0.2.x releases or 0.3 (#9, #10, #11).\r\n"
+  },
+  {
+    "tag_name": "v0.2.0-alpha.2",
+    "name": "Weatherspell v0.2.0-alpha.2",
+    "draft": false,
+    "prerelease": true,
+    "published_at": "2026-10-15T05:05:02Z",
+    "html_url": "https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.2.0-alpha.2",
+    "assets": [
+      {
+        "name": "SHA256SUMS",
+        "size": 261,
+        "digest": "sha256:f5687400df34abbbfcd97fdab58d33b8988f3841b96754736eae172677d3d018",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0-alpha.2/SHA256SUMS"
+      },
+      {
+        "name": "Weatherspell-x86_64.AppImage",
+        "size": 6470136,
+        "digest": "sha256:089984e4e7973f175a6ddcca5509b857f33cddfdbe620c444be2bc4294a77b5f",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0-alpha.2/Weatherspell-x86_64.AppImage"
+      },
+      {
+        "name": "Weatherspell.dmg",
+        "size": 5420426,
+        "digest": "sha256:e2fa54488cbe0889c845cdff53c9cafee403b8eb42ef4628075aa6fba8b12ba7",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0-alpha.2/Weatherspell.dmg"
+      },
+      {
+        "name": "Weatherspell.exe",
+        "size": 14315520,
+        "digest": "sha256:5fbf4cb7307992cba75eea072b600d2bf9c12d0d4d164fef5659a79849ed4830",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0-alpha.2/Weatherspell.exe"
+      }
+    ],
+    "body": "The second preview of Weatherspell 0.2 for testing, and the first to add Mac and Linux versions alongside Windows. It's the same app on all three systems, utilizing largely the same code, with each system's own shortcuts and settings where they differ. Feedback and issue reports are very welcome, especially from people using VoiceOver, Orca or a screen magnification!\r\n\r\n## Downloading\r\n\r\n- **Windows:** download `Weatherspell.exe` and run it. If you've used Weatherspell before, itretains your saved locations and settings. Works on 64-bit Windows 10 (version 1709 and later) and Windows 11.\r\n- **Mac:** for Macs with Apple silicon, on macOS 15 (Sequoia) or later (universal binary including Intel Mac support is in the works). Weatherspell isn't notarized by Apple at this time, so a copy downloaded through a browser is blocked when first opened, until it's allowed under Privacy & Security in System Settings. To install it without that step, you should be able to paste this line into Terminal and press Return; it checks the download and copies Weatherspell into your Applications folder:\r\n  `curl -fsSL https://raw.githubusercontent.com/PlanetLinux98/weatherspell/main/tools/mac/install.sh | sh -s -- --preview`\r\n- **Linux:** for 64-bit PCs with GTK 3 support, such as Ubuntu 22.04, Debian 12 and Fedora 36 or later. Download `Weatherspell-x86_64.AppImage`, allow it to run as a program (in its properties in your file manager, or with `chmod +x`), and open it. Tested with GNOME and Orca at this time, though should work on other desktop environments.\r\n\r\n`SHA256SUMS` holds a checksum for each file.\r\n\r\n## New since 0.2.0-alpha.1\r\n\r\n**Added**\r\n- Weatherspell for the Mac. It follows the Mac's keys and menus: Cmd+R refreshes, Cmd+] and Cmd+[ move between sections, Cmd+? opens the user guide, and Settings is in the app menu with Cmd+comma. Units and time format come from your system's region settings, light/dark mode should follow the system setting, and the View menu has Bigger Text, Smaller Text and Actual Text Size options. (#25)\r\n- Weatherspell for Linux. Units, time format, text size, and light or dark mode follow your system's settings, and the window opens how it was last closed, as far as your desktop allows (there are some limits to this on Wayland sessions). (#26)\r\n- View > Reset Window Size and Position puts the main window back where and how it first opened, to the extent that each OS and its window manager allows.\r\n\r\n**Changed**\r\n- Environment Canada's alerts are more naturally named with their colour level first, as in \"Yellow wind warning\".\r\n\r\n**Fixed**\r\n- In dark mode on Windows, Narrator didn't say whether a check box was checked when it was toggled.\r\n\r\n## Recap of 0.2 so far\r\n\r\n- Weatherspell is rebuilt in Rust with wxWidgets, which is what makes the Mac and Linux versions possible. (#24)\r\n- Follows the system's light or dark mode, and changes along with it while open. (#24)\r\n- Manage Locations: Rename becomes Edit (Alt+E or F2), and the choice of whether a location's alerts are announced moves into the Edit Location dialog. (#24)\r\n- With Narrator, the heading is no longer spoken twice after Ctrl+PageDown, Ctrl+PageUp or Ctrl+Shift+A. (#23)\r\n\r\n## Still to come before 0.2.0\r\n\r\n- The user guide's Mac and Linux content. At this alpha snapshot, it still just describes the Windows version.\r\n- A full pass over every window with NVDA, Narrator, VoiceOver and Orca, and fixes from community testing. (#25, #26)\r\n- A version for Intel Macs. (#25)\r\n- Bug fixes from community feedback (much appreciated!)\r\n\r\nAlerts for Europe, an hour-by-hour view, air quality and Check for Updates are planned for future 0.2.x releases or 0.3 (#9, #10, #11).\r\n"
+  },
+  {
+    "tag_name": "v0.2.0-alpha.1",
+    "name": "Weatherspell v0.2.0-alpha.1",
+    "draft": false,
+    "prerelease": true,
+    "published_at": "2026-10-06T18:35:52Z",
+    "html_url": "https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.2.0-alpha.1",
+    "assets": [
+      {
+        "name": "SHA256SUMS",
+        "size": 83,
+        "digest": "sha256:efefcf06c6c87d66e338ce9f7ad26bbcd31f49e4637e36fcfd68ac87a1368f0e",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0-alpha.1/SHA256SUMS"
+      },
+      {
+        "name": "Weatherspell.exe",
+        "size": 14291968,
+        "digest": "sha256:ca0644e08f09d5094f85e3f9eb99d6cbb2135dc6ae35965424090e0f355f1884",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0-alpha.1/Weatherspell.exe"
+      }
+    ],
+    "body": "The first preview of Weatherspell 0.2, for testing. Weatherspell has been rebuilt in Rust with wxWidgets, in order to streamline future development and work as the base for Mac and Linux versions later. It should work much as 0.1 does, with the few changes below. Features and issue resolutions already planned for the 0.2 series will be addressed in upcoming 0.2.x releases or in 0.3. Upon downloading and running `Weatherspell.exe`, it keeps using your saved locations and settings from 0.1. It runs on 64-bit Windows 10 (version 1709 and later) and Windows 11. You can press F1 in the app for the user guide.\r\n\r\n## New since 0.1.0\r\n\r\n**Added**\r\n- Follows the light or dark mode chosen in Windows, and changes along with it while open. (#24)\r\n\r\n**Changed**\r\n- Completely rebuilt in Rust with wxWidgets. It's still one executable with nothing to install, and needs 64-bit Windows at this time. (#24)\r\n- Manage Locations: Rename becomes Edit (Alt+E or F2), and the choice of whether a location's alerts are announced moves into the Edit Location dialog, which names the place. (#24)\r\n- The forecast text's context menu holds just Copy and Select All options. (#24)\r\n- The user guide's credits now link to third-party notices for the software Weatherspell is built with. (#24)\r\n\r\n**Fixed**\r\n- With Narrator, the heading was being spoken twice after Ctrl+PageDown, Ctrl+PageUp or Ctrl+Shift+A. (#23)\r\n\r\n## Still to come before 0.2.0\r\n\r\n- A full pass with NVDA and Narrator, and fixes from community testing. Feedback and issue reports are very welcome!\r\n\r\nAlerts for Europe, an hour-by-hour view, air quality and Check for Updates are planned for future 0.2.x releases or 0.3 (#9, #10, #11).\r\n"
+  },
+  {
+    "tag_name": "v0.1.0",
+    "name": "Weatherspell v0.1.0",
+    "draft": false,
+    "prerelease": false,
+    "published_at": "2026-10-04T20:01:12Z",
+    "html_url": "https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.1.0",
+    "assets": [
+      {
+        "name": "SHA256SUMS",
+        "size": 83,
+        "digest": "sha256:3e8b4db9cf066c66d6c71e2ffbd40b329e7ea6d9bd52370d933e0230058f1dcd",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.1.0/SHA256SUMS"
+      },
+      {
+        "name": "Weatherspell.exe",
+        "size": 872448,
+        "digest": "sha256:77ea393a255f2c91c1ac5c2079ef2ff1f5d8e7690812dc284e10bf58cd87e907",
+        "browser_download_url": "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.1.0/Weatherspell.exe"
+      }
+    ],
+    "body": "The first release. Simply download `Weatherspell.exe` and run it. For Windows 10 (version 1903 or later) and Windows 11. Press F1 for the user guide.\n\n### Added\n- The forecast as text you can arrow through, select and copy, in sections: Alerts, Right now, Rest of today, the coming days, and Sources. Ctrl+PageDown and Ctrl+PageUp move between them, and every command is in a menu with its shortcut (#5, #15, #17, #23).\n- In Canada and the United States, including most US territories, the forecast in the words of official sources (Environment and Climate Change Canada or the National Weather Service), with current conditions from the nearest station (#3, #19).\n- Everywhere else, a forecast written from Open-Meteo data: the rest of today by part of day, and each coming day as a day and a night (#2).\n- Shows the location's own local time, with your PC time in parentheses when they differ. Each location's forecast is in one unit system: metric in Canada, and elsewhere per your Windows region (#2, #6, #21).\n- Urgent weather alerts for Canada and the United States, most severe first. Press Enter on an alert, or double-click it, for its details; Ctrl+Shift+A moves to the alerts section. Every saved location is checked every 10 minutes by default (configurable), and new alerts can be announced as they arrive (#4, #19, #20).\n- Add Location (Ctrl+Shift+L) finds a place by name, postal code or coordinates (#1, #18).\n- Manage Locations (Ctrl+L): put locations in order, rename them with a nickname such as \"Home\", remove them, and choose which locations' alerts are announced. Ctrl+1 to Ctrl+9 switch to the first nine (#1).\n- The forecast refreshes itself, every 30 minutes by default (configurable), without moving the caret, and says how old it is once it's out of date. Each location's last forecast and alerts are kept, and shown with their age when the weather service can't be reached (#5, #6, #7, #16).\n- Settings: how often the forecast refreshes and alerts are checked, and which new alerts are announced (#6).\n- The window follows the display scale and the Windows Text size setting, and opens how it was last closed (#5, #16).\n- A user guide (F1), and an About dialog with credits for each source (#8).\n\n"
+  }
+]

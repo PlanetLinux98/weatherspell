@@ -40,6 +40,19 @@ pub trait Fetch: Sync {
     fn get_bytes(&self, url: &str, timeout: Option<Duration>) -> Result<Vec<u8>, FetchError> {
         self.get(url, timeout).map(String::into_bytes)
     }
+
+    // A large file handed over piece by piece as it arrives (an update's
+    // download), so it never sits whole in memory and its progress can be
+    // shown. The receiver stops it by answering false, and Ok(false) says
+    // it did. The real client reads as it goes; this is for the tests'
+    // stand-ins.
+    fn download(
+        &self,
+        url: &str,
+        piece: &mut dyn FnMut(&[u8]) -> bool,
+    ) -> Result<bool, FetchError> {
+        Ok(piece(&self.get_bytes(url, None)?))
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

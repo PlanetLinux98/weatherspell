@@ -19,6 +19,13 @@ pub const TIMEOUT: Duration = Duration::from_secs(20);
 // MB on a stormy day (2026-10-25).
 const MAX_BODY: u64 = 64 * 1024 * 1024;
 
+// An update's download: the exe is 14 MB, and TIMEOUT's 20 seconds for
+// the whole of it would fail on a slow line. ureq has no timeout between
+// reads, so this bounds a stalled one; the user's Cancel is the nearer
+// way out. The size limit is a backstop against an endless answer.
+const DOWNLOAD_TIMEOUT: Duration = Duration::from_secs(30 * 60);
+const MAX_DOWNLOAD: u64 = 512 * 1024 * 1024;
+
 pub struct UreqFetch {
     agent: Agent,
     ftp: Ftp,
@@ -123,6 +130,55 @@ impl Fetch for UreqFetch {
             .limit(MAX_BODY)
             .read_to_vec()
             .map_err(|e| failed(e, host(url)))
+    }
+
+    fn download(
+        &self,
+        url: &str,
+        piece: &mut dyn FnMut(&[u8]) -> bool,
+    ) -> Result<bool, FetchError> {
+        use std::io::Read;
+
+        let host = host(url);
+        if self.offline {
+            return Err(FetchError::Offline { host });
+        }
+        let mut response = self
+            .agent
+            .get(url)
+            .config()
+            .timeout_global(Some(DOWNLOAD_TIMEOUT))
+            .timeout_connect(Some(TIMEOUT))
+            .timeout_recv_response(Some(TIMEOUT))
+            .build()
+            .call()
+            .map_err(|e| failed(e, host.clone()))?;
+        let mut body = response
+            .body_mut()
+            .with_config()
+            .limit(MAX_DOWNLOAD)
+            .reader();
+        let mut block = vec![0; 64 * 1024];
+        loop {
+            match body.read(&mut block) {
+                Ok(0) => return Ok(true),
+                Ok(n) => {
+                    if !piece(&block[..n]) {
+                        return Ok(false);
+                    }
+                }
+                Err(e) if e.kind() == std::io::ErrorKind::Interrupted => {}
+                Err(e) if e.kind() == std::io::ErrorKind::TimedOut => {
+                    return Err(FetchError::TimedOut { host });
+                }
+                Err(e) => {
+                    return Err(FetchError::Unreachable {
+                        host,
+                        detail: e.to_string(),
+                    });
+                }
+            }
+        }
     }
 }
 

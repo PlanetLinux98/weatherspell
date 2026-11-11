@@ -18,10 +18,17 @@ flate2 = "1"
 # The real network client, for the app and the example; the core's own
 # logic and tests never touch the network.
 ureq = { version = "3", optional = true, default-features = false, features = ["rustls", "platform-verifier", "gzip", "win-system-proxy"] }
+# SHA-256 for a downloaded update (updates.rs); rustls already brings it
+# in, so it rides with the network client and adds no crate.
+ring = { version = "0.17", optional = true }
 
 [features]
-net = ["dep:ureq"]
+net = ["dep:ureq", "dep:ring"]
 
 [[example]]
 name = "forecast"
+required-features = ["net"]
+
+[[example]]
+name = "update"
 required-features = ["net"]

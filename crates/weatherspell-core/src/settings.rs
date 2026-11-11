@@ -44,6 +44,15 @@ pub struct AppSettings {
     // in 0.1's file, which it ignores.
     #[serde(deserialize_with = "on_unless_off")]
     pub show_air_quality: bool,
+    // Whether Check for Updates offers previews too. Not in the file
+    // until a preview first runs (which turns it on, so testers stay on
+    // previews until they clear it) or the user changes it; 0.1 and 0.2
+    // ignore it.
+    #[serde(
+        deserialize_with = "switch_if_set",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub include_preview_versions: Option<bool>,
     // Where the main window was when it last closed; None until then.
     pub window: Option<SavedWindow>,
 }
@@ -58,6 +67,7 @@ impl Default for AppSettings {
             alert_check_minutes: DEFAULT_ALERT_MINUTES,
             alert_announcements: Announcements::All,
             show_air_quality: true,
+            include_preview_versions: None,
             window: None,
         }
     }
@@ -85,6 +95,30 @@ impl AppSettings {
         self.locations
             .iter()
             .position(|s| place.is_same_place(&s.to_location()))
+    }
+
+    pub fn includes_previews(&self) -> bool {
+        self.include_preview_versions == Some(true)
+    }
+
+    // Called at start-up with whether this copy is a preview: the first
+    // preview to run turns previews on. True when that changed something
+    // to save. A choice already made, either way, is left alone.
+    pub fn note_running(&mut self, preview: bool) -> bool {
+        if preview && self.include_preview_versions.is_none() {
+            self.include_preview_versions = Some(true);
+            return true;
+        }
+        false
+    }
+
+    // The Settings dialog's check box. Unchanged, it records nothing, so
+    // pressing OK in an official version does not count as turning
+    // previews off for a preview run later.
+    pub fn set_includes_previews(&mut self, wanted: bool) {
+        if wanted != self.includes_previews() {
+            self.include_preview_versions = Some(wanted);
+        }
     }
 
     pub fn announces(&self, severity: AlertSeverity) -> bool {
@@ -233,6 +267,12 @@ fn or_default<'de, D: Deserializer<'de>, T: Deserialize<'de> + Default>(
 // A switch that is on unless the file says false.
 fn on_unless_off<'de, D: Deserializer<'de>>(d: D) -> Result<bool, D::Error> {
     Ok(Option::<bool>::deserialize(d)?.unwrap_or(true))
+}
+
+// A switch that may not be in the file at all; anything that is not true
+// or false (hand-edited) reads as not there.
+fn switch_if_set<'de, D: Deserializer<'de>>(d: D) -> Result<Option<bool>, D::Error> {
+    Ok(Option::<serde_json::Value>::deserialize(d)?.and_then(|v| v.as_bool()))
 }
 
 // A count or an index; a negative one (hand-edited) reads as 0, which

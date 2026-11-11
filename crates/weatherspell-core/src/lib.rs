@@ -43,6 +43,7 @@ pub mod settings;
 pub mod shapes;
 pub mod text_size;
 pub mod units;
+pub mod updates;
 pub mod weather_codes;
 pub mod writer;
 
