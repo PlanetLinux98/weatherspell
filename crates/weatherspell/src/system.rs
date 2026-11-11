@@ -163,10 +163,15 @@ pub fn another_copy_brought_forward() -> bool {
             IsIconic, SW_RESTORE, SetForegroundWindow, ShowWindow,
         };
         use windows::core::w;
-        // Held until this copy ends, when Windows closes it.
-        if CreateMutexW(None, true, w!("Local\\Weatherspell")).is_err()
-            || GetLastError() != ERROR_ALREADY_EXISTS
-        {
+        // Held until this copy ends, when Windows closes it, or until it
+        // makes way for the copy an update relaunches.
+        let mutex = CreateMutexW(None, true, w!("Local\\Weatherspell"));
+        let exists = GetLastError() == ERROR_ALREADY_EXISTS;
+        let Ok(mutex) = mutex else {
+            return false;
+        };
+        if !exists {
+            ONLY_COPY.store(mutex.0 as usize, std::sync::atomic::Ordering::Relaxed);
             return false;
         }
         if let Some(window) = other_copy_window() {
@@ -181,9 +186,33 @@ pub fn another_copy_brought_forward() -> bool {
     false
 }
 
+// The mutex that makes this the only copy, as a number; 0 when there is
+// none.
+#[cfg(windows)]
+static ONLY_COPY: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+
+// Before an update relaunches the app (install.rs): the copy started next
+// must not find this one, which is closing. From the thread that made the
+// mutex, the main one.
+#[cfg(windows)]
+pub fn let_another_copy_start() {
+    use windows::Win32::Foundation::{CloseHandle, HANDLE};
+    use windows::Win32::System::Threading::ReleaseMutex;
+    let mutex = ONLY_COPY.swap(0, std::sync::atomic::Ordering::Relaxed);
+    if mutex != 0 {
+        unsafe {
+            let handle = HANDLE(mutex as *mut std::ffi::c_void);
+            let _ = ReleaseMutex(handle);
+            let _ = CloseHandle(handle);
+        }
+    }
+}
+
 // The other copy's main window, as .NET's MainWindowHandle finds it: the
 // first visible top-level window with no owner (a dialog has one) of a
-// process whose exe has this one's name.
+// process whose exe has this one's name. A copy that installed an update
+// and was not relaunched runs on as Weatherspell.exe.old (install.rs) and
+// is still the other copy.
 #[cfg(windows)]
 fn other_copy_window() -> Option<windows::Win32::Foundation::HWND> {
     use windows::Win32::Foundation::{CloseHandle, HWND, LPARAM};
@@ -210,7 +239,8 @@ fn other_copy_window() -> Option<windows::Win32::Foundation::HWND> {
             let _ = CloseHandle(process);
             named.ok()?;
             let path = PathBuf::from(String::from_utf16_lossy(&buffer[..length as usize]));
-            Some(path.file_name()?.to_string_lossy().to_lowercase())
+            let name = path.file_name()?.to_string_lossy().to_lowercase();
+            Some(name.strip_suffix(".old").unwrap_or(&name).to_string())
         }
     }
 

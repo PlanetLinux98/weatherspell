@@ -32,13 +32,15 @@ use weatherspell_core::search::LocationSearch;
 use weatherspell_core::settings::{AppSettings, LoadProblem, SavedLocation, SettingsStore};
 use weatherspell_core::text_size::TextSize;
 use weatherspell_core::units;
+use weatherspell_core::updates::{self, Answer, DownloadProblem, Update, Version};
 use weatherspell_core::writer::{self, Section, WriterOptions};
 use wx_accessibility::{Announcer, ScreenReaders};
 use wxdragon::prelude::*;
 
 use crate::system::{self, Region};
 use crate::{
-    about, add_location, details, dialogs, edit, guide, hourly, manage, on_ui, settings_dialog,
+    about, add_location, details, dialogs, edit, guide, hourly, install, manage, on_ui,
+    settings_dialog, update,
 };
 
 pub const APP_NAME: &str = "Weatherspell";
@@ -60,6 +62,7 @@ const ID_BIGGER: Id = ID_HIGHEST + 20;
 const ID_SMALLER: Id = ID_HIGHEST + 21;
 const ID_ACTUAL_SIZE: Id = ID_HIGHEST + 22;
 const ID_HOUR_BY_HOUR: Id = ID_HIGHEST + 23;
+const ID_CHECK_UPDATES: Id = ID_HIGHEST + 24;
 // Ctrl+1 to Ctrl+9: the first nine saved locations.
 const ID_LOCATION: Id = ID_HIGHEST + 10;
 const MENU_LOCATIONS: usize = 9;
@@ -117,6 +120,19 @@ pub struct MainWindow {
     normal: Cell<Rect>,
     maximized: Cell<bool>,
 
+    // The status bar's own line, kept so a note can ride at its end and
+    // so it can be put back after "Checking for updates...".
+    status_text: RefCell<String>,
+    // Check for Updates (#11). One check at a time; when the automatic
+    // one last looked; what it found, shown at the end of the status bar's
+    // line; what this run installed and has not relaunched for; and
+    // whether closing the window starts the new copy.
+    update_check: Cell<bool>,
+    update_checked_at: Cell<Option<Instant>>,
+    update_found: RefCell<Option<Version>>,
+    update_installed: RefCell<Option<Version>>,
+    relaunch: Cell<bool>,
+
     forecast_timer: Timer<Frame>,
     alert_timer: Timer<Frame>,
     // Once a minute: the age line, and the day headings at midnight.
@@ -138,7 +154,12 @@ pub struct Fetched {
 pub fn build() -> Rc<MainWindow> {
     let folder = system::data_folder();
     let store = SettingsStore::in_folder(&folder);
-    let (settings, load_problem) = store.load();
+    let (mut settings, load_problem) = store.load();
+    // The first preview to run turns previews on for Check for Updates.
+    // Not written after settings that could not be read (remember_window).
+    if settings.note_running(running_version().is_preview()) && load_problem.is_none() {
+        let _ = store.save(&mut settings);
+    }
 
     let frame = Frame::builder().with_title(APP_NAME).build();
     dialogs::app_font(&frame);
@@ -299,6 +320,12 @@ pub fn build() -> Rc<MainWindow> {
         closed: Cell::new(false),
         normal: Cell::new(Rect::default()),
         maximized: Cell::new(false),
+        status_text: RefCell::new("Ready".to_string()),
+        update_check: Cell::new(false),
+        update_checked_at: Cell::new(None),
+        update_found: RefCell::new(None),
+        update_installed: RefCell::new(None),
+        relaunch: Cell::new(false),
     });
     window.populate_locations();
 
@@ -392,6 +419,11 @@ pub fn build() -> Rc<MainWindow> {
         w.forecast_timer.stop();
         w.alert_timer.stop();
         w.clock_timer.stop();
+        // Relaunch Now after an update: once the settings are saved, so
+        // the new copy reads them as this one left them.
+        if w.relaunch.get() {
+            install::relaunch();
+        }
         event.skip(true);
     });
 
@@ -405,8 +437,28 @@ pub fn build() -> Rc<MainWindow> {
     let w = window.clone();
     window.alert_timer.on_tick(move |_| w.poll_alerts(true));
     let w = window.clone();
-    window.clock_timer.on_tick(move |_| w.rewrite_if_changed());
+    window.clock_timer.on_tick(move |_| {
+        w.rewrite_if_changed();
+        w.check_for_updates_if_due();
+    });
     window
+}
+
+// "0.3.0", or "0.3.0-alpha.0.18" between tags (build/version.rs).
+fn running_version() -> Version {
+    Version::parse(crate::VERSION)
+        .or_else(|| Version::parse("0.0.0-alpha.0"))
+        .expect("a version")
+}
+
+// GitHub's list. Developer-only, and only in a preview or a build between
+// tags: WEATHERSPELL_UPDATE_FEED gives another address, so the whole of an
+// update can be rehearsed against a made-up release.
+fn update_feed(running: &Version) -> String {
+    std::env::var("WEATHERSPELL_UPDATE_FEED")
+        .ok()
+        .filter(|feed| running.is_preview() && !feed.is_empty())
+        .unwrap_or_else(|| updates::RELEASES_URL.to_string())
 }
 
 // In characters of the window's font, within its screen.
@@ -480,6 +532,7 @@ fn handles(id: Id) -> bool {
             | ID_PREFERENCES
             | ID_GUIDE
             | ID_RESET_WINDOW
+            | ID_CHECK_UPDATES
             | ID_DONATE
             | ID_BIGGER
             | ID_SMALLER
@@ -535,6 +588,9 @@ fn menu_bar(settings: &AppSettings) -> MenuBar {
         .build();
     let help = Menu::builder()
         .append_item(ID_GUIDE, &format!("&User Guide{}", keys::GUIDE), "")
+        .append_separator()
+        // On request, or by itself if turned on in Settings (#11).
+        .append_item(ID_CHECK_UPDATES, "&Check for Updates...", "")
         .append_separator()
         // Not "Support Weatherspell", which in a Help menu reads as getting
         // help. Only this item: no dialog, no reminders.
@@ -813,6 +869,12 @@ impl MainWindow {
         self.start_forecast_timer();
         self.start_alert_timer();
         self.clock_timer.start(60_000, false);
+        // The automatic check, if turned on: a little after launch, so
+        // what it finds is said after the forecast's own announcement.
+        std::thread::spawn(|| {
+            std::thread::sleep(Duration::from_secs(10));
+            on_ui(|w| w.check_for_updates_if_due());
+        });
         // Not after settings that could not be read: no location is
         // loaded, so every location's file would go.
         if self.load_problem.is_none() {
@@ -878,6 +940,7 @@ impl MainWindow {
             ID_PREFERENCES => self.show_settings(),
             ID_GUIDE => guide::open(&self.frame, None),
             ID_RESET_WINDOW => self.reset_window(),
+            ID_CHECK_UPDATES => self.check_for_updates(false),
             ID_DONATE => about::open(&self.frame, about::DONATE),
             ID_BIGGER => self.change_text_size(self.text_size.get().bigger()),
             ID_SMALLER => self.change_text_size(self.text_size.get().smaller()),
@@ -980,11 +1043,15 @@ impl MainWindow {
             settings.forecast_refresh_minutes = chosen.forecast_minutes;
             settings.alert_check_minutes = chosen.alert_minutes;
             settings.alert_announcements = chosen.announcements;
+            settings.check_updates_automatically = chosen.check_updates;
+            settings.set_includes_previews(chosen.previews);
             std::mem::replace(&mut settings.show_air_quality, chosen.air_quality)
         };
         self.save_settings();
         self.start_forecast_timer();
         self.start_alert_timer();
+        // Just turned on: looks now rather than at the next launch.
+        self.check_for_updates_if_due();
         if air_was == chosen.air_quality {
             return;
         }
@@ -999,11 +1066,159 @@ impl MainWindow {
         }
     }
 
+    // An update the automatic check found rides at the end of the line,
+    // whatever the line says, until it is installed.
     fn status(&self, text: &str) {
+        *self.status_text.borrow_mut() = text.to_string();
+        let found = self.update_found.borrow();
+        let text = match &*found {
+            Some(version) => format!("{text}; {}", updates::wording::found_status(version)),
+            None => text.to_string(),
+        };
         match &self.status_line {
             // A label drops a lone "&" as a mnemonic: "Smith & Sons".
             Some(line) => line.set_label(&text.replace('&', "&&")),
-            None => self.frame.set_status_text(text, 0),
+            None => self.frame.set_status_text(&text, 0),
+        }
+    }
+
+    // The automatic check (Settings, off unless turned on): a little after
+    // launch, when it is turned on, and once a day while the app stays
+    // open. It only says what it found; nothing opens.
+    fn check_for_updates_if_due(&self) {
+        let due = self.update_checked_at.get().is_none_or(|at| {
+            at.elapsed() >= Duration::from_secs(updates::AUTOMATIC_CHECK_HOURS * 3600)
+        });
+        if due && self.settings.borrow().check_updates_automatically {
+            self.check_for_updates(true);
+        }
+    }
+
+    // Help > Check for Updates, and the automatic check. One request to
+    // GitHub, off the UI thread; the answer comes to update_answer.
+    fn check_for_updates(&self, automatic: bool) {
+        // Installed in this run and not relaunched for: this copy would
+        // find the same version again and install it over itself.
+        let installed = self.update_installed.borrow().clone();
+        if let Some(version) = installed {
+            if !automatic {
+                self.offer_relaunch(&version);
+            }
+            return;
+        }
+        if self.update_check.replace(true) {
+            return;
+        }
+        self.update_checked_at.set(Some(Instant::now()));
+        let before = self.status_text.borrow().clone();
+        if !automatic {
+            self.status(updates::wording::CHECKING);
+            self.announcer.say(updates::wording::CHECKING);
+        }
+        let running = running_version();
+        let feed = update_feed(&running);
+        let previews = self.settings.borrow().includes_previews();
+        let http = self.http.clone();
+        std::thread::spawn(move || {
+            let answer = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                updates::look(&*http, &feed, &running, previews, install::FILE_NAME)
+            }))
+            .unwrap_or_else(|_| Err(ServiceError::Unreadable("something went wrong".to_string())));
+            on_ui(move |w| w.update_answer(answer, automatic, &before));
+        });
+    }
+
+    fn update_answer(&self, answer: Result<Answer, ServiceError>, automatic: bool, before: &str) {
+        self.update_check.set(false);
+        if !automatic && *self.status_text.borrow() == updates::wording::CHECKING {
+            self.status(before);
+        }
+        let running = running_version();
+        match answer {
+            // Said once for each version, after whatever is being spoken,
+            // and kept on the status bar's line.
+            Ok(Answer::Newer(update)) if automatic => {
+                if self.update_found.borrow().as_ref() == Some(&update.version) {
+                    return;
+                }
+                *self.update_found.borrow_mut() = Some(update.version.clone());
+                self.show_status_again();
+                self.announcer
+                    .alert(&updates::wording::found(&update.version));
+            }
+            Ok(Answer::Newer(update)) => self.offer_update(&update, &running),
+            // The automatic check says nothing of a failure or of nothing
+            // new: it was not asked.
+            _ if automatic => {}
+            Ok(Answer::Latest) => {
+                self.forget_found_update();
+                update::tell(&self.frame, &updates::wording::latest(&running), false);
+            }
+            Ok(Answer::Ahead { official }) => {
+                self.forget_found_update();
+                update::tell(
+                    &self.frame,
+                    &updates::wording::ahead(&running, &official),
+                    false,
+                );
+            }
+            Err(problem) => update::tell(
+                &self.frame,
+                &updates::wording::could_not_check(&problem),
+                true,
+            ),
+        }
+    }
+
+    fn show_status_again(&self) {
+        let text = self.status_text.borrow().clone();
+        self.status(&text);
+    }
+
+    fn forget_found_update(&self) {
+        if self.update_found.borrow_mut().take().is_some() {
+            self.show_status_again();
+        }
+    }
+
+    // Update Available, then the download, the swap and the choice to
+    // relaunch. Cancel during the download comes back to Update Available;
+    // anything that fails says so once and leaves this copy as it was.
+    fn offer_update(&self, update: &Update, running: &Version) {
+        let way = install::way();
+        loop {
+            if !update::show(&self.frame, update, running, way) {
+                return;
+            }
+            let Some(to) = install::download_path(way) else {
+                return;
+            };
+            match update::download(&self.frame, self.http.clone(), update, &to) {
+                Ok(()) => {}
+                Err(DownloadProblem::Cancelled) => continue,
+                Err(problem) => {
+                    update::tell(&self.frame, &problem.to_string(), true);
+                    return;
+                }
+            }
+            if let Err(reason) = install::swap(&to, way, &self.frame) {
+                let _ = std::fs::remove_file(&to);
+                update::tell(&self.frame, &updates::wording::not_installed(&reason), true);
+                return;
+            }
+            *self.update_installed.borrow_mut() = Some(update.version.clone());
+            self.forget_found_update();
+            self.offer_relaunch(&update.version);
+            return;
+        }
+    }
+
+    // Relaunch Now closes the window, which saves its place and then
+    // starts the new copy (build's on_close); Later leaves this one open.
+    fn offer_relaunch(&self, version: &Version) {
+        if update::relaunch_now(&self.frame, version) {
+            self.relaunch.set(true);
+            self.frame.close(false);
         }
     }
 

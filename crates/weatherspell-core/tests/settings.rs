@@ -563,6 +563,43 @@ fn previews_are_offered_once_a_preview_has_run_until_the_box_is_cleared() {
 }
 
 #[test]
+fn the_automatic_update_check_is_off_unless_the_file_turns_it_on() {
+    assert!(!AppSettings::default().check_updates_automatically);
+    let dir = TempDir::new();
+    let store = store(&dir);
+    for (contents, expected) in [
+        (&br#"{"version":1,"locations":[]}"#[..], false),
+        (
+            &br#"{"version":1,"checkUpdatesAutomatically":null}"#[..],
+            false,
+        ),
+        (
+            &br#"{"version":1,"checkUpdatesAutomatically":"yes"}"#[..],
+            false,
+        ),
+        (
+            &br#"{"version":1,"checkUpdatesAutomatically":false}"#[..],
+            false,
+        ),
+        (
+            &br#"{"version":1,"checkUpdatesAutomatically":true}"#[..],
+            true,
+        ),
+    ] {
+        write(&store, contents);
+        let (settings, problem) = store.load();
+        assert_eq!(problem, None);
+        assert_eq!(settings.check_updates_automatically, expected);
+    }
+    let mut on = AppSettings {
+        check_updates_automatically: true,
+        ..AppSettings::default()
+    };
+    store.save(&mut on).unwrap();
+    assert!(store.load().0.check_updates_automatically);
+}
+
+#[test]
 fn a_preview_switch_that_is_not_one_reads_as_never_set() {
     let dir = TempDir::new();
     let store = store(&dir);

@@ -44,6 +44,11 @@ pub struct AppSettings {
     // in 0.1's file, which it ignores.
     #[serde(deserialize_with = "on_unless_off")]
     pub show_air_quality: bool,
+    // Whether the app looks for a new version by itself, at start-up and
+    // once a day; off unless turned on (Elliott, 2026-11-10). It only says
+    // one is there: installing stays Check for Updates' own.
+    #[serde(deserialize_with = "off_unless_on")]
+    pub check_updates_automatically: bool,
     // Whether Check for Updates offers previews too. Not in the file
     // until a preview first runs (which turns it on, so testers stay on
     // previews until they clear it) or the user changes it; 0.1 and 0.2
@@ -67,6 +72,7 @@ impl Default for AppSettings {
             alert_check_minutes: DEFAULT_ALERT_MINUTES,
             alert_announcements: Announcements::All,
             show_air_quality: true,
+            check_updates_automatically: false,
             include_preview_versions: None,
             window: None,
         }
@@ -267,6 +273,11 @@ fn or_default<'de, D: Deserializer<'de>, T: Deserialize<'de> + Default>(
 // A switch that is on unless the file says false.
 fn on_unless_off<'de, D: Deserializer<'de>>(d: D) -> Result<bool, D::Error> {
     Ok(Option::<bool>::deserialize(d)?.unwrap_or(true))
+}
+
+// A switch that is off unless the file says true.
+fn off_unless_on<'de, D: Deserializer<'de>>(d: D) -> Result<bool, D::Error> {
+    Ok(switch_if_set(d)?.unwrap_or(false))
 }
 
 // A switch that may not be in the file at all; anything that is not true

@@ -46,6 +46,7 @@
   "alertCheckMinutes": 5,
   "alertAnnouncements": "severe",
   "showAirQuality": true,
+  "checkUpdatesAutomatically": false,
   "window": {
     "left": -11,
     "top": 0,

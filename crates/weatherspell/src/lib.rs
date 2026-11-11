@@ -10,9 +10,11 @@ mod dialogs;
 mod edit;
 mod guide;
 pub mod hourly;
+pub mod install;
 pub mod manage;
 pub mod settings_dialog;
 mod system;
+pub mod update;
 pub mod window;
 
 // The build scripts' own code, so their tests run with the app's.
@@ -61,6 +63,8 @@ pub fn run() {
     if system::another_copy_brought_forward() {
         return;
     }
+    // What an update left behind, now that this is the only copy.
+    install::clean_up();
     let _ = wxdragon::main(|_| {
         system::before_windows();
         follow_appearance();

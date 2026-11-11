@@ -1,4 +1,4 @@
-// Settings (SettingsDialog.cs in 0.1): two groups of choices. OK applies
+// Settings (SettingsDialog.cs in 0.1): three groups of choices. OK applies
 // and closes, Apply applies and stays, Cancel closes and keeps whatever
 // Apply already did, as Windows dialogs do. The lists and their wording
 // are the core's (settings::choices); this only moves values between them
@@ -17,6 +17,8 @@ pub struct Chosen {
     pub alert_minutes: u32,
     pub announcements: Announcements,
     pub air_quality: bool,
+    pub check_updates: bool,
+    pub previews: bool,
 }
 
 // apply is called for OK and for each Apply.
@@ -96,7 +98,36 @@ pub fn build(
             .iter()
             .position(|(value, _)| *value == settings.alert_announcements),
     );
-    sizer.add_sizer(&alerts.0, 0, SizerFlag::Expand | SizerFlag::All, 10);
+    sizer.add_sizer(
+        &alerts.0,
+        0,
+        SizerFlag::Expand | SizerFlag::Left | SizerFlag::Right | SizerFlag::Top,
+        10,
+    );
+
+    // Check for Updates (#11). Looking by itself is off unless turned on
+    // (Elliott, 2026-11-10); previews come on by themselves the first time
+    // a preview runs, and stay until cleared here.
+    let updates = group(&dialog, "Updates");
+    let check_updates = CheckBox::builder(&updates.2)
+        .with_label("Check for &updates automatically")
+        .build();
+    check_updates.set_value(settings.check_updates_automatically);
+    wx_accessibility::report_toggles(&check_updates);
+    let previews = CheckBox::builder(&updates.2)
+        .with_label("Include &preview versions")
+        .build();
+    previews.set_value(settings.includes_previews());
+    wx_accessibility::report_toggles(&previews);
+    for check in [&check_updates, &previews] {
+        updates.0.add(
+            check,
+            0,
+            SizerFlag::Left | SizerFlag::Right | SizerFlag::Bottom,
+            6,
+        );
+    }
+    sizer.add_sizer(&updates.0, 0, SizerFlag::Expand | SizerFlag::All, 10);
 
     let ok = Button::builder(&dialog)
         .with_id(ID_OK)
@@ -129,6 +160,8 @@ pub fn build(
         announcements: choices::ANNOUNCEMENTS[announcements.get_selection().unwrap_or(0) as usize]
             .0,
         air_quality: air_quality.get_value(),
+        check_updates: check_updates.get_value(),
+        previews: previews.get_value(),
     };
     let apply = std::rc::Rc::new(apply);
     let (a, c) = (apply.clone(), chosen.clone());

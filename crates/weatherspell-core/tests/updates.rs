@@ -402,9 +402,43 @@ fn the_app_says_it_in_these_words() {
         "Downloading Weatherspell 0.2.0..."
     );
     assert_eq!(
-        wording::installed(&update),
+        wording::installed(&update.version),
         "Weatherspell 0.2.0 is installed. Relaunch to start using it."
     );
+    assert_eq!(
+        wording::found(&update.version),
+        "Weatherspell 0.2.0 is available. Check for Updates is in the Help menu."
+    );
+    assert_eq!(
+        wording::found_status(&update.version),
+        "Weatherspell 0.2.0 is available"
+    );
+    assert_eq!(wording::not_installed(""), "Nothing was installed.");
+    assert_eq!(
+        wording::not_installed("Access is denied."),
+        "Nothing was installed: Access is denied."
+    );
+}
+
+#[test]
+fn a_copy_in_wingets_folders_is_known() {
+    for path in [
+        r"C:\Users\Pat\AppData\Local\Microsoft\WinGet\Packages\PlanetLinux98.Weatherspell_Microsoft.Winget.Source_8wekyb3d8bbwe\Weatherspell.exe",
+        r"C:\Users\Pat\AppData\Local\Microsoft\WinGet\Links\Weatherspell.exe",
+        r"C:\Program Files\WinGet\Packages\PlanetLinux98.Weatherspell_Microsoft.Winget.Source_8wekyb3d8bbwe\Weatherspell.exe",
+        r"\\?\C:\Users\Pat\AppData\Local\Microsoft\winget\packages\x\Weatherspell.exe",
+        "C:/Users/Pat/AppData/Local/Microsoft/WinGet/Links/Weatherspell.exe",
+    ] {
+        assert!(updates::is_winget_path(path), "{path}");
+    }
+    for path in [
+        r"C:\Users\Pat\Downloads\Weatherspell.exe",
+        r"C:\Program Files\Weatherspell\Weatherspell.exe",
+        r"D:\WinGet\Weatherspell.exe",
+        r"C:\Tools\WinGet Packages\Weatherspell.exe",
+    ] {
+        assert!(!updates::is_winget_path(path), "{path}");
+    }
 }
 
 // Answers by address; anything else is a 404.

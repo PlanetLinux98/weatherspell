@@ -26,6 +26,10 @@ pub const RELEASES_PAGE: &str = "https://github.com/PlanetLinux98/weatherspell/r
 pub const SUMS_NAME: &str = "SHA256SUMS";
 pub const WINGET_COMMAND: &str = "winget upgrade PlanetLinux98.Weatherspell";
 
+// How often the automatic check, when turned on, looks again while the
+// app stays open.
+pub const AUTOMATIC_CHECK_HOURS: u64 = 24;
+
 // What release.yml attaches for each system.
 pub const WINDOWS_FILE: &str = "Weatherspell.exe";
 pub const MAC_FILE: &str = "Weatherspell.dmg";
@@ -325,6 +329,15 @@ pub fn listed_sum(sums: &str, file_name: &str) -> Option<String> {
     })
 }
 
+// Whether the exe runs from where winget puts a portable package: its
+// Packages folder (in the user's AppData, or Program Files for all users)
+// or the Links folder beside it. winget owns those, so such a copy is
+// pointed at `winget upgrade`.
+pub fn is_winget_path(exe: &str) -> bool {
+    let path = exe.replace('\\', "/").to_lowercase();
+    path.contains("/winget/packages/") || path.contains("/winget/links/")
+}
+
 // One request: GitHub's list, and what it means for this copy.
 pub fn look(
     http: &dyn Fetch,
@@ -495,14 +508,37 @@ pub mod wording {
         )
     }
 
+    pub const WHATS_NEW: &str = "What's &new";
+    pub const COPIED: &str = "Copied.";
+
+    // The automatic check's finding: said once, and kept at the end of
+    // the status bar's line until the app is relaunched.
+    pub fn found(version: &Version) -> String {
+        format!("Weatherspell {version} is available. Check for Updates is in the Help menu.")
+    }
+
+    pub fn found_status(version: &Version) -> String {
+        format!("Weatherspell {version} is available")
+    }
+
     pub fn downloading(update: &Update) -> String {
         format!("Downloading Weatherspell {}...", update.version)
     }
 
-    pub fn installed(update: &Update) -> String {
-        format!(
-            "Weatherspell {} is installed. Relaunch to start using it.",
-            update.version
-        )
+    pub fn installed(version: &Version) -> String {
+        format!("Weatherspell {version} is installed. Relaunch to start using it.")
+    }
+
+    pub const RELAUNCH_NOW: &str = "&Relaunch Now";
+    pub const LATER: &str = "&Later";
+
+    // The download was good, and putting it in place failed or was not
+    // allowed: the reason after it, when there is one.
+    pub fn not_installed(reason: &str) -> String {
+        if reason.is_empty() {
+            "Nothing was installed.".to_string()
+        } else {
+            format!("Nothing was installed: {reason}")
+        }
     }
 }

@@ -7,11 +7,13 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::Arc;
 
-use weatherspell::{about, add_location, details, hourly, manage, settings_dialog, window};
+use weatherspell::install::Way;
+use weatherspell::{about, add_location, details, hourly, manage, settings_dialog, update, window};
 use weatherspell_core::location::Location;
 use weatherspell_core::net::UreqFetch;
 use weatherspell_core::search::LocationSearch;
 use weatherspell_core::settings::{AppSettings, SavedLocation, SettingsStore};
+use weatherspell_core::updates::{File, Update, Version};
 use wx_accessibility::lint;
 use wxdragon::prelude::*;
 
@@ -31,6 +33,22 @@ Hours: Open-Meteo (open-meteo.com), licensed CC BY 4.0.
     text.layout.text = lines.to_string();
     text.layout.length = lines.encode_utf16().count();
     text
+}
+
+// A version to offer, as Check for Updates would have found it.
+fn an_update() -> Update {
+    let file = |name: &str| File {
+        name: name.to_string(),
+        url: format!("https://example.test/{name}"),
+        size: 1,
+    };
+    Update {
+        version: Version::parse("0.3.1").unwrap(),
+        notes: "Fixed\n- A fix.".to_string(),
+        file: file("Weatherspell.exe"),
+        sums: Some(file("SHA256SUMS")),
+        page: "https://example.test/".to_string(),
+    }
 }
 
 // How many windows were checked, their problems, and what the lint found
@@ -82,6 +100,7 @@ fn main() {
         weatherspell::follow_appearance();
         let main = window::build();
         let frame = main.frame();
+        let running = Version::parse("0.3.0").unwrap();
         let http = Arc::new(UreqFetch::new("Weatherspell-lint"));
         let search = Arc::new(LocationSearch::new());
         let dialogs = [
@@ -97,6 +116,19 @@ fn main() {
                 Some("https://weather.gc.ca/"),
             ),
             hourly::build(&frame, "Hour by Hour: Home", &hour_by_hour(), 0),
+            // Update Available as each kind of copy sees it, and the
+            // download's progress.
+            update::build(
+                &frame,
+                &an_update(),
+                &running,
+                Way::Install {
+                    with_permission: true,
+                },
+            ),
+            update::build(&frame, &an_update(), &running, Way::Winget),
+            update::build(&frame, &an_update(), &running, Way::ByHand),
+            update::build_progress(&frame, &an_update()).0,
         ];
         let mut problems = lint::check(&frame);
         for dialog in &dialogs {
