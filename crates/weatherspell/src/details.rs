@@ -102,7 +102,10 @@ pub fn build(parent: &Frame, title: &str, paragraphs: &[String], url: Option<&st
             // Where it was going, so it can be reached by hand.
             MessageDialog::builder(
                 &owner,
-                &format!("Couldn't open the browser.\n\n{target}"),
+                &format!(
+                    "Couldn't open the browser. {}\n\n{target}",
+                    weatherspell_core::trouble::Code::H1
+                ),
                 &caption,
             )
             .with_style(MessageDialogStyle::OK | MessageDialogStyle::IconWarning)

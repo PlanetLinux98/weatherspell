@@ -247,7 +247,7 @@ impl AddLocation {
         self.search.enable(true);
         let (failed, result) = match answer {
             Answer::Places(result) => (
-                "Couldn't search",
+                weatherspell_core::trouble::Code::L1,
                 result.map(|places| {
                     let count = if places.len() == 1 {
                         "1 place found.".to_string()
@@ -265,7 +265,7 @@ impl AddLocation {
                 }),
             ),
             Answer::Point(lat, lon, result) => (
-                "Couldn't look up those coordinates",
+                weatherspell_core::trouble::Code::L2,
                 result.map(|named| match named {
                     Some(place) => {
                         let text = place.near_text();
@@ -291,7 +291,7 @@ impl AddLocation {
                     }
                     e => e.to_string(),
                 };
-                self.set_status(&format!("{failed}: {reason}"));
+                self.set_status(&format!("{}: {reason} {failed}", failed.opening()));
                 self.query.set_focus();
                 return;
             }

@@ -166,7 +166,7 @@ fn an_answer_that_is_not_a_list_is_said_so() {
     );
     assert_eq!(
         wording::could_not_check(&problem),
-        "Couldn't check for updates: GitHub's list of versions could not be read."
+        "Couldn't check for updates: GitHub's list of versions could not be read. (Code U1)"
     );
 }
 
@@ -413,10 +413,13 @@ fn the_app_says_it_in_these_words() {
         wording::found_status(&update.version),
         "Weatherspell 0.2.0 is available"
     );
-    assert_eq!(wording::not_installed(""), "Nothing was installed.");
+    assert_eq!(
+        wording::not_installed(""),
+        "Nothing was installed. (Code U6)"
+    );
     assert_eq!(
         wording::not_installed("Access is denied."),
-        "Nothing was installed: Access is denied."
+        "Nothing was installed: Access is denied. (Code U6)"
     );
 }
 
@@ -509,7 +512,7 @@ fn a_check_that_gets_no_answer_says_why() {
     .unwrap_err();
     assert_eq!(
         wording::could_not_check(&problem),
-        "Couldn't check for updates: api.github.com could not be reached."
+        "Couldn't check for updates: api.github.com could not be reached. (Code U1)"
     );
 }
 
@@ -587,7 +590,7 @@ mod downloads {
         assert!(!path.exists());
         assert_eq!(
             problem.to_string(),
-            "The download didn't match its checksum, so nothing was installed. Try again, or download it from the releases page."
+            "The download didn't match its checksum, so nothing was installed. Try again, or download it from the releases page. (Code U3)"
         );
     }
 
@@ -611,7 +614,7 @@ mod downloads {
         assert!(!path.exists());
         assert_eq!(
             problem.to_string(),
-            "This version was published without a checksum to check the download against, so nothing was installed."
+            "This version was published without a checksum to check the download against, so nothing was installed. (Code U2)"
         );
     }
 
@@ -638,7 +641,7 @@ mod downloads {
         assert!(!path.exists());
         assert_eq!(
             problem.to_string(),
-            "Couldn't download the update: github.com could not be reached. Nothing was installed."
+            "Couldn't download the update: github.com could not be reached. Nothing was installed. (Code U4)"
         );
 
         // The checksum list itself out of reach.

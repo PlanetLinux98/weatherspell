@@ -7,6 +7,7 @@
 // wording, links and licences are in the guide's Credits and licences
 // section.
 
+use weatherspell_core::trouble::Code;
 use weatherspell_core::{environment_canada, nws, open_meteo};
 use wxdragon::prelude::*;
 
@@ -116,7 +117,7 @@ pub fn open(owner: &dyn WxWidget, url: &str) {
     if !launch_default_browser(url, BrowserLaunchFlags::Default) {
         MessageDialog::builder(
             owner,
-            &format!("Couldn't open the browser.\n\n{url}"),
+            &format!("Couldn't open the browser. {}\n\n{url}", Code::H1),
             "Weatherspell",
         )
         .with_style(MessageDialogStyle::OK | MessageDialogStyle::IconWarning)

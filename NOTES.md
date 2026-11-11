@@ -277,14 +277,43 @@ too sparse to name a cottage); BigDataCloud's free reverse geocoder, which
 is only for a device's own location; and GeoNames' web service, which needs
 an account.
 
-## Updates are checked on request only
+## Updates are checked on request, or automatically if asked
 
-No automatic checking at this time. Help > Check for Updates fetches the
-latest GitHub Release, shows the newest version and its release notes, and
-offers to install: it verifies the downloaded exe against the `SHA256SUMS`
-asset and replaces itself. A copy installed by winget will not: winget
-owns that folder, so the app should detect the winget install location and
-point the user at `winget upgrade` instead.
+Help > Check for Updates asks GitHub for the list of releases, shows the
+newest version and its release notes, and offers to install it. The
+download is checked against the release's `SHA256SUMS` before anything
+is replaced, and a release without one is never installed. That check
+catches a broken download; it does not prove who published the release,
+which signing the checksums could do in a later version.
+
+Looking automatically is a setting, off unless turned on: no request
+leaves the app that the user did not ask for. When on, it only says that
+a version is available (an announcement, and a note on the status bar);
+installing is always the user's choice.
+
+On Windows the running exe is renamed aside and the new one takes its
+name, since Windows lets a running program be renamed but not deleted;
+the old file is removed when the new copy starts. Where the folder needs
+an administrator, the same moves go through the shell's file operation,
+so the permission prompt is Windows' own and the exe needs no helper
+program or command-line arguments. A copy installed by winget does not
+replace itself: winget owns that folder, so it is given the
+`winget upgrade` command.
+
+Rejected: a separate updater program or an installer (one exe, nothing
+beside it); relaunching the exe elevated with an argument (the prompt
+would name an unsigned program, and the exe has no arguments).
+
+## Failure messages end with a code
+
+A message that stops something the user asked for ends with a short
+code, such as "(Code U3)": a letter for the area and a number, short to
+hear and to quote in a report. The user guide's Troubleshooting section
+explains each one, and a test holds the two together, so a new code
+cannot ship without its entry. The code comes last, so the sentence is
+heard first. Announcements carry none, and neither do the forecast's own
+lines that say what was done instead ("Alerts couldn't be checked this
+time ..."), where it would be read on every pass through the text.
 
 ## Versioning and releases
 

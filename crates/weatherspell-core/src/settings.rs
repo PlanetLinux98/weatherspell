@@ -16,6 +16,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use crate::alerts::AlertSeverity;
 use crate::files;
 use crate::location::Location;
+use crate::trouble::Code;
 
 pub const FILE_NAME: &str = "settings.json";
 
@@ -348,12 +349,14 @@ impl SettingsStore {
         let bad = self.bad_copy_path();
         let message = match std::fs::copy(&self.path, &bad) {
             Ok(_) => format!(
-                "{start} The file it couldn't read was kept as {} in {folder}.",
-                files::name(&bad)
+                "{start} The file it couldn't read was kept as {} in {folder}. {}",
+                files::name(&bad),
+                Code::S1
             ),
             Err(_) => format!(
-                "{start} The file is {} in {folder}.",
-                files::name(&self.path)
+                "{start} The file is {} in {folder}. {}",
+                files::name(&self.path),
+                Code::S1
             ),
         };
         LoadProblem { message, error }

@@ -60,9 +60,16 @@ pub fn open(owner: &dyn WxWidget, section: Option<&str>) {
             if launch_default_application(&page.display().to_string()) {
                 return;
             }
-            format!("Couldn't open the user guide.\n\n{}", page.display())
+            format!(
+                "Couldn't open the user guide. {}\n\n{}",
+                weatherspell_core::trouble::Code::H2,
+                page.display()
+            )
         }
-        Err(e) => format!("Couldn't open the user guide: {e}"),
+        Err(e) => format!(
+            "Couldn't open the user guide: {e} {}",
+            weatherspell_core::trouble::Code::H2
+        ),
     };
     MessageDialog::builder(owner, &problem, "Weatherspell User Guide")
         .with_style(MessageDialogStyle::OK | MessageDialogStyle::IconWarning)

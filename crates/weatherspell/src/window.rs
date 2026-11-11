@@ -31,6 +31,7 @@ use weatherspell_core::placement::{self, CharSize, Rect};
 use weatherspell_core::search::LocationSearch;
 use weatherspell_core::settings::{AppSettings, LoadProblem, SavedLocation, SettingsStore};
 use weatherspell_core::text_size::TextSize;
+use weatherspell_core::trouble::Code;
 use weatherspell_core::units;
 use weatherspell_core::updates::{self, Answer, DownloadProblem, Update, Version};
 use weatherspell_core::writer::{self, Section, WriterOptions};
@@ -860,7 +861,11 @@ impl MainWindow {
         if let Some(problem) = &self.load_problem {
             // Said before anything else opens over it, where the status
             // bar alone went unnoticed (#22).
-            self.status(&format!("Settings could not be read: {}", problem.error));
+            self.status(&format!(
+                "Settings could not be read: {} {}",
+                problem.error,
+                Code::S1
+            ));
             MessageDialog::builder(&self.frame, &problem.message, APP_NAME)
                 .with_style(MessageDialogStyle::OK | MessageDialogStyle::IconWarning)
                 .build()
@@ -1362,12 +1367,12 @@ impl MainWindow {
         if generation != self.generation.get() {
             return;
         }
-        self.status("Something went wrong.");
+        self.status(&format!("Something went wrong. {}", Code::F2));
         if self.shown.borrow().is_none() {
             self.set_text(&[Section::new(
                 "Problem",
                 vec![
-                    "Something went wrong.".to_string(),
+                    format!("Something went wrong. {}", Code::F2),
                     "Press F5 to try again.".to_string(),
                 ],
             )]);
@@ -1519,7 +1524,10 @@ impl MainWindow {
                 Some(alerts.or_last_known(earlier.as_ref())),
                 automatic,
             );
-            self.status(&format!("Couldn't fetch the forecast for {name}: {reason}"));
+            self.status(&format!(
+                "Couldn't fetch the forecast for {name}: {reason} {}",
+                Code::F1
+            ));
             format!(
                 "Couldn't fetch the forecast for {name}. Showing the forecast from {}.",
                 self.pc_time_on_day(fetched_at)
@@ -1530,7 +1538,10 @@ impl MainWindow {
                 cached.forecast,
                 alerts.or_last_known(cached.alerts.as_ref()),
             );
-            self.status(&format!("Couldn't fetch the forecast for {name}: {reason}"));
+            self.status(&format!(
+                "Couldn't fetch the forecast for {name}: {reason} {}",
+                Code::F1
+            ));
             format!(
                 "Couldn't fetch the forecast for {name}. Showing the forecast from {}{}.",
                 self.pc_time_on_day(fetched_at),
@@ -1545,11 +1556,17 @@ impl MainWindow {
             self.set_text(&[Section::new(
                 "Problem",
                 vec![
-                    format!("Couldn't fetch the forecast for {name}: {reason}"),
+                    format!(
+                        "Couldn't fetch the forecast for {name}: {reason} {}",
+                        Code::F1
+                    ),
                     "Press F5 to try again.".to_string(),
                 ],
             )]);
-            self.status(&format!("Couldn't fetch the forecast for {name}."));
+            self.status(&format!(
+                "Couldn't fetch the forecast for {name}. {}",
+                Code::F1
+            ));
             format!("Couldn't fetch the forecast for {name}.")
         };
         if alerts.checked() {
@@ -1956,14 +1973,17 @@ impl MainWindow {
     // offline view, not the forecast.
     fn try_cache(&self, write: impl FnOnce(&ForecastCache) -> io::Result<()>) {
         if let Err(e) = write(&self.cache) {
-            self.status(&format!("Couldn't keep the forecast for offline use: {e}"));
+            self.status(&format!(
+                "Couldn't keep the forecast for offline use: {e} {}",
+                Code::S3
+            ));
         }
     }
 
     fn save_settings(&self) {
         let result = self.store.save(&mut self.settings.borrow_mut());
         if let Err(e) = result {
-            self.status(&format!("Couldn't save settings: {e}"));
+            self.status(&format!("Couldn't save settings: {e} {}", Code::S2));
         }
     }
 }

@@ -37,6 +37,9 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
   page at this time. Settings has "Check for updates automatically" (off
   unless you turn it on), which says when a new version is available,
   and "Include preview versions". (#11)
+- When something can't be done, the message ends with a short code, such
+  as "(Code U3)", and the user guide's new Troubleshooting section
+  explains each code and what you can try.
 
 ### Changed
 - Places in Hong Kong and Macao are found with their territory's name.

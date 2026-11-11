@@ -18,6 +18,7 @@ use regex::Regex;
 use serde::Deserialize;
 
 use crate::fetch::{Fetch, FetchError, ServiceError};
+use crate::trouble::Code;
 
 // Newest first by date; 30 is far more than anyone is behind by.
 pub const RELEASES_URL: &str =
@@ -365,18 +366,26 @@ pub enum DownloadProblem {
 impl fmt::Display for DownloadProblem {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            DownloadProblem::NoChecksum => f.write_str(
-                "This version was published without a checksum to check the download against, so nothing was installed.",
+            DownloadProblem::NoChecksum => write!(
+                f,
+                "This version was published without a checksum to check the download against, so nothing was installed. {}",
+                Code::U2
             ),
-            DownloadProblem::Mismatch => f.write_str(
-                "The download didn't match its checksum, so nothing was installed. Try again, or download it from the releases page.",
+            DownloadProblem::Mismatch => write!(
+                f,
+                "The download didn't match its checksum, so nothing was installed. Try again, or download it from the releases page. {}",
+                Code::U3
             ),
-            DownloadProblem::Fetch(e) => {
-                write!(f, "Couldn't download the update: {e}. Nothing was installed.")
-            }
-            DownloadProblem::File(e) => {
-                write!(f, "Couldn't save the download: {e}. Nothing was installed.")
-            }
+            DownloadProblem::Fetch(e) => write!(
+                f,
+                "Couldn't download the update: {e}. Nothing was installed. {}",
+                Code::U4
+            ),
+            DownloadProblem::File(e) => write!(
+                f,
+                "Couldn't save the download: {e}. Nothing was installed. {}",
+                Code::U5
+            ),
             DownloadProblem::Cancelled => f.write_str("The download was cancelled."),
         }
     }
@@ -464,6 +473,7 @@ pub fn sha256(path: &std::path::Path) -> std::io::Result<String> {
 pub mod wording {
     use super::{Update, Version, WINGET_COMMAND};
     use crate::fetch::ServiceError;
+    use crate::trouble::Code;
 
     pub const CHECKING: &str = "Checking for updates...";
 
@@ -476,7 +486,7 @@ pub mod wording {
     }
 
     pub fn could_not_check(problem: &ServiceError) -> String {
-        format!("Couldn't check for updates: {problem}.")
+        format!("Couldn't check for updates: {problem}. {}", Code::U1)
     }
 
     // Update Available's first line.
@@ -536,9 +546,9 @@ pub mod wording {
     // allowed: the reason after it, when there is one.
     pub fn not_installed(reason: &str) -> String {
         if reason.is_empty() {
-            "Nothing was installed.".to_string()
+            format!("Nothing was installed. {}", Code::U6)
         } else {
-            format!("Nothing was installed: {reason}")
+            format!("Nothing was installed: {reason} {}", Code::U6)
         }
     }
 }

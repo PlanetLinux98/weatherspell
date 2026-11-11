@@ -20,6 +20,7 @@ shortcuts](#keyboard-shortcuts) lists every key for each system.
 - [Changing settings](#changing-settings)
 - [Keyboard shortcuts](#keyboard-shortcuts)
 - [Where your settings are kept](#where-your-settings-are-kept)
+- [Troubleshooting](#troubleshooting)
 - [Getting help](#getting-help)
 - [Credits and licences](#credits-and-licences)
 
@@ -105,18 +106,38 @@ choose Add. [Adding a location](#adding-a-location) has more on searching.
 
 Your locations and settings stay as they were when you update.
 
-- **Windows**: replace `Weatherspell.exe` with the newer one from the
-  Releases page. If you installed with winget, run this instead:
+To see whether there is a newer version, choose Check for Updates from
+the Help menu. Weatherspell tells you if you already have the latest
+version. If there is a newer one, Update Available opens with what's new
+in it, as text you can read with the arrow keys.
+
+- **Windows**: choose Install. Weatherspell downloads the new version,
+  checks the download against the release's checksums, and puts it in
+  place of the old one. Then choose Relaunch Now to start using it, or
+  Later to carry on and get the new version the next time you start
+  Weatherspell. If Weatherspell is in a folder that needs an
+  administrator's permission to change, such as Program Files, Windows
+  asks for it. If you installed with winget, Update Available gives you
+  the command to run instead, and Copy Command copies it:
 
   ```
   winget upgrade PlanetLinux98.Weatherspell
   ```
 
-- **The Mac**: quit Weatherspell, and run the install command from
+  A new version can take a few days to reach winget.
+- **The Mac**: choose Open Download Page, or quit Weatherspell and run
+  the install command from
   [Installing on the Mac](#installing-on-the-mac) again. It replaces the
   app with the latest release.
-- **Linux**: download the newer `Weatherspell-x86_64.AppImage`, allow it
-  to run as a program, and put it in place of the old one.
+- **Linux**: choose Open Download Page, download the newer
+  `Weatherspell-x86_64.AppImage`, allow it to run as a program, and put
+  it in place of the old one.
+
+Weatherspell only looks for a new version when you ask, unless you turn
+on "Check for updates automatically" in
+[Settings](#changing-settings). With that on, it looks a few moments
+after it starts and once a day while it stays open, and tells you when a
+new version is available. It never installs one by itself.
 
 ## Reading the forecast
 
@@ -404,7 +425,7 @@ turn it off, clear "Show air quality" in [Settings](#changing-settings).
 
 To change settings, choose Settings from the Settings menu. On the Mac,
 Settings is in the Weatherspell menu, and Cmd+comma opens it. There are
-two groups:
+three groups:
 
 - **Forecast**: "Refresh the forecast every" 15 minutes, 30 minutes (the
   default), 1 hour or 2 hours; and "Show air quality" (on by default).
@@ -412,6 +433,10 @@ two groups:
   default), 15 or 30 minutes (locations in Europe are checked at least every
   10 minutes), and "Announce new alerts": All new alerts (the default),
   Severe and extreme only, or Off.
+- **Updates**: "Check for updates automatically" (off by default), which
+  tells you when a new version is available; and "Include preview
+  versions", for trying versions that are still being tested (off by
+  default unless you have run a preview version).
 
 Choose OK or Apply to save your changes; Cancel closes Settings without
 saving them.
@@ -533,6 +558,80 @@ without your saved locations. The file it couldn't read is kept as
 To remove your locations and settings as well, delete the folders listed
 under [Where your settings are kept](#where-your-settings-are-kept).
 
+## Troubleshooting
+
+If something can't be done or isn't working right, Weatherspell says so
+and ends it with a short code, such as "(Code U3)". The codes are listed
+here with what each one means and what you can try. If you report a
+problem, including the code helps.
+
+Many messages give a reason. "could not be reached" usually means your
+internet connection, or the service, is down for the moment. "took too
+long to answer" means the service was slow. Both usually pass on their
+own: please try again in a few minutes.
+
+### Updates
+
+- **U1: "Couldn't check for updates"**. Weatherspell couldn't reach
+  GitHub, where its versions are published. Check your internet
+  connection and try again. The newest version is also on the
+  [Releases page](https://github.com/PlanetLinux98/weatherspell/releases).
+- **U2: "This version was published without a checksum"**. The release
+  is missing the list Weatherspell checks a download against, so it
+  didn't install it. Please report this; nothing is wrong on your
+  computer.
+- **U3: "The download didn't match its checksum"**. The file that
+  arrived isn't the file that was published, usually because the
+  download was cut short. Nothing was installed. Try again; if it keeps
+  happening, download the new version from the Releases page.
+- **U4: "Couldn't download the update"**. The download didn't finish.
+  Check your internet connection and try again.
+- **U5: "Couldn't save the download"**. Weatherspell couldn't write the
+  new version to disk. Check that the disk isn't full, then try again.
+- **U6: "Nothing was installed"**. The new version was downloaded and
+  couldn't be put in place. If Windows asked for an administrator's
+  permission and it wasn't given, try again and allow it. Otherwise,
+  close other copies of Weatherspell and try again, or replace the app
+  by hand from the Releases page.
+
+### Forecasts and alerts
+
+- **F1: "Couldn't fetch the forecast"**. The weather service didn't
+  answer. If Weatherspell has an earlier forecast, it shows that and
+  says how old it is. Press F5 (Cmd+R on the Mac) to try again.
+- **F2: "Something went wrong"**. Weatherspell met something it didn't
+  expect while fetching. Press F5 to try again; if it keeps happening
+  for the same location, please report it with the location's name.
+
+### Locations
+
+- **L1: "Couldn't search"**. The place search didn't answer. Try again
+  in a moment.
+- **L2: "Couldn't look up those coordinates"**. The service that names
+  a point didn't answer. Try again in a moment.
+
+### Settings and files
+
+- **S1: "Weatherspell couldn't read its settings"**. The settings file
+  was damaged, so Weatherspell started without your saved locations and
+  kept the damaged file beside the new one as `settings.json.bad`, in
+  the folder named in the message. You can add your locations again, or
+  send the kept file with a report.
+- **S2: "Couldn't save settings"**. Weatherspell couldn't write to its
+  settings folder. Check that the disk isn't full and that the folder
+  can be written to.
+- **S3: "Couldn't keep the forecast for offline use"**. The same, for
+  the folder where forecasts are kept for when you're offline. The
+  forecast on screen isn't affected.
+
+### Opening pages
+
+- **H1: "Couldn't open the browser"**. Weatherspell asked your system
+  to open a web page and it didn't. The address is in the message, to
+  open by hand.
+- **H2: "Couldn't open the user guide"**. The guide is also on
+  [GitHub](https://github.com/PlanetLinux98/weatherspell/blob/main/USER_GUIDE.md).
+
 ## Getting help
 
 To open this guide, choose User Guide from the Help menu, or press F1
@@ -541,6 +640,9 @@ To open this guide, choose User Guide from the Help menu, or press F1
 About Weatherspell, in the Help menu (in the Weatherspell menu on the
 Mac), gives the version you're running and short credits, with buttons
 for the full credits and licences and for Weatherspell's website.
+
+If a message ends with a code, such as "(Code U3)",
+[Troubleshooting](#troubleshooting) explains it and what you can try.
 
 If something doesn't work as expected, or reads or behaves badly with your
 screen reader, magnifier or other assistive technology, please

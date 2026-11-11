@@ -42,6 +42,7 @@ pub mod search;
 pub mod settings;
 pub mod shapes;
 pub mod text_size;
+pub mod trouble;
 pub mod units;
 pub mod updates;
 pub mod weather_codes;
