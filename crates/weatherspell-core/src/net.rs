@@ -75,11 +75,34 @@ impl UreqFetch {
         if self.offline {
             return Err(FetchError::Offline { host });
         }
-        let mut request = self.agent.get(url).header("Accept", "application/json");
-        if let Some(t) = timeout {
-            request = request.config().timeout_global(Some(t)).build();
+        let ask = || {
+            let mut request = self.agent.get(url).header("Accept", "application/json");
+            if let Some(t) = timeout {
+                request = request.config().timeout_global(Some(t)).build();
+            }
+            request.call()
+        };
+        once_more_if_stale(ask).map_err(|e| failed(e, host))
+    }
+}
+
+// A connection kept from an earlier request can have been closed by the
+// server since: the request then fails at once ("Peer disconnected")
+// though the server is there. Asked once more, it goes out on a new
+// connection. Seen downloading an update from a server that closes after
+// every answer (2026-11-10); a real failure fails the same way twice.
+fn once_more_if_stale<T>(ask: impl Fn() -> Result<T, ureq::Error>) -> Result<T, ureq::Error> {
+    use std::io::ErrorKind::{BrokenPipe, ConnectionAborted, ConnectionReset, UnexpectedEof};
+    match ask() {
+        Err(ureq::Error::Io(e))
+            if matches!(
+                e.kind(),
+                UnexpectedEof | ConnectionReset | ConnectionAborted | BrokenPipe
+            ) =>
+        {
+            ask()
         }
-        request.call().map_err(|e| failed(e, host))
+        answer => answer,
     }
 }
 
@@ -143,16 +166,17 @@ impl Fetch for UreqFetch {
         if self.offline {
             return Err(FetchError::Offline { host });
         }
-        let mut response = self
-            .agent
-            .get(url)
-            .config()
-            .timeout_global(Some(DOWNLOAD_TIMEOUT))
-            .timeout_connect(Some(TIMEOUT))
-            .timeout_recv_response(Some(TIMEOUT))
-            .build()
-            .call()
-            .map_err(|e| failed(e, host.clone()))?;
+        let mut response = once_more_if_stale(|| {
+            self.agent
+                .get(url)
+                .config()
+                .timeout_global(Some(DOWNLOAD_TIMEOUT))
+                .timeout_connect(Some(TIMEOUT))
+                .timeout_recv_response(Some(TIMEOUT))
+                .build()
+                .call()
+        })
+        .map_err(|e| failed(e, host.clone()))?;
         let mut body = response
             .body_mut()
             .with_config()
@@ -184,6 +208,53 @@ impl Fetch for UreqFetch {
 
 #[cfg(test)]
 mod tests {
+    // A server on this machine that answers each connection once, as if
+    // it would keep the connection, and then closes it: the second request
+    // finds the kept connection dead.
+    fn closes_after_each_answer(answers: usize) -> String {
+        use std::io::{BufRead, BufReader, Write};
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = format!("http://{}/", listener.local_addr().unwrap());
+        std::thread::spawn(move || {
+            for _ in 0..answers {
+                let Ok((mut stream, _)) = listener.accept() else {
+                    return;
+                };
+                let mut reader = BufReader::new(stream.try_clone().unwrap());
+                let mut line = String::new();
+                while reader.read_line(&mut line).is_ok_and(|n| n > 0) && line != "\r\n" {
+                    line.clear();
+                }
+                let _ = stream.write_all(b"HTTP/1.1 200 OK\r\nContent-Length: 2\r\n\r\nok");
+                // Closed a moment later, as a busy server does: the next
+                // request is already on its way down this connection.
+                std::thread::sleep(std::time::Duration::from_millis(50));
+            }
+        });
+        address
+    }
+
+    #[test]
+    fn a_kept_connection_the_server_has_closed_is_asked_again() {
+        use crate::fetch::Fetch;
+        let http = super::UreqFetch::new("Weatherspell-test");
+        // WEATHERSPELL_OFFLINE in the environment would fail every request.
+        if http.offline {
+            return;
+        }
+        let address = closes_after_each_answer(6);
+        for _ in 0..3 {
+            assert_eq!(http.get(&address, None).as_deref(), Ok("ok"));
+        }
+        let mut body = Vec::new();
+        let finished = http.download(&address, &mut |piece| {
+            body.extend_from_slice(piece);
+            true
+        });
+        assert_eq!(finished, Ok(true));
+        assert_eq!(body, b"ok");
+    }
+
     #[test]
     fn hosts_are_named_from_the_address() {
         assert_eq!(

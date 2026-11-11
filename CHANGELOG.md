@@ -29,6 +29,14 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
   areas can be supported), with the main pollutant when the air isn't
   good; and the day's pollen in Europe. It can be turned off in
   Settings. (#10)
+- Check for Updates (Help menu): shows the newest version and what's new
+  in it. On Windows, Install downloads it, checks it against the
+  release's checksums and puts it in place, with a choice to relaunch
+  now or later; a copy installed with winget is given the
+  `winget upgrade` command. On the Mac and Linux it opens the download
+  page at this time. Settings has "Check for updates automatically" (off
+  unless you turn it on), which says when a new version is available,
+  and "Include preview versions". (#11)
 
 ### Changed
 - Places in Hong Kong and Macao are found with their territory's name.
