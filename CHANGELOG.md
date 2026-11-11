@@ -30,13 +30,12 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
   good; and the day's pollen in Europe. It can be turned off in
   Settings. (#10)
 - Check for Updates (Help menu): shows the newest version and what's new
-  in it. On Windows, Install downloads it, checks it against the
-  release's checksums and puts it in place, with a choice to relaunch
-  now or later; a copy installed with winget is given the
-  `winget upgrade` command. On the Mac and Linux it opens the download
-  page at this time. Settings has "Check for updates automatically" (off
-  unless you turn it on), which says when a new version is available,
-  and "Include preview versions". (#11)
+  in it. Install downloads it, checks it against the release's checksums
+  and puts it in place, with a choice to relaunch now or later; a copy
+  installed with winget is given the `winget upgrade` command. Settings
+  has "Check for updates automatically" (off unless you turn it on),
+  which says when a new version is available, and an "Include preview
+  versions" setting. (#11)
 - When something can't be done, the message ends with a short code, such
   as "(Code U3)", and the user guide's new Troubleshooting section
   explains each code and what you can try.

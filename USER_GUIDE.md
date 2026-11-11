@@ -125,13 +125,24 @@ in it, as text you can read with the arrow keys.
   ```
 
   A new version can take a few days to reach winget.
-- **The Mac**: choose Open Download Page, or quit Weatherspell and run
-  the install command from
-  [Installing on the Mac](#installing-on-the-mac) again. It replaces the
-  app with the latest release.
-- **Linux**: choose Open Download Page, download the newer
-  `Weatherspell-x86_64.AppImage`, allow it to run as a program, and put
-  it in place of the old one.
+- **The Mac**: choose Install. Weatherspell downloads the new version's
+  disk image, checks it against the release's checksums, and puts the
+  new app in place of the old one. Then choose Relaunch Now, or Later to
+  carry on and get the new version the next time you open Weatherspell.
+  If Weatherspell is in an Applications folder your account can't
+  change, macOS asks for an administrator's name and password. If you
+  opened Weatherspell straight from its disk image, it can't update
+  itself: quit it and run the install command from
+  [Installing on the Mac](#installing-on-the-mac), which puts the latest
+  release in your Applications folder.
+- **Linux**: choose Install. Weatherspell downloads the new AppImage,
+  checks it against the release's checksums, and puts it in place of the
+  old one, already allowed to run as a program. Then choose Relaunch
+  Now, or Later to carry on and get the new version the next time you
+  open Weatherspell. If the AppImage is in a folder you can't change,
+  Update Available has Open Download Page instead: in this case,
+  download the newer `Weatherspell-x86_64.AppImage`, allow it to run as
+  a program, and put it in place of the old one.
 
 Weatherspell only looks for a new version when you ask, unless you turn
 on "Check for updates automatically" in
@@ -589,10 +600,12 @@ own: please try again in a few minutes.
 - **U5: "Couldn't save the download"**. Weatherspell couldn't write the
   new version to disk. Check that the disk isn't full, then try again.
 - **U6: "Nothing was installed"**. The new version was downloaded and
-  couldn't be put in place. If Windows asked for an administrator's
-  permission and it wasn't given, try again and allow it. Otherwise,
-  close other copies of Weatherspell and try again, or replace the app
-  by hand from the Releases page.
+  couldn't be put in place. If Windows or macOS asked for an
+  administrator's permission and it wasn't given, try again and allow
+  it. Otherwise, close other copies of Weatherspell and try again, or
+  replace the app by hand from the Releases page (on the Mac, with the
+  install command from
+  [Installing on the Mac](#installing-on-the-mac)).
 
 ### Forecasts and alerts
 

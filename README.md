@@ -31,7 +31,8 @@ by anyone who wants the weather in a simple and straightforward manner.
 Weatherspell is a single `Weatherspell.exe`. Download it from the
 [latest release](https://github.com/PlanetLinux98/weatherspell/releases/latest),
 put it wherever you like, and run it. It needs nothing else on 64-bit
-Windows 10 (version 1709 and later) and Windows 11.
+Windows 10 (version 1709 and later) and Windows 11. To update, choose
+Check for Updates from the Help menu.
 
 Once Weatherspell is available in winget, you can also install it with:
 
@@ -53,8 +54,9 @@ curl -fsSL https://raw.githubusercontent.com/PlanetLinux98/weatherspell/main/too
 ```
 
 It downloads the latest release, checks it against the release's
-checksums, and copies Weatherspell into your Applications folder. Run the
-same line again to update.
+checksums, and copies Weatherspell into your Applications folder. To
+update, choose Check for Updates from the Help menu, or run the same line
+again.
 
 Weatherspell isn't notarized by Apple at this time. The command above
 installs it so it opens without a warning; `Weatherspell.dmg` on the
@@ -80,7 +82,8 @@ Download `Weatherspell-x86_64.AppImage` from the
 allow it to run as a program (in its properties in your file manager, or
 with `chmod +x Weatherspell-x86_64.AppImage`), and open it. It uses your
 system's own GTK, so it looks and reads like your other apps. If it
-doesn't open, your system may need FUSE, usually the `fuse3` package.
+doesn't open, your system may need FUSE, usually the `fuse3` package. To
+update, choose Check for Updates from the Help menu.
 
 Your saved locations and settings live in `~/.config/weatherspell`.
 

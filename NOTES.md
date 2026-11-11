@@ -300,9 +300,27 @@ program or command-line arguments. A copy installed by winget does not
 replace itself: winget owns that folder, so it is given the
 `winget upgrade` command.
 
+On Linux the AppImage's runtime names the file the app was started from,
+and the new AppImage is renamed over it with the old one's permissions;
+the running copy reads on from the old file until it closes. A copy that
+isn't the AppImage, or one in a folder the account can't change, is
+shown the download page: no prompt for an administrator's permission is
+on every desktop.
+
+On the Mac the download is the disk image. It is mounted out of sight,
+the app in it is checked against its own signature and copied beside the
+running one, and the two change places; the old app waits in the
+temporary folder until the new copy starts and removes it. Where the
+Applications folder is another account's to change, the same steps run
+through macOS's own administrator prompt. A copy opened straight from
+the disk image has nothing to replace, and is pointed at the install
+command.
+
 Rejected: a separate updater program or an installer (one exe, nothing
 beside it); relaunching the exe elevated with an argument (the prompt
-would name an unsigned program, and the exe has no arguments).
+would name an unsigned program, and the exe has no arguments); pkexec or
+sudo on Linux (not on every desktop, and an AppImage belongs in a folder
+of the user's own).
 
 ## Failure messages end with a code
 
