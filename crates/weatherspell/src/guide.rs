@@ -24,14 +24,61 @@ const PAGES: [(&str, &str); 2] = [
     ),
 ];
 
+// Windows' and the Mac's temporary folders are the account's own. Linux's
+// /tmp is everyone's, so the folder there is named for the account: one
+// name for all would be the first account's, and closed to the next.
+#[cfg(any(windows, target_os = "macos"))]
 fn folder() -> PathBuf {
     std::env::temp_dir().join("Weatherspell")
+}
+
+#[cfg(not(any(windows, target_os = "macos")))]
+fn folder() -> PathBuf {
+    // SAFETY: getuid has no failure and touches no memory.
+    let account = unsafe { libc::getuid() };
+    std::env::temp_dir().join(format!("Weatherspell-{account}"))
+}
+
+#[cfg(any(windows, target_os = "macos"))]
+fn make_private(folder: &Path) -> io::Result<()> {
+    fs::create_dir_all(folder)
+}
+
+// Made for this account alone, and used only if it is a folder of this
+// account's that no other can write in. In a shared /tmp another account
+// can make the folder first, and a link left in it under a page's name
+// would have that page written over whatever the link names.
+#[cfg(not(any(windows, target_os = "macos")))]
+fn make_private(folder: &Path) -> io::Result<()> {
+    use std::os::unix::fs::{DirBuilderExt, MetadataExt};
+
+    if let Some(parent) = folder.parent() {
+        fs::create_dir_all(parent)?;
+    }
+    match fs::DirBuilder::new().mode(0o700).create(folder) {
+        Err(e) if e.kind() != io::ErrorKind::AlreadyExists => return Err(e),
+        _ => {}
+    }
+    let found = fs::symlink_metadata(folder)?;
+    // SAFETY: getuid has no failure and touches no memory.
+    let account = unsafe { libc::getuid() };
+    if found.is_dir() && found.uid() == account && found.mode() & 0o022 == 0 {
+        Ok(())
+    } else {
+        Err(io::Error::new(
+            io::ErrorKind::PermissionDenied,
+            format!(
+                "{} belongs to another account, or others can change it.",
+                folder.display()
+            ),
+        ))
+    }
 }
 
 // The page to open. Opening a file drops any #fragment, so a section is
 // reached through a small page that forwards to it.
 fn prepare(folder: &Path, section: Option<&str>) -> io::Result<PathBuf> {
-    fs::create_dir_all(folder)?;
+    make_private(folder)?;
     for (name, page) in PAGES {
         fs::write(folder.join(name), page)?;
     }
@@ -99,5 +146,36 @@ mod tests {
             "<meta http-equiv=\"refresh\" content=\"0; url=user-guide.html#credits-and-licences\">"
         ));
         let _ = fs::remove_dir_all(&folder);
+    }
+
+    #[cfg(not(any(windows, target_os = "macos")))]
+    #[test]
+    fn a_folder_others_can_change_or_a_link_in_its_place_is_refused() {
+        use std::os::unix::fs::PermissionsExt;
+
+        let base =
+            std::env::temp_dir().join(format!("weatherspell-guide-refuse-{}", std::process::id()));
+        fs::create_dir_all(&base).unwrap();
+
+        let open = base.join("open");
+        fs::create_dir(&open).unwrap();
+        fs::set_permissions(&open, fs::Permissions::from_mode(0o777)).unwrap();
+        assert!(prepare(&open, None).is_err());
+        assert!(!open.join(FILE_NAME).exists());
+
+        let real = base.join("real");
+        fs::create_dir(&real).unwrap();
+        let link = base.join("link");
+        std::os::unix::fs::symlink(&real, &link).unwrap();
+        assert!(prepare(&link, None).is_err());
+        assert!(!real.join(FILE_NAME).exists());
+
+        let mine = base.join("mine");
+        prepare(&mine, None).unwrap();
+        assert_eq!(
+            fs::metadata(&mine).unwrap().permissions().mode() & 0o777,
+            0o700
+        );
+        let _ = fs::remove_dir_all(&base);
     }
 }

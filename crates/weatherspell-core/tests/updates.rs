@@ -668,3 +668,76 @@ mod downloads {
         );
     }
 }
+
+#[test]
+fn a_list_sends_this_copy_only_to_github_or_a_rehearsal_to_its_own_server() {
+    let github = updates::RELEASES_URL;
+    assert!(updates::expected_link(
+        "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.3.0/Weatherspell.exe",
+        github
+    ));
+    for elsewhere in [
+        "http://github.com/PlanetLinux98/weatherspell/releases/download/v0.3.0/Weatherspell.exe",
+        "https://github.com.example.net/Weatherspell.exe",
+        "https://example.net/Weatherspell.exe",
+        "https://api.github.com/repos/PlanetLinux98/weatherspell/releases/assets/1",
+        "file:///tmp/Weatherspell.exe",
+        "",
+    ] {
+        assert!(!updates::expected_link(elsewhere, github), "{elsewhere}");
+    }
+
+    let rehearsal = "http://127.0.0.1:8765/releases.json";
+    assert!(updates::expected_link(
+        "http://127.0.0.1:8765/SHA256SUMS",
+        rehearsal
+    ));
+    assert!(updates::expected_link(
+        "https://github.com/PlanetLinux98/weatherspell/releases",
+        rehearsal
+    ));
+    assert!(!updates::expected_link(
+        "http://127.0.0.1:87650/SHA256SUMS",
+        rehearsal
+    ));
+    assert!(!updates::expected_link(
+        "http://127.0.0.2:8765/SHA256SUMS",
+        rehearsal
+    ));
+}
+
+#[test]
+fn a_release_whose_file_is_elsewhere_is_not_offered_and_its_page_is_ours() {
+    let json = fixture("github-releases.json");
+    let moved = json.replace(
+        "https://github.com/PlanetLinux98/weatherspell/releases/download/v0.2.0/",
+        "http://example.net/v0.2.0/",
+    );
+    assert_ne!(moved, json);
+    let http = Fake::default().answer(updates::RELEASES_URL, Ok(&moved));
+    let answer = updates::look(
+        &http,
+        updates::RELEASES_URL,
+        &v("0.2.0-beta.1"),
+        true,
+        LINUX_FILE,
+    )
+    .unwrap();
+    assert!(!matches!(answer, Answer::Newer(update) if update.version == v("0.2.0")));
+
+    let page = json.replace(
+        "\"html_url\": \"https://github.com/PlanetLinux98/weatherspell/releases/tag/v0.2.0\"",
+        "\"html_url\": \"file:///etc/passwd\"",
+    );
+    assert_ne!(page, json);
+    let http = Fake::default().answer(updates::RELEASES_URL, Ok(&page));
+    let answer = updates::look(
+        &http,
+        updates::RELEASES_URL,
+        &v("0.2.0-beta.1"),
+        true,
+        LINUX_FILE,
+    )
+    .unwrap();
+    assert_eq!(newer(answer).page, updates::RELEASES_PAGE);
+}

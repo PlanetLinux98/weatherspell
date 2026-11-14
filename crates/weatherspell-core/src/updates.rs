@@ -348,7 +348,32 @@ pub fn look(
     file_name: &str,
 ) -> Result<Answer, ServiceError> {
     let json = http.get(feed, None).map_err(ServiceError::Fetch)?;
-    Ok(check(&releases(&json)?, running, previews, file_name))
+    let mut releases = releases(&json)?;
+    for release in &mut releases {
+        release.files.retain(|file| expected_link(&file.url, feed));
+        if !expected_link(&release.page, feed) {
+            release.page = RELEASES_PAGE.to_string();
+        }
+    }
+    Ok(check(&releases, running, previews, file_name))
+}
+
+// Where a list may send this copy: GitHub over HTTPS, or, for a
+// rehearsal's list (window.rs, update_feed), that list's own server. The
+// list is trusted as it is, so this guards only against an answer gone
+// wrong: a download over plain HTTP, another host, a link that is no web
+// address.
+pub fn expected_link(url: &str, feed: &str) -> bool {
+    if url.starts_with("https://github.com/") {
+        return true;
+    }
+    // "http://127.0.0.1:8765/": through the slash that ends the host.
+    let server = feed
+        .match_indices('/')
+        .nth(2)
+        .map(|(at, _)| &feed[..=at])
+        .filter(|_| feed != RELEASES_URL);
+    server.is_some_and(|server| url.starts_with(server))
 }
 
 // Why a download was not kept. Nothing is left on disk after any of them.

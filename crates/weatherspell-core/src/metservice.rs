@@ -90,14 +90,7 @@ pub fn alert_for(alert: &CapAlert, location: &Location, now: Timestamp) -> Optio
                 .trim(),
         ))
         .filter(|i| !i.is_empty()),
-        url: Some(
-            if info.web.starts_with("http") {
-                info.web.trim()
-            } else {
-                WARNINGS_PAGE
-            }
-            .to_string(),
-        ),
+        url: Some(cap::web_link(&info.web, WARNINGS_PAGE)),
         expires: info.expires,
         references: Some(alert.references.iter().map(|r| format!("nz:{r}")).collect()),
         notice: None,

@@ -558,3 +558,25 @@ fn alerts_without_a_chain_are_tracked_by_id_as_before() {
     assert!(alerts::track(&mut seen, std::slice::from_ref(&a)).is_empty());
     assert_eq!(seen, ["ec:1"]);
 }
+
+#[test]
+fn an_alerts_link_is_a_web_address_over_https_or_the_services_page() {
+    const PAGE: &str = "https://example.org/warnings";
+    assert_eq!(
+        cap::web_link(" https://example.org/a ", PAGE),
+        "https://example.org/a"
+    );
+    assert_eq!(
+        cap::web_link("http://example.org/a", PAGE),
+        "https://example.org/a"
+    );
+    for other in [
+        "",
+        "httpx://example.org",
+        "file:///etc/passwd",
+        "javascript:alert(1)",
+        "www.example.org",
+    ] {
+        assert_eq!(cap::web_link(other, PAGE), PAGE, "{other}");
+    }
+}

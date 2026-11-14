@@ -283,3 +283,15 @@ fn units(text: &str) -> String {
     }
     text
 }
+
+// An alert's own link, as the app will open it: a web address over HTTPS
+// ("http://" is asked for as "https://"), and the service's page in place
+// of anything else, so no feed can have another kind of link opened.
+pub fn web_link(web: &str, fallback: &str) -> String {
+    let web = web.trim();
+    match web.strip_prefix("http://") {
+        Some(rest) => format!("https://{rest}"),
+        None if web.starts_with("https://") => web.to_string(),
+        None => fallback.to_string(),
+    }
+}

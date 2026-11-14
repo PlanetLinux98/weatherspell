@@ -676,7 +676,7 @@ fn weather_alert(
         level: None,
         description: description.join("\n\n"),
         instruction: Some(cap::readable(&info.instruction)).filter(|i| !i.trim().is_empty()),
-        url: Some(if web.starts_with("http") { web } else { SITE }.to_string()),
+        url: Some(cap::web_link(web, SITE)),
         expires: info.expires,
         references: Some(a.references.iter().map(|r| format!("eu:{r}")).collect()),
         notice: Some(DISCLAIMER.to_string()),
