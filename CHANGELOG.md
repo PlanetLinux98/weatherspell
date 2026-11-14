@@ -49,6 +49,9 @@ versions. Notes for the alpha and beta previews before 0.1.0 are on the
 - On tiling Wayland desktops such as Hyprland, the window now fits its
   tile; before, it was squeezed in, and clicks landed away from what was
   drawn.
+- On Linux, the user guide could fail to open for a second account on
+  the same computer, and could be written over another file if a
+  different account had prepared its temporary folder first.
 
 ## [0.2.0] - 2026-10-25
 
